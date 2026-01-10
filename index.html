@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEXORD ® | Beyond Standard</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .container { width: 90%; max-width: 500px; padding: 50px 0; }
+
+        /* Logo */
+        .logo-box img { width: 160px; height: auto; margin-bottom: 20px; }
+
+        h1 { letter-spacing: 5px; font-size: 2.2rem; margin-bottom: 5px; }
+        .tagline { color: #888; font-size: 0.8rem; margin-bottom: 40px; text-transform: uppercase; }
+
+        /* Pulsierender Google Button */
+        .btn-google {
+            display: inline-block;
+            background: #4285F4;
+            color: white;
+            padding: 18px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            margin-bottom: 40px;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 20px rgba(66, 133, 244, 0.4);
+        }
+
+        /* Link-Liste */
+        .link-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 50px; }
+        .link-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #333;
+            padding: 16px;
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+        .link-item:hover { border-color: #ff0000; background: rgba(255, 0, 0, 0.1); }
+
+        /* Formular-Bereiche */
+        .footer-section {
+            background: #0a0a0a;
+            width: 100%;
+            padding: 60px 0;
+            border-top: 2px solid #ff0000;
+        }
+        .form-card {
+            background: #111;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #222;
+            max-width: 400px;
+            margin: 20px auto;
+        }
+        input, textarea { 
+            width: 100%; padding: 12px; margin-bottom: 10px; 
+            background: #000; border: 1px solid #333; color: white; border-radius: 6px;
+            box-sizing: border-box;
+        }
+        .btn-submit { 
+            background: #ff0000; color: white; border: none; width: 100%; 
+            padding: 15px; border-radius: 6px; font-weight: bold; cursor: pointer; 
+        }
+
+        /* Sterne Styling */
+        .stars { font-size: 1.5rem; color: #FFD700; margin-bottom: 15px; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(66, 133, 244, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(66, 133, 244, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="logo-box">
+            <img src="logo.png" alt="LEXORD Logo">
+        </div>
+
+        <h1>LEXORD ®</h1>
+        <p class="tagline">Custom Controllers & Repair Service</p>
+
+        <a href="https://g.page/r/CQyRhiy7wS_DEAE/review" class="btn-google" target="_blank">⭐ JETZT AUF GOOGLE BEWERTEN</a>
+
+        <div class="link-list">
+            <a href="https://www.ebay.de/fdbk/leave_feedback?userid=lexord-de" class="link-item" target="_blank">🛒 eBay Bewertung abgeben</a>
+            <a href="https://www.ebay.de/usr/lexord-de" class="link-item" target="_blank">🛍️ Zum eBay Shop</a>
+            <a href="https://www.tiktok.com/@lexord.de" class="link-item" target="_blank">📱 TikTok Profil</a>
+            <a href="https://wa.me/4915204718720" class="link-item" target="_blank" style="border-color: #25D366;">💬 Support via WhatsApp</a>
+        </div>
+    </div>
+
+    <div class="footer-section">
+        
+        <div class="form-card">
+            <h3 style="margin-top:0;">Direkt-Bewertung</h3>
+            <p style="color:#888; font-size:0.8rem;">Wie war dein Erlebnis bei LEXORD?</p>
+            <div class="stars">★★★★★</div>
+            <form action="https://formspree.io/f/DEINE_ID" method="POST">
+                <input type="text" name="name" placeholder="Name oder eBay-Name" required>
+                <textarea name="bewertung" placeholder="Dein Feedback..." required></textarea>
+                <button type="submit" class="btn-submit">BEWERTUNG SENDEN</button>
+            </form>
+        </div>
+
+        <div class="form-card" style="margin-top: 40px; border-color: #ff0000;">
+            <h3 style="margin-top:0;">Fragen oder Support?</h3>
+            <form action="https://formspree.io/f/DEINE_ID" method="POST">
+                <input type="email" name="email" placeholder="Deine E-Mail" required>
+                <textarea name="nachricht" placeholder="Deine Nachricht..." required></textarea>
+                <button type="submit" class="btn-submit" style="background:#333;">NACHRICHT SENDEN</button>
+            </form>
+        </div>
+
+        <p style="margin-top: 50px; font-size: 0.7rem; opacity: 0.3; letter-spacing: 2px;">© 2026 LEXORD. ALL RIGHTS RESERVED.</p>
+    </div>
+
+</body>
+</html>

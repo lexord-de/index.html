@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LEXORD // Premium Custom Engineering</title>
+    <title>LEXORD.DE // Ultimate Controller Engineering</title>
     <style>
         :root {
-            --primary: #00f2ff;
-            --secondary: #7000ff;
-            --bg: #020205;
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08);
+            --p: #00f2ff; /* Neon Cyan */
+            --s: #7000ff; /* Deep Purple */
+            --bg: #010103;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
@@ -23,182 +21,191 @@
             align-items: center;
             min-height: 100vh;
             overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(112, 0, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, rgba(0, 242, 255, 0.05) 0%, transparent 30%);
         }
 
-        /* High-End Background Animation */
-        .bg-glow {
+        /* Animiertes Grid */
+        body::before {
+            content: "";
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% -20%, #1a1a3a 0%, var(--bg) 70%);
+            background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
             z-index: -1;
+            mask-image: linear-gradient(to bottom, black, transparent);
         }
 
-        .bg-grid {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
-            background-size: 40px 40px;
-            mask-image: radial-gradient(circle, black, transparent 80%);
-            opacity: 0.2;
-            z-index: -1;
-        }
+        header { padding: 70px 20px 30px; text-align: center; }
 
-        header { padding: 60px 20px 40px; text-align: center; }
-
-        /* Logo Hologramm */
-        .logo-container {
+        /* Das Logo mit Energie-Effekt */
+        .logo-box {
             position: relative;
-            width: 140px; height: 140px;
-            margin: 0 auto 25px;
+            width: 150px; height: 150px;
+            margin: 0 auto 30px;
         }
-        .logo-container img {
+        .logo-box img {
             width: 100%; height: 100%;
             border-radius: 50%;
-            border: 1px solid var(--primary);
-            position: relative; z-index: 2;
-            object-fit: cover;
+            border: 2px solid var(--p);
+            position: relative; z-index: 5;
             background: #000;
+            filter: drop-shadow(0 0 10px var(--p));
         }
-        .logo-container::after {
-            content: ''; position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px;
-            border-radius: 50%; background: var(--primary);
-            filter: blur(25px); opacity: 0.3; animation: pulse 3s infinite;
+        .logo-box::before {
+            content: ''; position: absolute; top: -15px; left: -15px; right: -15px; bottom: -15px;
+            background: linear-gradient(45deg, var(--p), var(--s));
+            border-radius: 50%;
+            filter: blur(30px);
+            opacity: 0.4;
+            animation: rotate 6s linear infinite;
         }
 
-        @keyframes pulse { 0%, 100% { opacity: 0.2; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.1); } }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        h1 { font-size: 2.5rem; letter-spacing: 10px; font-weight: 900; background: linear-gradient(to bottom, #fff 40%, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(0,242,255,0.3)); }
-        
-        .badges { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
-        .badge { font-size: 0.6rem; padding: 4px 10px; border: 1px solid var(--primary); border-radius: 4px; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
+        /* Glitch Überschrift */
+        h1 { 
+            font-size: 3rem; 
+            font-weight: 900; 
+            letter-spacing: 12px;
+            text-shadow: 2px 2px var(--s), -2px -2px var(--p);
+            animation: glitch 3s infinite;
+        }
 
-        /* Buttons List */
-        .stack { width: 90%; max-width: 440px; display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        @keyframes glitch {
+            0% { text-shadow: 2px 2px var(--s), -2px -2px var(--p); }
+            50% { text-shadow: -2px 2px var(--s), 2px -2px var(--p); }
+            100% { text-shadow: 2px 2px var(--s), -2px -2px var(--p); }
+        }
 
-        .item {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            padding: 20px;
-            border-radius: 12px;
+        .tagline { 
+            color: #fff; font-size: 0.85rem; margin-top: 20px; 
+            letter-spacing: 3px; font-weight: 700; opacity: 0.8;
+            max-width: 400px; line-height: 1.6;
+            text-transform: uppercase;
+        }
+
+        /* Ultra-Premium Buttons */
+        .links { width: 90%; max-width: 460px; display: flex; flex-direction: column; gap: 20px; margin-top: 40px; }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 22px;
+            border-radius: 15px;
             text-decoration: none;
             color: #fff;
             display: flex;
             align-items: center;
-            gap: 15px;
-            transition: 0.3s all cubic-bezier(0.23, 1, 0.32, 1);
+            justify-content: space-between;
+            transition: 0.4s;
             backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
         }
 
-        .item:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: var(--primary);
-            transform: scale(1.03) translateX(5px);
-            box-shadow: -10px 0 20px rgba(0, 242, 255, 0.1);
+        .btn::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 242, 255, 0.1), transparent);
+            transition: 0.5s;
         }
 
-        .icon-box { font-size: 1.5rem; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid var(--border); }
-        .text-box h3 { font-size: 0.95rem; letter-spacing: 1px; margin-bottom: 2px; }
-        .text-box p { font-size: 0.7rem; opacity: 0.5; font-family: 'Segoe UI', sans-serif; }
+        .btn:hover {
+            border-color: var(--p);
+            transform: translateY(-5px) scale(1.02);
+            background: rgba(0, 242, 255, 0.05);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        .btn:hover::after { left: 100%; }
 
-        /* WhatsApp Action Button */
-        .action-btn {
-            margin-top: 30px;
-            width: 90%; max-width: 440px;
-            background: linear-gradient(45deg, var(--secondary), var(--primary));
-            padding: 20px;
-            border-radius: 12px;
+        .btn-info h3 { font-size: 1rem; letter-spacing: 2px; }
+        .btn-info p { font-size: 0.7rem; opacity: 0.5; font-family: sans-serif; margin-top: 3px; }
+        .btn-arrow { color: var(--p); font-size: 1.2rem; }
+
+        /* Massive Action Button */
+        .cta {
+            margin-top: 40px;
+            width: 90%; max-width: 460px;
+            background: linear-gradient(45deg, var(--s), var(--p));
+            padding: 22px;
+            border-radius: 15px;
             text-decoration: none;
             color: #fff;
-            font-weight: 700;
+            font-weight: 900;
             text-align: center;
+            letter-spacing: 4px;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            box-shadow: 0 10px 30px rgba(112, 0, 255, 0.3);
+            box-shadow: 0 0 30px rgba(112, 0, 255, 0.4);
             transition: 0.3s;
         }
-        .action-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0, 242, 255, 0.4); }
+        .cta:hover { transform: scale(1.05); box-shadow: 0 0 50px var(--p); }
 
-        /* Footer */
-        footer { margin-top: auto; padding: 60px 20px; text-align: center; width: 100%; opacity: 0.6; }
-        .rights { font-size: 0.6rem; letter-spacing: 2px; margin-bottom: 20px; }
+        footer { margin-top: 80px; padding: 40px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05); width: 100%; }
+        .copy { font-size: 0.6rem; opacity: 0.4; letter-spacing: 3px; margin-bottom: 20px; }
         
-        details { display: inline-block; width: 100%; max-width: 400px; text-align: left; background: rgba(0,0,0,0.5); border-radius: 8px; padding: 10px; }
-        summary { cursor: pointer; font-size: 0.7rem; text-align: center; list-style: none; text-decoration: underline; color: var(--primary); }
+        details { background: #000; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; max-width: 400px; margin: 0 auto; text-align: left; }
+        summary { cursor: pointer; font-size: 0.7rem; color: var(--p); text-align: center; list-style: none; font-weight: bold; }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="bg-glow"></div>
-<div class="bg-grid"></div>
-
 <header>
-    <div class="logo-container">
+    <div class="logo-box">
         <img src="logo.png" alt="LEXORD" onerror="this.src='https://via.placeholder.com/150/000/00f2ff?text=LEXORD'">
     </div>
-    <h1>LEXORD</h1>
-    <div class="badges">
-        <span class="badge">Custom Builds</span>
-        <span class="badge">Repair Service</span>
-        <span class="badge">Est. 2026</span>
-    </div>
+    <h1>LEXORD.DE</h1>
+    <p class="tagline">DEIN GAME. DEIN UPGRADE.<br>WIR LASSEN WÜNSCHE WAHR WERDEN.</p>
 </header>
 
-<div class="stack">
-    <a href="https://www.ebay.de/usr/lexord-de" target="_blank" class="item">
-        <div class="icon-box">🛒</div>
-        <div class="text-box">
+<div class="links">
+    <a href="https://www.ebay.de/usr/lexord-de" target="_blank" class="btn">
+        <div class="btn-info">
             <h3>EBAY STORE</h3>
-            <p>Ready-to-play Controller & Ersatzteile</p>
+            <p>Ready-to-Play High-End Controller</p>
         </div>
+        <div class="btn-arrow">❯</div>
     </a>
 
-    <a href="https://www.tiktok.com/@lexord.de" target="_blank" class="item">
-        <div class="icon-box">📱</div>
-        <div class="text-box">
-            <h3>TIKTOK KANAL</h3>
-            <p>Daily Mods, Repairs & Behind the Scenes</p>
+    <a href="https://www.tiktok.com/@lexord.de" target="_blank" class="btn">
+        <div class="btn-info">
+            <h3>TIKTOK CHANNEL</h3>
+            <p>Live Repairs & Custom Builds</p>
         </div>
+        <div class="btn-arrow">❯</div>
     </a>
 
-    <a href="#" target="_blank" class="item">
-        <div class="icon-box">📸</div>
-        <div class="text-box">
+    <a href="#" target="_blank" class="btn">
+        <div class="btn-info">
             <h3>INSTAGRAM</h3>
-            <p>Exklusive Einblicke in unsere Projekte</p>
+            <p>Portfolio & Galerie</p>
         </div>
-    </a>
-
-    <a href="mailto:kontakt@lexord.de" class="item">
-        <div class="icon-box">📧</div>
-        <div class="text-box">
-            <h3>SUPPORT MAIL</h3>
-            <p>kontakt@lexord.de – Anfragen & Hilfe</p>
-        </div>
+        <div class="btn-arrow">❯</div>
     </a>
 </div>
 
-<a href="https://wa.me/4915204718720" target="_blank" class="action-btn">
-    Projekt Anfragen
+<a href="https://wa.me/4915204718720" target="_blank" class="cta">
+    Projekt Starten
 </a>
 
 <footer>
-    <p class="rights">© 2026 LEXORD CUSTOMS // ALL RIGHTS RESERVED</p>
-    
+    <p class="copy">© 2026 LEXORD CUSTOMS // PREMIUM ENGINEERING</p>
     <details>
-        <summary>Impressum & Datenschutz</summary>
-        <div style="font-size: 0.7rem; margin-top: 15px; color: #ccc; line-height: 1.6;">
+        <summary>RECHTLICHES & IMPRESSUM</summary>
+        <div style="font-size: 0.75rem; color: #888; margin-top: 15px; line-height: 1.7;">
             <strong>Impressum</strong><br>
             Inhaber: [DEIN NAME]<br>
-            [STRASSE & HAUSNUMMER]<br>
-            [PLZ & STADT]<br>
+            Anschrift: [STRASSE], [PLZ STADT]<br>
             E-Mail: kontakt@lexord.de<br>
             Tel: +49 1520 47 18720<br><br>
-            <strong>Haftungshinweis</strong><br>
-            Verantwortlich für den Inhalt nach § 5 TMG. Wir modifizieren Hardware nach Kundenwunsch. Keine offizielle Partnerschaft mit Sony, Microsoft oder Nintendo.
+            <strong>Haftung</strong><br>
+            Verantwortlich für den Inhalt nach § 5 TMG. Wir stehen in keiner offiziellen Verbindung zu Sony oder Microsoft. Alle Marken gehören den jeweiligen Eigentümern.
         </div>
     </details>
 </footer>
 
 </body>
 </html>
+
 
 

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEXORD™ // The Engineering Elite</title>
+    <style>
+        :root {
+            --neon-blue: #00f2ff;
+            --deep-purple: #bc13fe;
+            --dark-bg: #030303;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
+
+        body {
+            background: var(--dark-bg);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* High-End Partikel Hintergrund */
+        #particles-js {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%);
+        }
+
+        header { padding: 60px 20px 40px; text-align: center; z-index: 10; }
+
+        .logo-container {
+            width: 200px; height: 200px;
+            margin: 0 auto 20px;
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+        }
+
+        .logo-ring {
+            position: absolute;
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            background: linear-gradient(var(--dark-bg), var(--dark-bg)) padding-box,
+                        linear-gradient(45deg, var(--neon-blue), var(--deep-purple)) border-box;
+            box-shadow: 0 0 40px rgba(0, 242, 255, 0.4);
+            animation: rotateRing 10s linear infinite;
+        }
+
+        /* DEIN LOGO 1:1 IN CODE */
+        .skull-svg {
+            width: 130px; 
+            z-index: 2;
+            filter: drop-shadow(0 0 15px var(--neon-blue));
+            animation: pulseLogo 4s ease-in-out infinite;
+        }
+        
+        /* Die Farben aus deinem Bild */
+        .skull-white { fill: #FFFFFF; stroke: #000000; stroke-width: 1.5; }
+        .skull-detail { fill: #000000; }
+        .skull-accent { fill: #808080; }
+
+        h1 { font-size: 1.8rem; letter-spacing: 6px; margin-top: 20px; text-transform: uppercase; text-shadow: 0 0 10px var(--neon-blue); }
+        .tagline { color: var(--neon-blue); font-size: 0.65rem; letter-spacing: 4px; margin-bottom: 40px; opacity: 0.8; }
+
+        .btn-google {
+            display: inline-block; background: linear-gradient(90deg, #4285F4, #34a853); color: white;
+            padding: 16px 30px; border-radius: 50px; font-weight: bold;
+            text-decoration: none; margin-bottom: 50px; font-size: 0.7rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: 0.3s;
+            animation: glowBtn 3s infinite; z-index: 10;
+        }
+
+        .link-container { width: 90%; max-width: 420px; display: flex; flex-direction: column; gap: 15px; z-index: 10; }
+        .card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 22px; border-radius: 8px; text-decoration: none;
+            color: white; display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(15px); transition: 0.4s;
+        }
+        .card:hover {
+            border-color: var(--neon-blue);
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 242, 255, 0.1);
+        }
+        .card h3 { font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; }
+        .arrow { color: var(--neon-blue); font-size: 1.1rem; }
+
+        .feedback-section { width: 90%; max-width: 420px; margin-top: 50px; z-index: 10; }
+        .feedback-card {
+            background: rgba(5, 5, 5, 0.85); padding: 30px; border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px);
+        }
+        input, textarea {
+            width: 100%; padding: 15px; margin: 10px 0; background: rgba(0,0,0,0.6);
+            border: 1px solid #222; color: white; border-radius: 4px; font-size: 0.8rem;
+            transition: 0.3s; outline: none;
+        }
+        input:focus, textarea:focus { border-color: var(--neon-blue); }
+        .btn-send {
+            background: var(--neon-blue); color: #000; border: none;
+            width: 100%; padding: 16px; font-weight: bold; cursor: pointer;
+            font-size: 0.75rem; margin-top: 15px; letter-spacing: 2px;
+        }
+        #success-msg { display: none; color: var(--neon-blue); text-align: center; font-size: 0.75rem; margin-top: 20px; font-weight: bold;}
+
+        .footer-area { width: 90%; max-width: 420px; text-align: center; z-index: 10; padding: 40px 0 60px; }
+        .imp-btn { background: transparent; border: none; color: #444; font-size: 0.6rem; cursor: pointer; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; }
+        .imp-content { display: none; padding: 25px; background: #080808; border: 1px solid #111; margin-top: 15px; font-size: 0.7rem; color: #777; text-align: left; line-height: 1.6; }
+        .copyright { color: #222; font-size: 0.55rem; letter-spacing: 2px; text-transform: uppercase; margin-top: 20px; }
+
+        @keyframes rotateRing { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes pulseLogo { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } }
+        @keyframes glowBtn { 0%, 100% { box-shadow: 0 0 5px rgba(66, 133, 244, 0.3); } 50% { box-shadow: 0 0 20px rgba(66, 133, 244, 0.6); } }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</head>
+<body>
+
+<div id="particles-js"></div>
+
+<header>
+    <div class="logo-container">
+        <div class="logo-ring"></div>
+        <svg class="skull-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20,50 Q20,20 50,20 Q80,20 80,50" fill="none" stroke="#FFFFFF" stroke-width="4" />
+            <path class="skull-white" d="M30,45 C30,30 70,30 70,45 L70,70 C70,75 60,80 50,80 C40,80 30,75 30,70 Z" />
+            <rect class="skull-white" x="15" y="45" width="10" height="20" rx="2" />
+            <rect class="skull-white" x="75" y="45" width="10" height="20" rx="2" />
+            <circle class="skull-detail" cx="40" cy="55" r="7" />
+            <circle class="skull-detail" cx="60" cy="55" r="7" />
+            <path d="M38,55 H42 M40,53 V57" stroke="white" stroke-width="1" />
+            <path d="M58,55 H62 M60,53 V57" stroke="white" stroke-width="1" />
+            <path class="skull-detail" d="M42,70 H58 V73 H42 Z" />
+            <path d="M46,70 V73 M50,70 V73 M54,70 V73" stroke="white" stroke-width="0.5" />
+        </svg>
+    </div>
+    <h1>LEXORD™</h1>
+    <p class="tagline">THE ENGINEERING ELITE</p>
+</header>
+
+<a href="https://g.page/r/CQyRhiy7wS_DEAE/review" class="btn-google" target="_blank">⭐ JETZT BEWERTEN</a>
+
+<div class="link-container">
+    <a href="https://www.ebay.de/usr/lexord-de" class="card" target="_blank"><h3>SHOP NOW</h3><div class="arrow">›</div></a>
+    <a href="https://www.ebay.de/usr/lexord-de#tab1" class="card" target="_blank"><h3>eBay Feedback</h3><div class="arrow" style="color:#f4ae01">★</div></a>
+    <a href="https://www.instagram.com/lexord.de" class="card" target="_blank"><h3>Instagram</h3><div class="arrow">›</div></a>
+    <a href="https://www.tiktok.com/@lexord.de" class="card" target="_blank"><h3>TIKTOK</h3><div class="arrow">›</div></a>
+</div>
+
+<div class="feedback-section">
+    <div class="feedback-card">
+        <form id="pro-form">
+            <input type="text" name="name" placeholder="Dein Name" required>
+            <input type="email" name="email" placeholder="E-Mail" required>
+            <textarea name="message" placeholder="Anfrage..." rows="4" required></textarea>
+            <button type="submit" class="btn-send" id="send-btn">NACHRICHT ABSENDEN</button>
+        </form>
+        <div id="success-msg">✓ ERFOLGREICH ÜBERMITTELT</div>
+    </div>
+</div>
+
+<div class="footer-area">
+    <button class="imp-btn" onclick="toggleImp()">Impressum</button>
+    <div id="imp-box" class="imp-content">
+        <strong>LEXORD™</strong><br>Leon Schulz<br>An Der Domsühler Straße 2<br>19374 Domsühl<br><br>
+        Kontakt: kontakt@lexord.de
+    </div>
+    <div class="copyright">© 2025 LEXORD.DE - ALL RIGHTS RESERVED</div>
+</div>
+
+<script>
+    particlesJS('particles-js', {
+        particles: {
+            number: { value: 80 },
+            color: { value: '#00f2ff' },
+            opacity: { value: 0.3 },
+            size: { value: 2 },
+            line_linked: { enable: true, distance: 150, color: '#00f2ff', opacity: 0.1 },
+            move: { enable: true, speed: 1.2 }
+        }
+    });
+
+    const form = document.getElementById('pro-form');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('send-btn');
+        btn.innerText = 'WIRD ÜBERMITTELT...';
+
+        fetch("https://formspree.io/f/xanypboy", {
+            method: "POST",
+            body: new FormData(form),
+            headers: { 'Accept': 'application/json' }
+        }).then(res => {
+            if (res.ok) {
+                form.style.display = 'none';
+                document.getElementById('success-msg').style.display = 'block';
+            }
+        });
+    });
+
+    function toggleImp() {
+        var x = document.getElementById("imp-box");
+        x.style.display = (x.style.display === "none" || x.style.display === "") ? "block" : "none";
+    }
+</script>
+</body>
+</html>

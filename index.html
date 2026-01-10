@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEXORD™ // The Engineering Elite</title>
+    <style>
+        :root { --neon-blue: #00f2ff; --neon-purple: #bc13fe; --dark-bg: #030303; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
+        
+        body { background: var(--dark-bg); color: white; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
+
+        #particles-js { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%); }
+
+        header { padding: 60px 20px 40px; text-align: center; z-index: 10; }
+
+        .logo-container { width: 180px; height: 180px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; position: relative; }
+        .logo-ring { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 2px solid transparent; background: linear-gradient(var(--dark-bg), var(--dark-bg)) padding-box, linear-gradient(45deg, var(--neon-blue), var(--neon-purple)) border-box; box-shadow: 0 0 30px rgba(0, 242, 255, 0.4); animation: rotateRing 12s linear infinite; }
+        .my-logo { width: 135px; z-index: 2; mix-blend-mode: screen; filter: drop-shadow(0 0 15px var(--neon-blue)) brightness(1.1); animation: pulse 5s ease-in-out infinite; }
+
+        h1 { font-size: 1.8rem; letter-spacing: 6px; margin-top: 25px; text-transform: uppercase; text-shadow: 0 0 15px rgba(0, 242, 255, 0.5); }
+        .tagline { color: var(--neon-blue); font-size: 0.65rem; letter-spacing: 4px; margin-bottom: 45px; opacity: 0.8; }
+
+        /* GOOGLE BUTTON */
+        .btn-google { 
+            display: inline-block; background: linear-gradient(90deg, #5c8ee6, #7dc49d); color: white; 
+            padding: 18px 35px; border-radius: 50px; text-decoration: none; margin-bottom: 45px; font-size: 0.8rem; 
+            font-weight: 700; transition: 0.4s; box-shadow: 0 4px 15px rgba(0,0,0,0.5); animation: pulseBtn 3s infinite;
+            border: none; cursor: pointer; text-align: center;
+        }
+
+        /* SHOP SEKTION */
+        .shop-section { width: 90%; max-width: 420px; z-index: 10; margin-bottom: 30px; }
+        .shop-title { color: var(--neon-blue); font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 20px; text-align: left; opacity: 0.8; }
+        
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .product-card { 
+            background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-radius: 15px; padding: 15px; text-align: center; backdrop-filter: blur(10px); transition: 0.4s;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .product-card:hover { border-color: var(--neon-blue); transform: translateY(-5px); }
+        
+        .img-wrap { width: 100%; height: 140px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+        .product-card img { max-width: 90%; max-height: 90%; object-fit: contain; }
+        
+        .product-card h3 { font-size: 0.6rem; letter-spacing: 1px; margin-bottom: 8px; color: #eee; }
+        .product-card .price { color: var(--neon-blue); font-weight: bold; font-size: 0.9rem; margin-bottom: 15px; display: block; }
+        
+        .buy-btn, .btn-send { 
+            background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue); 
+            padding: 12px; border-radius: 8px; font-size: 0.6rem; font-weight: bold; text-decoration: none; transition: 0.3s;
+            text-transform: uppercase; cursor: pointer; width: 100%;
+        }
+        .buy-btn:hover, .btn-send:hover { background: var(--neon-blue); color: #000; }
+
+        /* LINKS */
+        .link-container { width: 90%; max-width: 420px; display: flex; flex-direction: column; gap: 15px; z-index: 10; margin-bottom: 30px; }
+        .card { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); padding: 22px; border-radius: 12px; text-decoration: none; color: white; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(15px); transition: 0.4s; }
+        .card:hover { border-color: var(--neon-blue); transform: translateX(5px); }
+
+        /* KONTAKT */
+        .feedback-section { width: 90%; max-width: 420px; z-index: 10; margin-bottom: 50px; }
+        .feedback-card { background: rgba(5, 5, 5, 0.95); padding: 30px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.05); }
+        input, textarea { width: 100%; padding: 15px; margin: 10px 0; background: #000; border: 1px solid #222; color: white; border-radius: 8px; outline: none; font-size: 0.85rem; }
+
+        /* FOOTER & IMPRESSUM */
+        .footer-area { width: 90%; max-width: 420px; text-align: center; padding: 50px 0; z-index: 10; }
+        .imp-btn { background: transparent; border: none; color: #444; font-size: 0.65rem; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; }
+        .imp-content { display: none; padding: 25px; background: #080808; border: 1px solid #111; margin-top: 15px; font-size: 0.75rem; color: #777; text-align: left; line-height: 1.6; border-radius: 8px; }
+
+        /* ANIMATION OVERLAY */
+        #checkout-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.98); z-index: 10000; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .spinner { width: 50px; height: 50px; border: 3px solid rgba(0, 242, 255, 0.1); border-top: 3px solid var(--neon-blue); border-radius: 50%; animation: spin 1s linear infinite; }
+
+        @keyframes rotateRing { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+        @keyframes pulseBtn { 0% { box-shadow: 0 0 0 0 rgba(0, 242, 255, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(0, 242, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 242, 255, 0); } }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</head>
+<body>
+
+<div id="particles-js"></div>
+
+<header>
+    <div class="logo-container">
+        <div class="logo-ring"></div>
+        <img src="IMG_7023.png" alt="LEXORD" class="my-logo">
+    </div>
+    <h1>LEXORD™</h1>
+    <p class="tagline">THE ENGINEERING ELITE</p>
+</header>
+
+<button onclick="handleGlobalClick(this, 'https://g.page/r/CQyRhiy7wS_DEAE/review')" class="btn-google">⭐ JETZT BEWERTEN</button>
+
+<div class="shop-section">
+    <div class="shop-title">EXCLUSIVE GEAR // SHOP</div>
+    <div class="product-grid">
+        
+        <div class="product-card">
+            <div class="img-wrap"><img src="https://i.ibb.co/L9p6pPz/halterung-transparent.png" alt="Halterung"></div>
+            <h3>120MM FAN MOUNT</h3>
+            <span class="price">5,95 €</span>
+            <button onclick="handleGlobalClick(this, 'https://www.ebay.de/itm/127605871230')" class="buy-btn">KAUFEN</button>
+        </div>
+
+        <div class="product-card">
+            <div class="img-wrap"><img src="https://i.ibb.co/N2L4Xf8/controller-paddle.png" alt="Paddle System"></div>
+            <h3>PS5 PADDLE SYSTEM</h3>
+            <span class="price">45,95 €</span>
+            <button onclick="handleGlobalClick(this, 'https://www.ebay.de/itm/127554903259')" class="buy-btn">KAUFEN</button>
+        </div>
+
+        <div class="product-card" style="grid-column: span 2; border: 1px solid rgba(0, 242, 255, 0.4); background: rgba(0, 242, 255, 0.05);">
+            <div class="img-wrap" style="height: 180px;">
+                <img src="DEIN_BUNDLE_BILD_LINK" alt="Bundle">
+            </div>
+            <h3 style="color: var(--neon-blue);">TMR STICK & HALL EFFECT BUNDLE</h3>
+            <span class="price" style="font-size: 1.2rem;">49,90 €</span>
+            <button onclick="handleGlobalClick(this, 'https://www.ebay.de/usr/lexord-de')" class="buy-btn" style="background: var(--neon-blue); color: #000;">JETZT SPAREN</button>
+        </div>
+
+    </div>
+</div>
+
+<div class="link-container">
+    <a href="https://www.ebay.de/usr/lexord-de?_tab=feedback" class="card" target="_blank"><span>EBAY FEEDBACK</span><span style="color:#f4ae01">★</span></a>
+    <a href="https://www.tiktok.com/@lexord.de" class="card" target="_blank"><span>TIKTOK</span><span>›</span></a>
+    <a href="https://www.instagram.com/lexord.de" class="card" target="_blank"><span>INSTAGRAM</span><span>›</span></a>
+</div>
+
+<div class="feedback-section">
+    <div id="form-container" class="feedback-card">
+        <form id="contact-form">
+            <input type="text" name="name" placeholder="Name" required>
+            <input type="email" name="email" placeholder="E-Mail" required>
+            <textarea name="message" placeholder="Deine Nachricht..." rows="4" required></textarea>
+            <button type="submit" class="btn-send" id="submit-btn">NACHRICHT ABSENDEN</button>
+        </form>
+    </div>
+</div>
+
+<div class="footer-area">
+    <button class="imp-btn" onclick="toggleImp()">Impressum</button>
+    <div id="imp-box" class="imp-content">
+        <strong>LEXORD™</strong><br>Leon Schulz<br>An Der Domsühler Straße 2<br>19374 Domsühl<br><br>
+        <strong>SUPPORT: 0152 04718720</strong><br>E-MAIL: kontakt@lexord.de
+    </div>
+    <div style="color:#333; font-size:0.6rem; margin-top:25px; letter-spacing:3px; text-transform: uppercase;">Lexord.de 2026 all right reserved</div>
+</div>
+
+<div id="checkout-overlay">
+    <div class="spinner"></div>
+    <p style="margin-top: 20px; color: var(--neon-blue); font-size: 0.7rem; letter-spacing: 2px;">WIRD GELADEN...</p>
+</div>
+
+<script>
+    particlesJS('particles-js', { particles: { number: { value: 70 }, color: { value: '#00f2ff' }, opacity: { value: 0.2 }, size: { value: 2 }, line_linked: { enable: true, distance: 150, color: '#00f2ff', opacity: 0.1 }, move: { enable: true, speed: 0.8 } } });
+
+    function toggleImp() { 
+        var x = document.getElementById("imp-box"); 
+        x.style.display = (x.style.display === "none" || x.style.display === "") ? "block" : "none"; 
+    }
+
+    function handleGlobalClick(btn, url) {
+        if(event) event.preventDefault();
+        const originalText = btn.innerText;
+        btn.innerText = "BITTE WARTEN...";
+        const overlay = document.getElementById('checkout-overlay');
+        overlay.style.display = 'flex';
+        setTimeout(() => { 
+            if(url) window.location.href = url;
+            setTimeout(() => { 
+                overlay.style.display = 'none'; 
+                btn.innerText = originalText;
+            }, 1000);
+        }, 2200);
+    }
+
+    const contactForm = document.getElementById('contact-form');
+    contactForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submit-btn');
+        handleGlobalClick(btn, null);
+        fetch("https://formsubmit.co/ajax/kontakt@lexord.de", {
+            method: "POST",
+            body: new FormData(contactForm),
+            headers: { 'Accept': 'application/json' }
+        }).then(() => {
+            setTimeout(() => {
+                document.getElementById('form-container').innerHTML = "<div style='text-align:center; padding:20px; color:var(--neon-blue)'>✓ NACHRICHT GESENDET</div>";
+            }, 2300);
+        });
+    });
+</script>
+</body>
+</html>

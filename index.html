@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEXORD™ // The Engineering Elite</title>
+    <style>
+        :root {
+            --neon-blue: #00f2ff;
+            --dark-bg: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
+        
+        body { 
+            background: var(--dark-bg); 
+            color: white; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+
+        header { padding: 40px 20px; text-align: center; width: 100%; }
+
+        /* Logo Animation & Design */
+        .logo-container {
+            width: 180px; height: 180px;
+            margin: 0 auto 20px;
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+        }
+
+        /* Der leuchtende Ring */
+        .logo-ring {
+            position: absolute;
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            background: linear-gradient(var(--dark-bg), var(--dark-bg)) padding-box,
+                        linear-gradient(to right, var(--neon-blue), #bc13fe) border-box;
+            box-shadow: 0 0 25px rgba(0, 242, 255, 0.2);
+            animation: rotateRing 10s linear infinite;
+        }
+
+        /* Das weiße animierte LEXORD-Logo (SVG) */
+        .logo-svg {
+            width: 110px;
+            height: auto;
+            z-index: 2;
+            fill: white;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+            animation: pulseLogo 3s ease-in-out infinite;
+        }
+
+        h1 { font-size: 1.8rem; letter-spacing: 5px; margin-top: 15px; text-transform: uppercase; }
+        .tagline { color: var(--neon-blue); font-size: 0.6rem; letter-spacing: 3px; margin-bottom: 30px; }
+
+        .sub-nav { display: flex; gap: 10px; margin-bottom: 25px; justify-content: center; }
+        .btn-small {
+            border: 1px solid #333; background: rgba(255,255,255,0.03);
+            padding: 10px 15px; font-size: 0.55rem; letter-spacing: 1px;
+            color: #aaa; text-decoration: none; text-transform: uppercase; border-radius: 2px;
+        }
+
+        .btn-google {
+            display: inline-block; background: #4285F4; color: white;
+            padding: 15px 30px; border-radius: 50px; font-weight: bold;
+            text-decoration: none; margin-bottom: 40px; font-size: 0.7rem;
+            animation: pulseBtn 2s infinite; letter-spacing: 1px;
+        }
+
+        .link-container { width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 12px; }
+
+        .card {
+            background: var(--glass); border: 1px solid var(--border);
+            padding: 20px; border-radius: 4px; text-decoration: none;
+            color: white; display: flex; justify-content: space-between; align-items: center;
+            transition: 0.3s;
+        }
+        .card:hover { border-color: var(--neon-blue); background: rgba(255,255,255,0.08); }
+
+        .card-text h3 { font-size: 0.85rem; letter-spacing: 1.5px; margin-bottom: 4px; text-transform: uppercase; }
+        .card-text p { font-size: 0.65rem; color: #666; font-family: sans-serif; }
+        .arrow { color: var(--neon-blue); font-size: 1rem; }
+
+        /* Formular & Impressum */
+        .feedback-section { width: 90%; max-width: 400px; margin-top: 40px; }
+        .feedback-card { background: #080808; padding: 20px; border-radius: 4px; border: 1px solid #1a1a1a; }
+        input, textarea { 
+            width: 100%; padding: 12px; margin: 8px 0; background: #000; 
+            border: 1px solid #222; color: white; border-radius: 2px; font-size: 0.75rem;
+        }
+        .btn-send { background: var(--neon-blue); color: #000; border: none; width: 100%; padding: 14px; font-weight: bold; cursor: pointer; font-size: 0.75rem; margin-top: 10px; }
+
+        .impressum-area { width: 90%; max-width: 400px; margin-top: 30px; text-align: center; }
+        .impressum-card-btn {
+            width: 100%; background: transparent; border: 1px solid #222;
+            padding: 15px; color: #444; font-size: 0.6rem; letter-spacing: 2px;
+            text-transform: uppercase; cursor: pointer; border-radius: 4px;
+        }
+        .impressum-content {
+            display: none; padding: 20px; margin-top: 10px; background: #0a0a0a;
+            border-radius: 4px; font-size: 0.7rem; color: #777; line-height: 1.6;
+            text-align: center; font-family: sans-serif; border: 1px solid #111;
+        }
+
+        /* Animationen */
+        @keyframes pulseLogo {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+        @keyframes rotateRing {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes pulseBtn {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.4); }
+            70% { transform: scale(1.03); box-shadow: 0 0 0 10px rgba(66, 133, 244, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(66, 133, 244, 0); }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header>
+    <div class="logo-container">
+        <div class="logo-ring"></div>
+        <svg class="logo-svg" viewBox="0 0 100 100">
+            <path d="M20,30 L80,30 L80,40 L35,40 L35,55 L75,55 L75,65 L35,65 L35,80 L80,80 L80,90 L20,90 Z" />
+            <circle cx="50" cy="15" r="5" fill="var(--neon-blue)" />
+        </svg>
+    </div>
+    <h1>LEXORD™</h1>
+    <p class="tagline">THE ENGINEERING ELITE</p>
+
+    <div class="sub-nav">
+        <a href="https://www.ebay.de/usr/lexord-de" class="btn-small">Pro-Zubehör</a>
+        <a href="https://wa.me/4915204718720" class="btn-small">Reparaturservice</a>
+    </div>
+</header>
+
+<a href="https://g.page/r/CQyRhiy7wS_DEAE/review" class="btn-google" target="_blank">⭐ JETZT BEWERTEN</a>
+
+<div class="link-container">
+    <a href="https://www.ebay.de/usr/lexord-de" class="card" target="_blank">
+        <div class="card-text">
+            <h3>Master-Collection</h3>
+            <p>High-End Controller & Zubehör.</p>
+        </div>
+        <div class="arrow">›</div>
+    </a>
+
+    <a href="https://www.instagram.com/lexord.de" class="card" target="_blank">
+        <div class="card-text">
+            <h3>Instagram</h3>
+            <p>Daily Builds & News.</p>
+        </div>
+        <div class="arrow">›</div>
+    </a>
+
+    <a href="https://www.tiktok.com/@lexord.de" class="card" target="_blank">
+        <div class="card-text">
+            <h3>Inside the Lab</h3>
+            <p>TikTok Repair-Sessions & Technik.</p>
+        </div>
+        <div class="arrow">›</div>
+    </a>
+
+    <a href="https://www.ebay.de/fdbk/leave_feedback?userid=lexord-de" class="card" target="_blank">
+        <div class="card-text">
+            <h3>eBay Feedback</h3>
+            <p>Bewertungen unserer Kunden.</p>
+        </div>
+        <div class="arrow">›</div>
+    </a>
+</div>
+
+<div class="feedback-section">
+    <div class="feedback-card">
+        <h3 style="font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 15px; color: #444; text-align: center;">SUPPORT & KONTAKT</h3>
+        <form action="https://formspree.io/f/DEINE_ID" method="POST">
+            <input type="text" name="name" placeholder="Name" required>
+            <textarea name="review" placeholder="Deine Nachricht..." rows="3" required></textarea>
+            <button type="submit" class="btn-send">ABSENDEN</button>
+        </form>
+    </div>
+</div>
+
+<div class="impressum-area">
+    <button class="impressum-card-btn" onclick="toggleImpressum()">Impressum anzeigen</button>
+    <div id="impressumBox" class="impressum-content">
+        <strong>Impressum</strong><br><br>
+        LEXORD™<br>
+        Leon Schulz<br>
+        An Der Domsühler Straße 2<br>
+        19374 Domsühl<br><br>
+        Kontakt: kontakt@lexord.de<br>
+        Telefon: +49 1520 47 18720<br><br>
+        Plattform der EU zur Online-Streitbeilegung:<br>
+        <a href="https://ec.europa.eu/consumers/odr" target="_blank" style="color: var(--neon-blue); text-decoration: none;">https://ec.europa.eu/consumers/odr</a>
+    </div>
+</div>
+
+<p style="margin-top: 40px; opacity: 0.2; font-size: 0.5rem; letter-spacing: 2px; text-align: center;">© 2026 LEXORD™ ALL RIGHTS RESERVED.</p>
+
+<script>
+    function toggleImpressum() {
+        var box = document.getElementById("impressumBox");
+        if (box.style.display === "none" || box.style.display === "") {
+            box.style.display = "block";
+            box.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            box.style.display = "none";
+        }
+    }
+</script>
+
+</body>
+</html>

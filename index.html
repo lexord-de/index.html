@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEXORD™ // The Engineering Elite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon-blue: #00f2ff; --neon-purple: #bc13fe; --dark-bg: #030303; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
+        body { background: var(--dark-bg); color: white; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
+        
+        /* Hintergrund Animation */
+        #particles-js { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: #000; }
+        
+        /* Header & Logo */
+        header { padding: 60px 20px 40px; text-align: center; z-index: 10; }
+        .logo-container { width: 180px; height: 180px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; position: relative; }
+        .logo-ring { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 2px solid transparent; background: linear-gradient(var(--dark-bg), var(--dark-bg)) padding-box, linear-gradient(45deg, var(--neon-blue), var(--neon-purple)) border-box; box-shadow: 0 0 30px rgba(0, 242, 255, 0.4); animation: rotateRing 12s linear infinite; }
+        .my-logo { width: 135px; z-index: 2; filter: drop-shadow(0 0 15px var(--neon-blue)); }
+
+        h1 { font-size: 1.8rem; letter-spacing: 6px; margin-top: 25px; text-transform: uppercase; text-shadow: 0 0 15px rgba(0, 242, 255, 0.5); }
+        .tagline { color: var(--neon-blue); font-size: 0.65rem; letter-spacing: 4px; margin-bottom: 45px; opacity: 0.8; }
+
+        /* Shop Bereich */
+        .shop-section { width: 95%; max-width: 450px; z-index: 10; margin-bottom: 50px; }
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .product-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 15px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s; }
+        .product-card:hover { border-color: var(--neon-blue); transform: translateY(-5px); }
+        .img-wrap { width: 100%; height: 120px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+        .product-card img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        h3 { font-size: 0.7rem; letter-spacing: 1px; margin: 5px 0; }
+        .price { color: var(--neon-blue); font-weight: bold; margin: 10px 0; display: block; font-size: 0.9rem; }
+        .buy-btn { background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 10px; border-radius: 8px; font-size: 0.6rem; text-decoration: none; text-transform: uppercase; font-weight: bold; }
+        .buy-btn:hover { background: var(--neon-blue); color: black; }
+
+        /* Impressum & Rechtliches */
+        .legal-section { width: 90%; max-width: 600px; background: rgba(255, 255, 255, 0.02); border-top: 1px solid rgba(0, 242, 255, 0.3); padding: 30px 20px; margin-top: 20px; z-index: 10; font-size: 0.7rem; line-height: 1.6; color: #aaa; border-radius: 15px 15px 0 0; }
+        .legal-section h2 { color: var(--neon-blue); font-size: 0.8rem; margin-bottom: 12px; letter-spacing: 2px; text-transform: uppercase; }
+        .legal-grid { display: grid; grid-template-columns: 1fr; gap: 25px; }
+        .legal-box { margin-bottom: 10px; }
+        .legal-box a { color: var(--neon-blue); text-decoration: none; }
+        
+        .copyright { color: #444; font-size: 0.55rem; letter-spacing: 3px; margin: 40px 0; z-index: 10; text-align: center; }
+        
+        @keyframes rotateRing { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @media (min-width: 400px) { .legal-grid { grid-template-columns: 1fr 1fr; } }
+    </style>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</head>
+<body>
+
+<div id="particles-js"></div>
+
+<header>
+    <div class="logo-container">
+        <div class="logo-ring"></div>
+        <img src="IMG_7023.png" alt="LEXORD Logo" class="my-logo">
+    </div>
+    <h1>LEXORD™</h1>
+    <p class="tagline">THE ENGINEERING ELITE</p>
+</header>
+
+<div class="shop-section">
+    <div class="product-grid">
+        <div class="product-card">
+            <div class="img-wrap"><img src="Stickzange.PNG" alt="Stickzange"></div>
+            <h3>Stickzange</h3>
+            <span class="price">5,95 €</span>
+            <a href="https://www.ebay.de/itm/127605871230" class="buy-btn">KAUFEN</a>
+        </div>
+
+        <div class="product-card">
+            <div class="img-wrap"><img src="PS5 PADDLE SYSTEM.jpg" alt="Paddle System"></div>
+            <h3>Paddle System</h3>
+            <span class="price">45,95 €</span>
+            <a href="https://www.ebay.de/itm/127554903259" class="buy-btn">KAUFEN</a>
+        </div>
+
+        <div class="product-card" style="grid-column: span 2; border: 1px solid var(--neon-blue);">
+            <div class="img-wrap" style="height: 150px;">
+                <img src="TMR STICK & HALL EFFECT BUNDLE.jpg" alt="TMR Bundle">
+            </div>
+            <h3 style="color: var(--neon-blue);">TMR STICK & HALL EFFECT BUNDLE</h3>
+            <span class="price">49,90 €</span>
+            <a href="https://www.ebay.de/usr/lexord-de" class="buy-btn" style="background: var(--neon-blue); color: #000;">JETZT SPAREN</a>
+        </div>
+    </div>
+</div>
+
+<div class="legal-section">
+    <div class="legal-grid">
+        <div class="legal-box">
+            <h2>Impressum</h2>
+            <p><strong>Lexord Engineering</strong><br>
+            Inhaber: [Dein Name]<br>
+            [Deine Straße]<br>
+            [PLZ] [Stadt]<br>
+            Deutschland</p>
+            <p>E-Mail: info@lexord.de</p>
+        </div>
+        <div class="legal-box">
+            <h2>Rechtliches</h2>
+            <p>Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz: [Deine USt-ID falls vorhanden]</p>
+            <p>Plattform der EU zur Online-Streitbeilegung: <a href="https://ec.europa.eu/consumers/odr" target="_blank">ec.europa.eu/consumers/odr</a></p>
+        </div>
+    </div>
+    <div class="legal-box" style="margin-top: 20px;">
+        <h2>Datenschutz & Widerruf</h2>
+        <p>Informationen zum Datenschutz und Ihr Widerrufsrecht finden Sie direkt in unseren eBay-Angeboten. Wir speichern auf dieser Website keine persönlichen Daten.</p>
+    </div>
+</div>
+
+<div class="copyright">LEXORD.DE 2026 // ALL RIGHTS RESERVED</div>
+
+<script>
+    particlesJS('particles-js', {
+        particles: {
+            number: { value: 60, density: { enable: true, value_area: 800 } },
+            color: { value: "#00f2ff" },
+            shape: { type: "circle" },
+            opacity: { value: 0.3, random: true },
+            size: { value: 2, random: true },
+            line_linked: { enable: true, distance: 150, color: "#00f2ff", opacity: 0.1, width: 1 },
+            move: { enable: true, speed: 1, direction: "none", random: true, straight: false, out_mode: "out" }
+        },
+        interactivity: {
+            detect_on: "canvas",
+            events: { onhover: { enable: true, mode: "grab" }, onclick: { enable: true, mode: "push" } }
+        },
+        retina_detect: true
+    });
+</script>
+</body>
+</html>

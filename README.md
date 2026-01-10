@@ -4,221 +4,144 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LEXORD // Beyond Standard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Inter:wght@200;700&display=swap');
-
         :root {
-            --black: #050505;
-            --accent: #ff003c;
-            --border: rgba(255, 255, 255, 0.08);
-            --glass: rgba(10, 10, 10, 0.7);
+            --neon-blue: #00f2ff;
+            --neon-purple: #bc13fe;
+            --dark-bg: #050505;
+            --glass: rgba(255, 255, 255, 0.03);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
         
-        body {
-            background-color: var(--black);
-            color: #fff;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
+        body { 
+            background: var(--dark-bg); 
+            color: white; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 0%, #1a1a2e 0%, #050505 100%);
         }
 
-        /* Ambient Background */
-        .bg-grid {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: 
-                linear-gradient(rgba(5, 5, 5, 0.8), rgba(5, 5, 5, 0.8)),
-                repeating-linear-gradient(0deg, transparent, transparent 48px, rgba(255, 255, 255, 0.03) 50px),
-                repeating-linear-gradient(90deg, transparent, transparent 48px, rgba(255, 255, 255, 0.03) 50px);
-            z-index: -1;
-        }
-
-        .scanner {
-            position: fixed; top: 0; left: 0; width: 100%; height: 3px;
-            background: var(--accent);
-            opacity: 0.3;
-            box-shadow: 0 0 20px var(--accent);
-            animation: scan 6s linear infinite;
-            z-index: 100;
-        }
-
-        @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
-
-        .wrapper { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-
+        /* Header Bereich */
         header {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            padding: 50px 20px;
             text-align: center;
         }
 
-        /* Das Logo wird hier perfekt integriert */
-        .logo-box img {
-            max-width: 400px;
-            width: 90%;
-            filter: drop-shadow(0 0 30px rgba(255, 0, 60, 0.2));
-            animation: pulse 4s ease-in-out infinite;
+        .logo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 20px var(--neon-blue);
+            margin-bottom: 20px;
+            object-fit: cover;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(255, 0, 60, 0.1)); }
-            50% { transform: scale(1.05); filter: drop-shadow(0 0 40px rgba(255, 0, 60, 0.4)); }
+        h1 { 
+            font-size: 2.2rem; 
+            letter-spacing: 5px; 
+            text-shadow: 0 0 10px var(--neon-blue);
+            margin-bottom: 5px;
         }
 
-        .hero-title {
-            font-family: 'Orbitron';
-            font-size: 0.7rem;
-            letter-spacing: 15px;
-            color: var(--accent);
-            margin-top: 20px;
-            text-transform: uppercase;
-        }
+        .tagline { color: var(--neon-purple); font-size: 0.8rem; margin-bottom: 30px; letter-spacing: 2px; }
 
-        /* Service Cards */
-        .main-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            margin-top: -100px;
-            padding-bottom: 100px;
-        }
+        /* Die Link-Container */
+        .link-tree { width: 90%; max-width: 450px; display: flex; flex-direction: column; gap: 15px; }
 
-        .card {
+        .link-item {
             background: var(--glass);
-            border: 1px solid var(--border);
-            padding: 50px;
-            backdrop-filter: blur(15px);
-            transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-
-        .card:hover {
-            border-color: var(--accent);
-            transform: translateY(-10px);
-            background: rgba(20, 20, 20, 0.9);
-            box-shadow: 0 20px 60px rgba(0,0,0,1);
-        }
-
-        .card h2 {
-            font-family: 'Orbitron';
-            font-size: 1rem;
-            letter-spacing: 4px;
-            margin-bottom: 30px;
-            color: #fff;
-            display: flex;
-            align-items: center;
-        }
-
-        .card h2::before {
-            content: ""; width: 8px; height: 8px; background: var(--accent); margin-right: 15px;
-        }
-
-        .list { list-style: none; }
-        .list li {
-            font-size: 0.9rem;
-            color: #999;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            transition: 0.3s;
-        }
-
-        .card:hover .list li { color: #fff; }
-
-        .list i { color: var(--accent); margin-right: 15px; width: 20px; text-align: center; }
-
-        /* Final Action */
-        .action-area {
-            padding: 150px 0;
-            text-align: center;
-        }
-
-        .btn-mega {
-            padding: 30px 80px;
-            background: transparent;
-            border: 1px solid var(--accent);
-            color: #fff;
-            font-family: 'Orbitron';
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 18px;
+            border-radius: 12px;
             text-decoration: none;
-            letter-spacing: 5px;
-            font-weight: 900;
-            position: relative;
-            transition: 0.5s;
-            overflow: hidden;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
         }
 
-        .btn-mega:hover {
-            background: var(--accent);
-            color: #000;
-            box-shadow: 0 0 50px var(--accent);
+        .link-item:hover {
+            border-color: var(--neon-blue);
+            transform: scale(1.03);
+            background: rgba(0, 242, 255, 0.05);
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
         }
 
-        footer {
-            padding: 50px;
-            text-align: center;
-            font-family: 'Orbitron';
-            font-size: 0.6rem;
-            letter-spacing: 5px;
-            opacity: 0.3;
+        .link-item span { font-size: 1.5rem; }
+        .link-text h3 { font-size: 1.1rem; }
+        .link-text p { font-size: 0.75rem; opacity: 0.6; }
+
+        /* Großer Kontakt Button */
+        .contact-btn {
+            margin-top: 30px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(188, 19, 254, 0.4);
         }
+
+        footer { margin-top: auto; padding: 40px; font-size: 0.6rem; opacity: 0.3; }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="bg-grid"></div>
-<div class="scanner"></div>
-
 <header>
-    <div class="logo-box">
-        <img src="logo.png" alt="LEXORD">
-    </div>
-    <div class="hero-title">Elite Modding Lab</div>
+    <img src="logo.png" alt="LEXORD Logo" class="logo" onerror="this.src='https://via.placeholder.com/150/000?text=LEXORD'">
+    <h1>LEXORD</h1>
+    <p class="tagline">CUSTOM CONTROLLERS & TECH REPAIR</p>
 </header>
 
-<div class="wrapper">
-    <div class="main-content">
-        <div class="card">
-            <h2>MODDING</h2>
-            <ul class="list">
-                <li><i class="fas fa-bolt"></i> Smart Trigger & Bumpers</li>
-                <li><i class="fas fa-microchip"></i> Hall Effect (Stick Drift Proof)</li>
-                <li><i class="fas fa-gamepad"></i> 4-Paddle Rear Systems</li>
-                <li><i class="fas fa-tachometer-alt"></i> Polling Rate Optimization</li>
-            </ul>
+<div class="link-tree">
+    <a href="#" class="link-item">
+        <span>🎮</span>
+        <div class="link-text">
+            <h3>Custom Controller</h3>
+            <p>Design & Performance Upgrades</p>
         </div>
+    </a>
 
-        <div class="card">
-            <h2>ENGINEERING</h2>
-            <ul class="list">
-                <li><i class="fas fa-tools"></i> Deep Cleaning & Maintenance</li>
-                <li><i class="fas fa-print"></i> 3D-Printed Custom Parts</li>
-                <li><i class="fas fa-vial"></i> Mechanical Diagnostics</li>
-                <li><i class="fas fa-plug"></i> Battery & Component Swap</li>
-            </ul>
+    <a href="#" class="link-item">
+        <span>🛠️</span>
+        <div class="link-text">
+            <h3>Reparatur Service</h3>
+            <p>Stick Drift & Button Fixes</p>
         </div>
+    </a>
 
-        <div class="card">
-            <h2>DESIGN</h2>
-            <ul class="list">
-                <li><i class="fas fa-palette"></i> Industrial Goth Aesthetics</li>
-                <li><i class="fas fa-fill-drip"></i> Soft-Touch Performance Grip</li>
-                <li><i class="fas fa-lightbulb"></i> Dynamic LED Integration</li>
-                <li><i class="fas fa-shield-alt"></i> Hard-Coat Protection</li>
-            </ul>
+    <a href="#" class="link-item">
+        <span>📦</span>
+        <div class="link-text">
+            <h3>Zubehör Shop</h3>
+            <p>Ersatzteile & Cases</p>
         </div>
-    </div>
+    </a>
 
-    <div class="action-area">
-        <a href="https://wa.me/DEINE_NUMMER?text=INITIALIZE_LEXORD_UNIT" class="btn-mega">KONFIGURIEREN</a>
-    </div>
+    <a href="#" class="link-item">
+        <span>📸</span>
+        <div class="link-text">
+            <h3>Instagram</h3>
+            <p>Check meine neuesten Builds</p>
+        </div>
+    </a>
 </div>
 
+<a href="https://wa.me/DEINE_NUMMER" class="contact-btn">Projekt anfragen</a>
+
 <footer>
-    LEXORD // PRECISION MODDING // EST. 2026
+    &copy; 2026 LEXORD. DEINE WERKE. DEIN STYLE.
 </footer>
 
 </body>
 </html>
+

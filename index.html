@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEXORD™ // OS v2.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <style>
+        :root { --n-blue: #00f2ff; --n-purple: #bc13fe; --bg: #020202; --card: rgba(10, 10, 10, 0.95); }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
+        
+        body { background: var(--bg); color: white; font-family: 'Orbitron', sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
+        #particles-js { position: fixed; inset: 0; z-index: -1; opacity: 0.3; }
+
+        /* --- HIGH-END SYSTEM LOADER (PURPLE) --- */
+        #redirect-loader {
+            position: fixed; inset: 0; background: radial-gradient(circle, #100015 0%, #000 100%); z-index: 10000;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .scanline {
+            width: 200px; height: 2px; background: var(--n-purple);
+            box-shadow: 0 0 20px var(--n-purple);
+            animation: scan 1.5s infinite ease-in-out;
+        }
+        .loader-brand { font-size: 1.5rem; letter-spacing: 15px; color: var(--n-purple); margin-bottom: 40px; text-shadow: 0 0 15px var(--n-purple); }
+
+        /* --- HEADER UI --- */
+        header { padding: 80px 20px 40px; text-align: center; }
+        .logo-main { width: 130px; filter: drop-shadow(0 0 20px var(--n-blue)); margin-bottom: 20px; animation: pulseGlow 4s infinite; }
+        h1 { font-size: 2rem; letter-spacing: 10px; font-weight: 900; background: linear-gradient(to right, #fff, var(--n-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* --- PRODUCT CARDS (SCANNABLE DESIGN) --- */
+        .grid { width: 92%; max-width: 500px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; z-index: 10; }
+        .card { 
+            background: var(--card); border: 1px solid rgba(255,255,255,0.05); border-radius: 5px; padding: 20px; 
+            position: relative; overflow: hidden; transition: 0.4s;
+        }
+        
+        /* Der "Scanner-Lichtstrahl" Effekt */
+        .card::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 242, 255, 0.05), transparent);
+            transform: rotate(45deg); transition: 0.8s;
+        }
+        .card:hover::before { left: 100%; top: 100%; }
+
+        .card:hover { 
+            border-color: var(--n-blue); 
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.15), inset 0 0 15px rgba(0, 242, 255, 0.05); 
+            transform: scale(1.03);
+        }
+
+        .card img { width: 100%; height: 100px; object-fit: contain; margin-bottom: 20px; transition: 0.5s; filter: grayscale(20%); }
+        .card:hover img { filter: grayscale(0%); transform: translateY(-5px); }
+
+        .price { font-size: 1.2rem; color: var(--n-blue); margin-bottom: 15px; text-shadow: 0 0 10px rgba(0, 242, 255, 0.3); }
+        .buy-btn { 
+            width: 100%; padding: 12px; background: transparent; border: 1px solid #333; color: white;
+            font-size: 0.6rem; letter-spacing: 3px; font-weight: 900; transition: 0.3s;
+        }
+        .buy-btn:hover { background: white; color: black; border-color: white; box-shadow: 0 0 20px white; }
+
+        /* --- INTERFACE LINKS --- */
+        .links-wrap { width: 92%; max-width: 500px; margin-top: 30px; display: flex; flex-direction: column; gap: 10px; }
+        .link-item { 
+            padding: 20px; background: rgba(255,255,255,0.01); border-left: 3px solid #111;
+            text-decoration: none; color: #888; display: flex; justify-content: space-between;
+            font-size: 0.7rem; transition: 0.3s; letter-spacing: 3px;
+        }
+        .link-item:hover { 
+            background: rgba(188, 19, 254, 0.05); border-left-color: var(--n-purple); 
+            color: white; padding-left: 30px; text-shadow: 0 0 10px var(--n-purple);
+        }
+
+        /* --- KEYFRAMES --- */
+        @keyframes scan { 0% { transform: translateY(-100px); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(100px); opacity: 0; } }
+        @keyframes pulseGlow { 0%, 100% { filter: drop-shadow(0 0 20px var(--n-blue)); } 50% { filter: drop-shadow(0 0 40px var(--n-blue)); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        footer { padding: 60px 20px; color: #222; font-size: 0.5rem; letter-spacing: 10px; }
+    </style>
+</head>
+<body>
+
+<div id="redirect-loader">
+    <div class="loader-brand">LEXORD™</div>
+    <div class="scanline"></div>
+    <p style="color: var(--n-purple); font-size: 0.5rem; letter-spacing: 5px; margin-top: 20px;">INITIALIZING SECURE PROTOCOL...</p>
+</div>
+
+<div id="particles-js"></div>
+
+<header>
+    <img src="IMG_7023.png" class="logo-main" alt="LEXORD">
+    <h1>LEXORD™</h1>
+    <p style="font-size: 0.5rem; color: var(--n-blue); letter-spacing: 8px; margin-top: 10px;">EST. 2026 // ENGINEERING OS</p>
+</header>
+
+<div class="grid">
+    <div class="card" onclick="startRedirect('https://www.ebay.de/itm/127605871230')">
+        <img src="Stickzange.PNG">
+        <p style="font-size: 0.5rem; margin-bottom: 10px; color: #555;">ID: #7023-ST-PR</p>
+        <div class="price">5,95 €</div>
+        <button class="buy-btn">ACQUIRE</button>
+    </div>
+    <div class="card" onclick="startRedirect('https://www.ebay.de/itm/127554903259')">
+        <img src="PADDLE SYSTEM.PNG">
+        <p style="font-size: 0.5rem; margin-bottom: 10px; color: #555;">ID: #9921-PD-V2</p>
+        <div class="price">45,95 €</div>
+        <button class="buy-btn">ACQUIRE</button>
+    </div>
+</div>
+
+<div class="links-wrap">
+    <a href="https://www.ebay.de/usr/lexord-de" class="link-item" onclick="startRedirect(this.href); return false;"><span>MAIN DATABASE</span><span>01</span></a>
+    <a href="https://www.tiktok.com/@lexord.de" class="link-item" onclick="startRedirect(this.href); return false;"><span>COMM L-04</span><span>02</span></a>
+    <a href="https://www.instagram.com/lexord.de" class="link-item" onclick="startRedirect(this.href); return false;"><span>VISUAL CORE</span><span>03</span></a>
+</div>
+
+<footer>CORE SYSTEM // ALL RIGHTS RESERVED</footer>
+
+<script>
+    particlesJS('particles-js', {
+        particles: { number: { value: 60 }, color: { value: '#00f2ff' }, opacity: { value: 0.2 }, size: { value: 1 }, line_linked: { enable: true, distance: 100, color: '#00f2ff', opacity: 0.1, width: 1 }, move: { speed: 1 } }
+    });
+
+    function startRedirect(url) {
+        const loader = document.getElementById('redirect-loader');
+        loader.style.display = 'flex';
+        
+        // Simuliert einen verschlüsselten Handshake (1.5 Sek)
+        setTimeout(() => {
+            window.location.href = url;
+        }, 1500);
+    }
+</script>
+</body>
+</html>

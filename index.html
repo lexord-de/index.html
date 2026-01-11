@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEXORD™ // ELITE INTERFACE v2.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/howler@2.2.3/dist/howler.min.js"></script>
+    <style>
+        :root { --neon: #00f2ff; --purple: #bc13fe; --bg: #000; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
+        
+        body { 
+            background: var(--bg); 
+            color: white; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+        }
+
+        /* --- DER KRASSESTE HINTERGRUND (GRID & NEBULA) --- */
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: radial-gradient(circle at center, #0a151a 0%, #000 100%); }
+        .grid-floor {
+            position: fixed; bottom: -50%; left: -50%; width: 200%; height: 100%;
+            background-image: linear-gradient(var(--neon) 1px, transparent 1px), linear-gradient(90deg, var(--neon) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: perspective(500px) rotateX(60deg);
+            opacity: 0.1;
+            animation: gridMove 2s linear infinite;
+            z-index: -1;
+        }
+        @keyframes gridMove { from { background-position: 0 0; } to { background-position: 0 50px; } }
+
+        /* --- OPTIMIERTE LADEANIMATION (MUST-SEE) --- */
+        #loader-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.95); z-index: 10000; 
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            backdrop-filter: blur(20px);
+        }
+        .ultra-loader { position: relative; width: 250px; height: 250px; }
+        .r-ring { position: absolute; border-radius: 50%; border: 3px solid transparent; width: 100%; height: 100%; border-top-color: var(--neon); animation: rotate 0.8s linear infinite; filter: drop-shadow(0 0 15px var(--neon)); }
+        .r-ring.inner { width: 80%; height: 80%; top: 10%; left: 10%; border-top-color: var(--purple); animation-duration: 1.2s; }
+        .loader-logo { position: absolute; top: 30%; left: 30%; width: 40%; animation: pulse 1s infinite; }
+
+        /* --- CONTENT CARDS --- */
+        header { padding: 60px 0; text-align: center; z-index: 10; }
+        .main-logo { width: 140px; filter: drop-shadow(0 0 30px var(--neon)); margin-bottom: 20px; }
+        
+        .grid { width: 90%; max-width: 500px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; z-index: 10; }
+        .card { 
+            background: rgba(5,5,5,0.8); border: 1px solid rgba(0,242,255,0.2); 
+            border-radius: 15px; padding: 20px; text-align: center; transition: 0.4s;
+            backdrop-filter: blur(10px);
+        }
+        .card:hover { border-color: var(--neon); transform: translateY(-5px); box-shadow: 0 0 30px rgba(0,242,255,0.2); }
+        .card img { width: 100%; height: 100px; object-fit: contain; margin-bottom: 10px; }
+
+        .config-module { width: 90%; max-width: 500px; margin-top: 40px; z-index: 10; background: rgba(5,5,5,0.9); border: 1px solid var(--purple); border-radius: 20px; padding: 30px; text-align: center; }
+        .config-preview { width: 100%; height: 180px; object-fit: contain; filter: drop-shadow(0 0 20px var(--neon)); transition: 0.5s; }
+        
+        .opt-btn { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #333; cursor: pointer; display: inline-block; margin: 10px; transition: 0.3s; }
+        .opt-btn.active { border-color: white; transform: scale(1.2); box-shadow: 0 0 15px var(--neon); }
+
+        .btn-elite { 
+            background: transparent; border: 1px solid var(--neon); color: var(--neon); 
+            width: 100%; padding: 12px; border-radius: 8px; font-weight: 900; 
+            cursor: pointer; letter-spacing: 2px; text-transform: uppercase; margin-top: 10px;
+        }
+
+        /* --- CONTACT & POPUP --- */
+        .contact-area { width: 90%; max-width: 500px; margin: 40px 0; z-index: 10; background: rgba(10,10,10,0.9); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        input, textarea { width: 100%; padding: 15px; margin-bottom: 10px; background: #000; border: 1px solid #222; color: white; border-radius: 8px; outline: none; }
+        .btn-send { background: linear-gradient(90deg, var(--neon), var(--purple)); color: #000; border: none; width: 100%; padding: 15px; font-weight: 900; border-radius: 8px; cursor: pointer; letter-spacing: 3px; }
+
+        #custom-alert { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); background: #000; border: 2px solid var(--neon); padding: 40px; z-index: 20000; border-radius: 20px; text-align: center; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        #custom-alert.active { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 50px var(--neon); }
+
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div id="bg-canvas"></div>
+<div class="grid-floor"></div>
+
+<div id="loader-overlay">
+    <div class="ultra-loader">
+        <div class="r-ring"></div>
+        <div class="r-ring inner"></div>
+        <img src="IMG_7023.png" class="loader-logo">
+    </div>
+    <p style="margin-top:30px; color:var(--neon); letter-spacing:5px; font-size:0.7rem;" id="status-text">SYNCING WITH EBAY CORE...</p>
+</div>
+
+<div id="custom-alert">
+    <h2 style="color:var(--neon); margin-bottom:10px;">SUCCESS</h2>
+    <p>TRANSMISSION RECEIVED.</p>
+    <button onclick="closeAlert()" style="background:var(--neon); color:black; border:none; padding:10px 20px; border-radius:5px; margin-top:20px; cursor:pointer; font-weight:900;">OK</button>
+</div>
+
+<div id="particles-js" style="position:fixed; width:100%; height:100%; z-index:-1;"></div>
+
+<header>
+    <img src="IMG_7023.png" class="main-logo">
+    <h1 style="letter-spacing:10px; font-size:1.8rem; text-shadow: 0 0 20px var(--neon);">LEXORD™</h1>
+</header>
+
+<div class="grid">
+    <div class="card">
+        <img src="Stickzange.PNG">
+        <p style="color:var(--neon); font-weight:900; margin-bottom:10px;">5,95 €</p>
+        <button class="btn-elite" onclick="secureRedirect('https://www.ebay.de/itm/127605871230')">ACCESS DATA</button>
+    </div>
+    <div class="card">
+        <img src="PADDLE SYSTEM.PNG">
+        <p style="color:var(--neon); font-weight:900; margin-bottom:10px;">45,95 €</p>
+        <button class="btn-elite" onclick="secureRedirect('https://www.ebay.de/itm/127554903259')">ACCESS DATA</button>
+    </div>
+</div>
+
+<div class="config-module">
+    <p style="color:var(--neon); font-size:0.6rem; letter-spacing:4px; margin-bottom:15px;">UNIT CONFIGURATOR</p>
+    <img src="ANTI STICKDRIFT BUNDLE.PNG" id="ctrl-preview" class="config-preview">
+    <div>
+        <div class="opt-btn active" style="background:#00f2ff;" onclick="changeCtrl('#00f2ff', 'ANTI STICKDRIFT BUNDLE.PNG', this)"></div>
+        <div class="opt-btn" style="background:#bc13fe;" onclick="changeCtrl('#bc13fe', 'PADDLE SYSTEM.PNG', this)"></div>
+    </div>
+    <button class="btn-elite" onclick="secureRedirect('https://www.ebay.de/usr/lexord-de')">ORDER CUSTOM UNIT</button>
+</div>
+
+<div class="contact-area" id="contact-container">
+    <form id="contact-form">
+        <input type="text" placeholder="OPERATOR NAME" required>
+        <input type="email" placeholder="SECURE EMAIL" required>
+        <textarea placeholder="PROTOCOL MESSAGE..." rows="3" required></textarea>
+        <button type="submit" class="btn-send">TRANSMIT</button>
+    </form>
+</div>
+
+<script>
+    particlesJS('particles-js', { particles: { number: { value: 60 }, color: { value: '#00f2ff' }, opacity: { value: 0.2 }, line_linked: { enable: true, opacity: 0.1 }, move: { speed: 1 } } });
+    
+    const uiClick = new Howl({ src: ['https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-click-900.mp3'], volume: 0.5 });
+
+    // DIE OPTIMIERTE REDIRECT LOGIK (ERST ANIMATION, DANN EBAY)
+    function secureRedirect(url) {
+        uiClick.play();
+        const loader = document.getElementById('loader-overlay');
+        const status = document.getElementById('status-text');
+        
+        loader.style.display = 'flex';
+        
+        // Sequenz-Text
+        setTimeout(() => status.innerText = "BYPASSING FIREWALL...", 600);
+        setTimeout(() => status.innerText = "ACCESS GRANTED.", 1200);
+        
+        // Erst nach 2 Sekunden wird eBay im neuen Tab geöffnet
+        setTimeout(() => {
+            window.open(url, '_blank');
+            // Loader ausblenden, nachdem der Tab geöffnet wurde
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => { loader.style.display='none'; loader.style.opacity='1'; status.innerText="SYNCING WITH EBAY CORE..."; }, 500);
+            }, 1000);
+        }, 2000);
+    }
+
+    function changeCtrl(color, img, btn) {
+        uiClick.play();
+        document.getElementById('ctrl-preview').src = img;
+        document.getElementById('ctrl-preview').style.filter = `drop-shadow(0 0 20px ${color})`;
+        document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function closeAlert() { document.getElementById('custom-alert').classList.remove('active'); }
+
+    document.getElementById('contact-form').addEventListener("submit", function(e) {
+        e.preventDefault();
+        uiClick.play();
+        this.style.opacity = '0.3';
+        this.style.pointerEvents = 'none';
+        
+        fetch("https://formsubmit.co/ajax/kontakt@lexord.de", { method: "POST", body: new FormData(this) })
+        .then(() => { 
+            document.getElementById('custom-alert').classList.add('active');
+            this.reset();
+            this.style.opacity = '1';
+            this.style.pointerEvents = 'all';
+        });
+    });
+</script>
+</body>
+</html>

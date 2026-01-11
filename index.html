@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LEXORD™ // OMEGA TERMINAL</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <style>
+        :root { --neon: #00f2ff; --purple: #bc13fe; --bg: #000; --google-blue: #4285F4; }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Orbitron', sans-serif; transform-style: preserve-3d; }
+        body { background: var(--bg); color: white; overflow-x: hidden; min-height: 100vh; }
+
+        /* --- HACKER BOOT LOADER --- */
+        #loader-overlay {
+            position: fixed; inset: 0; background: #000; z-index: 1000000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .loader-logo { width: 90px; filter: drop-shadow(0 0 20px var(--neon)); margin-bottom: 25px; }
+        .scan-line { width: 250px; height: 2px; background: var(--neon); box-shadow: 0 0 20px var(--neon); position: relative; overflow: hidden; }
+        .scan-anim { position: absolute; inset: 0; background: #fff; animation: scan 1.5s infinite; }
+        .loader-msg { font-family: 'Share Tech Mono', monospace; color: var(--neon); margin-top: 15px; font-size: 0.75rem; letter-spacing: 4px; }
+
+        /* --- PERFORMANCE BACKGROUND --- */
+        #particles-js { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+        .parallax-bg { position: fixed; inset: -5%; z-index: -2; background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%); will-change: transform; }
+        .grid-3d { position: absolute; bottom: 0; left: -50%; width: 200%; height: 100%; background-image: linear-gradient(rgba(0,242,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(0,242,255,0.08) 1px, transparent 1px); background-size: 50px 50px; transform: rotateX(75deg); }
+
+        /* --- UI STRUCTURE --- */
+        #ui-wrapper { opacity: 0; visibility: hidden; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
+        
+        header { text-align: center; margin-bottom: 40px; }
+        .logo-main { width: 120px; filter: drop-shadow(0 0 30px var(--neon)); margin-bottom: 10px; }
+        .brand { font-size: 2.5rem; letter-spacing: 15px; font-weight: 900; text-transform: uppercase; }
+
+        /* --- ACTION HUB --- */
+        .social-bar { display: flex; gap: 20px; margin-bottom: 40px; }
+        .s-btn { width: 55px; height: 55px; border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); transition: 0.4s; text-decoration: none; }
+        .s-btn:hover { border-color: var(--neon); box-shadow: 0 0 25px var(--neon); transform: translateY(-5px); }
+        .s-btn img { width: 25px; filter: invert(1); }
+
+        .btn-google { background: var(--google-blue); color: white; padding: 20px 40px; border-radius: 50px; font-weight: 900; text-decoration: none; margin-bottom: 20px; animation: pulse 2s infinite; font-size: 0.85rem; border: none; letter-spacing: 2px; cursor: pointer; }
+        .btn-ebay { background: linear-gradient(45deg, #4285f4, #34a853, #fbbc05, #ea4335); color: white; padding: 22px 50px; border-radius: 50px; font-weight: 900; text-decoration: none; letter-spacing: 4px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); transition: 0.4s; margin-bottom: 50px; display: block; text-align: center; }
+        .btn-ebay:hover { transform: scale(1.05); box-shadow: 0 0 30px var(--neon); }
+
+        /* --- PRODUCT TILES --- */
+        .p-grid { width: 100%; max-width: 600px; display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .p-card { background: rgba(15,15,15,0.9); border: 1px solid rgba(255,255,255,0.08); padding: 30px; border-radius: 25px; text-align: center; backdrop-filter: blur(15px); }
+        .p-card img { width: 100%; height: 140px; object-fit: contain; margin-bottom: 20px; }
+        .p-card h3 { font-size: 0.7rem; color: var(--neon); letter-spacing: 3px; margin-bottom: 10px; }
+        .p-btn { border: 1px solid var(--neon); color: var(--neon); padding: 12px; font-size: 0.7rem; font-weight: 900; text-decoration: none; display: block; border-radius: 8px; transition: 0.3s; }
+        .p-btn:hover { background: var(--neon); color: #000; }
+
+        /* --- TERMINAL FORM --- */
+        .terminal { width: 100%; max-width: 600px; background: rgba(5,5,5,0.95); border: 1px solid var(--purple); padding: 40px; border-radius: 30px; margin-top: 60px; }
+        .terminal h2 { font-size: 0.9rem; color: var(--purple); text-align: center; letter-spacing: 6px; margin-bottom: 30px; }
+        input, textarea { width: 100%; background: #000; border: 1px solid #333; color: white; padding: 20px; margin-bottom: 15px; border-radius: 10px; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--neon); }
+        .send-btn { width: 100%; background: var(--purple); color: white; padding: 20px; border: none; font-weight: 900; letter-spacing: 5px; border-radius: 10px; cursor: pointer; }
+
+        /* --- LEGAL GLASS BOX (VOLLSTÄNDIG) --- */
+        .impressum-glass { 
+            width: 100%; max-width: 600px; margin-top: 80px; 
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 25px; padding: 40px; text-align: center; backdrop-filter: blur(10px);
+        }
+        .impressum-glass h4 { font-size: 0.8rem; letter-spacing: 8px; color: #555; margin-bottom: 25px; }
+        .legal-text { font-size: 0.75rem; color: #aaa; line-height: 2.2; font-family: 'Share Tech Mono', monospace; }
+
+        footer { margin: 60px 0; font-size: 0.75rem; color: #444; letter-spacing: 5px; }
+
+        @keyframes scan { 0% { left: -100%; } 100% { left: 100%; } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(66,133,244,0.6); } 100% { transform: scale(1); } }
+    </style>
+</head>
+<body>
+
+<div id="loader-overlay">
+    <img src="IMG_7023.png" class="loader-logo">
+    <div class="scan-line"><div class="scan-anim"></div></div>
+    <div class="loader-msg" id="st">ENCRYPTING LEXORD OMEGA CORE...</div>
+</div>
+
+<div class="parallax-bg" id="pbg"><div class="grid-3d"></div></div>
+<div id="particles-js"></div>
+
+<div id="ui-wrapper">
+    <header>
+        <img src="IMG_7023.png" class="logo-main">
+        <h1 class="brand">LEXORD</h1>
+    </header>
+
+    <div class="social-bar">
+        <a href="https://www.tiktok.com/@lexord.de" target="_blank" class="s-btn"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png"></a>
+        <a href="https://www.instagram.com/lexord.de" target="_blank" class="s-btn"><img src="https://cdn-icons-png.flaticon.com/512/174/174855.png"></a>
+        <a href="https://wa.me/4915204718720" target="_blank" class="s-btn" style="border-color:#25D366;"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png"></a>
+    </div>
+
+    <a href="https://g.page/r/CQyRhiy7wS_DEAE/review" class="btn-google" target="_blank">⭐ JETZT AUF GOOGLE BEWERTEN</a>
+    <a href="https://www.ebay.de/usr/lexord-de" class="btn-ebay" target="_blank">ZUM OFFIZIELLEN EBAY SHOP</a>
+
+    <div class="p-grid">
+        <div class="p-card">
+            <h3>STICK-ZANGE</h3>
+            <img src="Stickzange.PNG">
+            <a href="https://www.ebay.de/itm/127605871230" class="p-btn" target="_blank">5,95 € - KAUFEN</a>
+        </div>
+        <div class="p-card">
+            <h3>PADDLE-SYSTEM</h3>
+            <img src="PADDLE SYSTEM.PNG">
+            <a href="https://www.ebay.de/itm/127554903259" class="p-btn" target="_blank">45,95 € - UPGRADE</a>
+        </div>
+    </div>
+
+    <div class="terminal">
+        <h2>KONTAKT TERMINAL</h2>
+        <form onsubmit="event.preventDefault(); alert('Übertragung erfolgreich verschlüsselt.');">
+            <input type="text" placeholder="NAME / CALLSIGN" required>
+            <input type="email" placeholder="E-MAIL ADRESSE" required>
+            <textarea placeholder="DEINE NACHRICHT..." rows="5" required></textarea>
+            <button type="submit" class="send-btn">DATEN SENDEN</button>
+        </form>
+    </div>
+
+    <div class="impressum-glass">
+        <h4>IMPRESSUM</h4>
+        <div class="legal-text">
+            <strong>LEXORD ® // Professional Controller Services</strong><br>
+            Inhaber: Alexander L.<br>
+            Musterstraße 1<br>
+            12345 Musterstadt<br><br>
+            <strong>KONTAKT:</strong><br>
+            E-Mail: info@lexord.de<br>
+            Tel: +49 1520 4718720<br><br>
+            <span style="color:var(--neon)">WWW.LEXORD.DE</span>
+        </div>
+    </div>
+
+    <footer>
+        LEXORD 2026 // ALL RIGHTS RESERVED
+    </footer>
+</div>
+
+<script>
+    // 120FPS GPU ENGINE
+    let ticking = false;
+    document.addEventListener('mousemove', e => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                const x = (window.innerWidth / 2 - e.clientX) / 65;
+                const y = (window.innerHeight / 2 - e.clientY) / 65;
+                document.getElementById('pbg').style.transform = `translate3d(${x}px, ${y}px, 0)`;
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+
+    // MASTER BOOT SEQUENCE
+    window.onload = () => {
+        const st = document.getElementById('st');
+        setTimeout(() => { st.innerText = "BYPASSING ANALYTICS..."; }, 1000);
+        setTimeout(() => { st.innerText = "120FPS STABLE. READY."; }, 2000);
+
+        setTimeout(() => {
+            gsap.to("#loader-overlay", { duration: 1, opacity: 0, display: "none", ease: "power4.inOut" });
+            gsap.set("#ui-wrapper", { visibility: "visible" });
+            gsap.to("#ui-wrapper", { duration: 1.2, opacity: 1, y: 0, force3D: true, ease: "expo.out" });
+        }, 3000);
+    };
+
+    particlesJS('particles-js', {
+        particles: {
+            number: { value: 60, density: { enable: true, value_area: 800 } },
+            color: { value: '#00f2ff' },
+            opacity: { value: 0.2 },
+            size: { value: 2 },
+            line_linked: { enable: true, distance: 150, color: '#00f2ff', opacity: 0.1, width: 1 },
+            move: { enable: true, speed: 1.2, out_mode: "out" }
+        }
+    });
+</script>
+</body>
+</html>

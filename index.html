@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEXORD™ // THE ENGINEERING ELITE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/howler@2.2.3/dist/howler.min.js"></script>
+    <style>
+        :root { --neon: #00f2ff; --purple: #bc13fe; --bg: #000000; --card-bg: rgba(5, 5, 5, 0.9); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
+        
+        body { background: var(--bg); color: white; min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; align-items: center; }
+        #particles-js { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+
+        /* --- THE UNBEATABLE ELITE LOADER --- */
+        #loader-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #050505 0%, #000 100%);
+            z-index: 10000; display: none; flex-direction: column; align-items: center; justify-content: center;
+            backdrop-filter: blur(15px);
+        }
+        .ultra-loader { position: relative; width: 280px; height: 280px; transform: scale(0.9); }
+        .r-ring { position: absolute; border-radius: 50%; border: 2px solid transparent; }
+        .r1 { width: 100%; height: 100%; border-top: 4px solid var(--neon); animation: rotate 0.7s linear infinite; filter: drop-shadow(0 0 20px var(--neon)); }
+        .r2 { width: 82%; height: 82%; top: 9%; left: 9%; border-left: 2px solid var(--purple); animation: rotate 1.1s linear infinite reverse; opacity: 0.7; }
+        .r3 { width: 64%; height: 64%; top: 18%; left: 18%; border-bottom: 2px solid var(--neon); animation: rotate 1.8s linear infinite; opacity: 0.5; }
+        .loader-logo { position: absolute; top: 25%; left: 25%; width: 50%; filter: drop-shadow(0 0 25px var(--neon)); animation: holoGlitch 0.2s infinite alternate; }
+        .scanner-line { position: absolute; width: 120%; height: 2px; background: linear-gradient(90deg, transparent, var(--neon), transparent); box-shadow: 0 0 30px var(--neon); animation: scanMove 2.2s infinite ease-in-out; left: -10%; }
+        .loader-text { margin-top: 60px; font-size: 0.75rem; letter-spacing: 12px; color: var(--neon); text-transform: uppercase; text-shadow: 0 0 10px var(--neon); }
+
+        /* --- MAIN CONTENT UI --- */
+        header { padding: 80px 20px 40px; text-align: center; z-index: 10; }
+        .main-logo { width: 160px; filter: drop-shadow(0 0 40px var(--neon)); margin-bottom: 25px; animation: pulse 5s infinite ease-in-out; }
+        h1 { font-size: 2.5rem; letter-spacing: 14px; font-weight: 900; background: linear-gradient(to right, #fff, var(--neon), #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .grid { width: 92%; max-width: 480px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; z-index: 10; margin-top: 30px; }
+        .card { 
+            background: var(--card-bg); border: 1px solid rgba(0,242,255,0.1); 
+            border-radius: 20px; padding: 25px; text-align: center; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; overflow: hidden; backdrop-filter: blur(10px);
+        }
+        .card:hover { border-color: var(--neon); transform: translateY(-12px); box-shadow: 0 15px 45px rgba(0,242,255,0.2); }
+        .card img { max-width: 100%; height: 110px; object-fit: contain; margin-bottom: 15px; transition: 0.4s; }
+        .card:hover img { transform: scale(1.08); filter: drop-shadow(0 0 15px var(--neon)); }
+        
+        .price { color: var(--neon); font-size: 1.1rem; font-weight: 900; display: block; margin-bottom: 18px; letter-spacing: 2px; }
+        .btn-elite { 
+            background: transparent; border: 1px solid var(--neon); color: var(--neon); 
+            width: 100%; padding: 14px; border-radius: 10px; font-weight: 900; font-size: 0.65rem; 
+            cursor: pointer; text-transform: uppercase; letter-spacing: 3px; transition: 0.3s;
+        }
+        .btn-elite:hover { background: var(--neon); color: black; box-shadow: 0 0 30px var(--neon); }
+
+        /* --- CONTACT SECTION UPDATED --- */
+        .contact-area { 
+            width: 92%; max-width: 480px; margin-top: 60px; z-index: 10; 
+            background: rgba(10,10,10,0.8); padding: 35px; border-radius: 25px; 
+            border: 1px solid rgba(255,255,255,0.05); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        /* Krasser Sende-Effekt */
+        .contact-area.sending { transform: scale(0.9) rotateX(10deg); filter: blur(2px) brightness(0.5); pointer-events: none; }
+        
+        input, textarea { width: 100%; padding: 18px; margin-bottom: 15px; background: #000; border: 1px solid #222; color: white; border-radius: 12px; outline: none; font-size: 0.8rem; transition: 0.3s; }
+        input:focus, textarea:focus { border-color: var(--neon); box-shadow: 0 0 15px rgba(0,242,255,0.2); }
+        
+        .btn-send { 
+            background: linear-gradient(90deg, var(--neon), var(--purple)); color: black; 
+            border: none; width: 100%; padding: 18px; font-weight: 900; border-radius: 12px; 
+            cursor: pointer; letter-spacing: 5px; position: relative; overflow: hidden;
+        }
+        .btn-send.loading::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.3); animation: btnLoad 1.5s infinite;
+        }
+
+        /* CUSTOM CYBER POPUP */
+        #custom-alert {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            background: rgba(0,0,0,0.95); border: 2px solid var(--neon); padding: 40px;
+            z-index: 20000; border-radius: 20px; text-align: center; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #custom-alert.active { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 60px var(--neon); }
+
+        /* --- FOOTER & LEGAL --- */
+        .footer { padding: 80px 0; text-align: center; z-index: 10; width: 100%; }
+        .legal-btn { background: none; border: none; color: #444; cursor: pointer; font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 20px; transition: 0.3s; }
+        .legal-btn:hover { color: var(--neon); }
+        .imp-content { display: none; background: #050505; padding: 30px; border: 1px solid #111; border-radius: 20px; margin: 20px auto; width: 90%; max-width: 440px; text-align: left; font-size: 0.8rem; line-height: 1.8; color: #777; }
+        .copyright { color: #222; font-size: 0.65rem; letter-spacing: 5px; margin-top: 25px; text-transform: uppercase; }
+
+        /* --- ANIMATIONS --- */
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes scanMove { 0%, 100% { top: 10%; opacity: 0; } 50% { top: 90%; opacity: 1; } }
+        @keyframes holoGlitch { 0% { transform: translate(0) skew(0); } 20% { transform: translate(-2px, 1px); filter: hue-rotate(45deg); } 40% { transform: translate(2px, -1px); } 100% { transform: translate(0); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 40px var(--neon)); } 50% { transform: scale(1.05); filter: drop-shadow(0 0 60px var(--neon)); } }
+        @keyframes btnLoad { 0% { left: -100%; } 100% { left: 100%; } }
+    </style>
+</head>
+<body>
+
+<div id="loader-overlay">
+    <div class="ultra-loader">
+        <div class="r-ring r1"></div><div class="r-ring r2"></div><div class="r-ring r3"></div>
+        <div class="scanner-line"></div>
+        <img src="IMG_7023.png" class="loader-logo">
+    </div>
+    <p class="loader-text" id="status-text">INITIALIZING...</p>
+</div>
+
+<div id="custom-alert">
+    <h2 style="color:var(--neon); margin-bottom:10px; font-size:0.9rem;">SYSTEM STATUS</h2>
+    <p id="alert-text">PROTOCOL TRANSMITTED SUCCESSFUL.</p>
+    <button onclick="closeAlert()" style="background:var(--neon); color:black; border:none; padding:10px 20px; border-radius:5px; font-weight:900; margin-top:20px; cursor:pointer;">DISMISS</button>
+</div>
+
+<div id="particles-js"></div>
+
+<header>
+    <img src="IMG_7023.png" class="main-logo">
+    <h1>LEXORD™</h1>
+    <p style="color: var(--neon); font-size: 0.65rem; letter-spacing: 7px; margin-top: 15px;">ADVANCED CONTROLLER ENGINEERING</p>
+</header>
+
+<div class="grid">
+    <div class="card">
+        <img src="Stickzange.PNG">
+        <h3 style="font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 10px;">STICKZANGE</h3>
+        <span class="price">5,95 €</span>
+        <button class="btn-elite" onclick="runEliteSystem('https://www.ebay.de/itm/127605871230')">ACCESS DATA</button>
+    </div>
+    <div class="card">
+        <img src="PADDLE SYSTEM.PNG">
+        <h3 style="font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 10px;">PADDLE SYSTEM</h3>
+        <span class="price">45,95 €</span>
+        <button class="btn-elite" onclick="runEliteSystem('https://www.ebay.de/itm/127554903259')">ACCESS DATA</button>
+    </div>
+    <div class="card" style="grid-column: span 2; border: 1px solid var(--purple);">
+        <img src="ANTI STICKDRIFT BUNDLE.PNG" style="height: 140px;">
+        <h3 style="color: var(--purple); font-size: 0.85rem; letter-spacing: 5px; margin-bottom: 12px;">ANTI-DRIFT CORE BUNDLE</h3>
+        <span class="price">49,90 €</span>
+        <button class="btn-elite" style="border-color: var(--purple); color: var(--purple);" onclick="runEliteSystem('https://www.ebay.de/usr/lexord-de')">ACCESS GLOBAL SHOP</button>
+    </div>
+</div>
+
+<div class="contact-area" id="contact-container">
+    <form id="contact-form">
+        <input type="text" name="name" placeholder="NAME / IDENTITÄT" required>
+        <input type="email" name="email" placeholder="SECURE E-MAIL" required>
+        <textarea name="message" placeholder="ANFRAGE AN DAS SYSTEM..." rows="4" required></textarea>
+        <button type="submit" class="btn-send" id="send-btn">SEND PROTOCOL</button>
+    </form>
+</div>
+
+<div class="footer">
+    <button class="legal-btn" onclick="toggleLegal()">IMPRESSUM / LEGAL</button>
+    <div id="legal-box" class="imp-content">
+        <strong>LEXORD™ ENGINEERING</strong><br>
+        Betreiber: Leon Schulz<br>
+        An Der Domsühler Straße 2<br>
+        19374 Domsühl<br><br>
+        <strong>KONTAKT</strong><br>
+        Mobil: 0152 04718720<br>
+        E-Mail: kontakt@lexord.de
+    </div>
+    <p class="copyright">LEXORD.DE © 2025 ALL RIGHTS RESERVED // ELITE ARCHITECTURE</p>
+</div>
+
+<script>
+    particlesJS('particles-js', {
+        particles: { number: { value: 100 }, color: { value: '#00f2ff' }, opacity: { value: 0.2 }, line_linked: { enable: true, opacity: 0.1 }, move: { speed: 1.2 } }
+    });
+
+    const uiClick = new Howl({ src: ['https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-click-900.mp3'], volume: 0.4 });
+
+    function runEliteSystem(url) {
+        uiClick.play();
+        const loader = document.getElementById('loader-overlay');
+        const status = document.getElementById('status-text');
+        loader.style.display = 'flex';
+        window.open(url, '_blank');
+        const sequence = ["LINKING...", "DECRYPTING DATA...", "ACCESS GRANTED", "REDIRECTING..."];
+        let step = 0;
+        let seqInt = setInterval(() => { if(step < sequence.length) status.innerText = sequence[step++]; }, 650);
+        setTimeout(() => {
+            clearInterval(seqInt);
+            loader.style.opacity = '0';
+            setTimeout(() => { loader.style.display = 'none'; loader.style.opacity = '1'; status.innerText = "INITIALIZING..."; }, 500);
+        }, 2800);
+    }
+
+    function toggleLegal() { const box = document.getElementById('legal-box'); box.style.display = box.style.display === 'block' ? 'none' : 'block'; }
+    function closeAlert() { document.getElementById('custom-alert').classList.remove('active'); }
+
+    // KRASSE KONTAKT LOGIK
+    document.getElementById('contact-form').addEventListener("submit", function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('send-btn');
+        const container = document.getElementById('contact-container');
+        
+        btn.classList.add('loading');
+        btn.innerText = "TRANSMITTING...";
+        container.classList.add('sending');
+
+        fetch("https://formsubmit.co/ajax/kontakt@lexord.de", { method: "POST", body: new FormData(this) })
+        .then(() => { 
+            container.classList.remove('sending');
+            btn.classList.remove('loading');
+            btn.innerText = "SEND PROTOCOL";
+            document.getElementById('custom-alert').classList.add('active');
+            uiClick.play();
+            this.reset();
+        });
+    });
+</script>
+</body>
+</html>

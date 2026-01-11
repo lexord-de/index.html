@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LEXORD™ // OMEGA 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/howler@2.2.3/dist/howler.min.js"></script>
+    <style>
+        :root { --neon: #00f2ff; --purple: #bc13fe; --bg: #000; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Orbitron', sans-serif; cursor: none; }
+        
+        body { background: var(--bg); color: white; min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; perspective: 1000px; }
+
+        /* --- BACKGROUND --- */
+        #parallax-world { position: fixed; inset: -50px; z-index: -2; background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); transition: transform 0.2s ease-out; }
+        #particles-js { position: absolute; inset: 0; }
+        .grid-3d { position: absolute; bottom: 0; left: -50%; width: 200%; height: 100%; background-image: linear-gradient(var(--neon) 1px, transparent 1px), linear-gradient(90deg, var(--neon) 1px, transparent 1px); background-size: 30px 30px; transform: rotateX(70deg); opacity: 0.1; }
+
+        /* --- MOUSE / TOUCH HUD --- */
+        #cursor { position: fixed; width: 20px; height: 20px; border: 1px solid var(--neon); border-radius: 50%; pointer-events: none; z-index: 10000; transform: translate(-50%, -50%); mix-blend-mode: screen; }
+        @media (max-width: 768px) { #cursor { display: none; } * { cursor: auto; } }
+
+        /* --- ANTI-BLOCK LOADER --- */
+        #loader-overlay { position: fixed; inset: 0; background: #000; z-index: 100000; display: none; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.4s; }
+        #loader-overlay.active { display: flex; opacity: 1; }
+        .ring-box { position: relative; width: 120px; height: 120px; border: 2px solid transparent; border-top-color: var(--neon); border-radius: 50%; animation: spin 1s linear infinite; }
+        .loader-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 45px; filter: drop-shadow(0 0 10px var(--neon)); }
+
+        /* --- UI CONTENT --- */
+        #ui-scroller { width: 100%; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding: 30px 15px; position: relative; z-index: 10; }
+        header { text-align: center; margin-bottom: 25px; }
+        .logo-main { width: 85px; filter: drop-shadow(0 0 15px var(--neon)); margin-bottom: 10px; }
+        .glitch-title { font-size: 1.5rem; letter-spacing: 8px; font-weight: 900; text-shadow: 2px 0 var(--neon); }
+
+        /* --- CARDS --- */
+        .grid { width: 100%; max-width: 450px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .card { 
+            background: rgba(10,10,10,0.95); border: 1px solid rgba(0,242,255,0.1); 
+            padding: 12px; text-align: center; backdrop-filter: blur(10px); 
+            transform-style: preserve-3d; transition: transform 0.3s, border-color 0.3s;
+            clip-path: polygon(0 0, 92% 0, 100% 8%, 100% 100%, 8% 100%, 0 92%);
+        }
+        .card img { width: 100%; height: 85px; object-fit: contain; transform: translateZ(20px); transition: 0.3s; }
+        .card h3 { font-size: 0.5rem; color: var(--neon); margin: 8px 0; letter-spacing: 1px; }
+        .price { font-size: 0.75rem; font-weight: 900; margin-bottom: 8px; }
+
+        .btn-apex { background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 8px; width: 100%; font-size: 0.55rem; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; }
+        .btn-apex:hover { background: var(--neon); color: #000; box-shadow: 0 0 15px var(--neon); }
+
+        /* --- CONFIG --- */
+        .config-box { width: 100%; max-width: 450px; margin-top: 25px; padding: 20px; background: rgba(5,5,5,0.95); border: 1px solid var(--purple); text-align: center; }
+        .config-preview { width: 100%; height: 150px; object-fit: contain; filter: drop-shadow(0 0 20px var(--neon)); }
+
+        /* --- FOOTER --- */
+        footer { margin-top: auto; padding: 40px 20px; text-align: center; font-size: 0.6rem; color: #333; letter-spacing: 2px; }
+
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="parallax-world">
+    <div id="particles-js"></div>
+    <div class="grid-3d"></div>
+</div>
+
+<div id="loader-overlay">
+    <div class="ring-box"><img src="IMG_7023.png" class="loader-logo"></div>
+    <p id="status-text" style="margin-top:20px; color:var(--neon); font-size:0.5rem; letter-spacing:4px;">CONNECTING...</p>
+</div>
+
+<div id="ui-scroller">
+    <header>
+        <img src="IMG_7023.png" class="logo-main">
+        <div class="glitch-title">LEXORD</div>
+    </header>
+
+    <div class="grid">
+        <div class="card" data-tilt>
+            <h3>STICK-TOOL</h3>
+            <img src="Stickzange.PNG">
+            <div class="price">5,95 €</div>
+            <button class="btn-apex" onclick="secureNav('https://www.ebay.de/itm/127605871230')">GET IT</button>
+        </div>
+        <div class="card" data-tilt>
+            <h3>PADDLE-CORE</h3>
+            <img src="PADDLE SYSTEM.PNG">
+            <div class="price">45,95 €</div>
+            <button class="btn-apex" onclick="secureNav('https://www.ebay.de/itm/127554903259')">UPGRADE</button>
+        </div>
+    </div>
+
+    <div class="config-box">
+        <h3 style="font-size:0.55rem; color:var(--purple); letter-spacing:4px; margin-bottom:15px;">STABILIZER SYSTEM</h3>
+        <img src="ANTI STICKDRIFT BUNDLE.PNG" id="v-view" class="config-preview">
+        <div style="margin: 15px 0;">
+            <div onclick="upd('#00f2ff','ANTI STICKDRIFT BUNDLE.PNG')" style="width:25px; height:25px; background:var(--neon); display:inline-block; margin:0 8px; border:1px solid #fff;"></div>
+            <div onclick="upd('#bc13fe','PADDLE SYSTEM.PNG')" style="width:25px; height:25px; background:var(--purple); display:inline-block; margin:0 8px; border:1px solid #fff;"></div>
+        </div>
+        <button class="btn-apex" style="border-color:var(--purple); color:var(--purple);" onclick="secureNav('https://www.ebay.de/usr/lexord-de')">CONFIGURE</button>
+    </div>
+
+    <footer>
+        <p>Lexord 2025 all right reserved</p>
+    </footer>
+</div>
+
+<script>
+    // PARTICLE & SOUND
+    particlesJS('particles-js', { particles: { number: { value: 60 }, color: { value: '#00f2ff' }, opacity: { value: 0.2 }, line_linked: { enable: true, opacity: 0.1 }, move: { speed: 1 } } });
+    const snd = new Howl({ src: ['https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-click-900.mp3'], volume: 0.2 });
+
+    // PARALLAX & TILT
+    document.addEventListener('mousemove', e => {
+        const cur = document.getElementById('cursor');
+        if(cur) { cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px'; }
+        let x = (window.innerWidth / 2 - e.clientX) / 60;
+        let y = (window.innerHeight / 2 - e.clientY) / 60;
+        document.getElementById('parallax-world').style.transform = `translateX(${x}px) translateY(${y}px)`;
+    });
+
+    if(window.innerWidth > 768) {
+        document.querySelectorAll('[data-tilt]').forEach(el => {
+            el.addEventListener('mousemove', e => {
+                let r = el.getBoundingClientRect();
+                let x = (e.clientX - r.left) / r.width - 0.5;
+                let y = (e.clientY - r.top) / r.height - 0.5;
+                el.style.transform = `rotateX(${y * -20}deg) rotateY(${x * 20}deg)`;
+            });
+            el.addEventListener('mouseleave', () => el.style.transform = 'rotateX(0) rotateY(0)');
+        });
+    }
+
+    // --- SECURE NAVIGATION (NO POP-UP BLOCK) ---
+    function secureNav(url) {
+        snd.play();
+        const l = document.getElementById('loader-overlay');
+        const st = document.getElementById('status-text');
+        
+        // Loader anzeigen
+        l.style.display = 'flex';
+        setTimeout(() => { l.style.opacity = '1'; }, 10);
+        
+        // Hacking Simulation
+        setTimeout(() => { st.innerText = "BYPASSING FIREWALL..."; }, 600);
+        setTimeout(() => { st.innerText = "ACCESS GRANTED."; }, 1200);
+
+        // Der Trick: Wir öffnen im selben Fenster, um Blocker zu umgehen
+        setTimeout(() => { 
+            window.location.href = url; 
+        }, 1600);
+    }
+
+    function upd(c, i) {
+        snd.play();
+        const v = document.getElementById('v-view');
+        v.style.filter = `drop-shadow(0 0 25px ${c})`;
+        v.src = i;
+    }
+</script>
+</body>
+</html>

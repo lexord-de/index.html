@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LEXORD™ // OMEGA TERMINAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/howler@2.2.3/dist/howler.min.js"></script>
+    <style>
+        :root { --neon: #00f2ff; --purple: #bc13fe; --bg: #000; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Orbitron', sans-serif; cursor: none; }
+        
+        body { background: var(--bg); color: white; min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; perspective: 1000px; }
+
+        /* --- GLOBAL FX (CARBON + GRID + PARTICLES) --- */
+        #parallax-world { position: fixed; inset: -50px; z-index: -2; background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); transition: transform 0.2s ease-out; opacity: 0.6; }
+        #particles-js { position: absolute; inset: 0; }
+        .grid-3d { position: absolute; bottom: 0; left: -50%; width: 200%; height: 100%; background-image: linear-gradient(var(--neon) 1px, transparent 1px), linear-gradient(90deg, var(--neon) 1px, transparent 1px); background-size: 35px 35px; transform: rotateX(70deg); opacity: 0.15; }
+
+        /* --- HUD & CURSOR --- */
+        #cursor { position: fixed; width: 22px; height: 22px; border: 1px solid var(--neon); border-radius: 50%; pointer-events: none; z-index: 10000; transform: translate(-50%, -50%); mix-blend-mode: screen; }
+        @media (max-width: 768px) { #cursor { display: none; } * { cursor: auto; } }
+
+        /* --- ANTI-BLOCK LOADER SYSTEM --- */
+        #loader-overlay { position: fixed; inset: 0; background: #000; z-index: 100000; display: none; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.4s; }
+        .ring-box { position: relative; width: 110px; height: 110px; border: 2px solid transparent; border-top-color: var(--neon); border-radius: 50%; animation: spin 1s linear infinite; }
+        .loader-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 45px; filter: drop-shadow(0 0 10px var(--neon)); }
+
+        /* --- CONTENT SCROLLER --- */
+        #ui-scroller { width: 100%; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding: 30px 15px; }
+        header { text-align: center; margin-bottom: 30px; }
+        .logo-main { width: 90px; filter: drop-shadow(0 0 15px var(--neon)); margin-bottom: 10px; }
+        .glitch-title { font-size: 1.7rem; letter-spacing: 10px; font-weight: 900; text-shadow: 2px 0 var(--neon); animation: pulse 2s infinite alternate; }
+
+        /* --- CARDS MIT FARB-ANIMATION (NEON GLOW) --- */
+        .grid { width: 100%; max-width: 450px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .card { 
+            position: relative; background: rgba(10,10,10,0.95); border: 1px solid rgba(0,242,255,0.1); 
+            padding: 15px; text-align: center; backdrop-filter: blur(10px); overflow: hidden;
+            clip-path: polygon(0 0, 92% 0, 100% 8%, 100% 100%, 8% 100%, 0 92%); transition: 0.3s;
+        }
+        /* Die farbige Animation hinter dem Produkt */
+        .card-aura { position: absolute; top: 50%; left: 50%; width: 100px; height: 100px; background: var(--neon); border-radius: 50%; filter: blur(40px); opacity: 0; transition: 0.5s; transform: translate(-50%, -50%); z-index: 0; }
+        .card:hover .card-aura { opacity: 0.3; width: 150px; }
+
+        .card img { 
+            width: 100%; height: 90px; object-fit: contain; position: relative; z-index: 1;
+            filter: contrast(1.1) brightness(1.1) drop-shadow(0 0 5px rgba(0,242,255,0.2));
+            image-rendering: -webkit-optimize-contrast;
+        }
+        .card h3 { font-size: 0.5rem; color: var(--neon); margin: 10px 0; letter-spacing: 1.5px; z-index: 1; position: relative; }
+        .price { font-size: 0.8rem; font-weight: 900; margin-bottom: 10px; z-index: 1; position: relative; }
+
+        .btn-apex { background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 9px; width: 100%; font-size: 0.55rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; z-index: 1; position: relative; transition: 0.2s; }
+        .btn-apex:hover { background: var(--neon); color: #000; box-shadow: 0 0 15px var(--neon); }
+
+        /* --- KONTAKT & FOOTER --- */
+        .contact-box { width: 100%; max-width: 450px; margin-top: 30px; padding: 25px; background: rgba(5,5,5,0.95); border: 1px solid rgba(255,255,255,0.05); }
+        input, textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid #222; color: white; padding: 10px; margin-bottom: 12px; font-size: 0.75rem; outline: none; }
+        input:focus { border-bottom-color: var(--neon); }
+
+        footer { margin-top: auto; padding: 40px 20px; text-align: center; font-size: 0.6rem; color: #444; letter-spacing: 2px; }
+
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes pulse { from { opacity: 0.8; } to { opacity: 1; text-shadow: 0 0 15px var(--neon); } }
+    </style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="parallax-world">
+    <div id="particles-js"></div>
+    <div class="grid-3d"></div>
+</div>
+
+<div id="loader-overlay">
+    <div class="ring-box"><img src="IMG_7023.png" class="loader-logo"></div>
+    <p id="st-text" style="margin-top:20px; color:var(--neon); font-size:0.5rem; letter-spacing:4px;">INITIALIZING...</p>
+</div>
+
+<div id="ui-scroller">
+    <header>
+        <img src="IMG_7023.png" class="logo-main">
+        <div class="glitch-title">LEXORD</div>
+    </header>
+
+    <div class="grid">
+        <div class="card">
+            <div class="card-aura"></div>
+            <h3>STICK-TOOL</h3>
+            <img src="Stickzange.PNG">
+            <div class="price">5,95 €</div>
+            <button class="btn-apex" onclick="nav('https://www.ebay.de/itm/127605871230')">SHOP</button>
+        </div>
+        <div class="card">
+            <div class="card-aura" style="background:var(--purple);"></div>
+            <h3>PADDLE-UPGRADE</h3>
+            <img src="PADDLE SYSTEM.PNG">
+            <div class="price">45,95 €</div>
+            <button class="btn-apex" onclick="nav('https://www.ebay.de/itm/127554903259')">UPGRADE</button>
+        </div>
+    </div>
+
+    <div class="contact-box" style="border: 1px solid var(--purple); text-align:center; margin-top:20px;">
+        <h3 style="font-size:0.6rem; color:var(--purple); letter-spacing:3px; margin-bottom:15px;">ZERO-DRIFT SYSTEM</h3>
+        <img src="ANTI STICKDRIFT BUNDLE.PNG" id="v-view" style="height:140px; filter:drop-shadow(0 0 20px var(--neon));">
+        <div style="margin:15px 0;">
+            <div onclick="upd('#00f2ff','ANTI STICKDRIFT BUNDLE.PNG')" style="width:25px; height:25px; background:var(--neon); display:inline-block; margin:0 8px; border:1px solid #fff;"></div>
+            <div onclick="upd('#bc13fe','PADDLE SYSTEM.PNG')" style="width:25px; height:25px; background:var(--purple); display:inline-block; margin:0 8px; border:1px solid #fff;"></div>
+        </div>
+        <button class="btn-apex" style="border-color:var(--purple); color:var(--purple);" onclick="nav('https://www.ebay.de/usr/lexord-de')">CONFIG</button>
+    </div>
+
+    <div class="contact-box">
+        <p style="color:var(--neon); font-size:0.55rem; letter-spacing:3px; margin-bottom:15px; text-align:center;">FRAGEN? SCHREIB UNS!</p>
+        <form onsubmit="event.preventDefault(); alert('GESENDET!');">
+            <input type="text" placeholder="NAME" required>
+            <input type="email" placeholder="EMAIL" required>
+            <textarea placeholder="NACHRICHT..." rows="3" required></textarea>
+            <button type="submit" class="btn-apex">SENDEN</button>
+        </form>
+    </div>
+
+    <footer>
+        <p>Lexord 2025 all right reserved</p>
+    </footer>
+</div>
+
+<script>
+    // Particle Init
+    particlesJS('particles-js', { particles: { number: { value: 50 }, color: { value: '#00f2ff' }, opacity: { value: 0.2 }, line_linked: { enable: true, opacity: 0.1 }, move: { speed: 1 } } });
+    const snd = new Howl({ src: ['https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-click-900.mp3'], volume: 0.2 });
+
+    // Parallax
+    document.addEventListener('mousemove', e => {
+        const cur = document.getElementById('cursor');
+        if(cur) { cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px'; }
+        let x = (window.innerWidth / 2 - e.clientX) / 60;
+        let y = (window.innerHeight / 2 - e.clientY) / 60;
+        document.getElementById('parallax-world').style.transform = `translateX(${x}px) translateY(${y}px)`;
+    });
+
+    // Anti-Block Nav
+    function nav(url) {
+        snd.play();
+        const l = document.getElementById('loader-overlay');
+        const t = document.getElementById('st-text');
+        l.style.display = 'flex';
+        setTimeout(() => { l.style.opacity = '1'; }, 10);
+        setTimeout(() => { t.innerText = "ACCESS GRANTED."; }, 800);
+        setTimeout(() => { window.location.href = url; }, 1400);
+    }
+
+    function upd(c, i) {
+        snd.play();
+        const v = document.getElementById('v-view');
+        v.style.filter = `drop-shadow(0 0 25px ${c})`;
+        v.src = i;
+    }
+</script>
+</body>
+</html>

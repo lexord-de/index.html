@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LEXORD™ // OMEGA PRIME 2026</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <style>
+        :root { --neon: #00f2ff; --purple: #bc13fe; --bg: #000; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
+        body { background: var(--bg); color: white; overflow-x: hidden; }
+
+        /* --- EXTREME INTRO SYSTEM (MONTAGE) --- */
+        #master-loader {
+            position: fixed; inset: 0; background: #000; z-index: 999999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .scan-bar { position: absolute; top: 0; width: 100%; height: 4px; background: var(--neon); box-shadow: 0 0 50px var(--neon); z-index: 10; display: none; }
+        .loader-content { text-align: center; z-index: 5; position: relative; width: 100%; height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        
+        /* Montage Teile */
+        .part { position: absolute; width: 70px; opacity: 0; filter: drop-shadow(0 0 15px var(--neon)); will-change: transform; }
+        
+        .glitch-logo { width: 180px; filter: drop-shadow(0 0 20px var(--neon)); transform: scale(0); opacity: 0; z-index: 6; }
+        .boot-logs { font-family: 'Share Tech Mono', monospace; color: var(--neon); font-size: 10px; text-align: left; margin-top: 30px; height: 100px; overflow: hidden; opacity: 0.7; letter-spacing: 2px; }
+
+        /* --- MAIN UI --- */
+        #main-interface { opacity: 0; filter: blur(20px); transition: 1.5s cubic-bezier(0.19, 1, 0.22, 1); display: flex; flex-direction: column; align-items: center; }
+        #main-interface.active { opacity: 1; filter: blur(0); }
+
+        /* --- 3D GRID & BACKGROUND --- */
+        #particles-js { position: fixed; inset: 0; z-index: -1; }
+        .grid-3d { position: fixed; bottom: -50%; left: -50%; width: 200%; height: 200%; background-image: linear-gradient(rgba(0,242,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,242,255,0.05) 1px, transparent 1px); background-size: 50px 50px; transform: rotateX(75deg); z-index: -2; }
+
+        /* --- UI ELEMENTS --- */
+        header { padding: 80px 20px 40px; text-align: center; }
+        .main-logo { width: 150px; filter: drop-shadow(0 0 40px var(--neon)); will-change: transform; }
+        h1 { font-size: 3rem; letter-spacing: 20px; font-weight: 900; color: white; text-shadow: 0 0 20px var(--neon); }
+
+        /* --- PRODUCTS --- */
+        .p-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 800px; margin: 50px auto; padding: 0 20px; }
+        .p-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 40px; border-radius: 30px; text-align: center; backdrop-filter: blur(20px); transform-style: preserve-3d; will-change: transform; transition: 0.1s; }
+        .p-card img { width: 100%; height: 200px; object-fit: contain; pointer-events: none; margin-bottom: 20px; filter: drop-shadow(0 10px 20px black); }
+        .buy-btn { background: var(--neon); color: black; border: none; padding: 15px 30px; font-weight: 900; border-radius: 10px; cursor: pointer; letter-spacing: 3px; transition: 0.3s; }
+        .buy-btn:hover { box-shadow: 0 0 30px var(--neon); transform: scale(1.1); }
+
+        /* --- TERMINAL --- */
+        .contact-terminal { width: 90%; max-width: 600px; background: rgba(5,5,5,0.9); border: 1px solid var(--purple); padding: 40px; border-radius: 30px; margin-bottom: 50px; backdrop-filter: blur(20px); }
+        input, textarea { width: 100%; padding: 18px; margin-bottom: 15px; background: #000; border: 1px solid #222; color: white; border-radius: 10px; outline: none; font-family: 'Share Tech Mono'; }
+        .send-btn { width: 100%; background: var(--purple); color: white; border: none; padding: 20px; font-weight: 900; border-radius: 10px; cursor: pointer; letter-spacing: 5px; }
+
+        /* --- FOOTER & MODAL --- */
+        .footer { text-align: center; padding: 40px; }
+        .legal-btn { color: #444; font-size: 0.7rem; cursor: pointer; letter-spacing: 5px; background: none; border: none; margin-bottom: 15px; }
+        .copyright { font-size: 10px; color: #222; letter-spacing: 5px; text-transform: uppercase; }
+        
+        #modal-imprint { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
+        .modal-box { background: #050505; border: 1px solid var(--neon); padding: 50px; border-radius: 30px; max-width: 500px; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div id="master-loader">
+    <div class="scan-bar"></div>
+    <div class="loader-content">
+        <img src="Stickzange.PNG" class="part" id="part-l">
+        <img src="PADDLE SYSTEM.PNG" class="part" id="part-r">
+        <img src="IMG_7023.png" class="glitch-logo" id="l-logo">
+        <div class="boot-logs" id="logs"></div>
+    </div>
+</div>
+
+<div id="particles-js"></div>
+<div class="grid-3d"></div>
+
+<div id="main-interface">
+    <header>
+        <img src="IMG_7023.png" class="main-logo" id="hero-logo">
+        <h1>LEXORD</h1>
+    </header>
+
+    <div class="p-grid">
+        <div class="p-card" onmousemove="tilt(this, event)" onmouseleave="untilt(this)">
+            <img src="Stickzange.PNG">
+            <button class="buy-btn" onclick="window.open('https://www.ebay.de/itm/127605871230')">5,95 €</button>
+        </div>
+        <div class="p-card" onmousemove="tilt(this, event)" onmouseleave="untilt(this)">
+            <img src="PADDLE SYSTEM.PNG">
+            <button class="buy-btn" onclick="window.open('https://www.ebay.de/itm/127554903259')">45,95 €</button>
+        </div>
+    </div>
+
+    <div class="contact-terminal">
+        <h2 style="color:var(--purple); font-size:0.7rem; letter-spacing:5px; margin-bottom:20px; text-align:center;">SECURE CONTACT</h2>
+        <form onsubmit="event.preventDefault(); alert('TRANSMISSION SUCCESSFUL');">
+            <input type="text" placeholder="NAME / IDENT" required>
+            <input type="email" placeholder="EMAIL" required>
+            <textarea placeholder="MESSAGE..." rows="4" required></textarea>
+            <button type="submit" class="send-btn">SEND PROTOCOL</button>
+        </form>
+    </div>
+
+    <footer class="footer">
+        <button class="legal-btn" onclick="document.getElementById('modal-imprint').style.display='flex'">[ IMPRESSUM / LEGAL ]</button>
+        <div class="copyright">© 2026 LEXORD. ALL RIGHTS RESERVED. // ELITE ARCHITECTURE</div>
+    </footer>
+</div>
+
+<div id="modal-imprint">
+    <div class="modal-box">
+        <h2 style="color:var(--neon); margin-bottom:20px;">IMPRESSUM</h2>
+        <p style="font-family:'Share Tech Mono'; color:#888; line-height:1.8;">
+            Betreiber: Leon Schulz<br>
+            An Der Domsühler Straße 2<br>
+            19374 Domsühl<br><br>
+            Kontakt: kontakt@lexord.de
+        </p>
+        <button onclick="document.getElementById('modal-imprint').style.display='none'" style="margin-top:30px; background:var(--neon); border:none; padding:10px 20px; cursor:pointer; font-weight:900;">CLOSE</button>
+    </div>
+</div>
+
+<script>
+    // --- 120HZ ENGINE ---
+    gsap.ticker.fps(120);
+
+    const logs = document.getElementById('logs');
+    const logData = ["> INIT CORE...", "> 120HZ SYNC...", "> ASSEMBLING PARTS...", "> SYSTEM ONLINE."];
+
+    window.onload = () => {
+        let i = 0;
+        const interval = setInterval(() => {
+            if(i < logData.length) {
+                logs.innerHTML += logData[i] + "<br>";
+                i++;
+            } else {
+                clearInterval(interval);
+                runAssembly();
+            }
+        }, 400);
+    };
+
+    function runAssembly() {
+        const tl = gsap.timeline();
+        
+        // Montage: Teile fliegen ein
+        tl.to("#part-l", { opacity: 1, x: -160, left: '50%', duration: 0 });
+        tl.to("#part-r", { opacity: 1, x: 160, left: '50%', duration: 0 });
+        tl.to("#part-l", { x: -45, opacity: 1, duration: 0.5, ease: "power4.out" });
+        tl.to("#part-r", { x: 45, opacity: 1, duration: 0.5, ease: "power4.out" }, "-=0.5");
+        
+        // Logo erscheint beim Aufprall
+        tl.to("#l-logo", { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.7)" }, "-=0.2");
+        tl.to(".part", { scale: 0, opacity: 0, duration: 0.2 });
+
+        tl.set(".scan-bar", { display: 'block' });
+        tl.to(".scan-bar", { top: '100%', duration: 0.8 });
+        
+        tl.to("#master-loader", { opacity: 0, duration: 0.8, onComplete: () => {
+            document.getElementById('master-loader').style.display = 'none';
+            document.getElementById('main-interface').classList.add('active');
+            document.body.style.overflow = 'auto';
+        }});
+    }
+
+    function tilt(el, e) {
+        const rect = el.getBoundingClientRect();
+        const x = (e.clientX - rect.left - rect.width / 2) / 10;
+        const y = (e.clientY - rect.top - rect.height / 2) / 10;
+        gsap.to(el, { rotationY: x, rotationX: -y, transformPerspective: 1000, duration: 0.2 });
+    }
+    function untilt(el) {
+        gsap.to(el, { rotationY: 0, rotationX: 0, duration: 0.7 });
+    }
+
+    document.addEventListener('mousemove', (e) => {
+        const x = (window.innerWidth / 2 - e.clientX) / 40;
+        const y = (window.innerHeight / 2 - e.clientY) / 40;
+        gsap.to("#hero-logo", { rotationY: x, rotationX: -y, duration: 0.6 });
+    });
+
+    particlesJS('particles-js', {
+        particles: { number: { value: 80 }, color: { value: '#00f2ff' }, opacity: { value: 0.2 }, line_linked: { enable: true, opacity: 0.1 }, move: { speed: 1.5 } }
+    });
+</script>
+</body>
+</html>

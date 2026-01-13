@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEXORD™ // THE ENGINEERING ELITE</title>
+
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link rel="apple-touch-icon" href="IMG_7023.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+<style>
+:root{
+--n-blue:#00f2ff;
+--n-purple:#bc13fe;
+--bg:#020202;
+--card:rgba(20,20,20,0.7);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+background:var(--bg);
+color:white;
+font-family:'Inter',sans-serif;
+display:flex;
+flex-direction:column;
+align-items:center;
+min-height:100vh;
+overflow-x:hidden;
+}
+#particles-js{position:fixed;inset:0;z-index:-1;opacity:.3;}
+
+h1,h2,h3,.orbitron{
+font-family:'Orbitron',sans-serif;
+text-transform:uppercase;
+letter-spacing:3px;
+}
+
+/* --- ULTRA ANIMATIONEN --- */
+@keyframes syncGlow{
+0%,100%{border-color:var(--n-blue);box-shadow:0 0 20px rgba(0,242,255,0.1);}
+50%{border-color:var(--n-purple);box-shadow:0 0 20px rgba(188,19,254,0.1);}
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(2deg); }
+}
+
+/* GRID */
+.grid{
+width:92%;
+max-width:550px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:25px;
+z-index:10;
+perspective: 1200px;
+margin-top: 20px;
+}
+
+/* DIE ULTIMATIVE KARTE */
+.card{
+background:var(--card);
+border-radius:20px;
+padding:25px;
+display:flex;
+flex-direction:column;
+align-items:center;
+text-align:center;
+backdrop-filter:blur(15px);
+border: 1px solid rgba(255,255,255,0.1);
+transition: transform 0.1s ease-out;
+position: relative;
+overflow: hidden;
+transform-style: preserve-3d;
+}
+
+/* Dynamischer Glanz, der der Maus folgt */
+.card .shine {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.15) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.product-glow{
+position:relative;
+width: 100%;
+transform: translateZ(60px); /* 3D Pop-out Effekt */
+transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.product-glow img{
+width:100%;
+height:110px;
+object-fit:contain;
+animation: float 6s infinite ease-in-out;
+filter: drop-shadow(0 10px 20px rgba(0,0,0,0.9));
+}
+
+.card:hover .product-glow {
+  transform: translateZ(100px) scale(1.1);
+}
+
+.price{
+font-size:1.2rem;
+font-family:'Orbitron';
+font-weight:900;
+color:var(--n-blue);
+margin:15px 0;
+text-shadow: 0 0 10px rgba(0,242,255,0.5);
+}
+
+.buy-btn{
+width:100%;
+padding:14px;
+border-radius:10px;
+border:none;
+background: #fff;
+color: #000;
+font-weight:900;
+font-family:'Orbitron';
+font-size:.65rem;
+cursor:pointer;
+transition:.3s;
+position: relative;
+z-index: 4;
+}
+
+.buy-btn:hover{
+background: var(--n-blue);
+box-shadow: 0 0 25px var(--n-blue);
+transform: scale(1.05);
+}
+
+/* BUNDLE UPGRADE */
+.bundle-container {
+  width: 92%;
+  max-width: 550px;
+  margin-top: 40px;
+  z-index: 10;
+}
+
+.bundle-box {
+  background: linear-gradient(135deg, rgba(188,19,254,0.1) 0%, rgba(0,242,255,0.1) 100%);
+  border: 1px solid var(--n-purple);
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  position: relative;
+  animation: syncGlow 8s infinite;
+}
+
+.hot-badge {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, #ff0055, #ff9900);
+  padding: 5px 20px;
+  border-radius: 50px;
+  font-size: 0.7rem;
+  font-weight: 900;
+  box-shadow: 0 0 15px rgba(255,0,85,0.5);
+}
+
+.bundle-price-tag {
+  font-size: 1.8rem;
+  font-family: 'Orbitron';
+  font-weight: 900;
+  color: #00ff88;
+  margin: 10px 0;
+}
+
+/* HEADER & REST */
+header{padding:60px 20px; text-align:center;}
+.logo-main{width:120px; filter:drop-shadow(0 0 30px var(--n-blue)); margin-bottom:20px;}
+
+#gateway{
+position:fixed;
+inset:0;
+background:#000;
+display:none;
+align-items:center;
+justify-content:center;
+z-index:9999;
+}
+
+@media (max-width:600px){
+  .grid{grid-template-columns: 1fr; gap: 40px;}
+}
+</style>
+</head>
+
+<body>
+<div id="particles-js"></div>
+
+<header>
+  <img src="IMG_7023.png" class="logo-main">
+  <h1 style="font-size: 1.8rem;">LEXORD™</h1>
+  <p style="color:var(--n-blue); font-size: 0.6rem; letter-spacing: 5px;">ELITE GAMING ENGINEERING</p>
+</header>
+
+<div class="grid">
+  <div class="card" onmousemove="handleMove(event, this)" onmouseleave="handleLeave(this)">
+    <div class="shine"></div>
+    <div class="product-glow"><img src="Stickzange.PNG"></div>
+    <h3 style="font-size: 0.7rem; margin-top: 10px;">Stickzange Pro</h3>
+    <div class="price">5,95 €</div>
+    <button class="buy-btn" onclick="luxRedirect('https://www.ebay.de/itm/127605871230')">ACCESS STORE</button>
+  </div>
+
+  <div class="card" onmousemove="handleMove(event, this)" onmouseleave="handleLeave(this)">
+    <div class="shine"></div>
+    <div class="product-glow"><img src="PADDLE SYSTEM.PNG"></div>
+    <h3 style="font-size: 0.7rem; margin-top: 10px;">Paddle System V2</h3>
+    <div class="price">45,95 €</div>
+    <button class="buy-btn" onclick="luxRedirect('https://www.ebay.de/itm/127621679343')">ACCESS STORE</button>
+  </div>
+</div>
+
+<div class="bundle-container">
+  <div class="bundle-box">
+    <div class="hot-badge">MEISTGEKAUFT</div>
+    <h2 style="font-size: 1rem; margin-bottom: 10px;">FULL ENGINEERING SETUP</h2>
+    <p style="font-size: 0.6rem; opacity: 0.6;">Paddle System V2 + Stickzange Pro</p>
+    <div class="bundle-price-tag">49,95 €</div>
+    <p style="font-size: 0.5rem; color: #00ff88; margin-bottom: 20px;">DU SPARST 1,95 € & VERSANDKOSTEN</p>
+    <button class="buy-btn" style="background: var(--n-blue);" onclick="luxRedirect('LINK_ZUM_BUNDLE')">JETZT UPGRADEN</button>
+  </div>
+</div>
+
+<div style="margin: 40px 0; width: 92%; max-width: 550px;">
+  <a href="https://www.ebay.de/usr/lexord-de" style="text-decoration:none; color:white; display:flex; justify-content:space-between; padding:20px; border:1px solid #222; border-radius:15px; font-family:'Orbitron'; font-size: 0.7rem;">
+    <span>OFFICIAL EBAY SHOP</span><span>→</span>
+  </a>
+</div>
+
+<div id="gateway">
+  <div style="text-align:center;">
+    <div style="width:40px;height:40px;border:2px solid var(--n-blue);border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;"></div>
+    <p class="orbitron" style="font-size: 0.5rem; margin-top: 15px;">SECURE REDIRECT...</p>
+  </div>
+</div>
+
+<script>
+particlesJS('particles-js',{particles:{number:{value:40},color:{value:'#00f2ff'},opacity:{value:.2},size:{value:1},move:{speed:0.5}}});
+
+function handleMove(e, card) {
+  const rect = card.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  
+  // 3D Tilt
+  const rotateX = (rect.height / 2 - y) / 10;
+  const rotateY = (x - rect.width / 2) / 10;
+  
+  card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+  
+  // Glow Effekt Position
+  card.style.setProperty('--mouse-x', `${x}px`);
+  card.style.setProperty('--mouse-y', `${y}px`);
+}
+
+function handleLeave(card) {
+  card.style.transform = `rotateX(0deg) rotateY(0deg) translateY(0px)`;
+}
+
+function luxRedirect(url){
+  document.getElementById("gateway").style.display="flex";
+  setTimeout(()=>{ window.location.href=url; },1000);
+}
+</script>
+<style> @keyframes spin{to{transform:rotate(360deg)}} </style>
+</body>
+</html>

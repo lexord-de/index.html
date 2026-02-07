@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEXORD™ // THE ENGINEERING ELITE</title>
+
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link rel="apple-touch-icon" href="IMG_7023.png">
+
+<meta name="description" content="LEXORD™ Engineering – Die Elite für High-Performance Controller Tuning.">
+<meta name="keywords" content="Controller Tuning, PS5 Controller Paddles, Scuf Umbau, Gaming Zubehör, Stickzange, LEXORD">
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+<style>
+:root{ --n-blue:#00f2ff; --n-purple:#bc13fe; --bg:#050505; --card:rgba(15,15,15,.9); }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg); color:white; font-family:'Inter',sans-serif; display:flex; flex-direction:column; align-items:center; min-height:100vh; overflow-x:hidden;}
+#particles-js{position:fixed;inset:0;z-index:-1;opacity:.4;}
+
+h1,h2,h3,.orbitron{font-family:'Orbitron',sans-serif; text-transform:uppercase; letter-spacing:2px;}
+
+/* ANIMATIONEN */
+@keyframes syncGlow{ 0%,100%{border-color:var(--n-blue);box-shadow:0 0 20px rgba(0,242,255,0.1);} 50%{border-color:var(--n-purple);box-shadow:0 0 20px rgba(188,19,254,0.1);} }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes scanline { 0% { transform: translateY(-100%); } 100% { transform: translateY(400%); } }
+
+.elite-border{border:1px solid var(--n-blue); animation:syncGlow 10s infinite ease-in-out;}
+
+header{padding:50px 20px 30px; text-align:center; z-index:10;}
+.logo-main{width:120px; filter:drop-shadow(0 0 25px var(--n-blue)); margin-bottom:15px;}
+
+/* TRUST DASHBOARD */
+.trust-dashboard { width: 92%; max-width: 550px; margin-bottom: 30px; z-index: 10; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.trust-card { 
+    background: var(--card); border: 1px solid var(--n-blue); border-radius: 12px; padding: 15px 5px; 
+    text-decoration: none; color: white; transition: 0.3s; text-align: center; position: relative; overflow: hidden;
+}
+.trust-card:hover { border-color: var(--n-purple); transform: translateY(-3px); }
+.trust-label { font-size: 0.45rem; color: var(--n-blue); display: block; margin-bottom: 4px; }
+.trust-stars { color: #ffb400; font-size: 0.8rem; margin-bottom: 2px; }
+.trust-name { font-family: 'Orbitron'; font-size: 0.55rem; font-weight: 700; }
+.scanner-bar { position: absolute; top: 0; left: 0; width: 100%; height: 30px; background: linear-gradient(to bottom, transparent, rgba(0,242,255,0.05), transparent); animation: scanline 4s linear infinite; pointer-events: none; }
+
+/* PRODUCT GRID */
+.grid{width:92%; max-width:500px; display:grid; grid-template-columns:1fr 1fr; gap:20px; z-index:10; perspective: 1000px;}
+.card{background:var(--card); border-radius:16px; padding:25px; text-align:center; backdrop-filter:blur(12px); position: relative; transition: 0.1s; transform-style: preserve-3d;}
+.card .shine {position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.1) 0%, transparent 80%); pointer-events: none;}
+.product-glow img{width:100%; height:100px; object-fit:contain; animation: float 5s infinite ease-in-out; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));}
+
+.price{font-size:1.1rem; font-family:'Orbitron'; font-weight:700; color:var(--n-blue); margin:15px 0;}
+.buy-btn{width:100%; padding:12px; border-radius:8px; border:none; background:white; color:black; font-weight:700; font-family:'Orbitron'; font-size:.6rem; cursor:pointer; margin-bottom:8px; transition: .3s;}
+.buy-btn:hover{background:var(--n-blue); transform: scale(1.05);}
+.direct-btn{width:100%; padding:10px; border-radius:8px; border:1px solid var(--n-blue); background:transparent; color:var(--n-blue); font-weight:700; font-family:'Orbitron'; font-size:.55rem; cursor:pointer; transition: .3s;}
+.direct-btn:hover{background: rgba(0,242,255,0.1); border-color: var(--n-purple); color: white;}
+
+/* SUPPORT BUTTON */
+.support-link-btn{
+    width:92%; max-width:500px; margin-top:20px; padding:15px; border-radius:12px;
+    background: linear-gradient(45deg, var(--n-blue), var(--n-purple));
+    color: white; font-family: 'Orbitron'; font-weight: 900; font-size: 0.7rem;
+    text-align: center; text-decoration: none; z-index: 10; transition: 0.3s;
+    border: none; cursor: pointer; display: block;
+}
+.support-link-btn:hover{ letter-spacing: 2px; filter: brightness(1.2); transform: scale(1.02); }
+
+/* LINKS WRAPPER */
+.links-wrap{width:92%; max-width:500px; margin-top:35px; display:flex; flex-direction:column; gap:12px; z-index:10;}
+.link-item{padding:18px 25px; background:var(--card); border-radius:12px; text-decoration:none; color:white; display:flex; justify-content:space-between; align-items:center; font-family:'Orbitron'; font-size:.75rem; transition:.3s;}
+.link-item:hover{background:rgba(255,255,255,.05); padding-left:35px; color:var(--n-blue);}
+
+/* CONTACT BOX */
+.contact-box{width:92%; max-width:500px; margin:50px 0; background:var(--card); padding:35px; border-radius:20px; z-index:10;}
+input, textarea { width: 100%; padding: 14px; margin-bottom: 12px; background: #000; border: 1px solid #222; color: white; border-radius: 4px; outline: none; transition: 0.3s; }
+
+/* GATEWAY */
+#gateway{position:fixed; inset:0; background:#000; display:none; align-items:center; justify-content:center; z-index:11000; flex-direction: column;}
+.log-line { font-family: monospace; font-size: 0.65rem; color: var(--n-blue); margin-bottom: 4px; }
+
+/* --- NEUE ANIMIERTE ERFOLGSMELDUNG --- */
+#success-overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,0.95); display:none; 
+    align-items:center; justify-content:center; z-index:12000;
+}
+.success-panel{
+    background:var(--card); border:2px solid var(--n-blue); padding:40px; 
+    border-radius:15px; text-align:center; max-width:350px; width:90%;
+    box-shadow: 0 0 50px rgba(0,242,255,0.3);
+    animation: panelPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes panelPop { from { transform: scale(0.8); opacity:0; } to { transform: scale(1); opacity:1; } }
+
+.success-icon { font-size: 40px; color: var(--n-blue); margin-bottom: 15px; animation: iconPulse 2s infinite; }
+@keyframes iconPulse { 0%, 100% { filter: drop-shadow(0 0 5px var(--n-blue)); } 50% { filter: drop-shadow(0 0 20px var(--n-blue)); transform: scale(1.1); } }
+
+.close-success-btn {
+    margin-top: 25px; padding: 12px 25px; background: transparent; 
+    border: 1px solid var(--n-blue); color: var(--n-blue); font-family: 'Orbitron';
+    font-size: 0.7rem; cursor: pointer; border-radius: 5px; transition: 0.3s;
+    text-transform: uppercase; letter-spacing: 2px;
+}
+.close-success-btn:hover { background: var(--n-blue); color: black; box-shadow: 0 0 20px var(--n-blue); }
+
+footer{padding:40px 20px 80px; text-align:center; z-index:10;}
+.legal-trigger{background:none; border:none; color:#444; cursor:pointer; font-family:'Orbitron'; font-size:.6rem; text-decoration: underline;}
+.imp-content{display:none; text-align: left; background: rgba(10,10,10,0.95); border: 1px solid #222; border-radius: 12px; margin-top: 20px; max-width: 500px; padding: 25px; font-size: 0.7rem; color: #888; line-height: 1.6;}
+
+@media (max-width:600px){.grid{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+
+<body>
+<div id="particles-js"></div>
+
+<header>
+<img src="IMG_7023.png" class="logo-main" alt="LEXORD Logo">
+<h1>LEXORD™</h1>
+<p style="color:var(--n-blue); font-size: 0.65rem; letter-spacing: 5px; opacity: 0.8;">ADVANCED ENGINEERING SOLUTIONS</p>
+</header>
+
+<div class="trust-dashboard">
+    <a href="https://g.page/r/CQyRhiy7wS_DEAE/review" target="_blank" class="trust-card elite-border">
+        <div class="scanner-bar"></div>
+        <span class="trust-label orbitron">RATE_US</span>
+        <div class="trust-stars">★★★★★</div>
+        <div class="trust-name">GOOGLE</div>
+    </a>
+    <a href="https://www.ebay.de/usr/lexord-de#tab2" target="_blank" class="trust-card elite-border">
+        <div class="scanner-bar"></div>
+        <span class="trust-label orbitron">FEEDBACK</span>
+        <div class="trust-stars">★★★★★</div>
+        <div class="trust-name">EBAY</div>
+    </a>
+    <a href="https://de.trustpilot.com/review/lexord.de" target="_blank" class="trust-card elite-border">
+        <div class="scanner-bar"></div>
+        <span class="trust-label orbitron">GLOBAL_TRUST</span>
+        <div class="trust-stars" style="color: #00b67a;">★★★★★</div>
+        <div class="trust-name">TRUSTPILOT</div>
+    </a>
+</div>
+
+<div class="grid">
+  <div class="card elite-border" onmousemove="handleMove(event, this)" onmouseleave="handleLeave(this)">
+    <div class="shine"></div>
+    <div class="product-glow"><img src="Stickzange.PNG" alt="Stickzange"></div>
+    <h3 style="font-size: 0.6rem; min-height: 35px; margin-top:10px;">Stickzange Pro</h3>
+    <div class="price">5,95 €</div>
+    <button class="buy-btn" onclick="luxRedirect('https://www.ebay.de/itm/127605871230', 'CONNECTING TO EBAY...')">eBay Store</button>
+    <button class="direct-btn" onclick="luxRedirect('#contact-form-section', 'SCROLLING TO SUPPORT...')">Direkt kaufen</button>
+  </div>
+
+  <div class="card elite-border" onmousemove="handleMove(event, this)" onmouseleave="handleLeave(this)">
+    <div class="shine"></div>
+    <div class="product-glow"><img src="PADDLE SYSTEM.PNG" alt="Paddle System"></div>
+    <h3 style="font-size: 0.6rem; min-height: 35px; margin-top:10px;">Paddle System V2</h3>
+    <div class="price">45,95 €</div>
+    <button class="buy-btn" onclick="luxRedirect('https://www.ebay.de/itm/127621679343', 'CONNECTING TO EBAY...')">eBay Store</button>
+    <button class="direct-btn" onclick="luxRedirect('#contact-form-section', 'SCROLLING TO SUPPORT...')">Direkt kaufen</button>
+  </div>
+</div>
+
+<a href="#contact-form-section" class="support-link-btn elite-border">SUPPORT & KONTAKT</a>
+
+<div class="links-wrap">
+  <p class="orbitron" style="font-size: 0.55rem; color: #444; text-align: center; margin-bottom: -5px;">Official Marketplaces</p>
+  <a href="https://www.ebay.de/usr/lexord-de" class="link-item elite-border"><span>Official Ebay Shop</span><span>→</span></a>
+  
+  <p class="orbitron" style="font-size: 0.55rem; color: #444; text-align: center; margin-bottom: -5px; margin-top: 10px;">Second Hand Store</p>
+  <a href="https://www.vinted.de/member/143547805-lexord" target="_blank" class="link-item elite-border" style="border-left: 3px solid #09b1ba;"><span>Vinted Shop Profile</span><span>→</span></a>
+  
+  <p class="orbitron" style="font-size: 0.55rem; color: #444; text-align: center; margin-bottom: -5px; margin-top: 10px;">Community</p>
+  <a href="https://www.instagram.com/lexord.de" class="link-item elite-border"><span>Instagram Gallery</span><span>→</span></a>
+  <a href="https://www.tiktok.com/@lexord.de" class="link-item elite-border"><span>TikTok Community</span><span>→</span></a>
+</div>
+
+<div class="contact-box elite-border" id="contact-form-section">
+<h2 style="font-family:'Orbitron'; font-size:.8rem; margin-bottom:25px; text-align:center;">Support & Anfrage</h2>
+<form id="contact-form">
+<input type="text" name="name" placeholder="Name" required>
+<input type="email" name="email" placeholder="E-Mail" required>
+<textarea name="message" placeholder="Wie können wir helfen?" rows="4" required style="width:100%; padding:14px; background:#000; color:white; border:1px solid #222; border-radius:4px; margin-bottom:12px;"></textarea>
+<button class="send-btn" type="submit" style="width:100%; padding:18px; border-radius:10px; border:none; background:linear-gradient(90deg,var(--n-blue),var(--n-purple)); font-family:'Orbitron'; font-weight:900; cursor:pointer; color: white;">Anfrage Senden</button>
+</form>
+</div>
+
+<div id="success-overlay">
+    <div class="success-panel">
+        <div class="success-icon">✓</div>
+        <h2 class="orbitron" style="font-size: 0.9rem; color: var(--n-blue);">Übertragung erfolgreich</h2>
+        <p style="font-size: 0.7rem; margin-top: 10px; color: #ccc;">Anfrage wurde verschlüsselt an die Engineering-Zentrale gesendet.</p>
+        <button class="close-success-btn" onclick="closeSuccess()">Schließen</button>
+    </div>
+</div>
+
+<div id="gateway">
+    <div id="log-display" style="width: 250px;"></div>
+    <div style="width:100px; height:1px; background: #333; margin-top: 25px; position: relative; overflow: hidden;">
+        <div style="position: absolute; width: 40px; height: 100%; background: var(--n-blue); animation: loadBar 2s infinite;"></div>
+    </div>
+</div>
+
+<footer>
+<button class="legal-trigger" onclick="toggleLegal()">Impressum & Datenschutz</button>
+<div id="legal-box" class="imp-content">
+    <h4 class="orbitron" style="color:var(--n-blue)">Impressum</h4>
+    <strong>LEXORD™ ENGINEERING</strong><br>Inhaber: Leon Schulz<br>An Der Domsühler Straße 2<br>19374 Domsühl | kontakt@lexord.de<br><br>
+    <p>Privatverkauf. Analyse via GoatCounter (Cookie-frei).</p>
+</div>
+<p style="color:#222; font-size:0.6rem; margin-top:20px;">© 2026 LEXORD. ALL RIGHTS RESERVED.</p>
+</footer>
+
+<script>
+particlesJS('particles-js',{particles:{number:{value:45},color:{value:'#00f2ff'},opacity:{value:.2},size:{value:1},move:{speed:.7}}});
+
+function handleMove(e, card) {
+  const rect = card.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  card.style.transform = `rotateX(${(rect.height/2-y)/12}deg) rotateY(${(x-rect.width/2)/12}deg) translateY(-5px)`;
+  card.style.setProperty('--mouse-x', `${(x/rect.width)*100}%`);
+  card.style.setProperty('--mouse-y', `${(y/rect.height)*100}%`);
+}
+function handleLeave(card) { card.style.transform = `rotateX(0deg) rotateY(0deg) translateY(0)`; }
+
+function luxRedirect(url, msg) {
+    const gate = document.getElementById('gateway');
+    const display = document.getElementById('log-display');
+    display.innerHTML = ''; gate.style.display = 'flex';
+    const lines = [msg, "ESTABLISHING LINK...", "REDIRECTING..."];
+    lines.forEach((line, i) => {
+        setTimeout(() => {
+            const l = document.createElement('div');
+            l.className = 'log-line'; l.innerText = `> ${line}`;
+            display.appendChild(l);
+            if(i === lines.length - 1) setTimeout(() => {
+                if(url.startsWith('#')) { gate.style.display='none'; document.querySelector(url).scrollIntoView({behavior:'smooth'}); }
+                else window.location.href=url;
+            }, 800);
+        }, i * 500);
+    });
+}
+
+function closeSuccess() {
+    document.getElementById('success-overlay').style.display = 'none';
+}
+
+function toggleLegal(){ 
+  const box = document.getElementById('legal-box');
+  box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+}
+
+document.getElementById('contact-form').onsubmit = function(e) {
+    e.preventDefault();
+    luxRedirect('#', 'ENCRYPTING MESSAGE...');
+    
+    fetch("https://formsubmit.co/ajax/kontakt@lexord.de", { 
+        method: "POST", 
+        body: new FormData(this) 
+    })
+    .then(() => { 
+        document.getElementById('gateway').style.display = 'none';
+        document.getElementById('success-overlay').style.display = 'flex';
+        this.reset(); 
+    });
+};
+</script>
+<style>@keyframes loadBar { 0% { left: -100%; } 100% { left: 100%; } }</style>
+<script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEXORD™ | Engineering</title>
+
+    <script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@100;400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+
+    <style>
+        :root { --n-blue: #00f2ff; --bg: #000000; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
+
+        /* --- BACKGROUND --- */
+        #star-canvas { position: fixed; inset: 0; z-index: -1; background: #000; }
+
+        /* --- INTRO WARP --- */
+        #intro-overlay { position: fixed; inset: 0; background: black; z-index: 20000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #intro-logo { width: 120px; filter: drop-shadow(0 0 20px var(--n-blue)); margin-bottom: 20px; opacity: 0; transform: scale(0.5); }
+        #intro-text { font-family: 'Orbitron'; font-size: 0.8rem; letter-spacing: 5px; color: var(--n-blue); opacity: 0; }
+
+        /* --- HEADER --- */
+        header { position: fixed; top: 0; width: 100%; z-index: 10000; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); opacity: 0; }
+        .logo-area { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .logo-area img { width: 35px; filter: drop-shadow(0 0 8px var(--n-blue)); }
+        .brand-name { font-family: 'Orbitron'; font-weight: 900; font-size: 1.2rem; letter-spacing: 2px; }
+
+        .lang-switch { font-family: 'Orbitron'; font-size: 0.75rem; cursor: pointer; }
+        .lang-btn { opacity: 0.3; transition: 0.3s; padding: 5px; }
+        .lang-btn.active { opacity: 1; color: var(--n-blue); text-shadow: 0 0 10px var(--n-blue); }
+
+        /* --- HERO --- */
+        .hero-container { margin: 140px auto 50px; width: 92%; max-width: 1300px; background: rgba(10,10,10,0.6); border-radius: 12px; position: relative; min-height: 480px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px; border: 1px solid rgba(255,255,255,0.03); backdrop-filter: blur(8px); opacity: 0; text-align: center; }
+        .hero-logo-main { width: 85px; filter: drop-shadow(0 0 15px var(--n-blue)); margin-bottom: 25px; }
+        .hero-label { font-family: 'Orbitron'; font-size: 0.8rem; color: var(--n-blue); letter-spacing: 4px; margin-bottom: 15px; }
+        .hero-content h1 { font-family: 'Orbitron'; font-size: clamp(2.2rem, 7vw, 5rem); font-weight: 900; line-height: 0.9; letter-spacing: -2px; }
+
+        /* --- GRID & PRODUCTS --- */
+        .section-label { margin: 80px 5% 30px; border-left: 3px solid var(--n-blue); padding-left: 15px; opacity: 0; }
+        .section-label h2 { font-family: 'Orbitron'; font-size: 0.85rem; letter-spacing: 5px; color: var(--n-blue); }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 0 5% 100px; opacity: 0; }
+        .card { background: rgba(12,12,12,0.9); border: 1px solid #1a1a1a; padding: 40px 30px; border-radius: 15px; text-align: center; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; position: relative; overflow: hidden; }
+        
+        .img-box { height: 180px; margin-bottom: 25px; animation: floatAnim 4s ease-in-out infinite; transition: transform 0.3s; }
+        @keyframes floatAnim { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        
+        .card:hover { border-color: var(--n-blue); box-shadow: 0 0 30px rgba(0,242,255,0.1); }
+        .card.clicked { border-color: #fff; box-shadow: 0 0 60px var(--n-blue); transform: scale(0.96); }
+
+        .buy-btn { display: block; width: 100%; padding: 14px; background: transparent; color: white; border: 1px solid #222; border-radius: 4px; font-family: 'Orbitron'; font-size: 0.65rem; font-weight: 900; transition: 0.3s; margin-top: 25px; }
+        .card:hover .buy-btn { background: #fff; color: #000; border-color: #fff; }
+
+        /* --- CONTACT --- */
+        .contact-box { max-width: 600px; margin: 0 auto 100px; background: rgba(5,5,5,0.9); padding: 50px; border: 1px solid #111; border-radius: 15px; opacity: 0; }
+        input, textarea { width: 100%; padding: 15px; background: #000; border: 1px solid #222; color: white; margin-bottom: 15px; border-radius: 6px; outline: none; font-family: 'Inter'; }
+        .submit-btn { width: 100%; padding: 18px; background: var(--n-blue); color: #000; font-family: 'Orbitron'; font-weight: 900; border: none; cursor: pointer; border-radius: 6px; transition: 0.3s; }
+        .submit-btn:hover { background: white; box-shadow: 0 0 20px white; }
+
+        /* --- LEGAL MODULES --- */
+        .legal-wrapper { width: 90%; max-width: 1200px; margin: 0 auto 100px; opacity: 0; display: flex; flex-direction: column; gap: 15px; }
+        .legal-module { background: rgba(10,10,10,0.8); border: 1px solid #111; border-radius: 8px; overflow: hidden; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .legal-head { padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-family: 'Orbitron'; font-size: 0.75rem; letter-spacing: 2px; color: #555; }
+        .legal-head:hover { color: var(--n-blue); background: rgba(0, 242, 255, 0.03); }
+        .legal-module.active { border-color: var(--n-blue); }
+        .legal-module.active .legal-head { color: var(--n-blue); }
+        .legal-body { max-height: 0; opacity: 0; padding: 0 30px; transition: all 0.5s ease; font-size: 0.8rem; color: #888; line-height: 1.8; }
+        .legal-module.active .legal-body { max-height: 500px; opacity: 1; padding: 0 30px 30px 30px; }
+        .chevron { transition: 0.3s; font-size: 0.6rem; }
+        .legal-module.active .chevron { transform: rotate(180deg); color: var(--n-blue); }
+
+        footer { text-align: center; padding: 40px; font-family: 'Orbitron'; font-size: 0.5rem; color: #222; letter-spacing: 5px; }
+    </style>
+</head>
+<body>
+
+    <div id="intro-overlay">
+        <img src="IMG_7023.png" id="intro-logo">
+        <div id="intro-text">SHOP NOW LEXORD.DE</div>
+    </div>
+
+    <canvas id="star-canvas"></canvas>
+
+    <header id="main-header">
+        <div class="logo-area" onclick="location.reload()">
+            <img src="IMG_7023.png">
+            <span class="brand-name">LEXORD.DE</span>
+        </div>
+        <div class="lang-switch">
+            <span class="lang-btn active" onclick="setLanguage('de')">DE</span> | 
+            <span class="lang-btn" onclick="setLanguage('en')">EN</span>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero-container" id="hero">
+            <img src="IMG_7023.png" class="hero-logo-main">
+            <div class="hero-label" data-key="hero-label">HARDWARE MODDING / 3D DRUCK</div>
+            <h1 data-key="hero-title">BEYOND<br>LIMITS.</h1>
+        </section>
+
+        <div class="section-label"><h2 data-key="sec-prod">PRÄZISIONS_HARDWARE</h2></div>
+        
+        <section class="grid">
+            <div class="card" onclick="handleProductClick(this, 'https://www.ebay.de/itm/127605871230')">
+                <div class="img-box"><img src="Stickzange.PNG"></div>
+                <h4 class="orbitron" style="font-size:0.65rem;" data-key="p1-name">STICKZANGE PRO</h4>
+                <div style="color:var(--n-blue); font-family:Orbitron; margin:10px 0;">5,95 €</div>
+                <div class="buy-btn" data-key="buy-btn">EBAY SHOP</div>
+            </div>
+
+            <div class="card" onclick="handleProductClick(this, 'https://www.ebay.de/itm/127621679343')">
+                <div class="img-box"><img src="PADDLE SYSTEM.PNG"></div>
+                <h4 class="orbitron" style="font-size:0.65rem;" data-key="p2-name">PADDLE SYSTEM V2</h4>
+                <div style="color:var(--n-blue); font-family:Orbitron; margin:10px 0;">45,95 €</div>
+                <div class="buy-btn" data-key="buy-btn">EBAY SHOP</div>
+            </div>
+
+            <div class="card" style="opacity: 0.6;">
+                <div class="img-box"><img src="IMG_7023.png" style="filter:grayscale(1) opacity(0.2);"></div>
+                <h4 class="orbitron" style="font-size:0.65rem;">PROJECT_ALPHA</h4>
+                <div style="color:#333; font-family:Orbitron; margin:10px 0;" data-key="status-dev">IN ENTWICKLUNG</div>
+                <div class="buy-btn" data-key="btn-soon">COMING SOON</div>
+            </div>
+        </section>
+
+        <div class="section-label"><h2 data-key="sec-cont">KONTAKT</h2></div>
+        <section class="contact-box">
+            <form onsubmit="return false;">
+                <input type="text" id="form-name" placeholder="NAME">
+                <input type="email" id="form-email" placeholder="E-MAIL">
+                <textarea id="form-msg" placeholder="ANFRAGE..." rows="4"></textarea>
+                <button type="submit" class="submit-btn" data-key="btn-send">DATEN_SENDEN</button>
+            </form>
+        </section>
+
+        <section class="legal-wrapper">
+            <div class="legal-module" onclick="toggleLegal(this)">
+                <div class="legal-head">
+                    <span data-key="tab-imp">IMPRESSUM</span>
+                    <span class="chevron">▼</span>
+                </div>
+                <div class="legal-body">
+                    Leon Schulz<br>An Der Domsühler Str. 2<br>19374 Domsühl<br><br>E-Mail: kontakt@lexord.de
+                </div>
+            </div>
+
+            <div class="legal-module" onclick="toggleLegal(this)">
+                <div class="legal-head">
+                    <span data-key="tab-priv">RECHTLICHES</span>
+                    <span class="chevron">▼</span>
+                </div>
+                <div class="legal-body" data-key="legal-info">
+                    Privatverkauf unter Ausschluss jeglicher Gewährleistung. Analyse via GoatCounter (Anonym ohne Cookies).
+                </div>
+            </div>
+        </section>
+
+        <footer>© 2026 LEXORD. ALL RIGHTS RESERVED.</footer>
+    </main>
+
+    <script>
+        // --- ÜBERSETZUNGS-SYSTEM ---
+        const translations = {
+            de: {
+                "hero-label": "HARDWARE MODDING / 3D DRUCK",
+                "hero-title": "BEYOND<br>LIMITS.",
+                "sec-prod": "PRÄZISIONS_HARDWARE",
+                "sec-cont": "KONTAKT",
+                "p1-name": "STICKZANGE PRO",
+                "p2-name": "PADDLE SYSTEM V2",
+                "buy-btn": "EBAY SHOP",
+                "status-dev": "IN ENTWICKLUNG",
+                "btn-soon": "BALD VERFÜGBAR",
+                "btn-send": "DATEN_SENDEN",
+                "tab-imp": "IMPRESSUM",
+                "tab-priv": "RECHTLICHES",
+                "legal-info": "Privatverkauf unter Ausschluss jeglicher Gewährleistung. Analyse via GoatCounter (Anonym).",
+                "placeholder-name": "NAME",
+                "placeholder-msg": "ANFRAGE..."
+            },
+            en: {
+                "hero-label": "HARDWARE MODDING / 3D PRINTING",
+                "hero-title": "BEYOND<br>LIMITS.",
+                "sec-prod": "PRECISION_HARDWARE",
+                "sec-cont": "CONTACT",
+                "p1-name": "STICK PLIERS PRO",
+                "p2-name": "PADDLE SYSTEM V2",
+                "buy-btn": "EBAY SHOP",
+                "status-dev": "IN DEVELOPMENT",
+                "btn-soon": "COMING SOON",
+                "btn-send": "SEND_DATA",
+                "tab-imp": "IMPRINT",
+                "tab-priv": "LEGAL",
+                "legal-info": "Private sale excluding any warranty or liability. Analytics via GoatCounter (Anonymous).",
+                "placeholder-name": "YOUR NAME",
+                "placeholder-msg": "YOUR MESSAGE..."
+            }
+        };
+
+        function setLanguage(lang) {
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.innerText === lang.toUpperCase()));
+            document.querySelectorAll('[data-key]').forEach(el => el.innerHTML = translations[lang][el.getAttribute('data-key')]);
+            document.getElementById('form-name').placeholder = translations[lang]["placeholder-name"];
+            document.getElementById('form-msg').placeholder = translations[lang]["placeholder-msg"];
+        }
+
+        // --- STERNENHINTERGRUND ---
+        const canvas = document.getElementById('star-canvas');
+        const ctx = canvas.getContext('2d');
+        let stars = []; let warpSpeed = 0.2;
+        function initStars() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            stars = []; for(let i=0; i<300; i++) stars.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: Math.random()*1.8, speed: Math.random()*0.5 });
+        }
+        function drawStars() {
+            ctx.clearRect(0,0,canvas.width, canvas.height); ctx.fillStyle = "white";
+            stars.forEach(s => { ctx.globalAlpha = s.speed + 0.2; ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI*2); ctx.fill(); s.y += s.speed + warpSpeed; if(s.y > canvas.height) s.y = 0; });
+            requestAnimationFrame(drawStars);
+        }
+        window.addEventListener('resize', initStars); initStars(); drawStars();
+
+        // --- FUNKTIONEN ---
+        function handleProductClick(element, url) {
+            element.classList.add('clicked');
+            setTimeout(() => { element.classList.remove('clicked'); window.open(url, '_blank'); }, 300);
+        }
+
+        function toggleLegal(el) {
+            const isActive = el.classList.contains('active');
+            document.querySelectorAll('.legal-module').forEach(m => m.classList.remove('active'));
+            if(!isActive) el.classList.add('active');
+        }
+
+        // --- PAGE REVEAL ANIMATION ---
+        window.onload = () => {
+            const tl = gsap.timeline(); warpSpeed = 15; // Warp-Effekt im Intro
+            tl.to("#intro-logo", { opacity: 1, scale: 1, duration: 1.2, ease: "power4.out" })
+              .to("#intro-text", { opacity: 1, duration: 0.8 }, "-=0.4")
+              .to("#intro-overlay", { opacity: 0, duration: 1, delay: 0.8, onComplete: () => { 
+                  document.getElementById('intro-overlay').style.display = "none"; warpSpeed = 0.2; 
+              }})
+              .to("header, #hero, .section-label, .grid, .contact-box, .legal-wrapper", { opacity: 1, duration: 0.8, stagger: 0.1 });
+        };
+    </script>
+</body>
+</html>

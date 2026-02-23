@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEXORD™ | Profi PS5 Controller Mod-Kits</title>
+
+<script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link rel="apple-touch-icon" href="IMG_7023.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+<style>
+:root{ --n-blue:#00f2ff; --n-purple:#bc13fe; --bg:#050505; --card:rgba(15,15,15,0.95); }
+*{margin:0;padding:0;box-sizing:border-box; -webkit-font-smoothing: antialiased;}
+body{background:#000; color:white; font-family:'Inter',sans-serif; overflow-x:hidden;}
+
+/* --- INTRO --- */
+#intro-terminal { position: fixed; inset: 0; background: #000; z-index: 100000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.9s; }
+#warp-canvas { position: absolute; inset: 0; z-index: -1; }
+.glitch-logo { width: 200px; filter: drop-shadow(0 0 30px var(--n-blue)); margin-bottom: 40px; }
+.start-button { padding: 20px 60px; background: rgba(0,0,0,0.6); border: 1px solid var(--n-blue); color: var(--n-blue); font-family: 'Orbitron'; font-weight: 900; letter-spacing: 5px; cursor: pointer; transition: 0.4s; }
+.start-button:hover { background: var(--n-blue); color: #000; box-shadow: 0 0 50px var(--n-blue); }
+
+/* --- MAIN --- */
+#main-site { display: none; opacity: 0; background: var(--bg); min-height: 100vh; flex-direction: column; align-items: center; width: 100%; }
+.site-unlock { display: flex !important; animation: screen-open 0.8s forwards; }
+@keyframes screen-open { 0% { transform: scaleY(0.005) scaleX(0); opacity: 0; } 100% { transform: scaleY(1) scaleX(1); opacity: 1; } }
+
+#particles-js{position:fixed;inset:0;z-index:-1;opacity:.3;}
+header{padding:50px 20px; text-align:center;}
+.logo-mini{width:100px; filter:drop-shadow(0 0 15px var(--n-blue)); margin-bottom:10px;}
+
+/* TRUST DASHBOARD */
+.trust-dashboard { width: 92%; max-width: 550px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 30px; }
+.trust-card { background: var(--card); border: 1px solid var(--n-blue); border-radius: 12px; padding: 12px 5px; text-decoration: none; color: white; text-align: center; font-size: 0.8rem; transition: 0.3s; }
+.trust-label { font-family: 'Orbitron'; font-size: 0.45rem; color: var(--n-blue); display: block; margin-bottom: 4px; }
+
+.section-title { width: 92%; max-width: 550px; margin: 20px 0 15px; font-family: 'Orbitron'; font-size: 0.6rem; color: var(--n-blue); letter-spacing: 2px; border-left: 2px solid var(--n-blue); padding-left: 10px; }
+
+/* GRID */
+.grid{width:92%; max-width:550px; display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+.card { background: var(--card); border: 1px solid var(--n-blue); border-radius: 20px; padding: 20px; text-align: center; transition: 0.4s; position: relative;}
+.card:hover { border-color: var(--n-purple); transform: translateY(-5px); }
+
+.product-glow img { width: 100%; height: 100px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.4)); transition: 0.4s; }
+.card:hover .product-glow img { filter: drop-shadow(0 0 25px var(--n-blue)); transform: scale(1.05); }
+
+.price{font-size:1.1rem; font-family:'Orbitron'; color:var(--n-blue); margin:12px 0;}
+.buy-btn { display: block; background: #fff; color: #000; text-decoration: none; padding: 12px; border-radius: 8px; font-family: 'Orbitron'; font-size: .6rem; font-weight: 900; }
+
+/* SOCIALS DEZENT */
+.social-minimal { display: flex; gap: 25px; margin: 30px 0; }
+.social-link { text-decoration: none; color: #444; font-family: 'Orbitron'; font-size: 0.55rem; letter-spacing: 2px; transition: 0.3s; }
+.social-link:hover { color: var(--n-blue); }
+
+/* SUPPORT & OVERLAYS */
+#gateway-overlay { position: fixed; inset: 0; background: #000; z-index: 200000; display: none; align-items: center; justify-content: center; flex-direction: column; }
+.terminal-loader { width: 80%; max-width: 400px; font-family: monospace; color: var(--n-blue); padding: 20px; background: #050505; border: 1px solid #111; }
+#success-panel { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 210000; display: none; align-items: center; justify-content: center; }
+.success-card { background: #0a0a0a; border: 2px solid var(--n-blue); padding: 30px; border-radius: 20px; text-align: center; }
+
+.contact-box{width:92%; max-width:550px; margin-bottom:50px; background:var(--card); padding:30px; border-radius:24px; border: 1px solid var(--n-blue); }
+input, textarea { width: 100%; padding: 15px; margin-bottom: 10px; background: #000; border: 1px solid #222; color: white; border-radius: 8px; outline: none; }
+.send-btn{width:100%; padding:18px; border-radius:10px; border:none; background: linear-gradient(90deg, var(--n-blue), var(--n-purple)); font-family:'Orbitron'; font-weight:900; color: white; cursor:pointer;}
+
+footer{padding:40px 20px 80px; text-align:center;}
+.legal-trigger{background:none; border:none; color:#222; cursor:pointer; font-family:'Orbitron'; font-size:.5rem; text-decoration: underline;}
+.imp-box{display:none; text-align: left; background: #0a0a0a; border: 1px solid #222; padding: 20px; font-size: 0.7rem; color: #888; margin-top: 15px;}
+</style>
+</head>
+
+<body>
+<audio id="bootSound"><source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg"></audio>
+
+<div id="intro-terminal">
+    <canvas id="warp-canvas"></canvas>
+    <img src="IMG_7023.png" class="glitch-logo">
+    <button class="start-button" onclick="launchTerminal()">SYSTEM STARTEN</button>
+</div>
+
+<div id="gateway-overlay"><div class="terminal-loader" id="log-container"></div></div>
+<div id="success-panel">
+    <div class="success-card">
+        <h2 class="orbitron" style="color:var(--n-blue);">SENT</h2>
+        <p style="margin: 20px 0; font-size:0.8rem;">Anfrage erfolgreich übertragen.</p>
+        <button class="send-btn" onclick="closeSuccess()">OK</button>
+    </div>
+</div>
+
+<div id="main-site">
+    <div id="particles-js"></div>
+    <header>
+        <img src="IMG_7023.png" class="logo-mini">
+        <h1 class="orbitron">LEXORD™</h1>
+        <p style="color:var(--n-blue); font-size: 0.5rem; letter-spacing: 4px;">ENGINEERING & MODS</p>
+    </header>
+
+    <div class="trust-dashboard">
+        <a href="https://g.page/r/CQyRhiy7wS_DEAE/review" target="_blank" class="trust-card"><span class="trust-label">GOOGLE</span>★★★★★</a>
+        <a href="https://www.ebay.de/usr/lexord-de" target="_blank" class="trust-card"><span class="trust-label">EBAY</span>★★★★★</a>
+        <a href="https://de.trustpilot.com/review/lexord.de" target="_blank" class="trust-card"><span class="trust-label">TRUSTPILOT</span>★★★★★</a>
+    </div>
+
+    <div class="section-title">PRODUCTS_01</div>
+    <div class="grid">
+        <div class="card"><div class="product-glow"><img src="Stickzange.PNG"></div><h3 class="orbitron" style="font-size:0.5rem; margin-top:10px;">Stickzange Pro</h3><div class="price">5,95 €</div><a href="https://www.ebay.de/itm/127605871230" target="_blank" class="buy-btn">EBAY</a></div>
+        <div class="card"><div class="product-glow"><img src="PADDLE SYSTEM.PNG"></div><h3 class="orbitron" style="font-size:0.5rem; margin-top:10px;">Paddle System V2</h3><div class="price">45,95 €</div><a href="https://www.ebay.de/itm/127621679343" target="_blank" class="buy-btn">EBAY</a></div>
+        <div class="card"><div class="product-glow"><img src="IMG_7023.png" style="opacity:0.2;"></div><h3 class="orbitron" style="font-size:0.5rem; margin-top:10px;">Soon</h3><div class="price">--,-- €</div><a class="buy-btn" style="opacity:0.2;">SOON</a></div>
+        <div class="card"><div class="product-glow"><img src="IMG_7023.png" style="opacity:0.2;"></div><h3 class="orbitron" style="font-size:0.5rem; margin-top:10px;">Soon</h3><div class="price">--,-- €</div><a class="buy-btn" style="opacity:0.2;">SOON</a></div>
+        <div class="card"><div class="product-glow"><img src="IMG_7023.png" style="opacity:0.2;"></div><h3 class="orbitron" style="font-size:0.5rem; margin-top:10px;">Soon</h3><div class="price">--,-- €</div><a class="buy-btn" style="opacity:0.2;">SOON</a></div>
+        <div class="card"><div class="product-glow"><img src="IMG_7023.png" style="opacity:0.2;"></div><h3 class="orbitron" style="font-size:0.5rem; margin-top:10px;">Soon</h3><div class="price">--,-- €</div><a class="buy-btn" style="opacity:0.2;">SOON</a></div>
+    </div>
+
+    <div class="social-minimal">
+        <a href="https://www.instagram.com/lexord.de" target="_blank" class="social-link">INSTAGRAM</a>
+        <a href="https://www.tiktok.com/@lexord.de" target="_blank" class="social-link">TIKTOK</a>
+    </div>
+
+    <div class="contact-box">
+        <h2 class="orbitron" style="font-size:0.7rem; margin-bottom:20px; text-align:center;">SUPPORT_REQUEST</h2>
+        <form onsubmit="return handleForm(event)">
+            <input type="text" placeholder="Name" required>
+            <input type="email" placeholder="E-Mail" required>
+            <textarea placeholder="Nachricht..." rows="3" required></textarea>
+            <button class="send-btn" type="submit">ÜBERTRAGUNG STARTEN</button>
+        </form>
+    </div>
+
+    <footer>
+        <button class="legal-trigger" onclick="toggleLegal()">IMPRESSUM</button>
+        <div id="legal-box" class="imp-box">Leon Schulz | An Der Domsühler Straße 2 | 19374 Domsühl | lexord.de</div>
+    </footer>
+</div>
+
+<script>
+const canvas = document.getElementById('warp-canvas'); const ctx = canvas.getContext('2d');
+let stars = []; let speed = 0.5;
+function initStars() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; stars = []; for(let i=0; i<400; i++) stars.push({x: Math.random()*canvas.width-canvas.width/2, y: Math.random()*canvas.height-canvas.height/2, z: Math.random()*canvas.width}); }
+function drawStars() { ctx.fillStyle = "black"; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.translate(canvas.width/2, canvas.height/2); for(let s of stars) { s.z -= speed; if(s.z <= 0) s.z = canvas.width; let x = s.x * (canvas.width/s.z); let y = s.y * (canvas.width/s.z); let size = (1-s.z/canvas.width)*3; ctx.fillStyle = `rgba(0,242,255,${1-s.z/canvas.width})`; ctx.fillRect(x,y,size,size); } ctx.translate(-canvas.width/2, -canvas.height/2); requestAnimationFrame(drawStars); }
+initStars(); drawStars();
+
+function launchTerminal() {
+    speed = 50; document.getElementById('bootSound').play().catch(()=>{});
+    setTimeout(() => { document.getElementById('intro-terminal').style.display = "none"; document.getElementById('main-site').classList.add('site-unlock'); document.body.style.overflow = "auto"; particlesJS('particles-js',{particles:{number:{value:30},color:{value:'#00f2ff'},opacity:{value:.2},move:{speed:.7}}}); }, 700);
+}
+
+function handleForm(e) {
+    e.preventDefault();
+    const gateway = document.getElementById('gateway-overlay'); const container = document.getElementById('log-container');
+    const logs = ["> ENCRYPTING...", "> UPLOADING PACKET...", "> HANDSHAKE...", "> SUCCESS!"];
+    gateway.style.display = "flex"; container.innerHTML = "";
+    logs.forEach((text, i) => { setTimeout(() => { const p = document.createElement('p'); p.textContent = text; container.appendChild(p); if(i === logs.length - 1) { setTimeout(() => { gateway.style.display = "none"; document.getElementById('success-panel').style.display = "flex"; }, 800); } }, i * 600); });
+    return false;
+}
+function closeSuccess() { document.getElementById('success-panel').style.display = "none"; }
+function toggleLegal(){ const box = document.getElementById('legal-box'); box.style.display = (box.style.display === 'block') ? 'none' : 'block'; }
+</script>
+</body>
+</html>

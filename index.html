@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LEXORD | Engineering Excellence</title>
+    
+    <script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;400;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+
+    <style>
+        :root { --accent: #00f2ff; --bg: #000; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        
+        body { 
+            background: var(--bg); 
+            color: #fff; 
+            font-family: 'Inter', sans-serif; 
+            overflow-x: hidden;
+            height: 100vh;
+        }
+
+        /* --- ANIMIERTER LIQUID BACKGROUND --- */
+        #liquid-bg {
+            position: fixed; inset: 0; z-index: -1;
+            background: linear-gradient(125deg, #000000 0%, #050505 40%, #001a1d 100%);
+            background-size: 400% 400%;
+            animation: liquidFlow 15s ease infinite;
+            opacity: 0.8;
+        }
+        @keyframes liquidFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- BITRO WARP INTRO --- */
+        #intro {
+            position: fixed; inset: 0; background: #000; z-index: 100000;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+        }
+        #warp-canvas { position: absolute; inset: 0; opacity: 0.6; }
+        .intro-title {
+            position: relative; z-index: 2;
+            font-size: clamp(2rem, 12vw, 10rem); font-weight: 900; letter-spacing: -0.05em;
+            transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .intro-title:hover { color: var(--accent); filter: drop-shadow(0 0 30px var(--accent)); }
+
+        /* --- HEADER --- */
+        header {
+            position: fixed; top: 0; width: 100%; z-index: 5000; padding: 40px 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            mix-blend-mode: difference;
+        }
+        .logo { font-weight: 900; letter-spacing: 0.2em; font-size: 1.4rem; }
+        .nav-meta { display: flex; gap: 40px; font-size: 0.65rem; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase; }
+        .nav-meta div { cursor: pointer; transition: 0.3s; }
+        .nav-meta div:hover { color: var(--accent); }
+
+        /* --- CONTENT --- */
+        main { display: none; opacity: 0; }
+        section { min-height: 100vh; padding: 0 5%; display: flex; flex-direction: column; justify-content: center; position: relative; }
+
+        .hero-text { font-size: clamp(3rem, 15vw, 14rem); font-weight: 900; line-height: 0.75; letter-spacing: -0.06em; text-transform: uppercase; }
+        .hero-sub { margin-top: 50px; font-size: 0.7rem; letter-spacing: 0.4em; opacity: 0.4; font-weight: 400; }
+
+        /* --- SHOP GRID --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 40px; margin: 100px 0; }
+        .product-card {
+            position: relative; background: rgba(5,5,5,0.4); border: 1px solid #111; 
+            padding: 100px 50px; transition: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden; backdrop-filter: blur(10px);
+        }
+        .product-card:hover { border-color: var(--accent); transform: translateY(-15px); background: rgba(10,10,10,0.8); }
+        .product-card img { 
+            width: 100%; height: 350px; object-fit: contain; margin-bottom: 60px; 
+            transition: 0.8s cubic-bezier(0.16, 1, 0.3, 1); filter: grayscale(1);
+        }
+        .product-card:hover img { transform: scale(1.1); filter: grayscale(0) drop-shadow(0 0 40px var(--accent)); }
+        
+        .p-name { font-size: 2rem; font-weight: 900; letter-spacing: -0.02em; }
+        .p-price { font-size: 0.8rem; opacity: 0.4; margin-top: 10px; font-weight: 400; letter-spacing: 0.1em; }
+
+        /* --- FOOTER --- */
+        footer { padding: 200px 5% 60px; border-top: 1px solid #111; margin-top: 100px; }
+        .f-big { font-size: clamp(3rem, 18vw, 20rem); font-weight: 900; line-height: 0.7; letter-spacing: -0.08em; margin-bottom: 100px; }
+        .f-legal { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding-top: 40px; border-top: 1px solid #111; font-size: 0.55rem; 
+            letter-spacing: 0.2em; opacity: 0.3; 
+        }
+        .legal-links { display: flex; gap: 30px; }
+        .legal-links span { cursor: pointer; }
+        .legal-links span:hover { color: var(--accent); opacity: 1; }
+
+        /* --- OVERLAY --- */
+        #overlay { position: fixed; inset: 0; background: #000; z-index: 200000; display: none; padding: 120px 5%; overflow-y: auto; }
+
+        /* --- MOBILE --- */
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+            .hero-text { font-size: 4rem; }
+            header { padding: 20px 5%; }
+            .nav-meta { gap: 15px; font-size: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="liquid-bg"></div>
+
+    <div id="intro" onclick="launch()">
+        <canvas id="warp-canvas"></canvas>
+        <h1 class="intro-title">LEXORD.DE</h1>
+    </div>
+
+    <header>
+        <div class="logo" onclick="location.reload()">LEXORD</div>
+        <div class="nav-meta">
+            <div onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Collection</div>
+            <div onclick="openLegal('imp')">Legal</div>
+            <div onclick="openCart()">Cart [0]</div>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <section>
+            <p class="hero-sub">ADVANCED HARDWARE ENGINEERING // 2026</p>
+            <h1 class="hero-text">LEXORD<br>SYSTEMS</h1>
+        </section>
+
+        <section id="shop">
+            <div class="grid">
+                <div class="product-card" onclick="addToCart('Stickzange Pro', 5.95)">
+                    <img src="Stickzange.PNG">
+                    <div class="p-name">STICKZANGE PRO</div>
+                    <div class="p-price">5.95 EUR</div>
+                </div>
+                <div class="product-card" onclick="addToCart('Paddle System V2', 45.95)">
+                    <img src="PADDLE SYSTEM.PNG">
+                    <div class="p-name">PADDLE SYSTEM V2</div>
+                    <div class="p-price">45.95 EUR</div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="f-big">LEXORD</div>
+            <div class="f-legal">
+                <div class="legal-links">
+                    <span onclick="openLegal('imp')">IMPRESSUM</span>
+                    <span onclick="openLegal('ds')">DATENSCHUTZ</span>
+                    <span onclick="openLegal('pri')">PRIVATVERKAUF</span>
+                </div>
+                <div>© 2026 ALL RIGHTS RESERVED.</div>
+            </div>
+        </footer>
+    </main>
+
+    <div id="overlay">
+        <div onclick="this.parentElement.style.display='none'" style="cursor:pointer; margin-bottom:80px; font-size:0.6rem; letter-spacing:0.3em; opacity:0.5;">[ RETURN ]</div>
+        <div id="inject" style="max-width:800px;"></div>
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // WARP STARFIELD
+        const canvas = document.getElementById('warp-canvas'); const ctx = canvas.getContext('2d');
+        let stars = []; canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        for(let i=0; i<400; i++) stars.push({x: Math.random()*canvas.width-canvas.width/2, y: Math.random()*canvas.height-canvas.height/2, z: Math.random()*canvas.width});
+        
+        function animateWarp() {
+            ctx.fillStyle = "black"; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.translate(canvas.width/2, canvas.height/2);
+            stars.forEach(s => {
+                s.z -= 1.2; if(s.z <= 0) s.z = canvas.width;
+                let x = s.x*(canvas.width/s.z); let y = s.y*(canvas.width/s.z);
+                ctx.fillStyle = `rgba(0,242,255,${1-s.z/canvas.width})`; ctx.fillRect(x,y,1.5,1.5);
+            });
+            ctx.translate(-canvas.width/2, -canvas.height/2); requestAnimationFrame(animateWarp);
+        }
+        animateWarp();
+
+        // LAUNCH FUNCTION
+        function launch() {
+            gsap.to(".intro-title", { scale: 1.2, opacity: 0, duration: 1, ease: "power4.inOut" });
+            gsap.to("#intro", { y: "-100%", duration: 1.5, ease: "power4.inOut", onComplete: () => {
+                document.getElementById('intro').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                document.body.style.overflow = 'auto';
+                gsap.to("#main-content", { opacity: 1, duration: 1.5 });
+                initScroll();
+            }});
+        }
+
+        function initScroll() {
+            gsap.from(".hero-text", { y: 200, opacity: 0, duration: 2, ease: "power4.out" });
+            gsap.from(".product-card", { 
+                y: 100, opacity: 0, stagger: 0.3,
+                scrollTrigger: { trigger: "#shop", start: "top bottom" }
+            });
+        }
+
+        function openLegal(type) {
+            const legals = {
+                imp: "<h1>IMPRESSUM</h1><br><p>Leon Schulz<br>An der Domsühler Straße 2<br>19374 Domsühl<br>kontakt@lexord.de</p>",
+                ds: "<h1>DATENSCHUTZ</h1><br><p>GoatCounter Tracking. Keine Cookies. Maximale Anonymität.</p>",
+                pri: "<h1>PRIVATVERKAUF</h1><br><p>Der Verkauf erfolgt unter Ausschluss jeglicher Sachmängelhaftung nach § 13 BGB.</p>"
+            };
+            document.getElementById('inject').innerHTML = legals[type];
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function addToCart(n, p) {
+            console.log("Added:", n);
+        }
+    </script>
+</body>
+</html>

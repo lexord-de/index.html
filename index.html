@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEXORD™ | Custom Controller Engineering</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --accent: #00f2ff;
+    --bg-dark: #000000;
+    --text-main: #ffffff;
+    --text-dim: #a0a0a0;
+    --card-bg: rgba(10, 10, 10, 0.7);
+    --border-light: rgba(0, 242, 255, 0.1);
+    --border-dark: rgba(255, 255, 255, 0.05);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+body { background: var(--bg-dark); color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
+
+/* --- GLOBAL ANIMATIONS --- */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes slideInLeft { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes glitchText {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(2px, -2px); }
+    60% { transform: translate(-1px, 1px); }
+    80% { transform: translate(1px, -1px); }
+    100% { transform: translate(0); }
+}
+
+/* --- ANNOUNCEMENT BAR --- */
+.announcement {
+    background: #050505;
+    color: var(--accent);
+    font-family: 'Orbitron';
+    font-size: 0.6rem;
+    text-align: center;
+    padding: 8px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 1px solid var(--border-light);
+    animation: fadeIn 0.8s ease-out;
+}
+
+/* --- STICKY HEADER --- */
+header {
+    position: fixed; /* Changed to fixed for constant presence */
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.85); /* Slightly darker for depth */
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 5%; /* Slightly smaller for sleekness */
+    box-shadow: 0 2px 15px rgba(0,0,0,0.3); /* Subtle shadow */
+    animation: fadeIn 0.8s ease-out;
+}
+
+.logo-container { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.logo-img { width: 30px; filter: drop-shadow(0 0 8px var(--accent)); }
+.logo-text { font-family: 'Orbitron'; font-weight: 900; font-size: 1.1rem; letter-spacing: 3px; }
+
+.header-icons { display: flex; gap: 18px; align-items: center; }
+.icon-btn { cursor: pointer; background: none; border: none; color: white; transition: 0.3s; padding: 5px; }
+.icon-btn:hover { color: var(--accent); transform: scale(1.1); }
+.cart-btn { position: relative; }
+.cart-count { 
+    position: absolute; top: -6px; right: -8px; 
+    background: var(--accent); color: black; 
+    font-size: 0.5rem; font-weight: 700; 
+    padding: 1px 5px; border-radius: 50%; 
+    min-width: 16px; text-align: center;
+}
+
+/* --- MOBILE MENU OVERLAY (NEXUS STYLE) --- */
+#mobile-menu {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 2000;
+    display: none; flex-direction: column; justify-content: center; align-items: center;
+    padding: 60px 40px; animation: fadeIn 0.3s ease;
+    backdrop-filter: blur(25px);
+}
+.menu-close-btn { position: absolute; top: 30px; right: 30px; cursor: pointer; padding: 10px; }
+.menu-item {
+    font-family: 'Orbitron'; font-size: 2.2rem; margin-bottom: 35px;
+    color: var(--text-main); text-decoration: none; position: relative;
+    padding-bottom: 10px; transition: 0.4s ease; overflow: hidden;
+}
+.menu-item::after {
+    content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
+    background: var(--accent); transition: width 0.4s ease;
+}
+.menu-item:hover { color: var(--accent); }
+.menu-item:hover::after { width: 100%; }
+
+/* --- IMMERSIVE HERO SECTION --- */
+.hero {
+    height: 100vh; /* Full viewport height */
+    display: flex; flex-direction: column; 
+    justify-content: center; align-items: center; text-align: center;
+    position: relative; overflow: hidden;
+    color: white;
+}
+#hero-video {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    filter: brightness(0.4) grayscale(0.8); /* Darken and desaturate */
+    opacity: 0.6;
+}
+.hero-content { z-index: 10; padding: 20px; text-shadow: 0 0 15px rgba(0,0,0,0.7); }
+.hero-h1 { 
+    font-family: 'Orbitron'; font-size: 3.5rem; letter-spacing: 15px; 
+    text-transform: uppercase; margin-bottom: 20px; 
+    animation: fadeIn 1.5s ease-out;
+}
+.hero-p { 
+    color: var(--accent); font-size: 0.8rem; letter-spacing: 6px; 
+    margin-bottom: 40px; text-transform: uppercase;
+    animation: fadeIn 2s ease-out;
+}
+
+.btn-primary {
+    background: var(--accent); border: 1px solid var(--accent); color: black;
+    padding: 15px 40px; font-family: 'Orbitron'; font-weight: 700;
+    cursor: pointer; transition: 0.4s ease; text-decoration: none;
+    font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;
+    box-shadow: 0 0 20px rgba(0,242,255,0.4);
+    animation: fadeIn 2.5s ease-out;
+}
+.btn-primary:hover { 
+    background: black; color: var(--accent); 
+    box-shadow: 0 0 30px rgba(0,242,255,0.7); 
+    transform: translateY(-3px); 
+}
+
+/* --- SECTION HEADLINE ANIMATION --- */
+.section-headline {
+    padding: 80px 5% 40px; text-align: center;
+    font-family: 'Orbitron'; font-size: 1.8rem; letter-spacing: 8px;
+    color: var(--text-main); text-transform: uppercase;
+    position: relative; overflow: hidden;
+}
+.section-headline span {
+    display: inline-block;
+    animation: slideInLeft 1s ease-out forwards;
+}
+
+/* --- PRODUCT GRID (Holographic Hover) --- */
+.grid { 
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+    gap: 30px; padding: 0 5% 100px; max-width: 1400px; margin: 0 auto;
+}
+.card { 
+    background: var(--card-bg); border: 1px solid var(--border-dark); 
+    padding: 30px; transition: 0.5s ease; position: relative; overflow: hidden;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+.card::before { /* Holographic Border */
+    content: ''; position: absolute; inset: 0;
+    border: 2px solid transparent;
+    background: linear-gradient(45deg, var(--accent), var(--accent), var(--text-main)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0; transition: opacity 0.5s ease;
+}
+.card:hover::before { opacity: 1; }
+
+.card img { 
+    width: 90%; height: auto; margin-bottom: 20px; 
+    filter: drop-shadow(0 0 15px rgba(0,242,255,0.2));
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+.card:hover img { transform: scale(1.05); filter: drop-shadow(0 0 25px var(--accent)); }
+
+.card h3 { 
+    font-family: 'Orbitron'; font-size: 0.9rem; letter-spacing: 2px; 
+    margin-bottom: 10px; text-transform: uppercase;
+    color: var(--accent);
+}
+.price { 
+    font-weight: 700; font-size: 1.4rem; margin-bottom: 20px; 
+    color: var(--text-main);
+}
+.card .btn-primary { 
+    padding: 12px 30px; font-size: 0.65rem; border-color: var(--border-light);
+    box-shadow: none; background: rgba(0,242,255,0.1); color: var(--accent);
+}
+.card .btn-primary:hover { 
+    background: var(--accent); color: black; 
+    box-shadow: 0 0 15px var(--accent); 
+    transform: translateY(-2px);
+}
+
+/* --- SIDE CART PLUGIN (Refined) --- */
+#side-cart {
+    position: fixed; right: -100%; top: 0; width: 400px; height: 100vh;
+    background: rgba(0, 0, 0, 0.95); z-index: 3000; 
+    border-left: 1px solid var(--accent);
+    padding: 40px 30px; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: -20px 0 50px rgba(0,0,0,0.8);
+    backdrop-filter: blur(25px);
+}
+.cart-active #side-cart { right: 0; }
+.cart-header { 
+    display: flex; justify-content: space-between; align-items: center; 
+    margin-bottom: 30px; border-bottom: 1px solid var(--border-light); padding-bottom: 20px;
+}
+.cart-header h2 { font-family: 'Orbitron'; font-size: 1rem; letter-spacing: 2px; color: var(--accent); }
+.cart-header span { font-family: 'Orbitron'; font-size: 0.7rem; color: var(--text-dim); cursor: pointer; }
+.cart-header span:hover { color: var(--accent); }
+
+#cart-content { max-height: calc(100vh - 250px); overflow-y: auto; padding-right: 15px; } /* Scrollable */
+.cart-item { 
+    display: flex; justify-content: space-between; align-items: center; 
+    margin-bottom: 20px; font-size: 0.85rem; letter-spacing: 1px;
+    border-bottom: 1px dashed rgba(255,255,255,0.05); padding-bottom: 15px;
+}
+.cart-item span:first-child { color: var(--text-main); font-weight: 600; }
+.cart-item span:last-child { color: var(--accent); font-family: 'Orbitron'; }
+
+.cart-summary { 
+    position: absolute; bottom: 40px; left: 30px; right: 30px; 
+    border-top: 1px solid var(--border-light); padding-top: 25px;
+}
+.cart-summary div { 
+    display: flex; justify-content: space-between; margin-bottom: 25px; 
+    font-family: 'Orbitron'; font-size: 1.1rem; letter-spacing: 2px;
+}
+.cart-summary .btn-primary { 
+    width: 100%; padding: 18px; font-size: 0.7rem; 
+    background: var(--accent); color: black; border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(0,242,255,0.5);
+}
+.cart-summary .btn-primary:hover { 
+    background: black; color: var(--accent); 
+    box-shadow: 0 0 30px var(--accent); 
+}
+
+/* --- FOOTER --- */
+footer { 
+    padding: 60px 5% 40px; 
+    border-top: 1px solid var(--border-light); 
+    text-align: center; color: var(--text-dim); 
+    font-size: 0.65rem; letter-spacing: 2px;
+    opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+    .hero-h1 { font-size: 2.2rem; letter-spacing: 8px; }
+    .hero-p { font-size: 0.7rem; letter-spacing: 4px; }
+    .section-headline { font-size: 1.4rem; letter-spacing: 6px; padding: 60px 5% 30px; }
+    .grid { grid-template-columns: 1fr; }
+    #side-cart { width: 100%; }
+    .menu-item { font-size: 1.8rem; margin-bottom: 25px; }
+}
+
+@media (max-width: 480px) {
+    .hero-h1 { font-size: 1.8rem; letter-spacing: 5px; }
+    .hero-p { font-size: 0.6rem; letter-spacing: 3px; }
+    .section-headline { font-size: 1.2rem; letter-spacing: 4px; }
+    .card { padding: 20px; }
+    .card h3 { font-size: 0.8rem; }
+    .price { font-size: 1.2rem; }
+    .cart-header h2 { font-size: 0.9rem; }
+    .cart-summary div { font-size: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="announcement">
+    LEXORD™ // ENGINEERING HIGHEST PERFORMANCE CUSTOM CONTROLLER
+</div>
+
+<header>
+    <a href="#" class="logo-container">
+        <img src="IMG_7023.png" class="logo-img" alt="LEXORD Logo">
+        <span class="logo-text">LEXORD</span>
+    </a>
+    <div class="header-icons">
+        <button class="icon-btn" onclick="toggleMenu()">
+            <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+        </button>
+        <button class="icon-btn cart-btn" onclick="toggleCart()">
+            <svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            <span class="cart-count" id="cart-badge">0</span>
+        </button>
+    </div>
+</header>
+
+<div id="mobile-menu">
+    <button class="menu-close-btn" onclick="toggleMenu()">
+        <svg width="30" height="30" fill="white" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <a href="#produkte" class="menu-item" onclick="toggleMenu()">PRODUKTE</a>
+    <a href="#service" class="menu-item" onclick="toggleMenu()">SERVICE & REPARATUR</a>
+    <a href="#kontakt" class="menu-item" onclick="toggleMenu()">KONTAKT</a>
+    <a href="#" class="menu-item" onclick="alert('Impressum: Leon Schulz, An Der Domsühler Straße 2, 19374 Domsühl. Kontakt: kontakt@lexord.de'); toggleMenu();">IMPRESSUM</a>
+</div>
+
+<div id="side-cart">
+    <div class="cart-header">
+        <h2>DEIN STORAGE_CORE</h2>
+        <span onclick="toggleCart()">SCHLIESSEN</span>
+    </div>
+    <div id="cart-content">
+        </div>
+    <div class="cart-summary">
+        <div>
+            <span>GESAMT:</span><span id="cart-total">0.00 €</span>
+        </div>
+        <button class="btn-primary" onclick="checkout()">SICHERE DATENÜBERTRAGUNG (EBAY)</button>
+    </div>
+</div>
+
+<section class="hero">
+    <video autoplay muted loop playsinline id="hero-video">
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-glowing-digital-background-4712-large.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="hero-content">
+        <h1 class="hero-h1">LEXORD</h1>
+        <p class="hero-p">ADVANCED ENGINEERING // PRÄZISION NEU DEFINIERT</p>
+        <a href="#produkte" class="btn-primary">ZU DEN MODS</a>
+    </div>
+</section>
+
+<div id="produkte">
+    <h2 class="section-headline"><span>TOP</span> _MODS</h2>
+    <div class="grid">
+        <div class="card">
+            <img src="Stickzange.PNG" alt="Stickzange Pro">
+            <h3>STICKZANGE PRO</h3>
+            <div class="price">5,95 €</div>
+            <button class="btn-primary" onclick="addToCart('Stickzange Pro', 5.95)">IN DEN CORE</button>
+        </div>
+        <div class="card">
+            <img src="PADDLE SYSTEM.PNG" alt="Paddle System V2">
+            <h3>PADDLE SYSTEM V2</h3>
+            <div class="price">45,95 €</div>
+            <button class="btn-primary" onclick="addToCart('Paddle System V2', 45.95)">IN DEN CORE</button>
+        </div>
+        <div class="card">
+            <img src="https://via.placeholder.com/300x200/000000/00f2ff?text=COMING_SOON" alt="Produkt 3">
+            <h3>ANALYSE-MODUL</h3>
+            <div class="price">79,95 €</div>
+            <button class="btn-primary" onclick="addToCart('Analyse-Modul', 79.95)">IN DEN CORE</button>
+        </div>
+        <div class="card">
+            <img src="https://via.placeholder.com/300x200/000000/00f2ff?text=DEVELOPING" alt="Produkt 4">
+            <h3>ERGONOMIE-KIT</h3>
+            <div class="price">34,95 €</div>
+            <button class="btn-primary" onclick="addToCart('Ergonomie-Kit', 34.95)">IN DEN CORE</button>
+        </div>
+    </div>
+</div>
+
+<div id="service">
+    <h2 class="section-headline"><span>UNSER</span> _SERVICE</h2>
+    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+        <div class="card">
+            <h3>REPARATUREN</h3>
+            <p style="color:var(--text-dim); font-size:0.8rem; line-height:1.6;">Präzise Fehleranalyse und Instandsetzung deiner Hardware.</p>
+            <button class="btn-primary" style="margin-top:20px; padding:10px 25px;">MEHR INFOS</button>
+        </div>
+        <div class="card">
+            <h3>CUSTOM-BUILD</h3>
+            <p style="color:var(--text-dim); font-size:0.8rem; line-height:1.6;">Dein Controller, nach deinen Specs gefertigt. Einzigartig.</p>
+            <button class="btn-primary" style="margin-top:20px; padding:10px 25px;">ANFRAGE</button>
+        </div>
+        <div class="card">
+            <h3>3D-DRUCK</h3>
+            <p style="color:var(--text-dim); font-size:0.8rem; line-height:1.6;">Prototypen und Bauteile mit höchster Detailgenauigkeit.</p>
+            <button class="btn-primary" style="margin-top:20px; padding:10px 25px;">DETAILS</button>
+        </div>
+    </div>
+</div>
+
+<div id="kontakt">
+    <h2 class="section-headline"><span>KONTAKT</span> _LEXORD</h2>
+    <div class="card" style="max-width: 600px; margin: 0 auto 100px; padding: 40px;">
+        <h3 style="color:var(--accent); margin-bottom: 25px; font-size: 1.2rem;">DIREKTE ANFRAGE</h3>
+        <form onsubmit="return handleForm(event)" style="width: 100%;">
+            <input type="text" placeholder="DEIN NAME / ID" required 
+                   style="width:100%; padding:15px; margin-bottom:15px; background:rgba(255,255,255,0.05); border:1px solid #333; color:#fff; font-family:'Inter'; font-size:0.9rem;">
+            <input type="email" placeholder="KONTAKT E-MAIL" required 
+                   style="width:100%; padding:15px; margin-bottom:15px; background:rgba(255,255,255,0.05); border:1px solid #333; color:#fff; font-family:'Inter'; font-size:0.9rem;">
+            <textarea placeholder="DEINE NACHRICHT / PROJEKT" rows="5" required 
+                      style="width:100%; padding:15px; margin-bottom:25px; background:rgba(255,255,255,0.05); border:1px solid #333; color:#fff; font-family:'Inter'; font-size:0.9rem;"></textarea>
+            <button type="submit" class="btn-primary" style="width:100%;">DATEN SENDEN</button>
+        </form>
+    </div>
+</div>
+
+
+<footer>
+    <img src="IMG_7023.png" style="width:30px; margin-bottom: 15px; opacity: 0.3;" alt="LEXORD Logo">
+    <p>LEXORD™ // ENGINEERING DIVISION // 2026</p>
+    <p style="margin-top:10px;"><a href="#" style="color:var(--text-dim); text-decoration:none;" onclick="alert('Impressum: Leon Schulz, An Der Domsühler Straße 2, 19374 Domsühl. Kontakt: kontakt@lexord.de');">IMPRESSUM & DATENSCHUTZ</a></p>
+</footer>
+
+<script>
+let cart = [];
+
+// Load cart from localStorage on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const savedCart = localStorage.getItem('lexord_cart');
+    if (savedCart) {
+        cart = JSON.parse(savedCart);
+    }
+    updateUI();
+});
+
+function toggleMenu() {
+    const m = document.getElementById('mobile-menu');
+    m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+    document.body.style.overflow = m.style.display === 'flex' ? 'hidden' : 'auto';
+}
+
+function toggleCart() {
+    document.body.classList.toggle('cart-active');
+    document.body.style.overflow = document.body.classList.contains('cart-active') ? 'hidden' : 'auto';
+}
+
+function addToCart(name, price) {
+    cart.push({name, price});
+    localStorage.setItem('lexord_cart', JSON.stringify(cart)); // Save to localStorage
+    updateUI();
+    // Optional: Open cart if not already open
+    if (!document.body.classList.contains('cart-active')) {
+        toggleCart();
+    }
+}
+
+function updateUI() {
+    document.getElementById('cart-badge').innerText = cart.length;
+    const content = document.getElementById('cart-content');
+    content.innerHTML = "";
+    let total = 0;
+    if (cart.length === 0) {
+        content.innerHTML = `<p style="text-align:center; color:var(--text-dim); padding:20px;">Dein Storage_Core ist leer.</p>`;
+    } else {
+        cart.forEach((item, index) => {
+            content.innerHTML += `
+                <div class="cart-item">
+                    <span>${item.name}</span>
+                    <span>${item.price.toFixed(2)} €</span>
+                </div>`;
+            total += item.price;
+        });
+    }
+    
+    document.getElementById('cart-total').innerText = total.toFixed(2) + " €";
+}
+
+function checkout() {
+    alert("Simulation: Weiterleitung zum sicheren Ebay-Gateway wird initiiert...");
+    window.location.href = "https://www.ebay.de/usr/lexord-de"; // Real target
+}
+
+function handleForm(event) {
+    event.preventDefault();
+    alert("Nachricht gesendet! Wir werden uns schnellstmöglich melden.");
+    // In a real scenario, you'd send this data to a server
+    document.querySelector('#kontakt form').reset(); // Clear form
+    return false;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>LEXORD.DE | Premium Engineering</title>
+
+<script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+<style>
+:root {
+    --accent: #00f2ff;
+    --bg: #000;
+    --card-bg: #080808;
+    --border: rgba(0, 242, 255, 0.15);
+    --bezier: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
+body.no-scroll { overflow: hidden; height: 100vh; }
+
+#particles-js { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.25; }
+
+/* --- PROFESSIONAL HEADER --- */
+header {
+    position: fixed; top: 0; width: 100%; z-index: 5000;
+    background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(25px);
+    border-bottom: 1px solid var(--border);
+    padding: clamp(15px, 2vh, 25px) 8%;
+    display: flex; justify-content: space-between; align-items: center;
+    transition: all 0.5s var(--bezier);
+}
+
+header.scrolled { padding: 12px 8%; background: rgba(0,0,0,0.95); }
+
+/* ANIMIERTES LOGO */
+.logo-brand {
+    font-family: 'Orbitron'; font-weight: 900; 
+    font-size: clamp(1.1rem, 3vw, 1.5rem); letter-spacing: 4px;
+    text-decoration: none; display: flex; align-items: center; gap: 15px;
+    background: linear-gradient(90deg, #fff, var(--accent), #fff);
+    background-size: 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    animation: logoShine 4s linear infinite;
+}
+@keyframes logoShine { to { background-position: 200% center; } }
+
+/* NAVIGATION */
+nav { display: flex; gap: clamp(15px, 3vw, 35px); align-items: center; }
+.nav-link {
+    color: #fff; text-decoration: none; font-family: 'Orbitron'; font-size: 0.65rem;
+    letter-spacing: 2px; transition: 0.3s; position: relative; opacity: 0.7;
+}
+.nav-link:hover { opacity: 1; color: var(--accent); }
+.nav-link::after {
+    content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 1px;
+    background: var(--accent); transition: 0.3s;
+}
+.nav-link:hover::after { width: 100%; }
+
+.cart-btn { 
+    background: transparent; border: 1px solid var(--accent); color: var(--accent); 
+    padding: 10px 20px; font-family: 'Orbitron'; font-weight: 900; 
+    font-size: 0.65rem; cursor: pointer; transition: 0.4s var(--bezier);
+}
+.cart-btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 25px rgba(0, 242, 255, 0.4); }
+
+/* --- HERO --- */
+.hero { width: 100%; height: 85vh; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+#hero-vid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; object-fit: cover; filter: brightness(0.35); }
+.hero-h1 { font-family: 'Orbitron'; font-size: clamp(2.5rem, 10vw, 6rem); letter-spacing: clamp(10px, 3vw, 25px); font-weight: 900; text-align: center; }
+
+/* --- SEKTIONEN --- */
+.section { padding: 100px 8%; max-width: 1400px; margin: 0 auto; position: relative; z-index: 2; }
+.section-title { font-family: 'Orbitron'; font-size: clamp(1.2rem, 4vw, 2rem); color: var(--accent); margin-bottom: 60px; text-align: center; letter-spacing: 10px; }
+
+/* PRODUKT GRID */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; }
+.card { 
+    background: var(--card-bg); border: 1px solid var(--border); 
+    padding: 40px; transition: 0.6s var(--bezier); text-align: center;
+}
+.card:hover { transform: translateY(-15px); border-color: var(--accent); box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 20px rgba(0,242,255,0.1); }
+.card img { width: 100%; max-width: 250px; margin-bottom: 30px; transition: 0.8s var(--bezier); }
+.card:hover img { transform: scale(1.1); filter: drop-shadow(0 0 20px var(--accent)); }
+
+.buy-btn {
+    width: 100%; padding: 18px; background: transparent; border: 1px solid var(--accent);
+    color: var(--accent); font-family: 'Orbitron'; font-weight: 900; cursor: pointer;
+    transition: 0.3s; letter-spacing: 2px;
+}
+.buy-btn:hover { background: var(--accent); color: #000; }
+
+/* --- WARENKORB SIDEBAR --- */
+#sidebar { 
+    position: fixed; right: -100%; top: 0; width: 100%; max-width: 480px; height: 100%; 
+    background: #050505; z-index: 6000; border-left: 1px solid var(--border); 
+    padding: 60px 40px; transition: 0.8s var(--bezier); display: flex; flex-direction: column;
+}
+.sidebar-open #sidebar { right: 0; }
+
+/* --- IMPRESSUM MODAL --- */
+#legal-overlay {
+    position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.96); backdrop-filter: blur(30px);
+    display: none; align-items: center; justify-content: center;
+}
+.legal-content { max-width: 600px; width: 90%; text-align: left; background: #0a0a0a; border: 1px solid var(--border); padding: 40px; border-radius: 4px; }
+
+footer { padding: 80px 8%; text-align: center; border-top: 1px solid #111; color: #444; font-size: 0.7rem; letter-spacing: 2px; }
+
+@media (max-width: 1024px) { nav { display: none; } } /* Menü am Handy via Burger oder Button lösen, hier Fokus auf Cleanliness */
+
+</style>
+</head>
+<body>
+
+<div id="particles-js"></div>
+
+<header id="main-header">
+    <a href="#" class="logo-brand">LEXORD.DE</a>
+    
+    <nav>
+        <a href="#produkte" class="nav-link">PRODUKTE</a>
+        <a href="#service" class="nav-link">SERVICE</a>
+        <a href="#reparatur" class="nav-link">REPARATUR</a>
+        <a href="#kontakt" class="nav-link">KONTAKT</a>
+        <span class="nav-link" onclick="openLegal()" style="cursor:pointer">IMPRESSUM</span>
+    </nav>
+    
+    <div style="display:flex; align-items:center; gap: 20px;">
+        <div class="lang-switcher" style="font-family:'Orbitron'; font-size: 0.6rem;">
+            <span onclick="setLang('de')" id="lang-de" style="cursor:pointer; color:var(--accent);">DE</span> | 
+            <span onclick="setLang('en')" id="lang-en" style="cursor:pointer; opacity:0.4;">EN</span>
+        </div>
+        <button class="cart-btn" onclick="toggleCart()">WARENKORB (<span id="count">0</span>)</button>
+    </div>
+</header>
+
+<section class="hero">
+    <video autoplay muted loop playsinline id="hero-vid">
+        <source src="DEIN_VIDEO.mp4" type="video/mp4">
+    </video>
+    <h1 class="hero-h1">LEXORD</h1>
+    <p style="letter-spacing: 8px; color: var(--accent); font-family: 'Orbitron'; font-size: 0.7rem;">PREMIUM CONTROLLER MODS</p>
+</section>
+
+<div id="produkte" class="section">
+    <h2 class="section-title">ENGINEERING MODS</h2>
+    <div class="grid">
+        <div class="card">
+            <img src="Stickzange.PNG" alt="Stickzange">
+            <h3 class="orbitron" style="font-size: 0.9rem; margin-bottom:10px;">STICKZANGE PRO</h3>
+            <p style="color: var(--accent); font-weight:900; font-size: 1.5rem; margin-bottom:25px;">5,95 €</p>
+            <button class="buy-btn" onclick="addToCart('Stickzange Pro', 5.95)">IN DEN WARENKORB</button>
+        </div>
+        <div class="card">
+            <img src="PADDLE SYSTEM.PNG" alt="Paddle System">
+            <h3 class="orbitron" style="font-size: 0.9rem; margin-bottom:10px;">PADDLE SYSTEM V2</h3>
+            <p style="color: var(--accent); font-weight:900; font-size: 1.5rem; margin-bottom:25px;">45,95 €</p>
+            <button class="buy-btn" onclick="addToCart('Paddle System V2', 45.95)">IN DEN WARENKORB</button>
+        </div>
+    </div>
+</div>
+
+<div id="service" class="section">
+    <h2 class="section-title">SERVICE & REPARATUR</h2>
+    <div class="card" style="max-width: 900px; margin: 0 auto; text-align: left;">
+        <h3 class="orbitron" style="color:var(--accent); margin-bottom: 20px;">WIR MACHEN DEINEN CONTROLLER FIT</h3>
+        <p style="line-height: 1.8; opacity: 0.8; margin-bottom: 30px;">
+            Ob Stick-Drift, defekte Tasten oder ein kompletter Umbau auf High-End Paddles. 
+            Wir nutzen industrielle 3D-Druckverfahren und präzise Handarbeit für maximale Performance.
+        </p>
+        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div style="border-left: 2px solid var(--accent); padding-left: 20px;">
+                <h4 class="orbitron" style="font-size: 0.7rem;">REPARATUR</h4>
+                <p style="font-size: 0.8rem; opacity: 0.6;">Schnelle Hilfe bei Hardware-Defekten.</p>
+            </div>
+            <div style="border-left: 2px solid var(--accent); padding-left: 20px;">
+                <h4 class="orbitron" style="font-size: 0.7rem;">CUSTOM MODS</h4>
+                <p style="font-size: 0.8rem; opacity: 0.6;">Individuelle Umbauten nach deinen Wünschen.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="kontakt" class="section">
+    <h2 class="section-title">ANFRAGE SENDEN</h2>
+    <div style="max-width: 600px; margin: 0 auto;">
+        <form onsubmit="alert('Nachricht gesendet!'); return false;">
+            <input type="text" placeholder="NAME" style="width:100%; padding:20px; background:var(--card-bg); border:1px solid var(--border); color:#fff; margin-bottom:15px; font-family:'Orbitron'; font-size:0.7rem;">
+            <textarea placeholder="DEIN ANLIEGEN..." rows="5" style="width:100%; padding:20px; background:var(--card-bg); border:1px solid var(--border); color:#fff; margin-bottom:15px; font-family:'Inter';"></textarea>
+            <button type="submit" class="buy-btn">ÜBERTRAGUNG STARTEN</button>
+        </form>
+    </div>
+</div>
+
+<footer>
+    <p>© 2026 LEXORD.DE // PRECISION ENGINEERING</p>
+    <p style="margin-top:15px; opacity:0.3; font-size:0.5rem;">DESIGNED FOR THE ELITE GAMING COMMUNITY</p>
+</footer>
+
+<div id="sidebar">
+    <h2 class="orbitron" style="color:var(--accent); margin-bottom:40px;">WARENKORB</h2>
+    <div id="cart-list" style="flex-grow: 1; overflow-y: auto;"></div>
+    <div style="border-top: 1px solid #222; padding-top: 30px;">
+        <p class="orbitron" style="display:flex; justify-content:space-between; font-size:1.3rem;">TOTAL: <span id="total">0.00</span> €</p>
+        <button class="buy-btn" style="margin-top:30px; background:var(--accent); color:#000;" onclick="window.location.href='https://www.ebay.de/usr/lexord-de'">WARENKORB EBAY</button>
+        <p onclick="toggleCart()" style="text-align:center; margin-top:25px; cursor:pointer; font-size:0.6rem; opacity:0.4;">[ SCHLIESSEN ]</p>
+    </div>
+</div>
+
+<div id="legal-overlay">
+    <div class="legal-content">
+        <h2 class="orbitron" style="color:var(--accent); margin-bottom:25px;">IMPRESSUM & DATENSCHUTZ</h2>
+        <div style="font-size: 0.8rem; line-height: 1.6; max-height: 50vh; overflow-y: auto;">
+            <strong>Angaben gemäß § 5 TMG:</strong><br>
+            Leon Schulz<br>An Der Domsühler Straße 2<br>19374 Domsühl<br><br>
+            <strong>Kontakt:</strong><br>E-Mail: kontakt@lexord.de<br><br>
+            <strong>Rechtlicher Hinweis (Privatverkauf):</strong><br>
+            Der Verkauf erfolgt unter Ausschluss jeglicher Sachmängelhaftung. Die Haftung auf Schadenersatz wegen Verletzungen von Gesundheit, Körper oder Leben und grob fahrlässiger und/oder vorsätzlicher Verletzungen meiner Pflichten als Verkäufer bleibt davon unberührt.<br><br>
+            <strong>Datenschutz:</strong><br>
+            Diese Website nutzt GoatCounter für anonyme Besucherstatistiken. Es werden keine personenbezogenen Cookies gespeichert. Daten aus dem Kontaktformular werden nur zur Beantwortung der Anfrage genutzt.
+        </div>
+        <button class="buy-btn" style="margin-top:30px;" onclick="closeLegal()">SCHLIESSEN</button>
+    </div>
+</div>
+
+<script>
+// Header Scroll
+window.onscroll = () => {
+    const h = document.getElementById('main-header');
+    if(window.scrollY > 50) h.classList.add('scrolled');
+    else h.classList.remove('scrolled');
+};
+
+let cart = [];
+function addToCart(n, p) {
+    cart.push({n, p});
+    updateUI();
+    toggleCart(true);
+}
+
+function updateUI() {
+    document.getElementById('count').innerText = cart.length;
+    const list = document.getElementById('cart-list');
+    let t = 0; list.innerHTML = "";
+    cart.forEach((i, idx) => {
+        list.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid #111; padding-bottom:10px; animation: slideIn 0.5s var(--bezier) forwards; animation-delay: ${idx*0.05}s"><span>${i.n}</span><span>${i.p.toFixed(2)}€</span></div>`;
+        t += i.p;
+    });
+    document.getElementById('total').innerText = t.toFixed(2);
+}
+
+function toggleCart(open) {
+    if(open) document.body.classList.add('sidebar-open');
+    else document.body.classList.remove('sidebar-open');
+}
+
+function openLegal() {
+    document.getElementById('legal-overlay').style.display = 'flex';
+    document.body.classList.add('no-scroll');
+}
+function closeLegal() {
+    document.getElementById('legal-overlay').style.display = 'none';
+    document.body.classList.remove('no-scroll');
+}
+
+particlesJS('particles-js', { "particles": { "number": { "value": 35 }, "color": { "value": "#00f2ff" }, "line_linked": { "enable": true, "opacity": 0.1 } } });
+</script>
+</body>
+</html>

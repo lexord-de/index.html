@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEXORD™ | Decoding Performance</title>
+
+    <script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@100;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+
+    <style>
+        :root { --n-blue: #00f2ff; --bg: #000; --card: rgba(10,10,10,0.95); }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { background: #000; color: white; font-family: 'Inter', sans-serif; overflow: hidden; }
+
+        /* --- BACKGROUND --- */
+        #bg-canvas { position: fixed; inset: 0; z-index: -1; opacity: 0.3; }
+        .liquid-glow { position: fixed; inset: 0; z-index: -2; background: radial-gradient(circle at 50% 50%, #001a1d 0%, #000 100%); }
+
+        /* --- WARP INTRO --- */
+        #intro { position: fixed; inset: 0; background: #000; z-index: 100000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #warp-canvas { position: absolute; inset: 0; z-index: 1; }
+        .intro-content { position: relative; z-index: 10; text-align: center; }
+        .intro-logo { width: 140px; filter: drop-shadow(0 0 30px var(--n-blue)); margin-bottom: 20px; }
+        .start-btn { padding: 18px 60px; background: none; border: 1px solid var(--n-blue); color: var(--n-blue); font-family: 'Orbitron'; letter-spacing: 10px; cursor: pointer; transition: 0.5s; font-weight: 900; }
+        .start-btn:hover { background: var(--n-blue); color: #000; box-shadow: 0 0 60px var(--n-blue); }
+
+        /* --- HEADER --- */
+        header {
+            position: fixed; top: 0; width: 100%; z-index: 10000; padding: 30px 6%;
+            display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .header-left { display: flex; align-items: center; gap: 15px; cursor: pointer; }
+        .header-left img { width: 35px; }
+        .header-left span { font-family: 'Orbitron'; font-weight: 900; letter-spacing: 4px; }
+        .cart-icon { cursor: pointer; transition: 0.3s; }
+        .cart-icon:hover { color: var(--n-blue); transform: scale(1.1); }
+
+        /* --- POWER-STYLE HERO --- */
+        .hero { height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        .hero-bg-text {
+            position: absolute; font-family: 'Orbitron'; font-size: clamp(6rem, 25vw, 20rem);
+            font-weight: 900; line-height: 0.8; color: transparent; -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.08);
+            z-index: 1; white-space: nowrap; user-select: none; pointer-events: none;
+        }
+        .hero-tagline { position: relative; z-index: 2; font-family: 'Orbitron'; color: var(--n-blue); letter-spacing: 15px; text-shadow: 0 0 20px var(--n-blue); font-size: 1.2rem; }
+
+        /* --- SHOP GRID --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; padding: 150px 6%; }
+        .card { 
+            background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 60px 40px; 
+            text-align: center; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer;
+        }
+        .card:hover { border-color: var(--n-blue); box-shadow: 0 20px 60px rgba(0,242,255,0.15); transform: translateY(-15px); }
+        .card img { width: 100%; height: 250px; object-fit: contain; margin-bottom: 30px; transition: 0.5s; }
+        .card:hover img { transform: scale(1.1); filter: drop-shadow(0 0 30px var(--n-blue)); }
+
+        /* --- CONTACT TERMINAL --- */
+        .contact-section { max-width: 700px; margin: 0 auto 150px; padding: 0 6%; }
+        .terminal-box { 
+            background: #050505; border: 1px solid #1a1a1a; padding: 40px; border-radius: 4px;
+            position: relative; box-shadow: 0 0 40px rgba(0,0,0,1);
+        }
+        .terminal-header { color: #333; font-family: monospace; font-size: 0.7rem; margin-bottom: 20px; border-bottom: 1px solid #111; padding-bottom: 10px; }
+        input, textarea { 
+            width: 100%; background: transparent; border: none; border-bottom: 1px solid #222; 
+            padding: 15px 0; color: var(--n-blue); font-family: 'Orbitron'; outline: none; margin-bottom: 20px; transition: 0.3s;
+        }
+        input:focus { border-bottom-color: var(--n-blue); }
+        .send-btn { 
+            width: 100%; padding: 20px; background: white; color: black; font-family: 'Orbitron'; 
+            font-weight: 900; border: none; cursor: pointer; transition: 0.3s; margin-top: 20px;
+        }
+        .send-btn:hover { background: var(--n-blue); box-shadow: 0 0 30px var(--n-blue); }
+
+        /* --- FOOTER & BUTTONS --- */
+        footer { padding: 100px 6%; background: #020202; border-top: 1px solid #111; text-align: center; }
+        .footer-nav { display: flex; justify-content: center; gap: 30px; margin-bottom: 40px; }
+        .f-btn { 
+            background: none; border: 1px solid #222; color: #555; padding: 10px 25px; 
+            font-family: 'Orbitron'; font-size: 0.6rem; cursor: pointer; transition: 0.3s; border-radius: 50px;
+        }
+        .f-btn:hover { color: white; border-color: white; }
+        .copyright { font-family: 'Orbitron'; font-size: 0.7rem; color: #333; letter-spacing: 5px; margin-top: 30px; }
+
+        /* --- OVERLAYS --- */
+        .overlay { 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 50000; 
+            display: none; align-items: center; justify-content: center; padding: 40px;
+        }
+        .overlay-content { max-width: 600px; line-height: 1.8; font-size: 0.9rem; color: #ccc; }
+        #term-anim { position: fixed; inset: 0; background: #000; z-index: 1000000; display: none; align-items: center; justify-content: center; color: var(--n-blue); font-family: monospace; }
+    </style>
+</head>
+<body>
+
+    <div class="liquid-glow"></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <div id="intro">
+        <canvas id="warp-canvas"></canvas>
+        <div class="intro-content">
+            <img src="IMG_7023.png" class="intro-logo">
+            <button class="start-btn" onclick="launch()">INITIALIZE</button>
+        </div>
+    </div>
+
+    <header>
+        <div class="header-left" onclick="location.reload()">
+            <img src="IMG_7023.png">
+            <span>LEXORD.DE</span>
+        </div>
+        <div class="cart-icon" onclick="window.open('https://www.ebay.de/usr/lexord-de')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6h15l-1.5 9h-13L5 3H2"></path><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle></svg>
+        </div>
+    </header>
+
+    <main id="main" style="display:none; opacity:0;">
+        <section class="hero">
+            <div class="hero-bg-text" id="pText">BEYOND<br>LIMITS</div>
+            <div class="hero-tagline">ENGINEERING EXCELLENCE</div>
+        </section>
+
+        <section class="grid">
+            <div class="card" onclick="window.open('https://www.ebay.de/itm/127605871230')">
+                <img src="Stickzange.PNG">
+                <h3 class="orbitron">STICKZANGE PRO</h3>
+                <div class="price orbitron" style="color:var(--n-blue); margin-top:10px;">5,95 €</div>
+            </div>
+            <div class="card" onclick="window.open('https://www.ebay.de/itm/127621679343')">
+                <img src="PADDLE SYSTEM.PNG">
+                <h3 class="orbitron">PADDLE SYSTEM V2</h3>
+                <div class="price orbitron" style="color:var(--n-blue); margin-top:10px;">45,95 €</div>
+            </div>
+        </section>
+
+        <section class="contact-section">
+            <div class="terminal-box">
+                <div class="terminal-header">LEXORD_COMMUNICATION_v4.0.exe</div>
+                <form onsubmit="return sendForm(event)">
+                    <input type="text" placeholder="IDENTIFICATION (NAME)" required>
+                    <input type="email" placeholder="COM-LINK (E-MAIL)" required>
+                    <textarea placeholder="TRANSMISSION DATA (DEINE ANFRAGE...)" rows="4" required></textarea>
+                    <button class="send-btn">SEND TRANSMISSION</button>
+                </form>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-nav">
+                <button class="f-btn" onclick="openOverlay('impressum')">IMPRESSUM</button>
+                <button class="f-btn" onclick="openOverlay('datenschutz')">DATENSCHUTZ</button>
+                <button class="f-btn" onclick="window.open('https://www.ebay.de/usr/lexord-de')">EBAY SHOP</button>
+            </div>
+            <div class="copyright">© 2026 LEXORD. ALL RIGHTS RESERVED.</div>
+        </footer>
+    </main>
+
+    <div id="impressum" class="overlay" onclick="closeOverlay('impressum')">
+        <div class="overlay-content">
+            <h2 class="orbitron" style="color:white; margin-bottom:20px;">IMPRESSUM</h2>
+            <p>Leon Schulz<br>An Der Domsühler Str. 2<br>19374 Domsühl</p><br>
+            <p>E-Mail: kontakt@lexord.de</p><br>
+            <p><strong>Privatverkauf:</strong> Der Verkauf erfolgt unter Ausschluss jeglicher Sachmangelhaftung. Rücknahme und Umtausch sind ausgeschlossen.</p>
+        </div>
+    </div>
+
+    <div id="datenschutz" class="overlay" onclick="closeOverlay('datenschutz')">
+        <div class="overlay-content">
+            <h2 class="orbitron" style="color:white; margin-bottom:20px;">DATENSCHUTZ</h2>
+            <p>Diese Website nutzt GoatCounter zur anonymen Reichweitenmessung. Es werden keine personenbezogenen Daten gespeichert oder Tracking-Cookies verwendet.</p>
+        </div>
+    </div>
+
+    <div id="term-anim"></div>
+
+    <script>
+        // BACKGROUND
+        const bCanvas = document.getElementById('bg-canvas'); const bCtx = bCanvas.getContext('2d');
+        let parts = [];
+        function initBg() { bCanvas.width = window.innerWidth; bCanvas.height = window.innerHeight; parts = []; for(let i=0; i<60; i++) parts.push({x: Math.random()*bCanvas.width, y: Math.random()*bCanvas.height, s: Math.random()*0.4}); }
+        function drawBg() { bCtx.clearRect(0,0,bCanvas.width, bCanvas.height); bCtx.fillStyle = "rgba(0, 242, 255, 0.15)"; parts.forEach(p => { p.y -= p.s; if(p.y < 0) p.y = bCanvas.height; bCtx.beginPath(); bCtx.arc(p.x, p.y, 1, 0, Math.PI*2); bCtx.fill(); }); requestAnimationFrame(drawBg); }
+        initBg(); drawBg();
+
+        // WARP INTRO
+        const wCanvas = document.getElementById('warp-canvas'); const wCtx = wCanvas.getContext('2d');
+        let stars = []; let speed = 0.5;
+        function initWarp() { wCanvas.width = window.innerWidth; wCanvas.height = window.innerHeight; stars = []; for(let i=0; i<400; i++) stars.push({x: Math.random()*wCanvas.width-wCanvas.width/2, y: Math.random()*wCanvas.height-wCanvas.height/2, z: Math.random()*wCanvas.width}); }
+        function drawWarp() { wCtx.fillStyle = "black"; wCtx.fillRect(0,0,wCanvas.width,wCanvas.height); wCtx.translate(wCanvas.width/2, wCanvas.height/2); stars.forEach(s => { s.z -= speed; if(s.z <= 0) s.z = wCanvas.width; let x = s.x*(wCanvas.width/s.z); let y = s.y*(wCanvas.width/s.z); let sz = (1-s.z/wCanvas.width)*3; wCtx.fillStyle = `rgba(0,242,255,${1-s.z/wCanvas.width})`; wCtx.fillRect(x,y,sz,sz); }); wCtx.translate(-wCanvas.width/2, -wCanvas.height/2); requestAnimationFrame(drawWarp); }
+        initWarp(); drawWarp();
+
+        window.addEventListener('scroll', () => {
+            const scroll = window.pageYOffset;
+            const text = document.getElementById('pText');
+            if(text) text.style.transform = `translateY(${scroll * 0.3}px)`;
+        });
+
+        function launch() {
+            speed = 50;
+            gsap.to("#intro", { opacity: 0, duration: 1.5, ease: "power4.inOut", onComplete: () => {
+                document.getElementById('intro').style.display = "none";
+                document.getElementById('main').style.display = "block";
+                document.body.style.overflow = "auto";
+                gsap.to("#main", { opacity: 1, duration: 1 });
+            }});
+        }
+
+        function openOverlay(id) { document.getElementById(id).style.display = "flex"; gsap.from(`#${id} .overlay-content`, { y: 50, opacity: 0, duration: 0.5 }); }
+        function closeOverlay(id) { document.getElementById(id).style.display = "none"; }
+
+        function sendForm(e) {
+            e.preventDefault();
+            const term = document.getElementById('term-anim');
+            term.style.display = "flex";
+            const steps = ["> INITIALIZING SECURE LINK...", "> ENCRYPTING PACKETS...", "> UPLOADING TRANSMISSION...", "> SUCCESS: MESSAGE SENT TO LEXORD."];
+            term.innerHTML = "";
+            steps.forEach((s, i) => {
+                setTimeout(() => {
+                    term.innerHTML += `<p style="margin:10px 0;">${s}</p>`;
+                    if(i === 3) setTimeout(() => { term.style.display = "none"; alert("Nachricht erfolgreich gesendet!"); }, 1000);
+                }, i * 800);
+            });
+            return false;
+        }
+
+        window.onresize = () => { initBg(); initWarp(); };
+    </script>
+</body>
+</html>

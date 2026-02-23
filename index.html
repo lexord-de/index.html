@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEXORD™ | Advanced Engineering</title>
+
+<script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link rel="apple-touch-icon" href="IMG_7023.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+<style>
+:root{ --n-blue:#00f2ff; --n-purple:#bc13fe; --bg:#050505; --card:rgba(10,10,10,0.9); }
+*{margin:0;padding:0;box-sizing:border-box; -webkit-font-smoothing: antialiased;}
+body{background:#000; color:white; font-family:'Inter',sans-serif; overflow-x:hidden;}
+
+/* --- WARP INTRO --- */
+#intro-terminal { position: fixed; inset: 0; background: #000; z-index: 100000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.9s; }
+#warp-canvas { position: absolute; inset: 0; z-index: -1; }
+.glitch-logo { width: 180px; filter: drop-shadow(0 0 30px var(--n-blue)); margin-bottom: 40px; }
+.start-button { padding: 20px 60px; background: rgba(0,0,0,0.6); border: 1px solid var(--n-blue); color: var(--n-blue); font-family: 'Orbitron'; font-weight: 900; letter-spacing: 5px; cursor: pointer; transition: 0.4s; z-index: 10;}
+.start-button:hover { background: var(--n-blue); color: #000; box-shadow: 0 0 50px var(--n-blue); }
+
+/* --- SITE STRUCTURE --- */
+#main-site { display: none; opacity: 0; background: var(--bg); min-height: 100vh; flex-direction: column; align-items: center; width: 100%; position: relative;}
+.site-unlock { display: flex !important; animation: screen-open 0.8s forwards; }
+@keyframes screen-open { 0% { transform: scaleY(0.005) scaleX(0); opacity: 0; } 100% { transform: scaleY(1) scaleX(1); opacity: 1; } }
+
+.bg-logo-overlay { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90vw; max-width: 800px; opacity: 0.03; z-index: 0; pointer-events: none; filter: grayscale(1); }
+#particles-js{position:fixed;inset:0;z-index:1;opacity:.15;}
+
+/* --- PLUGIN: STICKY TOP BAR --- */
+.top-bar { width: 100%; position: sticky; top: 0; z-index: 5000; background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0,242,255,0.1); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; }
+.cart-icon { font-family: 'Orbitron'; font-size: 0.65rem; color: var(--n-blue); cursor: pointer; display: flex; align-items: center; gap: 8px; }
+.cart-badge { background: var(--n-blue); color: #000; font-weight: 900; padding: 2px 7px; border-radius: 10px; font-size: 0.55rem; }
+
+/* --- PLUGIN: SLIDE CART (SHOPIFY STYLE) --- */
+#cart-panel { position: fixed; right: -100%; top: 0; width: 380px; height: 100vh; background: #080808; z-index: 10000; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-left: 1px solid var(--n-blue); padding: 40px; box-shadow: -20px 0 50px rgba(0,0,0,0.8); }
+.cart-open #cart-panel { right: 0; }
+.cart-header { font-family: 'Orbitron'; border-bottom: 1px solid #222; padding-bottom: 20px; margin-bottom: 20px; display: flex; justify-content: space-between; }
+#cart-items { max-height: 60vh; overflow-y: auto; }
+.cart-item { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 0.8rem; letter-spacing: 1px; border-bottom: 1px solid #111; padding-bottom: 10px; }
+
+/* --- DESIGN ELEMENTS --- */
+.content-wrapper { position: relative; z-index: 10; width: 100%; display: flex; flex-direction: column; align-items: center; }
+header{padding:60px 20px 20px; text-align:center;}
+.nav-menu { display: flex; gap: 10px; margin-bottom: 30px; width: 92%; max-width: 550px; }
+.nav-btn { flex: 1; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(0,242,255,0.2); color: #fff; font-family: 'Orbitron'; font-size: 0.45rem; cursor: pointer; transition: 0.3s; letter-spacing: 2px;}
+.nav-btn:hover { background: var(--n-blue); color: #000; box-shadow: 0 0 15px var(--n-blue); }
+
+/* --- PLUGIN: IMAGE GLITCH HOVER --- */
+.card { background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 25px 20px; text-align: center; transition: 0.4s; backdrop-filter: blur(10px); position: relative;}
+.card:hover { border-color: var(--n-blue); transform: translateY(-3px); }
+.product-glow img { width: 100%; height: 110px; object-fit: contain; transition: 0.2s; }
+.card:hover .product-glow img { animation: glitch-img 0.3s infinite; }
+@keyframes glitch-img {
+    0% { transform: translate(0); filter: hue-rotate(0deg); }
+    33% { transform: translate(-2px, 2px); filter: hue-rotate(90deg); }
+    66% { transform: translate(2px, -2px); filter: hue-rotate(180deg); }
+    100% { transform: translate(0); filter: hue-rotate(0deg); }
+}
+
+.price{font-size: 1.1rem; font-family: 'Orbitron'; color: #fff; margin: 15px 0; font-weight: 900;}
+.buy-btn { display: block; background: transparent; border: 1px solid var(--n-blue); color: var(--n-blue); text-decoration: none; padding: 12px; font-family: 'Orbitron'; font-size: .55rem; font-weight: 900; transition: 0.3s; cursor: pointer; width: 100%; letter-spacing: 2px; }
+.buy-btn:hover { background: var(--n-blue); color: #000; }
+
+/* --- NOTIFICATION PLUGIN --- */
+#toast-container { position: fixed; bottom: 20px; left: 20px; z-index: 20000; font-family: monospace; color: var(--n-blue); font-size: 0.7rem; background: rgba(0,0,0,0.8); padding: 10px; border: 1px solid var(--n-blue); display: none; }
+
+.send-btn { width: 100%; padding: 20px; border: none; background: var(--n-blue); font-family: 'Orbitron'; font-weight: 900; color: #000; cursor: pointer; letter-spacing: 2px; }
+
+@media (max-width:600px){ #cart-panel { width: 100%; } .grid { width: 95%; gap: 10px; } }
+</style>
+</head>
+
+<body onload="checkLocalStorage()">
+<audio id="bootSound"><source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg"></audio>
+
+<div id="intro-terminal">
+    <canvas id="warp-canvas"></canvas>
+    <img src="IMG_7023.png" class="glitch-logo">
+    <button class="start-button" onclick="launchTerminal()">INITIALIZE LEXORD_CORE</button>
+</div>
+
+<div id="cart-panel">
+    <div class="cart-header">
+        <span class="orbitron" style="letter-spacing: 3px;">STORAGE_CORE</span>
+        <span onclick="toggleCart()" style="cursor:pointer; color:var(--n-blue); font-family: 'Orbitron';">[CLOSE]</span>
+    </div>
+    <div id="cart-items"></div>
+    <div style="margin-top: 40px; border-top: 1px solid #222; padding-top: 20px;">
+        <div style="display:flex; justify-content:space-between; font-family:'Orbitron'; margin-bottom:20px; letter-spacing: 2px;">
+            <span>TOTAL:</span><span id="cart-total">0.00 €</span>
+        </div>
+        <button class="send-btn" onclick="checkout()">CHECKOUT VIA EBAY</button>
+        <button class="buy-btn" onclick="clearCart()" style="border:none; margin-top:10px; color:#555;">EMPTY STORAGE</button>
+    </div>
+</div>
+
+<div id="toast-container"></div>
+
+<div id="main-site">
+    <img src="IMG_7023.png" class="bg-logo-overlay">
+    <div id="particles-js"></div>
+
+    <div class="top-bar">
+        <span class="orbitron" style="font-size:0.55rem; letter-spacing:4px; opacity: 0.7;">SYS_STATUS: ACTIVE</span>
+        <div class="cart-icon" onclick="toggleCart()">
+            STORAGE <span class="cart-badge" id="cart-count">0</span>
+        </div>
+    </div>
+    
+    <div class="content-wrapper">
+        <header>
+            <img src="IMG_7023.png" style="width:70px; margin-bottom:15px; filter:drop-shadow(0 0 10px var(--n-blue));">
+            <h1 class="orbitron" style="font-size: 2.5rem; letter-spacing: 12px; font-weight: 900;">LEXORD</h1>
+            <p style="color:var(--n-blue); font-size: 0.55rem; letter-spacing: 5px; margin-top:5px;">ADVANCED ENGINEERING // PRECISION MODS</p>
+        </header>
+
+        <nav class="nav-menu">
+            <button class="nav-btn" onclick="openInfo('faq')">FAQ</button>
+            <button class="nav-btn" onclick="openInfo('about')">ABOUT</button>
+            <button class="nav-btn" onclick="openInfo('repair')">SERVICE</button>
+        </nav>
+
+        <div class="grid">
+            <div class="card">
+                <div class="product-glow"><img src="Stickzange.PNG"></div>
+                <h3 class="orbitron" style="font-size:0.55rem; margin-top:15px; letter-spacing: 1px;">Stickzange Pro</h3>
+                <div class="price">5,95 €</div>
+                <button class="buy-btn" onclick="addToCart('Stickzange Pro', 5.95)">ADD TO STORAGE</button>
+            </div>
+            <div class="card">
+                <div class="product-glow"><img src="PADDLE SYSTEM.PNG"></div>
+                <h3 class="orbitron" style="font-size:0.55rem; margin-top:15px; letter-spacing: 1px;">Paddle System V2</h3>
+                <div class="price">45,95 €</div>
+                <button class="buy-btn" onclick="addToCart('Paddle System V2', 45.95)">ADD TO STORAGE</button>
+            </div>
+        </div>
+
+        <div class="contact-box" style="width:92%; max-width:550px; margin-top:60px; background:var(--card); padding:40px; border:1px solid rgba(0,242,255,0.1);">
+            <h2 class="orbitron" style="font-size:0.8rem; margin-bottom:30px; text-align:center; color: var(--n-blue); letter-spacing: 3px;">DIRECT_ENQUIRY</h2>
+            <form onsubmit="return handleForm(event)">
+                <input type="text" placeholder="CLIENT_ID / NAME" required style="width:100%; padding:15px; margin-bottom:10px; background:#000; border:1px solid #111; color:#fff; font-family: 'Inter';">
+                <textarea placeholder="MISSION_DETAILS..." rows="3" style="width:100%; padding:15px; margin-bottom:10px; background:#000; border:1px solid #111; color:#fff; font-family: 'Inter';"></textarea>
+                <button class="send-btn" type="submit">EXECUTE DATA TRANSFER</button>
+            </form>
+        </div>
+
+        <footer style="padding:80px 0; opacity: 0.4;">
+            <div style="color: #fff; font-size: 0.5rem; font-family: 'Orbitron'; letter-spacing: 4px;">LEXORD™ // ENGINEERING DIV. 2026</div>
+        </footer>
+    </div>
+</div>
+
+<script>
+// STARFIELD & INTRO (Beibehalten)
+const canvas = document.getElementById('warp-canvas'); const ctx = canvas.getContext('2d');
+let stars = []; let speed = 0.5;
+function initStars() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; stars = []; for(let i=0; i<400; i++) stars.push({x: Math.random()*canvas.width-canvas.width/2, y: Math.random()*canvas.height-canvas.height/2, z: Math.random()*canvas.width}); }
+function drawStars() { ctx.fillStyle = "black"; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.translate(canvas.width/2, canvas.height/2); for(let s of stars) { s.z -= speed; if(s.z <= 0) s.z = canvas.width; let x = s.x * (canvas.width/s.z); let y = s.y * (canvas.width/s.z); let size = (1-s.z/canvas.width)*3; ctx.fillStyle = `rgba(0,242,255,${1-s.z/canvas.width})`; ctx.fillRect(x,y,size,size); } ctx.translate(-canvas.width/2, -canvas.height/2); requestAnimationFrame(drawStars); }
+initStars(); drawStars();
+
+function launchTerminal() {
+    speed = 60; document.getElementById('bootSound').play().catch(()=>{});
+    setTimeout(() => { document.getElementById('intro-terminal').style.opacity = "0"; 
+    setTimeout(() => { document.getElementById('intro-terminal').style.display = "none"; document.getElementById('main-site').classList.add('site-unlock'); document.body.style.overflow = "auto"; particlesJS('particles-js',{particles:{number:{value:25},color:{value:'#00f2ff'},opacity:{value:.15},move:{speed:.5}}}); }, 400); }, 700);
+}
+
+/* PLUGIN: ADVANCED CART LOGIC */
+let cart = [];
+
+function checkLocalStorage() {
+    const savedCart = localStorage.getItem('lexord_cart');
+    if(savedCart) {
+        cart = JSON.parse(savedCart);
+        updateCart();
+    }
+}
+
+function addToCart(name, price) {
+    cart.push({name, price});
+    localStorage.setItem('lexord_cart', JSON.stringify(cart));
+    updateCart();
+    showToast(`> SYSTEM: ${name.toUpperCase()} MOVED TO STORAGE.`);
+}
+
+function updateCart() {
+    const list = document.getElementById('cart-items');
+    const badge = document.getElementById('cart-count');
+    const total = document.getElementById('cart-total');
+    list.innerHTML = "";
+    let sum = 0;
+    cart.forEach((item) => {
+        list.innerHTML += `<div class="cart-item"><span>${item.name}</span><span>${item.price.toFixed(2)}€</span></div>`;
+        sum += item.price;
+    });
+    badge.innerText = cart.length;
+    total.innerText = sum.toFixed(2) + " €";
+}
+
+function clearCart() {
+    cart = [];
+    localStorage.removeItem('lexord_cart');
+    updateCart();
+    showToast("> SYSTEM: STORAGE CLEARED.");
+}
+
+function toggleCart() { document.body.classList.toggle('cart-open'); }
+
+function showToast(msg) {
+    const t = document.getElementById('toast-container');
+    t.innerText = msg;
+    t.style.display = "block";
+    setTimeout(() => { t.style.display = "none"; }, 3000);
+}
+
+function checkout() {
+    showToast("> REDIRECTING TO SECURE EBAY GATEWAY...");
+    setTimeout(() => { window.location.href = "https://www.ebay.de/usr/lexord-de"; }, 1500);
+}
+
+function handleForm(e) { e.preventDefault(); showToast("> TRANSMISSION SUCCESSFUL."); return false; }
+</script>
+</body>
+</html>

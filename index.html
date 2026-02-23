@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEXORD™ | Engineering</title>
+
+    <script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@100;400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+
+    <style>
+        :root { --n-blue: #00f2ff; --bg: #000000; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
+
+        /* --- BACKGROUND --- */
+        #star-canvas { position: fixed; inset: 0; z-index: -1; background: #000; }
+
+        /* --- INTRO --- */
+        #intro-overlay { position: fixed; inset: 0; background: black; z-index: 20000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #intro-logo { width: 120px; filter: drop-shadow(0 0 20px var(--n-blue)); margin-bottom: 20px; opacity: 0; transform: scale(0.5); }
+        #intro-text { font-family: 'Orbitron'; font-size: 0.8rem; letter-spacing: 5px; color: var(--n-blue); opacity: 0; }
+
+        /* --- HEADER (MATCHING IMAGE) --- */
+        header { 
+            position: fixed; top: 0; width: 100%; z-index: 10000; 
+            padding: 25px 5%; display: flex; justify-content: space-between; align-items: flex-start; 
+            background: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0)); opacity: 0; 
+        }
+        .logo-area { display: flex; align-items: center; gap: 15px; cursor: pointer; }
+        .logo-area img { width: 45px; filter: drop-shadow(0 0 8px var(--n-blue)); }
+        .brand-name { font-family: 'Orbitron'; font-weight: 700; font-size: 1.6rem; letter-spacing: 3px; color: #fff; }
+        
+        .header-nav { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+        .header-nav a { 
+            font-family: 'Orbitron'; font-size: 0.75rem; color: #444; 
+            text-decoration: none; letter-spacing: 2px; transition: 0.3s; 
+        }
+        .header-nav a:hover, .header-nav a.active { color: var(--n-blue); text-shadow: 0 0 10px var(--n-blue); }
+
+        /* --- HERO (MATCHING IMAGE) --- */
+        .hero-container { 
+            margin: 180px auto 100px; width: 92%; max-width: 1300px; 
+            position: relative; min-height: 500px; display: flex; 
+            align-items: center; justify-content: flex-start; padding-left: 5%; opacity: 0; 
+        }
+        .hero-label { font-family: 'Orbitron'; font-size: 0.9rem; color: #333; letter-spacing: 5px; margin-bottom: 20px; }
+        
+        .hero-title-wrap { display: flex; align-items: center; gap: 30px; }
+        .hero-content h1 { font-family: 'Orbitron'; font-size: clamp(3rem, 8vw, 6rem); font-weight: 900; line-height: 0.85; color: #fff; }
+        .hero-skull { width: 110px; filter: drop-shadow(0 0 20px var(--n-blue)); animation: floatAnim 3s ease-in-out infinite; }
+
+        .ebay-main-btn { 
+            display: inline-block; margin-top: 40px; padding: 18px 45px; 
+            background: #fff; color: #000; font-family: 'Orbitron'; 
+            font-weight: 900; text-decoration: none; border-radius: 4px; 
+            font-size: 0.85rem; transition: 0.3s; 
+        }
+        .ebay-main-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,255,255,0.4); }
+
+        /* --- PRODUCTS --- */
+        .section-label { margin: 100px 5% 40px; border-left: 3px solid var(--n-blue); padding-left: 15px; opacity: 0; }
+        .section-label h2 { font-family: 'Orbitron'; font-size: 0.85rem; letter-spacing: 5px; color: var(--n-blue); }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 0 5% 100px; opacity: 0; }
+        .card { 
+            background: rgba(12,12,12,0.9); border: 1px solid #1a1a1a; padding: 50px 30px; 
+            border-radius: 15px; text-align: center; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            cursor: pointer; position: relative;
+        }
+        .img-box { height: 200px; margin-bottom: 30px; animation: floatAnim 4s ease-in-out infinite; }
+        @keyframes floatAnim { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        
+        .card img { max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 0 10px rgba(0,242,255,0.1)); transition: 0.3s; }
+        .card:hover { border-color: var(--n-blue); box-shadow: 0 0 40px rgba(0,242,255,0.15); transform: translateY(-10px); }
+        .card:hover img { filter: drop-shadow(0 0 25px var(--n-blue)); }
+        .card.clicked { border-color: #fff; box-shadow: 0 0 60px var(--n-blue); transform: scale(0.95); }
+
+        .buy-btn { display: block; width: 100%; padding: 15px; background: transparent; color: white; border: 1px solid #222; border-radius: 4px; font-family: 'Orbitron'; font-size: 0.7rem; font-weight: 900; transition: 0.3s; margin-top: 25px; }
+        .card:hover .buy-btn { background: #fff; color: #000; border-color: #fff; }
+
+        /* --- CONTACT --- */
+        .contact-box { max-width: 650px; margin: 0 auto 100px; background: rgba(5,5,5,0.9); padding: 50px; border: 1px solid #111; border-radius: 15px; opacity: 0; }
+        input, textarea { width: 100%; padding: 18px; background: #000; border: 1px solid #222; color: white; margin-bottom: 20px; border-radius: 6px; outline: none; font-family: 'Inter'; }
+        .submit-btn { width: 100%; padding: 20px; background: var(--n-blue); border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; border-radius: 6px; transition: 0.3s; }
+        .submit-btn:hover { background: #fff; box-shadow: 0 0 25px #fff; }
+
+        /* --- LEGAL SECTION (INVISIBLE UNTIL CLICKED) --- */
+        .legal-wrapper { width: 90%; max-width: 1200px; margin: 0 auto 100px; opacity: 0; }
+        .legal-box { background: rgba(10,10,10,0.8); border: 1px solid #1a1a1a; border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
+        .legal-trigger { padding: 20px 30px; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; color: #333; display: flex; justify-content: space-between; align-items: center; letter-spacing: 2px; }
+        .legal-content { max-height: 0; opacity: 0; padding: 0 30px; transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1); font-size: 0.8rem; color: #777; line-height: 1.8; }
+        .legal-box.open .legal-content { max-height: 1000px; opacity: 1; padding: 20px 30px 40px; }
+        .legal-box.open .legal-trigger { color: var(--n-blue); }
+
+        footer { text-align: center; padding: 60px; font-family: 'Orbitron'; font-size: 0.6rem; color: #1a1a1a; letter-spacing: 10px; }
+    </style>
+</head>
+<body>
+
+    <div id="intro-overlay">
+        <img src="IMG_7023.png" id="intro-logo">
+        <div id="intro-text">LEXORD.DE</div>
+    </div>
+
+    <canvas id="star-canvas"></canvas>
+
+    <header id="main-header">
+        <div class="logo-area" onclick="location.reload()">
+            <img src="IMG_7023.png">
+            <span class="brand-name">LEXORD.DE</span>
+        </div>
+        <nav class="header-nav">
+            <a href="#hero" class="active">HOME</a>
+            <a href="#shop">SHOP</a>
+            <a href="#contact">KONTAKT</a>
+            <a href="https://www.ebay.de/itm/127605871230" target="_blank">EBAY</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero-container" id="hero">
+            <div class="hero-content">
+                <div class="hero-label">HARDWARE / MODDING</div>
+                <div class="hero-title-wrap">
+                    <h1>BEYOND<br>LIMITS.</h1>
+                    <img src="IMG_7023.png" class="hero-skull">
+                </div>
+                <a href="https://www.ebay.de/itm/127605871230" target="_blank" class="ebay-main-btn">ZUM EBAY SHOP</a>
+            </div>
+        </section>
+
+        <div class="section-label" id="shop"><h2>PRÄZISIONS_HARDWARE</h2></div>
+        
+        <section class="grid">
+            <div class="card" onclick="handleProductClick(this, 'https://www.ebay.de/itm/127605871230')">
+                <div class="img-box"><img src="Stickzange.PNG"></div>
+                <h4 class="orbitron" style="font-size:0.7rem;">STICKZANGE PRO</h4>
+                <div style="color:var(--n-blue); font-family:Orbitron; margin:12px 0;">5,95 €</div>
+                <div class="buy-btn">EBAY SHOP</div>
+            </div>
+
+            <div class="card" onclick="handleProductClick(this, 'https://www.ebay.de/itm/127621679343')">
+                <div class="img-box"><img src="PADDLE SYSTEM.PNG"></div>
+                <h4 class="orbitron" style="font-size:0.7rem;">PADDLE SYSTEM V2</h4>
+                <div style="color:var(--n-blue); font-family:Orbitron; margin:12px 0;">45,95 €</div>
+                <div class="buy-btn">EBAY SHOP</div>
+            </div>
+
+            <div class="card" style="opacity: 0.5;">
+                <div class="img-box"><img src="IMG_7023.png" style="filter:grayscale(1) opacity(0.2);"></div>
+                <h4 class="orbitron" style="font-size:0.7rem;">PROJECT_ALPHA</h4>
+                <div style="color:#222; font-family:Orbitron; margin:12px 0;">IN ENTWICKLUNG</div>
+                <div class="buy-btn">COMING SOON</div>
+            </div>
+        </section>
+
+        <div class="section-label" id="contact"><h2>KONTAKT</h2></div>
+        <section class="contact-box">
+            <form action="mailto:kontakt@lexord.de" method="post" enctype="text/plain">
+                <input type="text" name="name" placeholder="NAME" required>
+                <input type="email" name="email" placeholder="E-MAIL" required>
+                <textarea name="message" placeholder="ANFRAGE..." rows="5" required></textarea>
+                <button type="submit" class="submit-btn">SIGNAL_SENDEN</button>
+            </form>
+        </section>
+
+        <section class="legal-wrapper">
+            <div class="legal-box">
+                <div class="legal-trigger" onclick="toggleLegal(this)">IMPRESSUM <span>+</span></div>
+                <div class="legal-content">
+                    Leon Schulz<br>An Der Domsühler Str. 2<br>19374 Domsühl<br><br>E-Mail: kontakt@lexord.de
+                </div>
+            </div>
+            <div class="legal-box">
+                <div class="legal-trigger" onclick="toggleLegal(this)">DATENSCHUTZ (DSGVO) <span>+</span></div>
+                <div class="legal-content">
+                    <strong>GoatCounter:</strong> Ich nutze GoatCounter zur Analyse. Keine Cookies, keine IP-Speicherung. <br>
+                    <strong>Kontakt:</strong> Daten werden nur zur Beantwortung von E-Mails genutzt.
+                </div>
+            </div>
+            <div class="legal-box">
+                <div class="legal-trigger" onclick="toggleLegal(this)">RECHTLICHE HINWEISE <span>+</span></div>
+                <div class="legal-content">
+                    <strong>Privatverkauf:</strong> Dies ist ein Privatverkauf von hobbymäßig herstellten Artikeln. Der Verkauf erfolgt unter Ausschluss jeglicher Gewährleistung, Sachmängelhaftung oder Rücknahme.
+                </div>
+            </div>
+        </section>
+
+        <footer>© 2026 LEXORD. ALL RIGHTS RESERVED.</footer>
+    </main>
+
+    <script>
+        // --- STARFIELD ---
+        const canvas = document.getElementById('star-canvas');
+        const ctx = canvas.getContext('2d');
+        let stars = []; let warpSpeed = 0.2;
+        function initStars() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            stars = []; for(let i=0; i<300; i++) stars.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: Math.random()*1.8, speed: Math.random()*0.5 });
+        }
+        function drawStars() {
+            ctx.clearRect(0,0,canvas.width, canvas.height); ctx.fillStyle = "white";
+            stars.forEach(s => { ctx.globalAlpha = s.speed + 0.2; ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI*2); ctx.fill(); s.y += s.speed + warpSpeed; if(s.y > canvas.height) s.y = 0; });
+            requestAnimationFrame(drawStars);
+        }
+        window.addEventListener('resize', initStars); initStars(); drawStars();
+
+        // --- PRODUCT CLICK ---
+        function handleProductClick(element, url) {
+            element.classList.add('clicked');
+            setTimeout(() => { element.classList.remove('clicked'); window.open(url, '_blank'); }, 300);
+        }
+
+        // --- LEGAL ACCORDION ---
+        function toggleLegal(el) {
+            const parent = el.parentElement;
+            const isOpen = parent.classList.contains('open');
+            document.querySelectorAll('.legal-box').forEach(box => box.classList.remove('open'));
+            if(!isOpen) parent.classList.add('open');
+        }
+
+        // --- INTRO & REVEAL ---
+        window.onload = () => {
+            const tl = gsap.timeline(); warpSpeed = 20;
+            tl.to("#intro-logo", { opacity: 1, scale: 1, duration: 1 })
+              .to("#intro-text", { opacity: 1, duration: 0.5 }, "-=0.2")
+              .to("#intro-overlay", { opacity: 0, duration: 1, delay: 0.5, onComplete: () => { 
+                  document.getElementById('intro-overlay').style.display = "none"; warpSpeed = 0.2; 
+              }})
+              .to("header, section, .section-label, .grid, .legal-wrapper", { opacity: 1, duration: 0.8, stagger: 0.1 });
+        };
+    </script>
+</body>
+</html>

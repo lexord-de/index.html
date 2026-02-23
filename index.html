@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LEXORD | Engineering Excellence</title>
+    
+    <script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+
+    <style>
+        :root { --accent: #00f2ff; --bg: #000; --bezier: cubic-bezier(0.16, 1, 0.3, 1); }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+
+        /* --- LOGO & BRANDING UNIT (ZENTRIERT) --- */
+        .brand-unit {
+            display: flex; align-items: center; justify-content: center; gap: 15px;
+            opacity: 0; transform: scale(0.9); animation: revealBrand 1.2s var(--bezier) forwards;
+            cursor: pointer;
+        }
+        .logo-img { height: 38px; filter: drop-shadow(0 0 12px var(--accent)); transition: 0.5s; }
+        .logo-txt { 
+            font-family: 'Orbitron'; font-weight: 900; letter-spacing: 5px; font-size: 1.3rem; 
+            background: linear-gradient(90deg, #fff, var(--accent));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .brand-unit:hover .logo-img { transform: rotate(10deg) scale(1.1); }
+
+        /* --- HEADER NAVIGATION --- */
+        header {
+            position: fixed; top: 0; width: 100%; z-index: 5000;
+            padding: 35px 6%; display: grid; grid-template-columns: 1fr 2fr 1fr; align-items: center;
+            transition: 0.6s var(--bezier);
+        }
+        header.scrolled { padding: 18px 6%; background: rgba(0,0,0,0.85); backdrop-filter: blur(25px); border-bottom: 1px solid rgba(0,242,255,0.1); }
+
+        .nav-left { display: flex; align-items: center; gap: 20px; }
+        .back-nav { display: none; font-family: 'Orbitron'; font-size: 0.6rem; color: var(--accent); cursor: pointer; animation: fadeIn 0.5s forwards; }
+        .back-nav.active { display: block; }
+
+        .burger { cursor: pointer; display: flex; flex-direction: column; gap: 7px; z-index: 6000; }
+        .burger div { width: 25px; height: 1px; background: #fff; transition: 0.4s; }
+        .burger:hover .line2 { width: 15px; background: var(--accent); }
+
+        .nav-right { display: flex; justify-content: flex-end; align-items: center; }
+        .cart-box { font-family: 'Orbitron'; font-size: 0.65rem; color: var(--accent); letter-spacing: 2px; cursor: pointer; transition: 0.3s; padding: 10px 20px; border: 1px solid rgba(0,242,255,0.1); }
+        .cart-box:hover { background: var(--accent); color: #000; box-shadow: 0 0 20px var(--accent); }
+
+        /* --- MEGA OVERLAYS --- */
+        .overlay {
+            position: fixed; inset: 0; background: #000; z-index: 7000;
+            display: none; padding: 100px 10%; overflow-y: auto;
+        }
+        .overlay.active { display: block; animation: slideUp 0.7s var(--bezier) forwards; }
+        .close-x { position: fixed; top: 40px; right: 40px; cursor: pointer; font-family: 'Orbitron'; color: var(--accent); font-size: 0.8rem; letter-spacing: 4px; }
+
+        /* --- CATEGORY LINKS --- */
+        .cat-grid { display: flex; flex-direction: column; gap: 30px; margin-top: 50px; }
+        .cat-link { font-family: 'Orbitron'; font-size: clamp(2rem, 6vw, 4rem); text-decoration: none; color: #fff; opacity: 0.3; transition: 0.5s; }
+        .cat-link:hover { opacity: 1; color: var(--accent); transform: translateX(25px); }
+        .cat-link span { font-family: 'Inter'; font-size: 0.8rem; margin-right: 20px; color: var(--accent); }
+
+        /* --- SECTION SYSTEM --- */
+        .section { height: 100vh; width: 100%; scroll-snap-align: start; position: relative; display: flex; align-items: center; justify-content: center; }
+        .v-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; filter: brightness(0.4); transform: scale(1.05); transition: 2s var(--bezier); }
+        .section.active .v-bg { transform: scale(1); }
+        .v-title { font-family: 'Orbitron'; font-size: clamp(2.5rem, 10vw, 7rem); font-weight: 900; letter-spacing: 20px; text-align: center; }
+
+        /* --- FOOTER --- */
+        footer { padding: 120px 8% 50px; background: #000; border-top: 1px solid #111; scroll-snap-align: end; }
+        .f-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 80px; }
+        .f-col h4 { font-family: 'Orbitron'; color: var(--accent); letter-spacing: 3px; font-size: 0.7rem; margin-bottom: 30px; }
+        .f-link { display: block; color: #fff; text-decoration: none; opacity: 0.4; margin-bottom: 15px; font-size: 0.9rem; transition: 0.3s; cursor: pointer; }
+        .f-link:hover { opacity: 1; color: var(--accent); }
+
+        @keyframes revealBrand { to { opacity: 1; transform: scale(1); } }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        @media (max-width: 768px) {
+            .logo-txt { font-size: 1rem; letter-spacing: 3px; }
+            header { grid-template-columns: 1fr 1fr; }
+            .nav-right { display: none; } /* Mobile Fokus auf Menü & Logo */
+        }
+    </style>
+</head>
+<body>
+
+<header id="main-header">
+    <div class="nav-left">
+        <div id="back-nav" class="back-nav" onclick="location.reload()">← BACK</div>
+        <div class="burger" onclick="openOverlay('menu')">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+    </div>
+    
+    <div class="brand-unit" onclick="window.scrollTo(0,0)">
+        <img src="LOGO_ICON.png" class="logo-img" alt="LEXORD Icon">
+        <span class="logo-txt">LEXORD.DE</span>
+    </div>
+    
+    <div class="nav-right">
+        <div class="cart-box" id="cart-display">WARENKORB (0)</div>
+    </div>
+</header>
+
+<div id="mega-overlay" class="overlay">
+    <div class="close-x" onclick="closeAll()">[ CLOSE ]</div>
+    <div id="overlay-content"></div>
+</div>
+
+<section class="section active">
+    <video autoplay muted loop playsinline class="v-bg"><source src="HERO_VIDEO.mp4" type="video/mp4"></video>
+    <h2 class="v-title">LEXORD</h2>
+</section>
+
+<section class="section">
+    <video autoplay muted loop playsinline class="v-bg"><source src="ENGINEERING.mp4" type="video/mp4"></video>
+    <h2 class="v-title" style="color:var(--accent)">CUSTOMS</h2>
+</section>
+
+<footer>
+    <div class="f-grid">
+        <div class="f-col">
+            <div class="logo-txt" style="margin-bottom: 20px; font-size: 1.5rem;">LEXORD</div>
+            <p style="opacity: 0.3; line-height: 1.8;">Hochpräzise Modifikationen für professionelle Gaming-Hardware. Handgefertigt in Deutschland. Jedes Stück ist ein technisches Meisterwerk.</p>
+        </div>
+        <div class="f-col">
+            <h4>SUPPORT & ANFRAGEN</h4>
+            <span class="f-link" onclick="openOverlay('repair')">Reparatur-Diagnose</span>
+            <span class="f-link" onclick="openOverlay('custom')">Sonderanfertigungen</span>
+            <span class="f-link" onclick="openOverlay('contact')">Kontakt Center</span>
+        </div>
+        <div class="f-col">
+            <h4>LEGAL</h4>
+            <span class="f-link" onclick="openOverlay('imp')">Impressum</span>
+            <span class="f-link" onclick="openOverlay('ds')">Datenschutz</span>
+            <span class="f-link" onclick="openOverlay('agb')">AGB & Widerruf</span>
+        </div>
+    </div>
+    <div style="margin-top: 80px; padding-top: 30px; border-top: 1px solid #111; display: flex; justify-content: space-between; font-size: 0.55rem; opacity: 0.2; letter-spacing: 2px;">
+        <div>© 2026 LEXORD ENGINEERING. ALL RIGHTS RESERVED.</div>
+        <div>DOMSÜHL // PRIVATVERKAUF NACH § 13 BGB</div>
+    </div>
+</footer>
+
+<script>
+    const data = {
+        menu: `<h4 style="color:var(--accent); font-family:'Orbitron'; letter-spacing:5px; margin-bottom:40px;">KATEGORIEN</h4>
+               <div class="cat-grid">
+                  <a href="#" class="cat-link" onclick="location.reload()"><span>01</span> COLLECTION 2026</a>
+                  <a href="#" class="cat-link" onclick="closeAll()"><span>02</span> CONTROLLER MODS</a>
+                  <a href="#" class="cat-link" onclick="closeAll()"><span>03</span> ERSATZTEILE</a>
+                  <a href="#" class="cat-link" onclick="closeAll()"><span>04</span> ENGINEERING TOOLS</a>
+               </div>`,
+        imp: `<h2 class="v-title" style="font-size:2rem; text-align:left; letter-spacing:5px;">IMPRESSUM</h2>
+              <div style="margin-top:50px; line-height:2; opacity:0.7;">
+                <p><strong>Betreiber der Website:</strong><br>Leon Schulz<br>An Der Domsühler Straße 2<br>19374 Domsühl<br><br>
+                <strong>E-Mail:</strong> kontakt@lexord.de<br><strong>Web:</strong> www.lexord.de</p>
+                <p style="margin-top:30px;">Plattform der EU-Kommission zur Online-Streitbeilegung: https://ec.europa.eu/consumers/odr</p>
+              </div>`,
+        repair: `<h2 class="v-title" style="font-size:2rem; text-align:left; letter-spacing:5px;">REPARATUR-DIAGNOSE</h2>
+                 <p style="margin-top:40px; opacity:0.7; line-height:1.8;">Senden Sie uns Ihr defektes Gerät zur präzisen Fehleranalyse. Wir behandeln jedes Projekt mit höchster Sorgfalt.<br><br>
+                 Kontaktieren Sie uns für ein unverbindliches Angebot unter: <strong>support@lexord.de</strong></p>`,
+        contact: `<h2 class="v-title" style="font-size:2rem; text-align:left; letter-spacing:5px;">KONTAKT CENTER</h2>
+                  <p style="margin-top:40px; opacity:0.7; line-height:1.8;">Wir sind für Sie da. Für Anfragen zu Sonderbauten oder bestehenden Bestellungen:<br><br>
+                  <strong>E-Mail:</strong> kontakt@lexord.de<br><strong>eBay:</strong> Lexord_Engineering</p>`
+    };
+
+    function openOverlay(type) {
+        document.getElementById('overlay-content').innerHTML = data[type] || "Inhalt wird geladen...";
+        document.getElementById('mega-overlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeAll() {
+        document.getElementById('mega-overlay').classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    // Scroll Logic
+    const sections = document.querySelectorAll('.section');
+    window.addEventListener('scroll', () => {
+        sections.forEach(s => {
+            const rect = s.getBoundingClientRect();
+            if(rect.top >= -window.innerHeight/2 && rect.top <= window.innerHeight/2) s.classList.add('active');
+            else s.classList.remove('active');
+        });
+        const h = document.getElementById('main-header');
+        if(window.scrollY > 50) h.classList.add('scrolled'); else h.classList.remove('scrolled');
+    });
+</script>
+</body>
+</html>

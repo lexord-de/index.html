@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEXORD™ | Engineering & 3D-Modding</title>
+
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+<style>
+:root{ --n-blue:#00f2ff; --n-purple:#bc13fe; --bg:#050505; --card:rgba(15,15,15,0.95); }
+*{margin:0;padding:0;box-sizing:border-box; -webkit-font-smoothing: antialiased;}
+body{background:#000; color:white; font-family:'Inter',sans-serif; overflow:hidden;}
+
+/* --- MAXIMUM IMPACT INTRO --- */
+#intro-terminal {
+    position: fixed; inset: 0; background: #000; z-index: 100000;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: all 0.7s cubic-bezier(0.95, 0.05, 0.795, 0.035);
+}
+
+.scanner-overlay {
+    position: absolute; width: 100%; height: 3px; background: var(--n-blue);
+    box-shadow: 0 0 30px var(--n-blue); top: 0; animation: scan 2.5s linear infinite; opacity: 0.4;
+}
+
+.glitch-logo { width: 190px; filter: drop-shadow(0 0 35px var(--n-blue)); margin-bottom: 40px; animation: pulse 2s infinite ease-in-out; }
+
+.start-button {
+    padding: 22px 70px; background: transparent; border: 1px solid var(--n-blue);
+    color: var(--n-blue); font-family: 'Orbitron'; font-weight: 900; letter-spacing: 8px;
+    cursor: pointer; position: relative; overflow: hidden; transition: 0.4s;
+    text-transform: uppercase;
+}
+.start-button:hover { background: var(--n-blue); color: #000; box-shadow: 0 0 70px var(--n-blue); transform: scale(1.05); }
+
+@keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+@keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.08); opacity: 1; } }
+@keyframes screen-open { 0% { transform: scaleY(0.005) scaleX(0); opacity: 0; } 50% { transform: scaleY(0.005) scaleX(1); opacity: 1; } 100% { transform: scaleY(1) scaleX(1); opacity: 1; } }
+
+/* --- MAIN INTERFACE --- */
+#main-site { display: none; opacity: 0; background: var(--bg); min-height: 100vh; flex-direction: column; align-items: center; width: 100%; }
+.site-unlock { display: flex !important; animation: screen-open 0.7s forwards; }
+
+#particles-js{position:fixed;inset:0;z-index:-1;opacity:.4;}
+header{padding:60px 20px 40px; text-align:center;}
+.logo-mini{width:110px; filter:drop-shadow(0 0 15px var(--n-blue)); margin-bottom:15px;}
+
+.trust-dashboard { width: 92%; max-width: 550px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 40px; }
+.trust-card { 
+    background: var(--card); border: 1px solid var(--n-blue); border-radius: 12px; padding: 15px 5px; 
+    text-decoration: none; color: white; text-align: center; position: relative; overflow: hidden; transition: 0.3s;
+}
+.trust-card:hover { border-color: var(--n-purple); transform: translateY(-5px); }
+.trust-label { font-family: 'Orbitron'; font-size: 0.45rem; color: var(--n-blue); display: block; margin-bottom: 4px; }
+.trust-stars { color: #ffb400; font-size: 0.8rem; }
+
+.section-title { width: 92%; max-width: 550px; margin: 30px 0 15px; font-family: 'Orbitron'; font-size: 0.65rem; color: var(--n-blue); text-align: left; letter-spacing: 2px; border-left: 2px solid var(--n-blue); padding-left: 10px; }
+
+.grid{width:92%; max-width:550px; display:grid; grid-template-columns:1fr 1fr; gap:20px; z-index:10;}
+.card {
+    background: var(--card); border: 1px solid rgba(0, 242, 255, 0.1); border-radius: 20px; padding: 25px; 
+    text-align: center; backdrop-filter: blur(10px); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.card:hover { transform: translateY(-10px) scale(1.02); border-color: var(--n-blue); box-shadow: 0 0 30px rgba(0, 242, 255, 0.2); }
+.product-glow img{width:100%; height:110px; object-fit:contain; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)); }
+.price{font-size:1.25rem; font-family:'Orbitron'; font-weight:700; color:var(--n-blue); margin:15px 0;}
+
+.buy-btn { display: block; background: #fff; color: #000; text-decoration: none; padding: 14px; border-radius: 10px; font-family: 'Orbitron'; font-size: .65rem; font-weight: 900; transition: 0.3s; }
+.buy-btn:hover { background: var(--n-blue); box-shadow: 0 0 20px var(--n-blue); }
+
+.contact-box{width:92%; max-width:550px; margin:60px 0; background:var(--card); padding:40px; border-radius:24px; border: 1px solid rgba(255,255,255,0.05); }
+input, textarea { width: 100%; padding: 16px; margin-bottom: 15px; background: #000; border: 1px solid #222; color: white; border-radius: 8px; outline: none; transition: 0.3s; font-family: 'Inter'; }
+input:focus, textarea:focus { border-color: var(--n-blue); }
+.send-btn{width:100%; padding:20px; border-radius:12px; border:none; background: linear-gradient(90deg, var(--n-blue), var(--n-purple)); font-family:'Orbitron'; font-weight:900; color: white; cursor:pointer; transition: 0.4s; letter-spacing: 2px;}
+.dsgvo-text { font-size: 0.55rem; color: #555; text-align: center; margin-top: 15px; line-height: 1.5; }
+
+/* Gateway Loader */
+#gateway{position:fixed; inset:0; background:#000; display:none; align-items:center; justify-content:center; z-index:11000; flex-direction: column;}
+.log-line { font-family: monospace; font-size: 0.75rem; color: var(--n-blue); margin-bottom: 8px; }
+
+footer{padding:60px 20px 100px; text-align:center; opacity: 0.7;}
+.legal-trigger{background:none; border:none; color:#444; cursor:pointer; font-family:'Orbitron'; font-size:.6rem; text-decoration: underline; letter-spacing: 1px;}
+.imp-box{display:none; text-align: left; background: #0a0a0a; border: 1px solid #222; border-radius: 12px; margin-top: 25px; max-width: 550px; padding: 30px; font-size: 0.75rem; color: #aaa; line-height: 1.7;}
+
+@media (max-width:600px){ .grid{ grid-template-columns: 1fr 1fr; gap: 12px; } .card{ padding: 15px; } .start-button{ padding: 18px 40px; font-size: 0.7rem; } }
+</style>
+</head>
+
+<body>
+
+<audio id="bootSound" preload="auto">
+    <source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg">
+</audio>
+
+<div id="intro-terminal">
+    <div class="scanner-overlay"></div>
+    <img src="IMG_7023.png" class="glitch-logo" alt="LEXORD™ Logo">
+    <button class="start-button" onclick="launchTerminal()">
+        SYSTEM STARTEN
+    </button>
+    <p style="font-family:'Orbitron'; font-size:0.5rem; color: #444; margin-top:25px; letter-spacing:4px;">LEXORD™ ENGINEERING v2.6 // OS_BOOT</p>
+</div>
+
+<div id="main-site">
+    <div id="particles-js"></div>
+    
+    <header>
+        <img src="IMG_7023.png" class="logo-mini" alt="LEXORD™ Logo">
+        <h1 class="orbitron" style="font-size: 2rem; background: linear-gradient(to bottom, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">LEXORD™</h1>
+        <p style="color:var(--n-blue); font-size: 0.6rem; letter-spacing: 6px; margin-top:12px;">ADVANCED MODDING & 3D-PRINT</p>
+    </header>
+
+    <div class="trust-dashboard">
+        <a href="https://g.page/r/CQyRhiy7wS_DEAE/review" target="_blank" class="trust-card">
+            <span class="trust-label">FEEDBACK</span>
+            <div class="trust-stars">★★★★★</div>
+            <div style="font-family:'Orbitron'; font-size:0.5rem;">GOOGLE</div>
+        </a>
+        <a href="https://www.ebay.de/usr/lexord-de" target="_blank" class="trust-card">
+            <span class="trust-label">VERIFIED</span>
+            <div class="trust-stars">★★★★★</div>
+            <div style="font-family:'Orbitron'; font-size:0.5rem;">EBAY</div>
+        </a>
+        <a href="https://de.trustpilot.com/review/lexord.de" target="_blank" class="trust-card">
+            <span class="trust-label">SECURITY</span>
+            <div class="trust-stars" style="color:#00b67a;">★★★★★</div>
+            <div style="font-family:'Orbitron'; font-size:0.5rem;">TRUSTPILOT</div>
+        </a>
+    </div>
+
+    <div class="section-title">HARDWARE_MODS</div>
+    <div class="grid">
+        <div class="card">
+            <div class="product-glow"><img src="Stickzange.PNG" alt="Stickzange"></div>
+            <h3 class="orbitron" style="font-size:0.55rem; margin-top:15px;">Stickzange Pro</h3>
+            <div class="price">5,95 €</div>
+            <a href="https://www.ebay.de/itm/127605871230" target="_blank" class="buy-btn">EBAY STORE</a>
+        </div>
+        <div class="card">
+            <div class="product-glow"><img src="PADDLE SYSTEM.PNG" alt="Paddle System"></div>
+            <h3 class="orbitron" style="font-size:0.55rem; margin-top:15px;">Paddle System V2</h3>
+            <div class="price">45,95 €</div>
+            <a href="https://www.ebay.de/itm/127621679343" target="_blank" class="buy-btn">EBAY STORE</a>
+        </div>
+    </div>
+
+    <div class="section-title">ENGINEERING_HUB (3D-DRUCK)</div>
+    <div class="grid">
+        <div class="card">
+            <div class="product-glow"><img src="placeholder.png"></div>
+            <h3 class="orbitron" style="font-size:0.55rem; margin-top:15px;">Custom Sticks</h3>
+            <div class="price">14,90 €</div>
+            <a href="#contact-form" class="buy-btn">ANFRAGEN</a>
+        </div>
+        <div class="card">
+            <div class="product-glow"><img src="placeholder.png"></div>
+            <h3 class="orbitron" style="font-size:0.55rem; margin-top:15px;">Display Stand</h3>
+            <div class="price">19,95 €</div>
+            <a href="https://www.ebay.de/usr/lexord-de" target="_blank" class="buy-btn">ZUM SHOP</a>
+        </div>
+    </div>
+
+    <div class="contact-box" id="contact-form-section">
+        <h2 class="orbitron" style="font-size:0.85rem; margin-bottom:25px; text-align:center; color: var(--n-blue);">Support & Projektanfrage</h2>
+        <form id="contact-form">
+            <input type="text" name="name" placeholder="Dein Name" required>
+            <input type="email" name="email" placeholder="Deine E-Mail Adresse" required>
+            <textarea name="message" placeholder="Beschreibe dein Anliegen oder deine 3D-Druck Idee..." rows="4" required></textarea>
+            <button class="send-btn" type="submit">ÜBERTRAGUNG STARTEN</button>
+            <p class="dsgvo-text">Mit dem Absenden erkläre ich mich einverstanden, dass meine Daten zur Bearbeitung der Anfrage genutzt werden (DSGVO konform).</p>
+        </form>
+    </div>
+
+    <footer>
+        <button class="legal-trigger" onclick="toggleLegal()">IMPRESSUM & DATENSCHUTZ</button>
+        <div id="legal-box" class="imp-box">
+            <h4 class="orbitron" style="color:var(--n-blue); margin-bottom:10px; font-size:0.8rem;">Impressum</h4>
+            <strong>LEXORD™ ENGINEERING</strong><br>
+            Inhaber: Leon Schulz<br>
+            An Der Domsühler Straße 2<br>
+            19374 Domsühl<br>
+            E-Mail: kontakt@lexord.de<br><br>
+            
+            <h4 class="orbitron" style="color:var(--n-blue); margin-bottom:10px; font-size:0.8rem;">Rechtlicher Hinweis</h4>
+            Dies ist ein <strong>Privatverkauf</strong>. Der Verkauf erfolgt unter Ausschluss jeglicher Sachmängelhaftung. Die Haftung auf Schadenersatz wegen Verletzungen von Gesundheit, Körper oder Leben und grob fahrlässiger und/oder vorsätzlicher Verletzungen meiner Pflichten als Verkäufer bleibt davon unberührt.<br><br>
+
+            <h4 class="orbitron" style="color:var(--n-blue); margin-bottom:10px; font-size:0.8rem;">Datenschutz</h4>
+            Personenbezogene Daten werden nur zur Beantwortung von Anfragen verwendet und nicht an Dritte weitergegeben.
+        </div>
+        <p style="color:#222; font-size:0.6rem; margin-top:25px; letter-spacing: 2px;">© 2026 LEXORD. FOR THE ELITE.</p>
+    </footer>
+</div>
+
+<div id="gateway"><div id="log-container"></div></div>
+
+<script>
+function launchTerminal() {
+    const sound = document.getElementById('bootSound');
+    sound.play().catch(e => console.log("Audio Interaktion nötig"));
+    
+    const intro = document.getElementById('intro-terminal');
+    const main = document.getElementById('main-site');
+    
+    intro.style.transform = "scale(1.2)";
+    intro.style.filter = "blur(20px)";
+    intro.style.opacity = "0";
+    
+    setTimeout(() => {
+        intro.style.display = "none";
+        main.classList.add('site-unlock');
+        document.body.style.overflow = "auto";
+        particlesJS('particles-js',{particles:{number:{value:55},color:{value:'#00f2ff'},opacity:{value:.2},size:{value:1},move:{speed:.7}}});
+    }, 600);
+}
+
+function toggleLegal(){ 
+    const box = document.getElementById('legal-box');
+    box.style.display = (box.style.display === 'block') ? 'none' : 'block';
+    if(box.style.display === 'block') box.scrollIntoView({behavior: "smooth"});
+}
+
+document.getElementById('contact-form').onsubmit = function(e) {
+    e.preventDefault();
+    const gateway = document.getElementById('gateway');
+    const log = document.getElementById('log-container');
+    log.innerHTML = '';
+    gateway.style.display = 'flex';
+    const steps = ["INITIALISIERE PROTOKOLL...", "VERSCHLÜSSELE DATEN...", "ÜBERTRAGE AN ENGINEERING_HUB...", "ÜBERTRAGUNG ERFOLGREICH."];
+    steps.forEach((text, i) => {
+        setTimeout(() => {
+            const line = document.createElement('div');
+            line.className = 'log-line';
+            line.innerText = "> " + text;
+            log.appendChild(line);
+            if(i === steps.length - 1) {
+                fetch("https://formsubmit.co/ajax/kontakt@lexord.de", { method: "POST", body: new FormData(this) })
+                .then(() => { 
+                    setTimeout(() => { 
+                        gateway.style.display = 'none'; 
+                        alert('Deine Nachricht wurde erfolgreich übertragen!'); 
+                        document.getElementById('contact-form').reset(); 
+                    }, 800);
+                });
+            }
+        }, i * 600);
+    });
+};
+</script>
+</body>
+</html>

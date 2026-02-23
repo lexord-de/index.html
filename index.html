@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LEXORD™ | Engineering Excellence</title>
+    
+    <script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+
+    <style>
+        :root { --n-blue: #00f2ff; --n-purple: #bc13fe; --bg: #050505; --bezier: cubic-bezier(0.16, 1, 0.3, 1); }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        
+        body { background: #000; color: white; font-family: 'Inter', sans-serif; overflow: hidden; }
+
+        /* --- WARP INTRO --- */
+        #intro-terminal { position: fixed; inset: 0; background: #000; z-index: 100000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #warp-canvas { position: absolute; inset: 0; z-index: -1; }
+        .glitch-logo { width: 180px; filter: drop-shadow(0 0 30px var(--n-blue)); margin-bottom: 40px; }
+        .start-button { padding: 20px 60px; background: rgba(0,0,0,0.6); border: 1px solid var(--n-blue); color: var(--n-blue); font-family: 'Orbitron'; font-weight: 900; letter-spacing: 5px; cursor: pointer; transition: 0.4s; z-index: 10;}
+        .start-button:hover { background: var(--n-blue); color: #000; box-shadow: 0 0 50px var(--n-blue); }
+
+        /* --- MAIN SITE --- */
+        #main-site { display: none; opacity: 0; height: 100vh; overflow-y: auto; scroll-snap-type: y mandatory; }
+        #particles-js { position: fixed; inset: 0; z-index: -1; opacity: 0.3; pointer-events: none; }
+
+        header { 
+            position: fixed; top: 0; width: 100%; z-index: 5000; padding: 30px 6%; 
+            display: flex; justify-content: space-between; align-items: center; transition: 0.5s var(--bezier);
+        }
+        header.scrolled { padding: 15px 6%; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0,242,255,0.1); }
+        .brand { display: flex; align-items: center; gap: 15px; cursor: pointer; text-decoration: none; color: white; }
+        .logo-mini { height: 35px; filter: drop-shadow(0 0 8px var(--n-blue)); }
+        .logo-txt { font-family: 'Orbitron'; font-weight: 900; letter-spacing: 4px; font-size: 1.1rem; }
+
+        /* --- SECTIONS --- */
+        section { height: 100vh; width: 100%; scroll-snap-align: start; position: relative; display: flex; align-items: center; justify-content: center; padding: 0 6%; }
+        .hero-text { text-align: center; }
+        .hero-title { font-family: 'Orbitron'; font-size: clamp(2.5rem, 10vw, 7rem); font-weight: 900; letter-spacing: 15px; margin-bottom: 10px; }
+        .hero-title span { color: var(--n-blue); text-shadow: 0 0 20px var(--n-blue); }
+
+        /* --- PRODUCT GRID --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; width: 100%; max-width: 1300px; }
+        .card { 
+            background: rgba(10,10,10,0.6); border: 1px solid rgba(0,242,255,0.1); border-radius: 4px; padding: 40px 20px; 
+            text-align: center; transition: 0.5s var(--bezier); text-decoration: none; color: white; position: relative; overflow: hidden;
+        }
+        .card:hover { border-color: var(--n-blue); transform: translateY(-10px); background: rgba(0,242,255,0.03); }
+        .card img { height: 120px; object-fit: contain; margin-bottom: 25px; transition: 0.5s; filter: drop-shadow(0 0 10px rgba(0,242,255,0.2)); }
+        .card:hover img { transform: scale(1.1); filter: drop-shadow(0 0 20px var(--n-blue)); }
+        .card h3 { font-family: 'Orbitron'; font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 10px; }
+        .price { font-family: 'Orbitron'; color: var(--n-blue); font-size: 1.1rem; margin-bottom: 20px; }
+
+        /* --- CONTACT & TERMINAL --- */
+        .contact-container { width: 100%; max-width: 600px; }
+        input, textarea { width: 100%; padding: 20px; background: rgba(255,255,255,0.03); border: 1px solid #222; color: white; font-family: 'Orbitron'; font-size: 0.7rem; margin-bottom: 15px; outline: none; }
+        input:focus { border-color: var(--n-blue); }
+        .send-btn { width: 100%; padding: 20px; background: var(--n-blue); color: black; border: none; font-family: 'Orbitron'; font-weight: 900; letter-spacing: 3px; cursor: pointer; transition: 0.3s; }
+
+        #gateway-overlay { position: fixed; inset: 0; background: #000; z-index: 200000; display: none; align-items: center; justify-content: center; }
+        .terminal-loader { width: 80%; max-width: 400px; font-family: monospace; color: var(--n-blue); line-height: 1.8; }
+
+        /* --- FOOTER & LEGAL --- */
+        footer { padding: 100px 8% 40px; background: #000; border-top: 1px solid #111; scroll-snap-align: end; }
+        .f-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 60px; }
+        .f-label { font-family: 'Orbitron'; color: var(--n-blue); font-size: 0.6rem; letter-spacing: 3px; margin-bottom: 25px; }
+        .f-link { display: block; color: white; text-decoration: none; opacity: 0.4; font-size: 0.85rem; margin-bottom: 12px; transition: 0.3s; }
+        .f-link:hover { opacity: 1; color: var(--n-blue); transform: translateX(5px); }
+
+        .legal-footer { margin-top: 80px; padding-top: 30px; border-top: 1px solid #111; display: flex; justify-content: space-between; font-family: 'Orbitron'; font-size: 0.55rem; opacity: 0.2; letter-spacing: 2px; }
+
+        @media (max-width: 768px) {
+            .logo-txt { display: none; }
+            .hero-title { letter-spacing: 8px; }
+            .f-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<audio id="bootSound"><source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg"></audio>
+
+<div id="intro-terminal">
+    <canvas id="warp-canvas"></canvas>
+    <img src="IMG_7023.png" class="glitch-logo">
+    <button class="start-button" onclick="launchTerminal()">SYSTEM STARTEN</button>
+</div>
+
+<div id="gateway-overlay"><div class="terminal-loader" id="log-container"></div></div>
+
+<div id="main-site">
+    <div id="particles-js"></div>
+    
+    <header id="main-header">
+        <a href="#" class="brand" onclick="location.reload()">
+            <img src="IMG_7023.png" class="logo-mini">
+            <span class="logo-txt">LEXORD.DE</span>
+        </a>
+        <div style="font-family:'Orbitron'; font-size:0.6rem; color:var(--n-blue); letter-spacing:2px; border:1px solid rgba(0,242,255,0.2); padding:8px 15px; cursor:pointer;" onclick="document.getElementById('shop-sec').scrollIntoView()">SHOP</div>
+    </header>
+
+    <section>
+        <div class="hero-text">
+            <p style="font-family:'Orbitron'; font-size:0.6rem; letter-spacing:10px; color:var(--n-blue); margin-bottom:20px;">EST. 2026 // DOMSÜHL</p>
+            <h1 class="hero-title">LEX<span>ORD</span></h1>
+            <p style="opacity: 0.4; letter-spacing: 4px; font-size: 0.8rem;">ENGINEERING & 3D DESIGN</p>
+        </div>
+    </section>
+
+    <section id="shop-sec">
+        <div class="grid">
+            <a href="https://www.ebay.de/itm/127605871230" target="_blank" class="card">
+                <img src="Stickzange.PNG">
+                <h3>STICKZANGE PRO</h3>
+                <div class="price">5,95 €</div>
+                <div style="font-family:'Orbitron'; font-size:0.5rem; color:var(--n-blue);">DETAILS ANSEHEN →</div>
+            </a>
+            <a href="https://www.ebay.de/itm/127621679343" target="_blank" class="card">
+                <img src="PADDLE SYSTEM.PNG">
+                <h3>PADDLE SYSTEM V2</h3>
+                <div class="price">45,95 €</div>
+                <div style="font-family:'Orbitron'; font-size:0.5rem; color:var(--n-blue);">DETAILS ANSEHEN →</div>
+            </a>
+            <div class="card" style="opacity:0.3;">
+                <img src="IMG_7023.png">
+                <h3>COMING SOON</h3>
+                <div class="price">--,-- €</div>
+                <div style="font-family:'Orbitron'; font-size:0.5rem;">UPDATE FOLGT</div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="contact-container">
+            <h2 style="font-family:'Orbitron'; letter-spacing:5px; margin-bottom:40px; border-left:3px solid var(--n-blue); padding-left:20px;">ANFRAGE</h2>
+            <form onsubmit="return handleForm(event)">
+                <input type="text" placeholder="NAME" required>
+                <input type="email" placeholder="EMAIL-ADRESSE" required>
+                <textarea placeholder="DEIN PROJEKT ODER REPARATUR-WUNSCH..." rows="4" required></textarea>
+                <button type="submit" class="send-btn">DATEN ÜBERMITTELN</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="f-grid">
+            <div>
+                <div class="logo-txt" style="margin-bottom:20px;">LEXORD</div>
+                <p style="opacity:0.3; font-size:0.85rem; line-height:1.7;">Wir modifizieren Hardware auf höchstem technischem Niveau. Jedes Projekt ist ein Unikat.</p>
+            </div>
+            <div>
+                <div class="f-label">NAVIGATION</div>
+                <a href="https://www.ebay.de/usr/lexord-de" target="_blank" class="f-link">eBay Shop</a>
+                <a href="https://www.instagram.com/lexord.de" target="_blank" class="f-link">Instagram</a>
+                <a href="https://www.tiktok.com/@lexord.de" target="_blank" class="f-link">TikTok</a>
+            </div>
+            <div>
+                <div class="f-label">LEGAL</div>
+                <p style="font-size:0.8rem; opacity:0.5; line-height:1.8;">Leon Schulz<br>An Der Domsühler Straße 2<br>19374 Domsühl<br>kontakt@lexord.de</p>
+                <p style="font-size:0.6rem; opacity:0.3; margin-top:10px;">Privatverkauf nach § 13 BGB.</p>
+            </div>
+        </div>
+        <div class="legal-footer">
+            <div>© 2026 LEXORD ENGINEERING.</div>
+            <div>GOATCOUNTER ANONYMOUS TRACKING ACTIVE</div>
+        </div>
+    </footer>
+</div>
+
+<script>
+    // WARP STARS LOGIC
+    const canvas = document.getElementById('warp-canvas'); const ctx = canvas.getContext('2d');
+    let stars = []; let speed = 0.5;
+    function initStars() { 
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight; 
+        stars = []; for(let i=0; i<400; i++) stars.push({x: Math.random()*canvas.width-canvas.width/2, y: Math.random()*canvas.height-canvas.height/2, z: Math.random()*canvas.width}); 
+    }
+    function drawStars() { 
+        ctx.fillStyle = "black"; ctx.fillRect(0,0,canvas.width,canvas.height); 
+        ctx.translate(canvas.width/2, canvas.height/2); 
+        for(let s of stars) { 
+            s.z -= speed; if(s.z <= 0) s.z = canvas.width; 
+            let x = s.x * (canvas.width/s.z); let y = s.y * (canvas.width/s.z); 
+            let size = (1-s.z/canvas.width)*3; ctx.fillStyle = `rgba(0,242,255,${1-s.z/canvas.width})`; 
+            ctx.fillRect(x,y,size,size); 
+        } ctx.translate(-canvas.width/2, -canvas.height/2); requestAnimationFrame(drawStars); 
+    }
+    initStars(); drawStars();
+
+    // START SITE
+    function launchTerminal() {
+        speed = 50;
+        document.getElementById('bootSound').play().catch(()=>{});
+        gsap.to("#intro-terminal", { duration: 1.2, y: "-100%", ease: "power4.inOut", onComplete: () => {
+            document.getElementById('intro-terminal').style.display = "none";
+            document.getElementById('main-site').style.display = "block";
+            gsap.to("#main-site", { opacity: 1, duration: 1 });
+            
+            particlesJS('particles-js', {
+                particles: {
+                    number: { value: 40 },
+                    color: { value: '#00f2ff' },
+                    opacity: { value: 0.3 },
+                    line_linked: { enable: true, distance: 150, color: '#00f2ff', opacity: 0.2, width: 1 },
+                    move: { speed: 1 }
+                }
+            });
+        }});
+    }
+
+    // FORM TERMINAL ANIMATION
+    function handleForm(e) {
+        e.preventDefault();
+        const gateway = document.getElementById('gateway-overlay');
+        const container = document.getElementById('log-container');
+        const logs = ["> INITIATING...", "> ENCRYPTING...", "> TRANSMITTING DATA...", "> SUCCESS: LEXORD_SYS RECEIVED"];
+        gateway.style.display = "flex";
+        container.innerHTML = "";
+        logs.forEach((text, i) => {
+            setTimeout(() => {
+                const p = document.createElement('p'); p.textContent = text;
+                container.appendChild(p);
+                if(i === logs.length - 1) {
+                    setTimeout(() => { gateway.style.display = "none"; alert("Anfrage erfolgreich gesendet!"); }, 1000);
+                }
+            }, i * 600);
+        });
+        return false;
+    }
+
+    // HEADER SCROLL
+    document.getElementById('main-site').addEventListener('scroll', function() {
+        const h = document.getElementById('main-header');
+        if(this.scrollTop > 50) h.classList.add('scrolled'); else h.classList.remove('scrolled');
+    });
+</script>
+</body>
+</html>

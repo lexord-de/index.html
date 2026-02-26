@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title class="notranslate">LEXORD® | High-End Engineering | Beste Scuf Alternative 2026</title>
+    <meta name="description" content="LEXORD® Engineering: Die ultimative Premium Scuf Alternative. High-End Paddle Systeme, Stickzangen & Custom Controller Tuning. Besser als Bitro, King & Aim. Made in Germany.">
+    <meta name="keywords" content="LEXORD, Scuf Alternative, Scuf Controller, PS5 Scuf, Xbox Scuf, Bitro, Bitro Shop, King Controller, AimControllers, Rocket Controller, Lux Controller, Stealth Controller, Gaming Engineering, Paddles nachrüsten, PS5 Paddles, Custom Controller Deutschland, Stick Drift Fix, Hall Effect Sticks, Digital Trigger, Clicky Buttons, Mouse Click Trigger, DualSense Edge Alternative, E-Sport Controller, Pro Controller, Controller Tuning, Stickzange, Löt frei Paddles, Rapid Fire, Drop Shot, Warzone Controller, Fortnite Scuf, Apex Legends Controller, Gaming Gear, High-End Gaming, Controller Umbau Service, Modding, Scuf Reflex, Scuf Instinct, Edge Controller Alternative, Hall Sensor Joysticks, No Drift, Gamer Hardware">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+
+    <style>
+        :root { --n-blue: #00f2ff; --bg: #000000; --panel: #0a0a0a; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; width: 100%; top: 0 !important; }
+
+        /* Hidden Google Translator Elements */
+        .goog-te-banner-frame, .goog-te-balloon-frame, #goog-gt-tt, .goog-te-gadget span, .goog-te-gadget .goog-te-combo { display: none !important; }
+        .goog-te-gadget { color: transparent !important; font-size: 0 !important; height: 0; width: 0; }
+        body { top: 0 !important; }
+
+        #star-canvas { position: fixed; inset: 0; z-index: -1; background: #000; }
+        #intro-overlay { position: fixed; inset: 0; background: black; z-index: 100000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+
+        /* --- TICKER / TRUSTBARS --- */
+        .ticker-wrapper { position: fixed; top: 0; width: 100%; z-index: 9000; font-family: 'Orbitron'; font-size: 9px; pointer-events: none; display: flex; flex-direction: column; }
+        .ticker-row { overflow: hidden; white-space: nowrap; padding: 8px 0; border-bottom: 1px solid #111; background: black; }
+        .row-second { top: 31px; background: rgba(0, 242, 255, 0.05); border-bottom: 1px solid rgba(0, 242, 255, 0.1); color: var(--n-blue); }
+        .ticker-move { display: inline-block; animation: ticker-scroll 30s linear infinite; }
+        .ticker-item { display: inline-block; margin-right: 50px; }
+        @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* --- HEADER --- */
+        header { position: fixed; top: 80px; width: 100%; z-index: 10000; padding: 0 6%; display: flex; justify-content: space-between; align-items: center; }
+        .brand-text { font-family: 'Orbitron'; font-weight: 900; font-size: 1.2rem; letter-spacing: 4px; }
+        .nav-controls { display: flex; align-items: center; gap: 20px; }
+        
+        .cart-icon-btn { cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; z-index: 10001; }
+        #cart-count { position: absolute; top: -8px; right: -10px; background: var(--n-blue); color: black; font-size: 10px; font-weight: bold; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Orbitron'; }
+
+        .burger-menu { cursor: pointer; width: 30px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; z-index: 40001; }
+        .burger-bar { height: 2px; width: 100%; background: var(--n-blue); transition: 0.3s; }
+
+        /* --- TRANSLATOR IN HEADER --- */
+        .header-lang { display: flex; gap: 8px; z-index: 10005; }
+        .lang-btn { 
+            font-family: 'Orbitron'; font-size: 10px; color: #555; background: #000; 
+            border: 1px solid #222; padding: 5px 10px; border-radius: 15px; 
+            cursor: pointer; transition: 0.3s ease; text-transform: uppercase;
+        }
+        .lang-btn.active { color: white; border-color: var(--n-blue); animation: pulse-blue 2s infinite; }
+        @keyframes pulse-blue { 0% { box-shadow: 0 0 0px var(--n-blue); } 50% { box-shadow: 0 0 8px var(--n-blue); } 100% { box-shadow: 0 0 0px var(--n-blue); } }
+
+        #full-nav { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 40000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; transform: translateX(100%); transition: 0.6s cubic-bezier(0.7, 0, 0.3, 1); }
+        #full-nav.active { transform: translateX(0); }
+        .nav-link { font-family: 'Orbitron'; font-size: 1.5rem; text-decoration: none; color: white; transition: 0.3s; }
+
+        /* --- HERO --- */
+        .hero { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0; }
+        .hero-logo-main { width: clamp(180px, 40vw, 300px); filter: drop-shadow(0 0 30px var(--n-blue)); margin-bottom: 20px; }
+
+        /* --- FLOATING PRODUCTS (Kasten entfernt) --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; padding: 100px 6%; max-width: 1400px; margin: 0 auto; }
+        .product-card { 
+            border-radius: 15px; 
+            border: none; 
+            text-align: center; 
+            transition: 0.5s ease; 
+            opacity: 0;
+            position: relative;
+            background: transparent;
+            padding: 20px;
+        }
+        /* Floating Animation for Cards */
+        .card-float { animation: floating 4s ease-in-out infinite; }
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* PRODUCT IMAGE WITH SHADOW */
+        .product-img { 
+            width: 100%; border-radius: 10px; margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.6); 
+            transition: 0.5s ease;
+            animation: pulse-shadow 3s infinite;
+        }
+        @keyframes pulse-shadow { 0% { box-shadow: 0 5px 15px rgba(0, 0, 242, 0.3); } 50% { box-shadow: 0 10px 30px rgba(0, 242, 255, 0.6); } 100% { box-shadow: 0 5px 15px rgba(0, 0, 242, 0.3); } }
+
+        .submit-btn { width: 100%; padding: 20px; background: white; color: black; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; transition: 0.3s; }
+        .submit-btn:hover { background: var(--n-blue); box-shadow: 0 0 25px var(--n-blue); }
+
+        /* CONTACT & LEGAL (Restored) */
+        .input-field { width: 100%; padding: 15px; background: #000; border: 1px solid #222; color: white; margin-bottom: 15px; font-family: 'Inter'; }
+        .legal-box { background: #050505; border: 1px solid #111; margin-bottom: 10px; border-radius: 8px; overflow: hidden; }
+        .legal-trigger { padding: 20px; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; color: #555; display: flex; justify-content: space-between; }
+        .legal-content { max-height: 0; opacity: 0; padding: 0 20px; transition: 0.5s; font-size: 0.8rem; color: #888; }
+        .legal-box.open .legal-content { max-height: 1000px; opacity: 1; padding-bottom: 20px; }
+
+        /* TERMINAL */
+        #gateway-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 50000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
+        .terminal { width: 90%; max-width: 450px; background: #020202; border: 1px solid #222; padding: 30px; font-family: 'Courier New', monospace; color: var(--n-blue); }
+
+        #cart-sidebar { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; background: #000; z-index: 30000; transition: 0.5s; padding: 120px 40px; border-left: 1px solid #111; }
+        #cart-sidebar.active { right: 0; }
+    </style>
+</head>
+<body class="notranslate">
+
+    <div id="intro-overlay"><canvas id="warp-canvas"></canvas>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEXORD™ | Engineering</title>
+    
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@100;400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+
+    <style>
+        :root { --n-blue: #00f2ff; --bg: #000000; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
+
+        #star-canvas { position: fixed; inset: 0; z-index: -1; background: #000; }
+
+        /* --- INTRO & GATEWAY --- */
+        #intro-overlay { position: fixed; inset: 0; background: black; z-index: 20000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #intro-logo { width: 120px; filter: drop-shadow(0 0 20px var(--n-blue)); margin-bottom: 20px; opacity: 0; transform: scale(0.5); }
+        #intro-text { font-family: 'Orbitron'; font-size: 0.8rem; letter-spacing: 5px; color: var(--n-blue); opacity: 0; }
+        #gateway-overlay { position: fixed; inset: 0; background: #000; z-index: 15000; display: none; align-items: center; justify-content: center; flex-direction: column; }
+        .terminal-loader { width: 85%; max-width: 450px; font-family: monospace; color: var(--n-blue); padding: 30px; background: #050505; border: 1px solid #111; line-height: 1.8; border-radius: 10px; font-size: 0.75rem; }
+
+        /* --- HEADER --- */
+        header { 
+            position: fixed; top: 0; width: 100%; z-index: 10000; 
+            padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; 
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); border-bottom: 1px solid #111;
+            opacity: 0;
+        }
+        .logo-area img { width: 50px; filter: drop-shadow(0 0 8px var(--n-blue)); cursor: pointer; }
+        .header-actions { display: flex; align-items: center; gap: 20px; }
+        .header-icon { color: white; cursor: pointer; transition: 0.3s; display: flex; align-items: center; text-decoration: none; }
+        .header-icon:hover { color: var(--n-blue); transform: translateY(-2px); }
+
+        /* --- ÜBERSETZER OVERLAY (NEU & ANIMIERT) --- */
+        #translate-overlay { 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); 
+            z-index: 25000; display: none; flex-direction: column; align-items: center; justify-content: center; 
+            opacity: 0;
+        }
+        .lang-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 90%; max-width: 400px; margin-top: 30px; }
+        .lang-btn { 
+            padding: 15px; border: 1px solid #222; background: rgba(20,20,20,0.5); 
+            color: white; font-family: 'Orbitron'; font-size: 0.7rem; cursor: pointer; 
+            transition: 0.3s; text-align: center; border-radius: 4px; letter-spacing: 2px;
+        }
+        .lang-btn:hover { border-color: var(--n-blue); color: var(--n-blue); box-shadow: 0 0 15px rgba(0,242,255,0.2); }
+
+        /* --- NAV OVERLAY (BURGER) --- */
+        #nav-overlay { 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 19000; 
+            display: none; flex-direction: column; align-items: center; justify-content: center; gap: 30px; 
+            opacity: 0; backdrop-filter: blur(20px);
+        }
+        .nav-link { font-family: 'Orbitron'; font-size: 1.8rem; color: #fff; text-decoration: none; letter-spacing: 5px; transition: 0.3s; }
+        .menu-trigger { cursor: pointer; display: flex; flex-direction: column; gap: 5px; z-index: 19001; }
+        .menu-trigger span { width: 25px; height: 2px; background: white; transition: 0.3s; }
+        .menu-trigger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .menu-trigger.active span:nth-child(2) { opacity: 0; }
+        .menu-trigger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* --- CONTENT & CATEGORY --- */
+        #category-view {
+            position: fixed; top: 80px; left: 0; width: 100%; height: calc(100vh - 80px);
+            background: black; z-index: 8000; display: none; overflow-y: auto; padding: 5%;
+            transform: translateY(100%); transition: transform 0.6s cubic-bezier(0.85, 0, 0.15, 1);
+        }
+        #category-view.active { transform: translateY(0); display: block; }
+
+        .main-wrapper { transition: 0.8s; }
+        .hero-container { margin: 180px auto 100px; width: 92%; max-width: 1300px; opacity: 0; }
+        h1 { font-family: 'Orbitron'; font-size: clamp(3rem, 8vw, 6rem); font-weight: 900; line-height: 0.85; }
+
+        .section-label { margin: 100px 5% 40px; border-left: 3px solid var(--n-blue); padding-left: 15px; opacity: 0; font-family: 'Orbitron'; color: var(--n-blue); letter-spacing: 5px; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; padding: 0 5% 100px; opacity: 0; }
+        .card { cursor: pointer; text-align: center; border: 1px solid #111; padding: 40px 20px; transition: 0.4s; background: rgba(5,5,5,0.5); }
+        .card:hover { border-color: var(--n-blue); }
+        .card img { width: 100%; height: 200px; object-fit: contain; }
+
+        /* --- FOOTER --- */
+        .footer-section { padding: 80px 5%; border-top: 1px solid #111; opacity: 0; }
+        .reviews-container { max-width: 800px; margin: 0 auto 50px; height: 100px; overflow: hidden; text-align: center; }
+        .review-track { transition: 0.6s; }
+        .review-card { height: 100px; display: flex; flex-direction: column; justify-content: center; }
+        .trust-badges { display: flex; justify-content: center; gap: 40px; margin-bottom: 50px; }
+        .legal-footer { text-align: center; font-size: 0.7rem; color: #333; font-family: 'Orbitron'; letter-spacing: 2px; }
+
+        #google_translate_element { display: none !important; }
+        .goog-te-banner-frame { display: none !important; }
+        body { top: 0 !important; }
+    </style>
+</head>
+<body>
+
+    <div id="intro-overlay">
+        <img src="IMG_7023.png" id="intro-logo">
+        <div id="intro-text">LEXORD.DE</div>
+    </div>
+    <div id="gateway-overlay"><div class="terminal-loader" id="log-container"></div></div>
+
+    <canvas id="star-canvas"></canvas>
+
+    <div id="translate-overlay">
+        <h2 style="font-family:'Orbitron'; color:var(--n-blue); letter-spacing:5px;">SELECT LANGUAGE</h2>
+        <div class="lang-grid">
+            <div class="lang-btn" onclick="changeLanguage('de')">DEUTSCH</div>
+            <div class="lang-btn" onclick="changeLanguage('en')">ENGLISH</div>
+            <div class="lang-btn" onclick="changeLanguage('fr')">FRANÇAIS</div>
+            <div class="lang-btn" onclick="changeLanguage('es')">ESPAÑOL</div>
+            <div class="lang-btn" onclick="changeLanguage('it')">ITALIANO</div>
+            <div class="lang-btn" onclick="changeLanguage('ru')">РУССКИЙ</div>
+            <div class="lang-btn" onclick="changeLanguage('tr')">TÜRKÇE</div>
+            <div class="lang-btn" onclick="changeLanguage('pl')">POLSKI</div>
+        </div>
+        <p onclick="closeTranslate()" style="margin-top:40px; cursor:pointer; font-family:'Orbitron'; font-size:0.6rem; color:#444;">[ CLOSE ]</p>
+    </div>
+
+    <header id="main-header">
+        <div class="logo-area" onclick="closeCategory();">
+            <img src="IMG_7023.png">
+        </div>
+        <div class="header-actions">
+            <div class="header-icon" onclick="openTranslate()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+            </div>
+            <a href="https://www.ebay.de/usr/lexord-de" target="_blank" class="header-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            </a>
+            <div class="menu-trigger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+        </div>
+    </header>
+
+    <nav id="nav-overlay">
+        <a href="#hero" class="nav-link" onclick="toggleMenu()">HOME</a>
+        <a href="javascript:void(0)" class="nav-link" onclick="toggleMenu(); openCategory('hardware')">HARDWARE</a>
+        <div style="margin-top:40px; display:flex; gap:20px;">
+            <a href="https://www.instagram.com/lexord_de/" target="_blank" style="color:#555; font-family:Orbitron; font-size:0.7rem;">INSTAGRAM</a>
+            <a href="https://www.tiktok.com/@lexord.de" target="_blank" style="color:#555; font-family:Orbitron; font-size:0.7rem;">TIKTOK</a>
+        </div>
+    </nav>
+
+    <div id="category-view">
+        <div style="font-family:'Orbitron'; color:var(--n-blue); cursor:pointer; margin-bottom:40px;" onclick="closeCategory()">[ BACK ]</div>
+        <div id="category-content"></div>
+    </div>
+
+    <div id="google_translate_element"></div>
+
+    <main class="main-wrapper" id="main-page">
+        <section class="hero-container" id="hero">
+            <h1>BEYOND<br>LIMITS.</h1>
+        </section>
+
+        <div class="section-label"><h2>CATEGORIES</h2></div>
+        <section class="grid">
+            <div class="card" onclick="openCategory('hardware')">
+                <img src="Stickzange.PNG">
+                <h3 style="font-family:'Orbitron'; font-size:0.8rem; margin-top:20px;">HARDWARE</h3>
+            </div>
+            <div class="card" onclick="openCategory('service')">
+                <img src="IMG_7023.png" style="opacity:0.2">
+                <h3 style="font-family:'Orbitron'; font-size:0.8rem; margin-top:20px;">MODDING SERVICE</h3>
+            </div>
+        </section>
+
+        <footer class="footer-section">
+            <div class="reviews-container">
+                <div class="review-track" id="review-track">
+                    <div class="review-card"><p style="font-style:italic; color:#ccc;">"Beste Hardware auf dem Markt."</p><span style="color:var(--n-blue); font-family:Orbitron; font-size:0.6rem;">EBAY ★★★★★</span></div>
+                    <div class="review-card"><p style="font-style:italic; color:#ccc;">"Absolut präzise Werkzeuge."</p><span style="color:var(--n-blue); font-family:Orbitron; font-size:0.6rem;">GOOGLE ★★★★★</span></div>
+                </div>
+            </div>
+            <div class="trust-badges">
+                <svg width="30" fill="var(--n-blue)" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                <svg width="30" fill="var(--n-blue)" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+            </div>
+            <div class="legal-footer">LEON SCHULZ | DOMSÜHL | © 2026 LEXORD</div>
+        </footer>
+    </main>
+
+    <script>
+        // ÜBERSETZER LOGIK
+        function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'de'}, 'google_translate_element'); }
+        function openTranslate() { 
+            const ov = document.getElementById('translate-overlay');
+            ov.style.display = 'flex';
+            gsap.to(ov, { opacity: 1, duration: 0.5 });
+        }
+        function closeTranslate() { 
+            gsap.to('#translate-overlay', { opacity: 0, duration: 0.4, onComplete: () => document.getElementById('translate-overlay').style.display = 'none' }); 
+        }
+        function changeLanguage(lang) {
+            const select = document.querySelector('.goog-te-combo');
+            if(select) { select.value = lang; select.dispatchEvent(new Event('change')); }
+            closeTranslate();
+        }
+
+        // KATEGORIE ENGINE
+        const catData = {
+            hardware: `<h2 style="font-family:Orbitron; font-size:2rem; margin-bottom:40px;">HARDWARE</h2><div class="grid" style="opacity:1"><div class="card" onclick="window.open('https://www.ebay.de/itm/127605871230')"><img src="Stickzange.PNG"><h3 style="font-family:'Orbitron'; font-size:0.8rem; margin-top:20px;">STICKZANGE PRO - 5,95€</h3></div></div>`,
+            service: `<h2 style="font-family:Orbitron; font-size:2rem;">SERVICES</h2><p style="margin-top:20px; color:#555;">In Kürze verfügbar.</p>`
+        };
+        function openCategory(cat) {
+            const view = document.getElementById('category-view');
+            document.getElementById('category-content').innerHTML = catData[cat];
+            view.style.display = 'block';
+            setTimeout(() => view.classList.add('active'), 10);
+            document.getElementById('main-page').style.opacity = '0';
+        }
+        function closeCategory() {
+            const view = document.getElementById('category-view');
+            view.classList.remove('active');
+            document.getElementById('main-page').style.opacity = '1';
+            setTimeout(() => view.style.display = 'none', 600);
+        }
+
+        // NAVIGATION
+        function toggleMenu() {
+            const nav = document.getElementById('nav-overlay');
+            const isOpen = nav.style.display === "flex";
+            nav.style.display = isOpen ? "none" : "flex";
+            gsap.to(nav, { opacity: isOpen ? 0 : 1 });
+            document.querySelector('.menu-trigger').classList.toggle('active');
+        }
+
+        // INTRO & TERMINAL
+        const logs = ["> SYSTEM_START", "> LOAD_RESOURCES", "> BYPASS_LIMITS", "> LEXORD_ONLINE"];
+        function startLog() {
+            const container = document.getElementById('log-container');
+            let i = 0;
+            const intv = setInterval(() => {
+                if(i < logs.length) {
+                    const d = document.createElement('div'); d.textContent = logs[i]; container.appendChild(d); i++;
+                } else {
+                    clearInterval(intv);
+                    setTimeout(() => gsap.to("#gateway-overlay", {opacity:0, onComplete:() => {
+                        document.getElementById('gateway-overlay').style.display="none";
+                        gsap.to("header, .hero-container, .section-label, .grid, .footer-section", {opacity:1, stagger:0.2});
+                    }}), 1000);
+                }
+            }, 500);
+        }
+
+        window.onload = () => {
+            gsap.timeline()
+                .to("#intro-logo", {opacity:1, scale:1, duration:1.5})
+                .to("#intro-text", {opacity:1, duration:0.5})
+                .to("#intro-overlay", {opacity:0, delay:1.5, onComplete:() => {
+                    document.getElementById('intro-overlay').style.display="none";
+                    document.getElementById('gateway-overlay').style.display="flex";
+                    startLog();
+                }});
+        };
+
+        // STERNE
+        const canvas = document.getElementById('star-canvas'); const ctx = canvas.getContext('2d');
+        let stars = [];
+        function initStars() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; stars = []; for(let i=0; i<200; i++) stars.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*0.8}); }
+        function drawStars() { ctx.clearRect(0,0,canvas.width, canvas.height); ctx.fillStyle="white"; stars.forEach(s => { ctx.fillRect(s.x, s.y, 1, 1); s.y += s.s; if(s.y > canvas.height) s.y = 0; }); requestAnimationFrame(drawStars); }
+        initStars(); drawStars();
+
+        // REVIEWS
+        let revIdx = 0;
+        setInterval(() => { revIdx = (revIdx + 1) % 2; document.getElementById('review-track').style.transform = `translateY(-${revIdx * 100}px)`; }, 4000);
+    </script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

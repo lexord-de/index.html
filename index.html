@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>LEXORD™ | Engineering – High-End Modding & 3D-Druck</title>
+    <meta name="description" content="LEXORD™ Engineering – Spezialist für High-End Hardware, präzisen 3D-Druck und professionelles Controller-Modding. Wir fertigen Bauteile jenseits der Standards.">
+    <meta name="robots" content="index, follow">
+
+    <script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@100;400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+
+    <style>
+        :root { --n-blue: #00f2ff; --bg: #000000; --card-bg: rgba(10,10,10,0.8); }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow: hidden; scroll-behavior: smooth; }
+
+        #star-canvas { position: fixed; inset: 0; z-index: -1; background: #000; }
+
+        /* --- INTRO & TERMINAL --- */
+        #intro-overlay { position: fixed; inset: 0; background: black; z-index: 20000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #intro-logo { width: 140px; filter: drop-shadow(0 0 25px var(--n-blue)); opacity: 0; transform: scale(0.8); }
+        #gateway-overlay { position: fixed; inset: 0; background: #000; z-index: 15000; display: none; align-items: center; justify-content: center; }
+        .terminal { width: 90%; max-width: 600px; font-family: 'Courier New', monospace; color: var(--n-blue); font-size: 0.85rem; line-height: 1.6; text-shadow: 0 0 5px var(--n-blue); }
+
+        /* --- HEADER --- */
+        header { 
+            position: fixed; top: 0; width: 100%; z-index: 10000; 
+            padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; 
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); border-bottom: 1px solid #111;
+            transform: translateY(-100%);
+        }
+        .logo-wrap { display: flex; align-items: center; gap: 15px; cursor: pointer; }
+        .logo-wrap img { width: 45px; filter: drop-shadow(0 0 5px var(--n-blue)); }
+        .logo-wrap span { font-family: 'Orbitron'; font-weight: 700; letter-spacing: 2px; font-size: 1.4rem; }
+
+        /* --- HERO --- */
+        .hero { height: 80vh; display: flex; align-items: center; padding: 0 5%; position: relative; }
+        .hero-flex { display: flex; align-items: center; gap: 40px; flex-wrap: wrap; }
+        .hero h1 { font-family: 'Orbitron'; font-size: clamp(3.5rem, 10vw, 7rem); line-height: 0.85; font-weight: 900; }
+        .hero-logo-container { position: relative; width: clamp(120px, 18vw, 220px); height: clamp(120px, 18vw, 220px); }
+        .moving-hero-logo { width: 100%; height: 100%; filter: drop-shadow(0 0 35px var(--n-blue)); animation: heroRotate 12s infinite linear; }
+        @keyframes heroRotate { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.1); } 100% { transform: rotate(360deg) scale(1); } }
+
+        /* --- PAGE CONTENT (Slide-Down) --- */
+        .page-content { opacity: 0; transform: translateY(-100vh); }
+        .section-title { font-family: 'Orbitron'; color: var(--n-blue); margin: 80px 5% 40px; letter-spacing: 5px; font-size: 0.8rem; border-left: 3px solid var(--n-blue); padding-left: 15px; }
+        
+        .main-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 0 5% 100px; }
+        .cat-card { background: var(--card-bg); border: 1px solid #111; height: 350px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.5s; position: relative; overflow: hidden; border-radius: 4px; }
+        .cat-card:hover { border-color: var(--n-blue); transform: translateY(-5px); }
+        .cat-card img { width: 65%; filter: grayscale(1); opacity: 0.5; transition: 0.6s; }
+        .cat-card:hover img { filter: grayscale(0) drop-shadow(0 0 20px var(--n-blue)); opacity: 1; }
+        .cat-card h3 { font-family: 'Orbitron'; position: absolute; bottom: 30px; letter-spacing: 3px; font-size: 0.8rem; text-align: center; width: 100%; }
+
+        /* --- REVIEWS --- */
+        .reviews-slider { max-width: 900px; margin: 0 auto 80px; text-align: center; height: 120px; overflow: hidden; }
+        .rev-card { height: 120px; display: flex; flex-direction: column; justify-content: center; }
+        .rev-text { font-style: italic; color: #888; margin-bottom: 15px; font-size: 1.1rem; }
+        .rev-meta { font-family: 'Orbitron'; color: var(--n-blue); font-size: 0.6rem; letter-spacing: 2px; }
+
+        /* --- LEGAL WRAPPER (Vollständig übertragen) --- */
+        .legal-wrapper { width: 90%; max-width: 1100px; margin: 0 auto 100px; }
+        .legal-box { background: rgba(5,5,5,0.8); border: 1px solid #111; border-radius: 4px; margin-bottom: 10px; overflow: hidden; }
+        .legal-trigger { padding: 20px 25px; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; color: #444; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
+        .legal-trigger:hover { color: var(--n-blue); }
+        .legal-content { max-height: 0; opacity: 0; padding: 0 25px; transition: 0.6s; font-size: 0.85rem; color: #777; line-height: 1.7; }
+        .legal-box.open .legal-content { max-height: 2000px; opacity: 1; padding: 20px 25px 40px; }
+
+        footer { text-align: center; padding: 50px; font-family: 'Orbitron'; font-size: 0.55rem; color: #151515; letter-spacing: 8px; }
+        #google_translate_element { display: none !important; }
+
+        /* Translator GUI */
+        #trans-gui { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 30000; display: none; flex-direction: column; align-items: center; justify-content: center; opacity: 0; backdrop-filter: blur(20px); }
+        .lang-btn { padding: 15px 40px; border: 1px solid #222; background: #050505; color: white; font-family: 'Orbitron'; cursor: pointer; margin: 10px; transition: 0.3s; font-size: 0.8rem; letter-spacing: 2px; }
+        .lang-btn:hover { border-color: var(--n-blue); color: var(--n-blue); }
+    </style>
+</head>
+<body>
+
+    <canvas id="star-canvas"></canvas>
+
+    <div id="intro-overlay"><img src="IMG_7023.png" id="intro-logo"></div>
+    <div id="gateway-overlay"><div class="terminal" id="term-box"></div></div>
+
+    <div id="trans-gui">
+        <h2 style="font-family:'Orbitron'; letter-spacing:8px; color:var(--n-blue); margin-bottom:30px;">SYSTEM_LANGUAGE</h2>
+        <div style="display:flex; flex-wrap:wrap; justify-content:center;">
+            <div class="lang-btn" onclick="setLang('de')">GERMAN</div>
+            <div class="lang-btn" onclick="setLang('en')">ENGLISH</div>
+        </div>
+        <div style="margin-top:40px; cursor:pointer; font-family:'Orbitron'; font-size:0.6rem; color:#444;" onclick="toggleTrans()">[ CLOSE_INTERFACE ]</div>
+    </div>
+
+    <header id="site-header">
+        <div class="logo-wrap" onclick="location.reload()">
+            <img src="IMG_7023.png">
+            <span>LEXORD.DE</span>
+        </div>
+        <div style="cursor:pointer; color:white;" onclick="toggleTrans()">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <section class="hero">
+            <div class="hero-flex">
+                <h1>BEYOND<br><span style="color:var(--n-blue)">LIMITS.</span></h1>
+                <div class="hero-logo-container">
+                    <img src="IMG_7023.png" class="moving-hero-logo">
+                </div>
+            </div>
+        </section>
+
+        <div class="section-title">ENGINEERING_CAPABILITIES</div>
+        <section class="main-grid">
+            <div class="cat-card" onclick="window.open('https://www.ebay.de/itm/127605871230')">
+                <img src="Stickzange.PNG">
+                <h3>PRECISION HARDWARE</h3>
+            </div>
+            <div class="cat-card" onclick="window.open('https://www.ebay.de/itm/127621679343')">
+                <img src="PADDLE SYSTEM.PNG">
+                <h3>HIGH-END MODDING</h3>
+            </div>
+            <div class="cat-card" onclick="window.open('https://www.ebay.de/usr/lexord-de')">
+                <img src="IMG_7023.png" style="opacity:0.2; filter:hue-rotate(180deg)">
+                <h3>3D-DRUCK / FERTIGUNG</h3>
+            </div>
+        </section>
+
+        <div class="reviews-slider">
+            <div id="rev-track" style="transition: 1s cubic-bezier(0.4, 0, 0.2, 1);">
+                <div class="rev-card"><p class="rev-text">"High-End 3D-Druck & Qualität."</p><p class="rev-meta">GOOGLE ★★★★★</p></div>
+                <div class="rev-card"><p class="rev-text">"Perfekte Hardware-Lösungen."</p><p class="rev-meta">EBAY ★★★★★</p></div>
+                <div class="rev-card"><p class="rev-text">"Präzision bis ins Detail."</p><p class="rev-meta">LEXORD CUSTOMS</p></div>
+            </div>
+        </div>
+
+        <section class="legal-wrapper">
+            <div class="legal-box">
+                <div class="legal-trigger" onclick="toggleLegal(this)">IMPRESSUM <span>+</span></div>
+                <div class="legal-content">
+                    <strong>Angaben gemäß § 5 TMG:</strong><br>
+                    Leon Schulz<br>An Der Domsühler Str. 2<br>19374 Domsühl<br><br>
+                    <strong>Kontakt:</strong> E-Mail: kontakt@lexord.de<br><br>
+                    <strong>Umsatzsteuer:</strong> Gemäß § 19 UStG wird keine Umsatzsteuer berechnet (Kleinunternehmerstatus).<br><br>
+                    <strong>Haftungsausschluss:</strong><br>
+                    Privatverkauf hobbymäßig hergestellter Artikel. Der Verkauf erfolgt unter Ausschluss jeglicher Sachmangelhaftung. Die Haftung auf Schadenersatz wegen Verletzungen von Gesundheit, Körper oder Leben und grob fahrlässiger und/oder vorsätzlicher Verletzungen meiner Pflichten als Verkäufer bleibt uneingeschränkt.
+                </div>
+            </div>
+            <div class="legal-box">
+                <div class="legal-trigger" onclick="toggleLegal(this)">DATENSCHUTZ (DSGVO) <span>+</span></div>
+                <div class="legal-content">
+                    Diese Website nutzt GoatCounter für eine datenschutzfreundliche Analyse (ohne Cookies, ohne IP-Speicherung). Personenbezogene Daten werden nur im Rahmen von Kontaktanfragen zur Bearbeitung Ihres Anliegens gespeichert.
+                </div>
+            </div>
+        </section>
+
+        <footer>© 2026 LEXORD. ALL RIGHTS RESERVED.</footer>
+    </main>
+
+    <div id="google_translate_element"></div>
+
+    <script>
+        function toggleLegal(el) { const box = el.parentElement; const isOpen = box.classList.contains('open'); document.querySelectorAll('.legal-box').forEach(b => b.classList.remove('open')); if(!isOpen) box.classList.add('open'); }
+        function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'de'}, 'google_translate_element'); }
+        function toggleTrans() { const gui = document.getElementById('trans-gui'); const isVisible = gui.style.display === 'flex'; if(!isVisible) { gui.style.display = 'flex'; gsap.to(gui, {opacity: 1}); } else { gsap.to(gui, {opacity: 0, onComplete: () => gui.style.display = 'none'}); } }
+        function setLang(lang) { const sel = document.querySelector('.goog-te-combo'); if(sel) { sel.value = lang; sel.dispatchEvent(new Event('change')); } toggleTrans(); }
+
+        const terminalLines = ["> INITIALIZING LEXORD_CORE...", "> 3D-PRINTING_ENGINE: ONLINE", "> LOADING HARDWARE_MODS...", "> ACCESS GRANTED: LEON.", "> SYSTEM READY."];
+        function startTerminal() {
+            const box = document.getElementById('term-box'); let i = 0;
+            const intv = setInterval(() => {
+                if(i < terminalLines.length) { const line = document.createElement('div'); line.textContent = terminalLines[i]; box.appendChild(line); i++; }
+                else { clearInterval(intv); setTimeout(revealWebsite, 800); }
+            }, 350);
+        }
+
+        function revealWebsite() {
+            const tl = gsap.timeline();
+            tl.to("#gateway-overlay", { opacity: 0, duration: 0.8 }).set("#gateway-overlay", { display: 'none' }).set("body", { overflowY: 'auto' })
+              .to(".page-content", { opacity: 1, y: 0, duration: 2, ease: "power4.inOut" })
+              .to("header", { y: 0, duration: 1, ease: "back.out(1.5)" }, "-=0.8");
+        }
+
+        window.onload = () => {
+            gsap.timeline().to("#intro-logo", { opacity: 1, scale: 1, duration: 1.2 })
+                .to("#intro-overlay", { opacity: 0, delay: 1.5, onComplete: () => {
+                    document.getElementById('intro-overlay').style.display = 'none';
+                    document.getElementById('gateway-overlay').style.display = 'flex';
+                    startTerminal();
+                }});
+        };
+
+        const canvas = document.getElementById('star-canvas'); const ctx = canvas.getContext('2d');
+        let stars = [];
+        function initStars() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; stars = []; for(let i=0; i<250; i++) stars.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*0.8 + 0.2}); }
+        function drawStars() { ctx.clearRect(0,0,canvas.width, canvas.height); ctx.fillStyle="rgba(255,255,255,0.8)"; stars.forEach(s => { ctx.fillRect(s.x, s.y, 1, 1); s.y += s.s; if(s.y > canvas.height) s.y = 0; }); requestAnimationFrame(drawStars); }
+        initStars(); drawStars();
+
+        let revIdx = 0;
+        setInterval(() => { revIdx = (revIdx + 1) % 3; document.getElementById('rev-track').style.transform = `translateY(-${revIdx * 120}px)`; }, 4500);
+    </script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

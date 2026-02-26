@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LEXORD® | Engineering</title>
+    
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --n-blue: #00f2ff; --bg: #000000; --panel: #0a0a0a; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; width: 100%; top: 0 !important; }
+
+        /* --- PERFORMANCE STERNE (BEWEGT) --- */
+        #star-container { position: fixed; inset: 0; z-index: -1; background: #000; overflow: hidden; }
+        .star { 
+            position: absolute; background: white; border-radius: 50%; opacity: 0.6;
+            animation: move-stars linear infinite;
+            will-change: transform;
+        }
+        @keyframes move-stars {
+            from { transform: translateY(0); }
+            to { transform: translateY(-1000px); }
+        }
+
+        /* Google Translate Hider */
+        #google_translate_element, .skiptranslate, .goog-te-banner-frame { display: none !important; visibility: hidden; }
+        
+        /* --- TRUSTBAR --- */
+        .ticker-wrapper { position: fixed; top: 0; width: 100%; z-index: 9000; font-family: 'Orbitron'; font-size: 9px; pointer-events: none; }
+        .ticker-row { overflow: hidden; white-space: nowrap; padding: 8px 0; border-bottom: 1px solid #111; background: black; }
+        .row-eval { color: #888; }
+        .row-service { color: var(--n-blue); }
+        .ticker-move { display: inline-block; animation: ticker-scroll 35s linear infinite; }
+        .ticker-item { display: inline-block; margin-right: 50px; }
+        @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* --- HEADER --- */
+        header { position: fixed; top: 60px; width: 100%; z-index: 10000; padding: 0 6%; display: flex; justify-content: space-between; align-items: center; height: 70px; }
+        .brand-text { font-family: 'Orbitron'; font-weight: 900; font-size: 1.2rem; letter-spacing: 4px; }
+        .nav-right { display: flex; align-items: center; gap: 15px; }
+        .lang-flag { width: 22px; height: 14px; cursor: pointer; border: 1px solid #333; }
+        .header-btn { cursor: pointer; display: flex; align-items: center; gap: 8px; border: 1px solid #222; padding: 8px 12px; border-radius: 30px; background: rgba(0,0,0,0.8); }
+
+        .hamburger { width: 25px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; z-index: 31000; }
+        .hamburger span { width: 100%; height: 2px; background: white; transition: 0.3s; }
+
+        /* --- SHOP --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 100px 6%; max-width: 1400px; margin: 0 auto; }
+        .card { background: var(--panel); padding: 30px; border-radius: 15px; border: 1px solid #111; text-align: center; transition: 0.3s; }
+        .card:hover { border-color: var(--n-blue); }
+        .card img { width: 100%; border-radius: 10px; cursor: pointer; }
+
+        .submit-btn { width: 100%; padding: 18px; background: white; color: black; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; transition: 0.3s; font-size: 0.8rem; margin-top: 15px; }
+        .submit-btn:hover { background: var(--n-blue); box-shadow: 0 0 20px var(--n-blue); }
+
+        /* --- SIDEBARS --- */
+        #cart-sidebar { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; background: #000; z-index: 30000; transition: 0.4s; padding: 120px 30px; border-left: 1px solid #111; }
+        #cart-sidebar.active { right: 0; }
+
+        /* --- LEGAL --- */
+        .legal-footer { padding: 40px; text-align: center; border-top: 1px solid #111; color: #444; font-size: 0.7rem; }
+    </style>
+</head>
+<body class="notranslate">
+
+    <div id="star-container"></div>
+    <div id="google_translate_element"></div>
+
+    <div class="ticker-wrapper">
+        <div class="ticker-row row-eval">
+            <div class="ticker-move">
+                <span class="ticker-item">GOOGLE: ★★★★★ 5.0</span><span class="ticker-item">MADE IN GERMANY</span><span class="ticker-item">EBAY: 100% POSITIV</span>
+                <span class="ticker-item">GOOGLE: ★★★★★ 5.0</span>
+            </div>
+        </div>
+        <div class="ticker-row row-service">
+            <div class="ticker-move">
+                <span class="ticker-item">● BLITZVERSAND</span><span class="ticker-item">● PREMIUM SUPPORT</span><span class="ticker-item">● QUALITÄT</span>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <div class="brand-text">LEXORD®</div>
+        <div class="nav-right">
+            <img src="https://flagcdn.com/w40/de.png" class="lang-flag" onclick="changeLang('de')">
+            <img src="https://flagcdn.com/w40/gb.png" class="lang-flag" onclick="changeLang('en')">
+            <div class="header-btn" onclick="toggleCart()" id="cart-btn">
+                <span id="cart-count">0</span>
+                <svg width="18" height="18" fill="white" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </div>
+            <div class="hamburger"><span></span><span></span><span></span></div>
+        </div>
+    </header>
+
+    <div id="cart-sidebar">
+        <h2 style="font-family:'Orbitron'; margin-bottom:20px;">WARENKORB</h2>
+        <div id="cart-items" style="color:#555;">Derzeit leer.</div>
+        <button class="submit-btn" onclick="window.open('https://www.ebay.de/usr/lexord-de')">CHECKOUT EBAY</button>
+        <p onclick="toggleCart()" style="margin-top:20px; cursor:pointer; font-size:0.7rem;">[ SCHLIESSEN ]</p>
+    </div>
+
+    <main>
+        <section class="grid">
+            <div class="card">
+                <a href="https://www.ebay.de/itm/316091010375" target="_blank"><img src="Stickzange.PNG"></a>
+                <h3 style="font-family:'Orbitron'; margin-top:10px; font-size:0.9rem;">STICKZANGE PRO</h3>
+                <button class="submit-btn" onclick="addToCart('Stickzange Pro')">WARENKORB +</button>
+            </div>
+            <div class="card">
+                <a href="https://www.ebay.de/itm/315902120464" target="_blank"><img src="PADDLE SYSTEM.PNG"></a>
+                <h3 style="font-family:'Orbitron'; margin-top:10px; font-size:0.9rem;">PADDLE SYSTEM V2</h3>
+                <button class="submit-btn" onclick="addToCart('Paddle System V2')">WARENKORB +</button>
+            </div>
+        </section>
+
+        <footer class="legal-footer">
+            <p>LEXORD® Engineering | Leon Schulz | 19374 Domsühl</p>
+            <p><a href="https://ec.europa.eu/consumers/odr/" target="_blank" style="color:#666;">OS-PLATTFORM</a> | PRIVATVERKAUF</p>
+        </footer>
+    </main>
+
+    <script>
+        function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'de'}, 'google_translate_element'); }
+        function changeLang(l) { const s = document.querySelector('.goog-te-combo'); if(s) { s.value = l; s.dispatchEvent(new Event('change')); } }
+
+        let count = 0;
+        function addToCart(n) {
+            count++;
+            document.getElementById('cart-count').innerText = count;
+            document.getElementById('cart-items').innerText = count + " Artikel vorgemerkt.";
+        }
+        function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); }
+
+        // Sterne erstellen & animieren (Effizient!)
+        const container = document.getElementById('star-container');
+        for(let i=0; i<120; i++) {
+            const s = document.createElement('div');
+            s.className = 'star';
+            const size = Math.random() * 3 + 'px';
+            s.style.width = size; s.style.height = size;
+            s.style.left = Math.random() * 100 + '%';
+            s.style.top = Math.random() * 100 + '%';
+            
+            // Zufällige Geschwindigkeit für Tiefe
+            const duration = 15 + Math.random() * 20 + 's';
+            s.style.animationDuration = duration;
+            s.style.animationDelay = -(Math.random() * 20) + 's';
+            
+            container.appendChild(s);
+        }
+    </script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

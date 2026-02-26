@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>LEXORD® | High-End Engineering & Controller Tuning</title>
+    <meta name="description" content="LEXORD® Engineering: Hochpräzise Stickzangen & Paddle Systeme. Besser als BITRO & Co. – Made in Germany.">
+    
+    <meta name="keywords" content="lexord, stickzange pro, paddle system v2, ps5 controller umbau, scuf alternative deutschland, bitro alternative, king controller alternative, lux controller alternative, controller paddles nachrüsten, aim controllers alternative, controller tuning deutschland, leon schulz engineering, domsühl gaming, professionelles controller werkzeug, esports equipment germany">
+    
+    <meta name="author" content="Leon Schulz">
+    <meta name="robots" content="index, follow">
+    
+    <meta property="og:title" content="LEXORD® | Beyond Limits Engineering">
+    <meta property="og:description" content="High-End Controller Tools & Tuning. Warum Standard kaufen, wenn du Engineering haben kannst?">
+    <meta property="og:image" content="IMG_7023.png">
+    <meta property="og:url" content="https://lexord.de">
+
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@100;400;700&display=swap" rel="stylesheet">
+    
+    <script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+
+    <style>
+        :root { --n-blue: #00f2ff; --bg: #000000; --panel: #0a0a0a; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; width: 100%; }
+        #star-canvas { position: fixed; inset: 0; z-index: -1; background: #000; }
+
+        /* --- INTRO & TERMINAL --- */
+        #intro-overlay { position: fixed; inset: 0; background: black; z-index: 30000; display: flex; align-items: center; justify-content: center; }
+        #intro-logo { width: 120px; opacity: 0; filter: drop-shadow(0 0 20px var(--n-blue)); }
+        #gateway-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 200000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(15px); padding: 20px; }
+        .terminal-loader { width: 100%; max-width: 450px; font-family: 'Courier New', monospace; color: var(--n-blue); padding: 30px; background: #020202; border: 1px solid #222; border-radius: 5px; font-size: 0.8rem; }
+
+        /* --- TRUSTBAR (RESPONSIVE) --- */
+        .ticker-wrapper { position: fixed; top: 0; width: 100%; z-index: 15000; display: flex; flex-direction: column; font-family: 'Orbitron', sans-serif; font-size: 9px; }
+        .ticker-row { overflow: hidden; white-space: nowrap; padding: 10px 0; border-bottom: 1px solid #111; }
+        .row-eval { background: rgba(0, 242, 255, 0.03); color: #666; }
+        .row-service { background: #000; color: var(--n-blue); }
+        .ticker-move { display: inline-block; animation: ticker-scroll 35s linear infinite; }
+        .ticker-item { display: inline-block; margin-right: 40px; }
+        @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* --- NAVIGATION --- */
+        header { position: fixed; top: 75px; width: 100%; z-index: 10000; padding: 20px 6%; display: flex; justify-content: space-between; align-items: center; opacity: 0; }
+        .brand-text { font-family: 'Orbitron'; font-weight: 900; font-size: 1.2rem; letter-spacing: 4px; }
+        
+        #menu-overlay { position: fixed; inset: 0; background: #000; z-index: 20000; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: 0.5s; }
+        #menu-overlay.active { opacity: 1; pointer-events: all; }
+        .menu-link { font-family: 'Orbitron'; font-size: 1.5rem; color: white; text-decoration: none; margin: 15px 0; transition: 0.3s; }
+        
+        .hamburger { width: 28px; height: 14px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; z-index: 21000; }
+        .hamburger span { width: 100%; height: 2px; background: white; transition: 0.3s; }
+        .hamburger.active span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+        /* --- CONTENT --- */
+        .hero { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 20px; }
+        .hero h1 { font-family: 'Orbitron'; font-size: clamp(2.5rem, 12vw, 8rem); font-weight: 900; line-height: 0.9; text-align: center; opacity: 0; transform: translateY(40px); }
+        .hero-logo { width: clamp(100px, 20vw, 150px); filter: drop-shadow(0 0 30px var(--n-blue)); margin-top: 40px; opacity: 0; }
+
+        .reveal { opacity: 0; transform: translateY(30px); }
+        
+        /* Responsive Grid */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 80px 6%; width: 100%; max-width: 1400px; margin: 0 auto; }
+        .card { background: var(--panel); padding: 30px; border-radius: 12px; border: 1px solid #151515; text-align: center; cursor: pointer; transition: 0.5s; }
+        .card:hover { border-color: var(--n-blue); transform: translateY(-10px); }
+        .card img { width: 100%; height: auto; border-radius: 8px; }
+
+        /* --- CONTACT --- */
+        .contact-box { width: 90%; max-width: 600px; margin: 60px auto 100px; background: #050505; padding: 40px 25px; border: 1px solid #111; }
+        .contact-box h2 { font-family: 'Orbitron'; font-size: 1.2rem; text-align: center; margin-bottom: 40px; letter-spacing: 3px; }
+        input, textarea { width: 100%; padding: 15px; background: #000; border: 1px solid #222; color: white; margin-bottom: 15px; outline: none; border-radius: 4px; font-size: 16px; /* Verhindert Zoom auf iOS */ }
+        
+        .checkbox-wrapper { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 25px; }
+        .checkbox-label { font-size: 0.7rem; color: #666; line-height: 1.4; text-align: left; }
+        .submit-btn { width: 100%; padding: 20px; background: white; color: black; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; }
+
+        /* --- LEGAL --- */
+        .legal-wrapper { width: 90%; max-width: 1200px; margin: 0 auto 100px; }
+        .legal-box { background: #050505; border: 1px solid #111; margin-bottom: 8px; border-radius: 4px; }
+        .legal-trigger { padding: 20px; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; color: #444; display: flex; justify-content: space-between; }
+        .legal-content { max-height: 0; opacity: 0; padding: 0 20px; transition: 0.4s; font-size: 0.8rem; color: #666; line-height: 1.6; overflow: hidden; }
+        .legal-box.open .legal-content { max-height: 500px; opacity: 1; padding-bottom: 20px; }
+
+        footer { text-align: center; padding: 60px 20px; font-family: 'Orbitron'; font-size: 0.5rem; color: #222; letter-spacing: 8px; }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            header { top: 65px; padding: 15px 20px; }
+            .hero h1 { font-size: 3.2rem; }
+            .grid { padding: 40px 20px; gap: 20px; }
+            .contact-box { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="intro-overlay"><img src="IMG_7023.png" id="intro-logo"></div>
+    <div id="gateway-overlay"><div class="terminal-loader" id="log-container"></div></div>
+    
+    <div id="menu-overlay">
+        <a href="#hero" class="menu-link" onclick="toggleMenu()">HOME</a>
+        <a href="#shop" class="menu-link" onclick="toggleMenu()">SHOP</a>
+        <a href="#contact" class="menu-link" onclick="toggleMenu()">KONTAKT</a>
+        <div style="margin-top:40px; border-top: 1px solid #111; padding-top:20px; text-align:center; width: 80%;">
+            <a href="https://instagram.com/lexord_engineering" target="_blank" class="menu-link" style="font-size:1rem;">INSTAGRAM</a>
+            <a href="https://tiktok.com/@lexord" target="_blank" class="menu-link" style="font-size:1rem;">TIKTOK</a>
+        </div>
+    </div>
+
+    <div class="ticker-wrapper">
+        <div class="ticker-row row-eval">
+            <div class="ticker-move">
+                <span class="ticker-item">GOOGLE: ★★★★★ 5.0</span><span class="ticker-item">EBAY: 100% POSITIV</span><span class="ticker-item">TRUSTPILOT: EXZELLENT</span>
+                <span class="ticker-item">GOOGLE: ★★★★★ 5.0</span><span class="ticker-item">EBAY: 100% POSITIV</span>
+            </div>
+        </div>
+        <div class="ticker-row row-service">
+            <div class="ticker-move">
+                <span class="ticker-item">● WORLDWIDE SHIPPING</span><span class="ticker-item">● SECURE CHECKOUT</span><span class="ticker-item">● PREMIUM ENGINEERING</span>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="star-canvas"></canvas>
+
+    <header id="main-header">
+        <div class="brand-text">LEXORD®</div>
+        <div class="hamburger" id="ham" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+    </header>
+
+    <main>
+        <section class="hero" id="hero">
+            <h1 id="hero-title">BEYOND<br>LIMITS.</h1>
+            <img src="IMG_7023.png" class="hero-logo" id="hero-img">
+        </section>
+
+        <section class="grid reveal" id="shop">
+            <div class="card" onclick="window.open('https://www.ebay.de/usr/lexord-engineering', '_blank')">
+                <img src="Stickzange.PNG" alt="Stickzange Pro">
+                <h3 style="font-family:'Orbitron'; margin-top:20px; font-size: 1rem;">STICKZANGE PRO</h3>
+                <p style="color:var(--n-blue); margin-top:8px; font-family:'Orbitron';">5,95 €</p>
+            </div>
+            <div class="card" onclick="window.open('https://www.ebay.de/usr/lexord-engineering', '_blank')">
+                <img src="PADDLE SYSTEM.PNG" alt="Paddle System V2">
+                <h3 style="font-family:'Orbitron'; margin-top:20px; font-size: 1rem;">PADDLE SYSTEM V2</h3>
+                <p style="color:var(--n-blue); margin-top:8px; font-family:'Orbitron';">45,95 €</p>
+            </div>
+        </section>
+
+        <section class="contact-box reveal" id="contact">
+            <h2>KONTAKT</h2>
+            <form onsubmit="return handleFormSubmit(event)">
+                <input type="text" placeholder="NAME" required>
+                <input type="email" placeholder="E-MAIL" required>
+                <textarea placeholder="DEINE ANFRAGE..." rows="4" required></textarea>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" required style="width: 18px; height: 18px;">
+                    <span class="checkbox-label">Einwilligung zur Datenverarbeitung gemäß DSGVO. <a href="javascript:void(0)" onclick="document.getElementById('dsgvo-trigger').click()">Details</a>.</span>
+                </label>
+                <button type="submit" class="submit-btn">ANFRAGE SENDEN</button>
+            </form>
+        </section>
+
+        <section class="legal-wrapper reveal">
+            <div class="legal-box">
+                <div class="legal-trigger" onclick="this.parentElement.classList.toggle('open')">IMPRESSUM <span>+</span></div>
+                <div class="legal-content">
+                    <strong>Leon Schulz | LEXORD® Engineering</strong><br>An Der Domsühler Str. 2<br>19374 Domsühl<br>Deutschland<br><br>
+                    Kontakt: kontakt@lexord.de
+                </div>
+            </div>
+            <div class="legal-box">
+                <div class="legal-trigger" id="dsgvo-trigger" onclick="this.parentElement.classList.toggle('open')">DATENSCHUTZ <span>+</span></div>
+                <div class="legal-content">
+                    Anonymes Tracking via GoatCounter. Keine Cookies. Daten werden nur zweckgebunden genutzt.
+                </div>
+            </div>
+        </section>
+
+        <footer>© 2026 LEXORD ENGINEERING</footer>
+    </main>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+        const canvas = document.getElementById('star-canvas');
+        const ctx = canvas.getContext('2d');
+        let stars = [], speedMultiplier = 15;
+
+        function initStars() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            stars = [];
+            const starCount = window.innerWidth < 768 ? 150 : 300;
+            for(let i=0; i<starCount; i++) stars.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, z: Math.random()*canvas.width, o: Math.random() });
+        }
+
+        function drawStars() {
+            ctx.fillStyle = "black"; ctx.fillRect(0,0,canvas.width, canvas.height);
+            ctx.fillStyle = "white";
+            stars.forEach(s => {
+                s.z -= speedMultiplier;
+                if(s.z <= 0) s.z = canvas.width;
+                let x = (s.x - canvas.width/2) * (canvas.width/s.z) + canvas.width/2;
+                let y = (s.y - canvas.height/2) * (canvas.width/s.z) + canvas.height/2;
+                let size = (1 - s.z / canvas.width) * (window.innerWidth < 768 ? 2 : 3);
+                ctx.globalAlpha = s.o;
+                ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI*2); ctx.fill();
+            });
+            requestAnimationFrame(drawStars);
+        }
+
+        function toggleMenu() {
+            document.getElementById('ham').classList.toggle('active');
+            document.getElementById('menu-overlay').classList.toggle('active');
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const gateway = document.getElementById('gateway-overlay');
+            const container = document.getElementById('log-container');
+            gateway.style.display = "flex"; container.innerHTML = "";
+            const logs = ["> RSA-4096 HANDSHAKE...", "> TRANSMISSION COMPLETE ✓", "> DATA SECURED"];
+            logs.forEach((t, i) => {
+                setTimeout(() => {
+                    const p = document.createElement('p'); p.textContent = t;
+                    p.style.marginBottom = "5px";
+                    if(t.includes("COMPLETE")) p.style.color = "#00ff88";
+                    container.appendChild(p);
+                    if(i === logs.length - 1) setTimeout(() => gateway.style.display="none", 1200);
+                }, i * 600);
+            });
+            return false;
+        }
+
+        window.onload = () => {
+            initStars(); drawStars();
+            const tl = gsap.timeline();
+            tl.to("#intro-logo", { opacity: 1, duration: 1 })
+              .to("#intro-overlay", { opacity: 0, duration: 0.8, delay: 0.5, onComplete: () => { 
+                  document.getElementById('intro-overlay').style.display = "none"; 
+                  speedMultiplier = 0.3; 
+              }})
+              .to("#main-header", { opacity: 1, duration: 0.5 })
+              .to("#hero-title", { opacity: 1, y: 0, duration: 0.8 })
+              .to("#hero-img", { opacity: 1, duration: 1 }, "-=0.4");
+
+            gsap.utils.toArray(".reveal").forEach(sec => {
+                gsap.to(sec, { scrollTrigger: { trigger: sec, start: "top 92%" }, opacity: 1, y: 0, duration: 0.8 });
+            });
+        };
+        window.addEventListener('resize', initStars);
+    </script>
+</body>
+</html>

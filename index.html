@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>LEXORD® | High-End Controller Engineering - Besser als Scuf & BITRO</title>
+    <meta name="description" content="LEXORD® Engineering: Die deutsche Manufaktur für Pro-Gamer. Stickzange Pro & Paddle System V2 – Präziser als BITRO, King Controller oder Lux. High-End Tuning für PS5 & Esports.">
+    
+    <meta name="keywords" content="lexord, stickzange pro, paddle system v2, ps5 controller umbau, scuf alternative deutschland, bitro alternative, king controller alternative, lux controller alternative, controller paddles nachrüsten, aim controllers alternative, controller tuning deutschland, leon schulz engineering, domsühl gaming, professionelles controller werkzeug, esports equipment germany">
+    
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@100;400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+
+    <style>
+        :root { --n-blue: #00f2ff; --bg: #000000; --panel: #0a0a0a; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        
+        /* Verhindert horizontales Scrollen auf mobilen Geräten */
+        html, body { overflow-x: hidden; width: 100%; background: var(--bg); color: white; font-family: 'Inter', sans-serif; }
+
+        /* --- TECHNISCHER HINTERGRUND --- */
+        #bg-animation { position: fixed; inset: 0; z-index: -1; background: #000; overflow: hidden; }
+        .grid-line { position: absolute; background: var(--n-blue); opacity: 0.04; }
+
+        /* --- INTRO (LOGO MASSIV) --- */
+        #intro-overlay { position: fixed; inset: 0; background: black; z-index: 30000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        #intro-logo { width: clamp(220px, 60vw, 500px); height: auto; opacity: 0; filter: drop-shadow(0 0 40px var(--n-blue)); }
+        
+        /* TERMINAL ANIMATION */
+        #gateway-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 200000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(20px); padding: 20px; }
+        .terminal-loader { width: 100%; max-width: 450px; font-family: 'Courier New', monospace; color: var(--n-blue); padding: clamp(20px, 5vw, 40px); background: #020202; border: 1px solid #222; border-radius: 8px; font-size: clamp(0.7rem, 2vw, 0.9rem); }
+
+        /* --- TICKER (RESPONSIVE) --- */
+        .ticker-wrapper { position: fixed; top: 0; width: 100%; z-index: 15000; display: flex; flex-direction: column; font-family: 'Orbitron', sans-serif; }
+        .ticker-row { overflow: hidden; white-space: nowrap; padding: clamp(8px, 2vw, 12px) 0; border-bottom: 1px solid #111; font-size: clamp(8px, 1.5vw, 10px); }
+        .row-eval { background: rgba(0, 242, 255, 0.03); color: #666; }
+        .row-service { background: #000; color: var(--n-blue); }
+        .ticker-move { display: inline-block; animation: ticker-scroll 35s linear infinite; }
+        .ticker-item { display: inline-block; margin-right: clamp(30px, 8vw, 60px); }
+        @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* --- NAV --- */
+        header { position: fixed; top: clamp(65px, 10vw, 85px); width: 100%; z-index: 10000; padding: 0 6%; display: flex; justify-content: space-between; align-items: center; opacity: 0; }
+        .brand-text { font-family: 'Orbitron'; font-weight: 900; font-size: clamp(1rem, 4vw, 1.5rem); letter-spacing: clamp(3px, 1vw, 6px); }
+        
+        #menu-overlay { position: fixed; inset: 0; background: #000; z-index: 20000; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: 0.5s; padding: 20px; }
+        #menu-overlay.active { opacity: 1; pointer-events: all; }
+        .menu-link { font-family: 'Orbitron'; font-size: clamp(1.4rem, 8vw, 2.5rem); color: white; text-decoration: none; margin: 15px 0; letter-spacing: 4px; text-align: center; }
+        
+        .social-group { margin-top: 40px; text-align: center; width: 100%; }
+        .social-links { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        .social-links a { color: #888; text-decoration: none; font-size: clamp(0.7rem, 3vw, 0.9rem); border: 1px solid #222; padding: 10px 20px; border-radius: 4px; font-family: 'Orbitron'; }
+
+        .hamburger { width: 30px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; z-index: 21000; }
+        .hamburger span { width: 100%; height: 2px; background: white; transition: 0.3s; }
+        .hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+        /* --- HERO --- */
+        .hero { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 20px; text-align: center; }
+        .hero h1 { font-family: 'Orbitron'; font-size: clamp(2.8rem, 16vw, 10rem); font-weight: 900; line-height: 0.85; opacity: 0; transform: translateY(50px); margin-bottom: clamp(20px, 5vw, 40px); }
+        .hero-logo { width: clamp(200px, 50vw, 450px); height: auto; filter: drop-shadow(0 0 50px var(--n-blue)); opacity: 0; }
+
+        /* --- GRID --- */
+        .reveal { opacity: 0; transform: translateY(40px); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(30px, 5vw, 60px); padding: 100px 8%; max-width: 1400px; margin: 0 auto; }
+        .card { background: var(--panel); padding: clamp(30px, 5vw, 60px); border-radius: 20px; border: 1px solid #151515; text-align: center; cursor: pointer; transition: 0.5s; }
+        .card img { width: 100%; height: auto; max-width: 300px; margin-bottom: 20px; }
+        .card h3 { font-family: 'Orbitron'; font-size: clamp(1rem, 3vw, 1.4rem); }
+
+        /* --- CONTACT --- */
+        .contact-box { width: 90%; max-width: 650px; margin: 60px auto 120px; background: #050505; padding: clamp(30px, 8vw, 60px); border: 1px solid #111; }
+        .contact-box h2 { font-family: 'Orbitron'; text-align: center; margin-bottom: 40px; letter-spacing: 5px; font-size: clamp(1.2rem, 5vw, 2rem); }
+        input, textarea { width: 100%; padding: 18px; background: #000; border: 1px solid #222; color: white; margin-bottom: 20px; border-radius: 5px; font-size: 16px; outline: none; }
+        .submit-btn { width: 100%; padding: 22px; background: white; color: black; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; transition: 0.3s; }
+
+        footer { text-align: center; padding: 80px 20px; font-family: 'Orbitron'; font-size: clamp(0.5rem, 2vw, 0.7rem); color: #222; letter-spacing: clamp(5px, 3vw, 15px); }
+
+        /* Anpassungen für Tablets/Handys */
+        @media (max-width: 480px) {
+            header { top: 60px; }
+            .grid { padding: 60px 20px; }
+            .ticker-item { margin-right: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="intro-overlay"><img src="IMG_7023.png" id="intro-logo" alt="LEXORD Logo"></div>
+    <div id="gateway-overlay"><div class="terminal-loader" id="log-container"></div></div>
+    
+    <div id="bg-animation"></div>
+
+    <div id="menu-overlay">
+        <a href="#hero" class="menu-link" onclick="toggleMenu()">HOME</a>
+        <a href="#shop" class="menu-link" onclick="toggleMenu()">SHOP</a>
+        <a href="#contact" class="menu-link" onclick="toggleMenu()">KONTAKT</a>
+        <div class="social-group">
+            <p style="color:#444; font-family:'Orbitron'; font-size:0.7rem; margin-bottom:15px; letter-spacing:3px;">SOCIAL MEDIA</p>
+            <div class="social-links">
+                <a href="https://instagram.com/lexord_engineering" target="_blank">INSTAGRAM</a>
+                <a href="https://tiktok.com/@lexord" target="_blank">TIKTOK</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="ticker-wrapper">
+        <div class="ticker-row row-eval">
+            <div class="ticker-move">
+                <span class="ticker-item">GOOGLE: ★★★★★ 5.0</span><span class="ticker-item">EBAY: 100% POSITIV</span><span class="ticker-item">MADE IN GERMANY</span><span class="ticker-item">PREMIUM ENGINEERING</span>
+            </div>
+        </div>
+        <div class="ticker-row row-service">
+            <div class="ticker-move">
+                <span class="ticker-item">● WORLDWIDE SHIPPING</span><span class="ticker-item">● BETTER THAN BITRO & SCUF</span><span class="ticker-item">● SECURE CHECKOUT</span>
+            </div>
+        </div>
+    </div>
+
+    <header id="main-header">
+        <div class="brand-text">LEXORD®</div>
+        <div class="hamburger" id="ham" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+    </header>
+
+    <main>
+        <section class="hero" id="hero">
+            <h1 id="hero-title">BEYOND<br>LIMITS.</h1>
+            <img src="IMG_7023.png" class="hero-logo" id="hero-img" alt="LEXORD Logo">
+        </section>
+
+        <section class="grid reveal" id="shop">
+            <div class="card" onclick="startTerminalAnim('https://www.ebay.de/usr/lexord-engineering', 'shop')">
+                <img src="Stickzange.PNG" alt="Stickzange Pro">
+                <h3>STICKZANGE PRO</h3>
+                <p style="color:var(--n-blue); font-family:'Orbitron'; margin-top:10px;">5,95 €</p>
+            </div>
+            <div class="card" onclick="startTerminalAnim('https://www.ebay.de/usr/lexord-engineering', 'shop')">
+                <img src="PADDLE SYSTEM.PNG" alt="Paddle System V2">
+                <h3>PADDLE SYSTEM V2</h3>
+                <p style="color:var(--n-blue); font-family:'Orbitron'; margin-top:10px;">45,95 €</p>
+            </div>
+        </section>
+
+        <section class="contact-box reveal" id="contact">
+            <h2>KONTAKT</h2>
+            <form onsubmit="return handleFormSubmit(event)">
+                <input type="text" placeholder="NAME" required>
+                <input type="email" placeholder="E-MAIL" required>
+                <textarea placeholder="ANFRAGE..." rows="5" required></textarea>
+                <button type="submit" class="submit-btn">ANFRAGE SENDEN</button>
+            </form>
+        </section>
+
+        <footer>© 2026 LEXORD ENGINEERING</footer>
+    </main>
+
+    <script>
+        // Grid Hintergrund
+        const bg = document.getElementById('bg-animation');
+        for(let i=0; i<20; i++) {
+            const line = document.createElement('div');
+            line.className = 'grid-line';
+            if(i < 10) { line.style.width = '1px'; line.style.height = '100%'; line.style.left = (i * 10) + '%'; }
+            else { line.style.width = '100%'; line.style.height = '1px'; line.style.top = ((i-10) * 10) + '%'; }
+            bg.appendChild(line);
+            gsap.to(line, { opacity: 0.1, duration: 2 + Math.random()*2, repeat: -1, yoyo: true });
+        }
+
+        function toggleMenu() {
+            document.getElementById('ham').classList.toggle('active');
+            document.getElementById('menu-overlay').classList.toggle('active');
+        }
+
+        function startTerminalAnim(url, type) {
+            const gateway = document.getElementById('gateway-overlay');
+            const container = document.getElementById('log-container');
+            gateway.style.display = "flex"; container.innerHTML = "";
+            const logs = type === 'shop' ? ["> ACCESSING STORE...", "> REDIRECTING ✓"] : ["> ENCRYPTING...", "> SUCCESSFUL ✓"];
+            logs.forEach((t, i) => {
+                setTimeout(() => {
+                    const p = document.createElement('p'); p.textContent = t;
+                    if(t.includes("✓")) p.style.color = "#00ff88";
+                    container.appendChild(p);
+                    if(i === logs.length - 1) setTimeout(() => { if(url !== "#") window.open(url, '_blank'); gateway.style.display="none"; }, 1000);
+                }, i * 500);
+            });
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            startTerminalAnim("#", "contact");
+            return false;
+        }
+
+        window.onload = () => {
+            const tl = gsap.timeline();
+            tl.to("#intro-logo", { opacity: 1, scale: 1.05, duration: 1.5 })
+              .to("#intro-overlay", { opacity: 0, duration: 1, delay: 0.8, onComplete: () => { document.getElementById('intro-overlay').style.display = "none"; }})
+              .to("#main-header", { opacity: 1, duration: 0.8 })
+              .to("#hero-title", { opacity: 1, y: 0, duration: 1.2 })
+              .to("#hero-img", { opacity: 1, duration: 1.5 }, "-=0.8");
+
+            gsap.utils.toArray(".reveal").forEach(sec => {
+                gsap.to(sec, { scrollTrigger: { trigger: sec, start: "top 90%" }, opacity: 1, y: 0, duration: 1 });
+            });
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEXORD® | Engineering</title>
+
+    <script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@100;400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+
+    <style>
+        :root { --n-blue: #00f2ff; --bg: #000000; --card-bg: rgba(15,15,15,0.9); }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+        #star-canvas { position: fixed; inset: 0; z-index: -1; background: #000; }
+
+        /* --- INTRO WARP --- */
+        #intro-overlay { position: fixed; inset: 0; background: black; z-index: 20000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #intro-logo { width: 250px; filter: drop-shadow(0 0 30px var(--n-blue)); opacity: 0; transform: scale(0.8); }
+
+        /* --- TICKER SYSTEM (TOP) --- */
+        .ticker-wrapper { position: fixed; top: 0; width: 100%; z-index: 11000; display: flex; flex-direction: column; }
+        .ticker-row { overflow: hidden; white-space: nowrap; padding: 8px 0; font-family: 'Orbitron'; font-size: 0.65rem; letter-spacing: 1px; }
+        .row-eval { background: rgba(0, 242, 255, 0.05); border-bottom: 1px solid rgba(0,242,255,0.1); color: #aaa; }
+        .row-service { background: rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--n-blue); }
+        
+        .ticker-move { display: inline-block; animation: ticker-scroll 40s linear infinite; }
+        .ticker-item { display: inline-block; margin-right: 40px; }
+        .ticker-item b { color: white; }
+        @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* --- HEADER --- */
+        header { 
+            position: fixed; top: 70px; width: 100%; z-index: 10000; 
+            padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; 
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); opacity: 0; 
+        }
+        .header-logo { font-family: 'Orbitron'; font-weight: 900; font-size: 1.8rem; letter-spacing: 4px; color: white; text-decoration: none; }
+
+        /* --- SHOPPING CART ICON --- */
+        .cart-btn { position: relative; cursor: pointer; display: flex; align-items: center; }
+        .cart-svg { width: 24px; height: 24px; fill: none; stroke: white; stroke-width: 1.5; }
+        .cart-count { position: absolute; -10px; -10px; background: var(--n-blue); color: black; font-family: 'Orbitron'; font-size: 0.6rem; font-weight: 900; padding: 2px 6px; border-radius: 10px; }
+
+        /* --- HERO & LOGO --- */
+        .hero { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; opacity: 0; }
+        .floating-logo { width: 180px; margin-bottom: 30px; animation: float 4s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(0,242,255,0.3)); }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        /* --- NAV MENU --- */
+        #nav-menu { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 12000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .nav-link { font-family: 'Orbitron'; font-size: 1.8rem; color: white; text-decoration: none; margin: 15px; transition: 0.3s; cursor: pointer; }
+        .nav-link:hover { color: var(--n-blue); }
+        .sub-link { font-family: 'Inter'; font-size: 0.8rem; color: #555; margin-top: -10px; margin-bottom: 20px; letter-spacing: 2px; }
+
+        /* --- GRID & CARDS --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; padding: 100px 5%; }
+        .card { background: var(--card-bg); padding: 30px; border-radius: 5px; border: 1px solid #111; text-align: center; transition: 0.4s; text-decoration: none; color: white; }
+        .card:hover { border-color: var(--n-blue); transform: scale(1.02); box-shadow: 0 0 30px rgba(0,242,255,0.1); }
+        .card img { width: 100%; margin-bottom: 20px; border-radius: 3px; }
+
+        /* --- CONTACT FORM --- */
+        .contact-section { padding: 100px 5%; max-width: 800px; margin: 0 auto; }
+        .form-group { position: relative; margin-bottom: 20px; }
+        input, textarea { width: 100%; background: #0a0a0a; border: 1px solid #1a1a1a; padding: 15px; color: white; font-family: 'Inter'; border-radius: 4px; }
+        input:focus { border-color: var(--n-blue); outline: none; }
+        .submit-btn { background: white; color: black; border: none; padding: 15px 40px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; width: 100%; transition: 0.3s; }
+        .submit-btn:hover { background: var(--n-blue); }
+        #form-success { display: none; color: var(--n-blue); font-family: 'Orbitron'; text-align: center; margin-top: 20px; animation: fadeIn 0.5s; }
+
+        /* --- FOOTER --- */
+        footer { padding: 50px; text-align: center; border-top: 1px solid #111; font-family: 'Orbitron'; font-size: 0.6rem; color: #333; letter-spacing: 5px; }
+
+        .hamburger { width: 30px; height: 15px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; z-index: 13000; }
+        .hamburger span { width: 100%; height: 2px; background: white; transition: 0.4s; }
+        .hamburger.active span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    </style>
+</head>
+<body>
+
+    <div id="intro-overlay">
+        <img src="IMG_7023.png" id="intro-logo">
+    </div>
+
+    <canvas id="star-canvas"></canvas>
+
+    <div class="ticker-wrapper">
+        <div class="ticker-row row-eval">
+            <div class="ticker-move">
+                <span class="ticker-item">GOOGLE: <b>5.0 STARS ★★★★★</b></span>
+                <span class="ticker-item">EBAY: <b>100% POSITIVE FEEDBACK</b></span>
+                <span class="ticker-item">TRUSTPILOT: <b>EXCELLENT</b></span>
+                <span class="ticker-item">GOOGLE: <b>5.0 STARS ★★★★★</b></span>
+            </div>
+        </div>
+        <div class="ticker-row row-service">
+            <div class="ticker-move">
+                <span class="ticker-item">▲ SICHERER KAUF</span>
+                <span class="ticker-item">▲ SCHNELLE LIEFERUNG</span>
+                <span class="ticker-item">▲ QUALITÄTSGARANTIE</span>
+                <span class="ticker-item">▲ SICHERER KAUF</span>
+            </div>
+        </div>
+    </div>
+
+    <header id="header">
+        <a href="#" class="header-logo">LEXORD®</a>
+        <div style="display:flex; align-items:center; gap:25px;">
+            <div class="cart-btn">
+                <svg class="cart-svg" viewBox="0 0 24 24"><path d="M6 6h15l-1.5 9h-12L6 6zM6 6L5 3H2M9 20a1 1 0 100 2 1 1 0 000-2zm9 0a1 1 0 100 2 1 1 0 000-2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span class="cart-count" id="c-count">0</span>
+            </div>
+            <div class="hamburger" id="ham" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+        </div>
+    </header>
+
+    <nav id="nav-menu">
+        <a class="nav-link" onclick="toggleMenu()">HOME</a>
+        <a class="nav-link" onclick="toggleMenu('#modding')">MODDING</a>
+        <div class="sub-link">PS5 | CUSTOM HARDWARE</div>
+        <a class="nav-link" onclick="toggleMenu('#3d')">3D-DRUCK</a>
+        <div class="sub-link">PROTOTYPING | SERVICE</div>
+        <a class="nav-link" onclick="openSocial()">SOCIAL MEDIA</a>
+        <div class="sub-link" id="social-box" style="display:none; color:var(--n-blue)">
+            <a href="https://instagram.com" style="color:inherit; text-decoration:none">INSTAGRAM</a> | 
+            <a href="https://tiktok.com" style="color:inherit; text-decoration:none">TIKTOK</a>
+        </div>
+        <a class="nav-link" onclick="toggleMenu('#contact')">KONTAKT</a>
+    </nav>
+
+    <main id="main-content" style="display:none">
+        <section class="hero">
+            <img src="IMG_7023.png" class="floating-logo">
+            <h2 style="font-family:'Orbitron'; font-size:0.7rem; letter-spacing:8px; color:#444; margin-bottom:10px;">HARDWARE / MODDING</h2>
+            <h1 style="font-family:'Orbitron'; font-size:4rem; font-weight:900;">BEYOND<br>LIMITS.</h1>
+        </section>
+
+        <section id="modding">
+            <div class="grid">
+                <a href="https://ebay.de" class="card" onclick="addCount()">
+                    <img src="Stickzange.PNG">
+                    <h3 style="font-family:'Orbitron'">STICKZANGE PRO</h3>
+                    <p style="color:var(--n-blue); margin-top:10px;">5,95 €</p>
+                </a>
+                <a href="https://ebay.de" class="card" onclick="addCount()">
+                    <img src="PADDLE SYSTEM.PNG">
+                    <h3 style="font-family:'Orbitron'">PADDLE SYSTEM V2</h3>
+                    <p style="color:var(--n-blue); margin-top:10px;">45,95 €</p>
+                </a>
+            </div>
+        </section>
+
+        <section id="contact" class="contact-section">
+            <h2 style="font-family:'Orbitron'; text-align:center; margin-bottom:40px;">GET IN TOUCH</h2>
+            <form id="contact-form" onsubmit="sendMail(event)">
+                <input type="text" placeholder="NAME" required style="margin-bottom:15px;">
+                <input type="email" placeholder="EMAIL" required style="margin-bottom:15px;">
+                <textarea rows="5" placeholder="MESSAGE"></textarea>
+                <button type="submit" class="submit-btn">SEND MESSAGE</button>
+            </form>
+            <div id="form-success">MESSAGE SENT SUCCESSFULLY.</div>
+        </section>
+
+        <footer>© 2026 LEXORD. ALL RIGHTS RESERVED.</footer>
+    </main>
+
+    <script>
+        // INTRO & SCROLL EFFECT (WIE IM ALTEN CODE)
+        window.onload = () => {
+            const tl = gsap.timeline();
+            tl.to("#intro-logo", { opacity: 1, scale: 1.2, duration: 1.5, ease: "power4.out" })
+              .to("#intro-overlay", { y: "-100%", duration: 1.2, ease: "expo.inOut", delay: 0.5, onComplete: () => {
+                  document.getElementById('main-content').style.display = "block";
+                  gsap.to("header, .hero, .grid", { opacity: 1, y: 0, duration: 1, stagger: 0.2 });
+              }});
+        };
+
+        // MENU & SOCIAL
+        function toggleMenu(target) {
+            const m = document.getElementById('nav-menu');
+            const h = document.getElementById('ham');
+            const isVisible = m.style.display === 'flex';
+            m.style.display = isVisible ? 'none' : 'flex';
+            h.classList.toggle('active');
+            if(target) document.querySelector(target).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function openSocial() {
+            const box = document.getElementById('social-box');
+            box.style.display = box.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // CART COUNT
+        let c = 0;
+        function addCount() { c++; document.getElementById('c-count').innerText = c; }
+
+        // CONTACT ANIMATION
+        function sendMail(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.innerText = "SENDING...";
+            setTimeout(() => {
+                e.target.style.display = "none";
+                document.getElementById('form-success').style.display = "block";
+            }, 1500);
+        }
+
+        // STARS (UNVERÄNDERT)
+        const canvas = document.getElementById('star-canvas');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        function init() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; stars=[]; for(let i=0; i<200; i++) stars.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, s:Math.random()*1.5, sp:Math.random()*0.4}); }
+        function draw() { ctx.clearRect(0,0,canvas.width, canvas.height); ctx.fillStyle="white"; stars.forEach(s=>{ ctx.beginPath(); ctx.arc(s.x, s.y, s.s, 0, Math.PI*2); ctx.fill(); s.y+=s.sp; if(s.y>canvas.height) s.y=0; }); requestAnimationFrame(draw); }
+        init(); draw();
+    </script>
+</body>
+</html>

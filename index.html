@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEXORD™ | Professional Engineering</title>
+
+    <script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@100;400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+
+    <style>
+        :root { --n-blue: #00f2ff; --bg: #000000; --card-bg: rgba(10,10,10,0.8); }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
+
+        #star-canvas { position: fixed; inset: 0; z-index: -1; background: #000; }
+
+        /* --- INTRO --- */
+        #intro-overlay { position: fixed; inset: 0; background: black; z-index: 20000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #intro-logo { width: 100px; filter: drop-shadow(0 0 20px var(--n-blue)); margin-bottom: 20px; opacity: 0; }
+
+        /* --- HEADER --- */
+        header { 
+            position: fixed; top: 0; width: 100%; z-index: 10000; 
+            padding: 25px 5%; display: flex; justify-content: space-between; align-items: center; 
+            backdrop-filter: blur(15px); background: rgba(0,0,0,0.8); border-bottom: 1px solid rgba(0,242,255,0.1); opacity: 0; 
+        }
+        .logo-area { display: flex; align-items: center; gap: 15px; cursor: pointer; }
+        .logo-area img { width: 40px; filter: drop-shadow(0 0 8px var(--n-blue)); }
+        
+        /* --- NAV OVERLAY --- */
+        #nav-menu { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .nav-link { font-family: 'Orbitron'; font-size: 2rem; color: white; text-decoration: none; margin: 20px; letter-spacing: 5px; transition: 0.3s; cursor: pointer; }
+        .nav-link:hover { color: var(--n-blue); text-shadow: 0 0 20px var(--n-blue); }
+
+        .hamburger { width: 30px; height: 18px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; z-index: 10001; }
+        .hamburger span { width: 100%; height: 2px; background: white; transition: 0.4s; }
+        .hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+        /* --- SECTIONS --- */
+        section { padding: 100px 10%; opacity: 0; }
+        h2 { font-family: 'Orbitron'; font-size: 2.5rem; margin-bottom: 40px; letter-spacing: 3px; border-left: 4px solid var(--n-blue); padding-left: 20px; }
+
+        /* --- TICKER --- */
+        .ticker { background: rgba(255,255,255,0.02); padding: 15px 0; overflow: hidden; white-space: nowrap; margin-top: 120px; }
+        .ticker-inner { display: inline-block; animation: ticker 30s linear infinite; }
+        .ticker-item { display: inline-block; margin-right: 50px; font-family: 'Orbitron'; font-size: 0.7rem; color: #555; }
+
+        /* --- GRID --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+        .card { background: var(--card-bg); padding: 40px; border-radius: 15px; border: 1px solid #111; transition: 0.4s; text-align: center; }
+        .card:hover { border-color: var(--n-blue); transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0,242,255,0.1); }
+        .card img { max-width: 80%; margin-bottom: 20px; transition: 0.5s; }
+        .card:hover img { filter: drop-shadow(0 0 20px var(--n-blue)); }
+
+        /* --- CONTACT FORM --- */
+        .contact-container { max-width: 600px; margin: 0 auto; background: #050505; padding: 40px; border-radius: 10px; border: 1px solid #111; }
+        input, textarea { width: 100%; padding: 15px; margin-bottom: 20px; background: #111; border: 1px solid #222; color: white; font-family: 'Inter'; border-radius: 5px; }
+        input:focus, textarea:focus { border-color: var(--n-blue); outline: none; }
+        .send-btn { width: 100%; padding: 15px; background: var(--n-blue); color: black; font-family: 'Orbitron'; font-weight: 900; border: none; cursor: pointer; transition: 0.3s; }
+        .send-btn:hover { background: white; transform: scale(1.02); }
+
+        /* --- LEGAL --- */
+        .legal-box { margin-bottom: 10px; border: 1px solid #111; }
+        .legal-head { padding: 20px; cursor: pointer; font-family: 'Orbitron'; font-size: 0.8rem; background: #050505; }
+        .legal-body { padding: 0 20px; max-height: 0; overflow: hidden; transition: 0.5s; font-size: 0.8rem; color: #666; }
+        .legal-box.active .legal-body { max-height: 500px; padding: 20px; }
+
+        @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        #gateway-overlay { position: fixed; inset: 0; background: #000; z-index: 200000; display: none; align-items: center; justify-content: center; flex-direction: column; }
+        .term { width: 90%; max-width: 400px; font-family: monospace; color: var(--n-blue); padding: 20px; border: 1px solid var(--n-blue); }
+    </style>
+</head>
+<body>
+
+    <div id="intro-overlay"><img src="IMG_7023.png" id="intro-logo"></div>
+    <div id="gateway-overlay"><div class="term" id="log-container"></div></div>
+    <canvas id="star-canvas"></canvas>
+
+    <header>
+        <div class="logo-area" onclick="location.href='#home'">
+            <img src="IMG_7023.png">
+            <span style="font-family:'Orbitron'; font-weight:900; letter-spacing:2px;">LEXORD</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:30px;">
+            <div style="font-family:'Orbitron'; font-size:0.7rem; cursor:pointer;" onclick="runGate('ACCESSING BAG...')">BAG <span id="b-count" style="color:var(--n-blue)">0</span></div>
+            <div class="hamburger" id="ham" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+        </div>
+    </header>
+
+    <nav id="nav-menu">
+        <a class="nav-link" onclick="toggleMenu('#home')">HOME</a>
+        <a class="nav-link" onclick="toggleMenu('#modding')">MODDING</a>
+        <a class="nav-link" onclick="toggleMenu('#3d')">3D-DRUCK</a>
+        <a class="nav-link" onclick="toggleMenu('#contact')">KONTAKT</a>
+    </nav>
+
+    <main id="home">
+        <div class="ticker">
+            <div class="ticker-inner">
+                <span class="ticker-item">EBAY: 100% POSITIV</span>
+                <span class="ticker-item">TRUSTPILOT: EXZELLENT ★★★★★</span>
+                <span class="ticker-item">PRIVATVERKAUF - HOBBY ENGINEERING</span>
+                <span class="ticker-item">SSL SECURE GATEWAY ACTIVE</span>
+            </div>
+        </div>
+
+        <section id="modding" style="opacity: 1;">
+            <h2>HARDWARE MODDING</h2>
+            <div class="grid">
+                <div class="card" onclick="addBag('STICKZANGE', 'https://ebay.de')">
+                    <img src="Stickzange.PNG">
+                    <h3 style="font-family:Orbitron">STICKZANGE PRO</h3>
+                    <p style="color:var(--n-blue); margin:10px 0;">5,95 €</p>
+                    <div style="font-size:0.6rem; color:#444;">EBAY SHOP</div>
+                </div>
+                <div class="card" onclick="addBag('PADDLE SYSTEM', 'https://ebay.de')">
+                    <img src="PADDLE SYSTEM.PNG">
+                    <h3 style="font-family:Orbitron">PADDLE SYSTEM V2</h3>
+                    <p style="color:var(--n-blue); margin:10px 0;">45,95 €</p>
+                    <div style="font-size:0.6rem; color:#444;">EBAY SHOP</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="3d" style="opacity: 1;">
+            <h2>3D-DRUCK SERVICE</h2>
+            <p style="color:#777; margin-bottom:30px;">Industrieller 3D-Druck für Prototypen und Kleinserien. Präzision in jedem Layer.</p>
+            <div class="grid">
+                <div class="card">
+                    <h3 style="font-family:Orbitron">PROTOTYPING</h3>
+                    <p style="font-size:0.8rem; margin-top:10px;">Individuelle Lösungen nach Maß.</p>
+                </div>
+                <div class="card">
+                    <h3 style="font-family:Orbitron">REPAIR PARTS</h3>
+                    <p style="font-size:0.8rem; margin-top:10px;">Ersatzteile, die es nicht mehr gibt.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" style="opacity: 1;">
+            <h2>KONTAKT</h2>
+            <div class="contact-container">
+                <form onsubmit="runGate('SENDING MESSAGE...'); return false;">
+                    <input type="text" placeholder="NAME" required>
+                    <input type="email" placeholder="E-MAIL" required>
+                    <textarea rows="5" placeholder="DEINE ANFRAGE (3D-DRUCK / MODDING)"></textarea>
+                    <button class="send-btn">NACHRICHT SENDEN</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="legal" style="opacity: 1;">
+            <div class="legal-box" id="l1">
+                <div class="legal-head" onclick="toggleLegal('l1')">IMPRESSUM [+]</div>
+                <div class="legal-body">
+                    Leon Schulz | An Der Domsühler Str. 2 | 19374 Domsühl | kontakt@lexord.de<br><br>
+                    Privatverkauf. Ausschluss der Sachmangelhaftung.
+                </div>
+            </div>
+            <div class="legal-box" id="l2">
+                <div class="legal-head" onclick="toggleLegal('l2')">DATENSCHUTZ [+]</div>
+                <div class="legal-body">Anonymes Tracking über GoatCounter. Keine Cookies.</div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // MENU
+        function toggleMenu(target) {
+            const m = document.getElementById('nav-menu');
+            const h = document.getElementById('ham');
+            const isVisible = m.style.display === 'flex';
+            m.style.display = isVisible ? 'none' : 'flex';
+            h.classList.toggle('active');
+            if(target) location.href = target;
+        }
+
+        // BAG & GATE
+        let count = 0;
+        function addBag(n, url) { 
+            count++; document.getElementById('b-count').innerText = count; 
+            runGate('LOCKING ITEM: ' + n);
+            setTimeout(() => { window.open(url, '_blank'); }, 1500);
+        }
+        function runGate(msg) {
+            const g = document.getElementById('gateway-overlay');
+            const c = document.getElementById('log-container');
+            g.style.display = "flex";
+            c.innerHTML = `<p>> INIT...</p><p>> ${msg}</p><p>> DONE.</p>`;
+            setTimeout(() => { g.style.display = "none"; }, 1200);
+        }
+
+        // STARS
+        const canvas = document.getElementById('star-canvas');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        function init() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; stars=[]; for(let i=0; i<200; i++) stars.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, s:Math.random()*1.5, sp:Math.random()*0.4}); }
+        function draw() { ctx.clearRect(0,0,canvas.width, canvas.height); ctx.fillStyle="white"; stars.forEach(s=>{ ctx.beginPath(); ctx.arc(s.x, s.y, s.s, 0, Math.PI*2); ctx.fill(); s.y+=s.sp; if(s.y>canvas.height) s.y=0; }); requestAnimationFrame(draw); }
+        init(); draw();
+
+        function toggleLegal(id) { document.getElementById(id).classList.toggle('active'); }
+
+        window.onload = () => {
+            gsap.to("#intro-logo", { opacity: 1, duration: 1 });
+            setTimeout(() => { 
+                gsap.to("#intro-overlay", { opacity: 0, duration: 1, onComplete: () => { 
+                    document.getElementById('intro-overlay').style.display="none";
+                    gsap.to("header, section", { opacity: 1, stagger: 0.2 });
+                }});
+            }, 1500);
+        };
+    </script>
+</body>
+</html>

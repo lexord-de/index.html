@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEXORD® | Modding & 3D-Druck</title>
+    
+    <meta name="description" content="LEXORD® – Spezialist für High-End Hardware, präzisen 3D-Druck und professionelles Controller-Modding.">
+    <meta name="robots" content="index, follow">
+
+    <script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@100;400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+
+    <style>
+        :root { --n-blue: #00f2ff; --bg: #000000; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
+
+        #star-canvas { position: fixed; inset: 0; z-index: -1; background: #000; }
+
+        /* --- HEADER --- */
+        header { 
+            position: fixed; top: 0; width: 100%; z-index: 10000; 
+            padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; 
+            backdrop-filter: blur(10px); background: rgba(0,0,0,0.6);
+            border-bottom: 1px solid rgba(0, 242, 255, 0.1);
+        }
+        .logo-area { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .logo-area img { width: 40px; filter: drop-shadow(0 0 8px var(--n-blue)); }
+        .brand-name { font-family: 'Orbitron'; font-weight: 900; letter-spacing: 2px; font-size: 1.3rem; }
+        .brand-reg { color: var(--n-blue); vertical-align: super; font-size: 0.8rem; margin-left: 2px; }
+
+        .nav-controls { display: flex; align-items: center; gap: 25px; }
+        .cart-icon { position: relative; cursor: pointer; }
+        .cart-icon svg { width: 26px; height: 26px; fill: white; }
+        
+        /* Hamburger */
+        .hamburger { width: 30px; height: 20px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; }
+        .hamburger span { width: 100%; height: 2px; background: white; transition: 0.3s; }
+        .hamburger.open span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
+        /* --- NAV OVERLAY --- */
+        #nav-overlay { 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 9999; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            transform: translateY(-100%); transition: 0.6s cubic-bezier(0.8, 0, 0.2, 1);
+        }
+        #nav-overlay.active { transform: translateY(0); }
+        .nav-links { display: flex; flex-direction: column; gap: 25px; text-align: center; }
+        .nav-links a, .social-btn { font-family: 'Orbitron'; font-size: 1.2rem; color: white; text-decoration: none; letter-spacing: 3px; cursor: pointer; transition: 0.3s; }
+        .nav-links a:hover, .social-btn:hover { color: var(--n-blue); text-shadow: 0 0 15px var(--n-blue); }
+        
+        .social-sub-menu { max-height: 0; overflow: hidden; transition: 0.5s; display: flex; flex-direction: column; gap: 15px; margin-top: 10px; }
+        .social-sub-menu.open { max-height: 200px; }
+        .social-sub-menu a { font-size: 0.9rem; color: #666; }
+
+        /* --- NOTIFICATION ANIMATION --- */
+        #status-msg { 
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
+            background: rgba(0,0,0,0.9); border: 1px solid var(--n-blue); padding: 40px;
+            z-index: 300000; border-radius: 15px; text-align: center; display: none; opacity: 0;
+            box-shadow: 0 0 50px rgba(0,242,255,0.2);
+        }
+        #status-msg h3 { font-family: 'Orbitron'; color: var(--n-blue); letter-spacing: 3px; margin-bottom: 10px; }
+
+        /* --- HERO --- */
+        .hero-container { margin: 180px auto 100px; width: 92%; max-width: 1300px; display: flex; align-items: center; gap: 40px; opacity: 0; }
+        .hero-content h1 { font-family: 'Orbitron'; font-size: clamp(2.5rem, 8vw, 5.5rem); font-weight: 900; line-height: 0.9; }
+        .hero-skull { width: 110px; filter: drop-shadow(0 0 20px var(--n-blue)); animation: float 4s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        /* --- TRUST & SIEGEL --- */
+        .trust-dashboard { display: flex; gap: 15px; margin: 40px 5%; flex-wrap: wrap; opacity: 0; }
+        .trust-card { background: rgba(15,15,15,0.8); border: 1px solid #1a1a1a; padding: 15px; border-radius: 10px; text-decoration: none; color: white; text-align: center; flex: 1; min-width: 140px; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; padding: 0 5% 100px; }
+        .card { background: rgba(5,5,5,0.8); border: 1px solid #111; padding: 30px; border-radius: 15px; text-align: center; transition: 0.4s; }
+        .card:hover { border-color: var(--n-blue); }
+        .img-box { height: 200px; display: flex; align-items: center; justify-content: center; }
+        .img-box img { max-width: 90%; max-height: 90%; }
+
+        .submit-btn { width: 100%; padding: 20px; background: var(--n-blue); border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; border-radius: 6px; }
+
+        /* --- LEGAL --- */
+        .legal-wrapper { width: 90%; max-width: 1200px; margin: 50px auto 100px; }
+        .legal-box { background: rgba(10,10,10,0.8); border: 1px solid #1a1a1a; border-radius: 8px; margin-bottom: 10px; }
+        .legal-trigger { padding: 20px 30px; cursor: pointer; font-family: 'Orbitron'; font-size: 0.7rem; color: #333; display: flex; justify-content: space-between; }
+        .legal-content { max-height: 0; opacity: 0; padding: 0 30px; transition: 0.5s; font-size: 0.8rem; color: #777; overflow: hidden; }
+        .legal-box.open .legal-content { max-height: 1000px; opacity: 1; padding: 20px 30px 40px; }
+
+        footer { text-align: center; padding: 40px; font-family: 'Orbitron'; font-size: 0.6rem; color: #1a1a1a; letter-spacing: 5px; }
+
+        /* Terminal */
+        #gateway-overlay { position: fixed; inset: 0; background: #000; z-index: 200000; display: none; align-items: center; justify-content: center; flex-direction: column; }
+        .terminal-loader { width: 85%; max-width: 450px; font-family: monospace; color: var(--n-blue); padding: 30px; background: #050505; border: 1px solid #111; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div id="status-msg">
+        <h3 id="status-title">ERFOLG</h3>
+        <p id="status-text">Signal wurde übertragen.</p>
+    </div>
+
+    <div id="intro-overlay" style="position:fixed; inset:0; background:black; z-index:20000; display:flex; align-items:center; justify-content:center;">
+        <img src="IMG_7023.png" id="intro-logo" style="width:100px; opacity:0; transform:scale(0.5);">
+    </div>
+
+    <div id="gateway-overlay"><div class="terminal-loader" id="log-container"></div></div>
+    <canvas id="star-canvas"></canvas>
+
+    <header>
+        <div class="logo-area" onclick="location.reload()">
+            <img src="IMG_7023.png">
+            <span class="brand-name">LEXORD<span class="brand-reg">®</span></span>
+        </div>
+        <div class="nav-controls">
+            <div class="cart-icon" onclick="showStatus('WARENKORB', 'Dein Warenkorb ist aktuell leer.')">
+                <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </div>
+            <div class="hamburger" id="menu-toggle"><span></span><span></span><span></span></div>
+        </div>
+    </header>
+
+    <nav id="nav-overlay">
+        <div class="nav-links">
+            <a href="#hero" onclick="closeMenu()">START</a>
+            <a href="#shop" onclick="closeMenu()">HARDWARE</a>
+            <a href="#shop" onclick="closeMenu()">3D-DRUCK</a>
+            <div class="social-btn" onclick="toggleSocial()">SOCIAL MEDIA ▼</div>
+            <div class="social-sub-menu" id="social-menu">
+                <a href="https://www.instagram.com/lexord.de" target="_blank">INSTAGRAM</a>
+                <a href="https://www.tiktok.com/@lexord.de" target="_blank">TIKTOK</a>
+            </div>
+            <a href="#contact" onclick="closeMenu()">KONTAKT</a>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero-container" id="hero">
+            <div class="hero-content">
+                <p style="color:var(--n-blue); font-family:'Orbitron'; font-size:0.7rem; letter-spacing:5px; margin-bottom:15px;">MODDING & 3D-DRUCK</p>
+                <h1>BEYOND<br>LIMITS.</h1>
+                <p style="color:#444; margin-top:20px; font-family:'Orbitron'; font-size:0.6rem; letter-spacing:2px;">PROFESSIONELLE LÖSUNGEN FÜR DEIN SETUP</p>
+            </div>
+            <img src="IMG_7023.png" class="hero-skull">
+        </section>
+
+        <div class="trust-dashboard">
+            <a href="https://g.page/r/CQyRhiy7wS_DEAE/review" target="_blank" class="trust-card"><span style="color:var(--n-blue); font-size:0.5rem; display:block;">GOOGLE</span>★★★★★</a>
+            <a href="https://www.ebay.de/usr/lexord-de" target="_blank" class="trust-card"><span style="color:var(--n-blue); font-size:0.5rem; display:block;">EBAY</span>★★★★★</a>
+            <a href="https://de.trustpilot.com/review/lexord.de" target="_blank" class="trust-card"><span style="color:var(--n-blue); font-size:0.5rem; display:block;">TRUSTPILOT</span>★★★★★</a>
+        </div>
+
+        <div class="section-label" style="margin: 80px 5% 30px; border-left: 2px solid var(--n-blue); padding-left: 15px;">
+            <h2 style="font-family:'Orbitron'; font-size:0.8rem; color:var(--n-blue); letter-spacing:3px;">PRODUKTE</h2>
+        </div>
+
+        <section class="grid" id="shop">
+            <div class="card" onclick="window.open('https://www.ebay.de/itm/127605871230')">
+                <div class="img-box"><img src="Stickzange.PNG"></div>
+                <h4 class="orbitron" style="font-size:0.7rem; margin-top:15px;">STICKZANGE PRO</h4>
+                <p style="color:var(--n-blue); font-family:Orbitron; margin-top:10px;">5,95 €</p>
+            </div>
+            <div class="card" onclick="window.open('https://www.ebay.de/itm/127621679343')">
+                <div class="img-box"><img src="PADDLE SYSTEM.PNG"></div>
+                <h4 class="orbitron" style="font-size:0.7rem; margin-top:15px;">PADDLE SYSTEM V2</h4>
+                <p style="color:var(--n-blue); font-family:Orbitron; margin-top:10px;">45,95 €</p>
+            </div>
+        </section>
+
+        <section class="contact-box" id="contact">
+            <form onsubmit="return handleFormSubmit(event)">
+                <input type="text" placeholder="NAME" required>
+                <input type="email" placeholder="EMAIL" required>
+                <textarea placeholder="DEINE NACHRICHT AN LEXORD..." rows="5" required></textarea>
+                <button type="submit" class="submit-btn">SIGNAL_SENDEN</button>
+            </form>
+        </section>
+
+        <section class="legal-wrapper">
+            <div class="legal-box">
+                <div class="legal-trigger" onclick="toggleLegal(this)">IMPRESSUM <span>+</span></div>
+                <div class="legal-content">
+                    <strong>LEXORD®</strong><br>
+                    Leon Schulz | An Der Domsühler Str. 2 | 19374 Domsühl<br>
+                    E-Mail: kontakt@lexord.de<br><br>
+                    Gemäß § 19 UStG wird keine Umsatzsteuer berechnet. Privatverkauf hobbymäßig hergestellter Artikel. Der Verkauf erfolgt unter Ausschluss jeglicher Sachmangelhaftung.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>© 2026 LEXORD® | ALL RIGHTS RESERVED</footer>
+
+    <script>
+        // Menu
+        const menuToggle = document.getElementById('menu-toggle');
+        const navOverlay = document.getElementById('nav-overlay');
+        menuToggle.onclick = () => { menuToggle.classList.toggle('open'); navOverlay.classList.toggle('active'); };
+        function closeMenu() { menuToggle.classList.remove('open'); navOverlay.classList.remove('active'); }
+        function toggleSocial() { document.getElementById('social-menu').classList.toggle('open'); }
+        function toggleLegal(el) { el.parentElement.classList.toggle('open'); }
+
+        // Professionelle Status-Meldung (statt Alert)
+        function showStatus(title, text) {
+            const box = document.getElementById('status-msg');
+            document.getElementById('status-title').textContent = title;
+            document.getElementById('status-text').textContent = text;
+            box.style.display = "block";
+            gsap.to(box, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out" });
+            setTimeout(() => {
+                gsap.to(box, { opacity: 0, scale: 0.8, duration: 0.5, onComplete: () => box.style.display = "none" });
+            }, 3000);
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const gateway = document.getElementById('gateway-overlay');
+            const container = document.getElementById('log-container');
+            const logs = ["> INITIATING LEXORD_CORE...", "> ENCRYPTING SIGNAL...", "> UPLOADING DATA...", "> SUCCESS: TRANSMITTED"];
+            gateway.style.display = "flex"; container.innerHTML = "";
+            logs.forEach((text, i) => {
+                setTimeout(() => {
+                    const p = document.createElement('p'); p.textContent = text;
+                    container.appendChild(p);
+                    if(i === logs.length - 1) {
+                        setTimeout(() => { 
+                            gateway.style.display = "none"; 
+                            showStatus("ERFOLG", "Deine Nachricht wurde sicher übertragen.");
+                            e.target.reset(); 
+                        }, 1000);
+                    }
+                }, i * 600);
+            });
+            return false;
+        }
+
+        // Stars
+        const canvas = document.getElementById('star-canvas');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        function initStars() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            stars = []; for(let i=0; i<250; i++) stars.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*1.2 });
+        }
+        function draw() {
+            ctx.clearRect(0,0,canvas.width, canvas.height); ctx.fillStyle="white";
+            stars.forEach(s => { ctx.beginPath(); ctx.arc(s.x, s.y, s.s, 0, Math.PI*2); ctx.fill(); s.y += 0.2; if(s.y > canvas.height) s.y = 0; });
+            requestAnimationFrame(draw);
+        }
+        initStars(); draw();
+
+        window.onload = () => {
+            gsap.to("#intro-logo", { opacity: 1, scale: 1, duration: 0.8 });
+            gsap.to("#intro-overlay", { y: "-100%", duration: 1, delay: 0.5, ease: "power4.inOut" });
+            gsap.to(".hero-container, .trust-dashboard", { opacity: 1, y: -20, delay: 1 });
+        };
+    </script>
+</body>
+</html>

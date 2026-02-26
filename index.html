@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>LEXORD® | High-End Controller Modding, Hall-Effect & 3D-Druck</title>
+    <meta name="description" content="LEXORD®: Profi-Modding für PS5 & PS4. Hall-Effect Sticks gegen Stickdrift, Smart-Trigger, 4er Paddles & 3D-Druck Service. Dein High-End Upgrade aus Deutschland.">
+    <meta name="keywords" content="Controller Modding, PS5 Paddles nachrüsten, Hall Effect Sticks, Stickdrift Reparatur, Smart Trigger Umbau, Custom Controller Deutschland, 3D Druck Service, Stickzange Pro, Bitro Alternative, Scuf Alternative, Rapid Fire, Mouseclick Trigger, Leon Schulz Modding, Lexord, BDM-030 Umbau, Controller Reparatur Domsühl, Gaming Hardware Engineering">
+
+    <script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@100;400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+
+    <style>
+        :root { --n-blue: #00f2ff; --bg: #000000; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
+
+        #star-canvas { position: fixed; inset: 0; z-index: -1; background: #000; }
+
+        /* --- INTRO --- */
+        #intro-overlay { position: fixed; inset: 0; background: black; z-index: 20000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #intro-logo { width: 180px; filter: drop-shadow(0 0 30px var(--n-blue)); opacity: 0; transform: scale(0.5); }
+        #intro-text { font-family: 'Orbitron'; font-size: 1rem; letter-spacing: 8px; color: var(--n-blue); margin-top: 25px; opacity: 0; }
+
+        /* --- HEADER & NAVIGATION --- */
+        header { 
+            position: fixed; top: 0; width: 100%; z-index: 10000; 
+            padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; 
+            backdrop-filter: blur(10px); background: rgba(0,0,0,0.6);
+            border-bottom: 1px solid rgba(0, 242, 255, 0.1); opacity: 0;
+        }
+        .logo-area { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .logo-area img { width: 40px; filter: drop-shadow(0 0 8px var(--n-blue)); }
+        .brand-name { font-family: 'Orbitron'; font-weight: 900; letter-spacing: 2px; font-size: 1.3rem; }
+        
+        .nav-controls { display: flex; align-items: center; gap: 25px; }
+        .cart-toggle { position: relative; cursor: pointer; display: flex; align-items: center; padding: 5px 10px; border: 1px solid rgba(0,242,255,0.2); border-radius: 4px; }
+        .cart-count { position: absolute; top: -8px; right: -8px; background: var(--n-blue); color: black; font-size: 0.7rem; font-weight: 900; padding: 2px 6px; border-radius: 50%; }
+
+        #nav-overlay { 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 9999; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            transform: translateY(-100%); transition: 0.6s cubic-bezier(0.8, 0, 0.2, 1);
+        }
+        #nav-overlay.active { transform: translateY(0); }
+        .nav-links a { font-family: 'Orbitron'; font-size: 1.2rem; color: white; text-decoration: none; letter-spacing: 3px; margin: 15px 0; display: block; text-align: center; }
+
+        .hamburger { width: 30px; height: 20px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; }
+        .hamburger span { width: 100%; height: 2px; background: white; transition: 0.3s; }
+
+        /* --- WARENKORB SIDEBAR --- */
+        #cart-sidebar {
+            position: fixed; top: 0; right: 0; width: 400px; height: 100%;
+            background: rgba(5, 5, 5, 0.98); backdrop-filter: blur(20px);
+            z-index: 30000; transform: translateX(100%);
+            transition: 0.5s cubic-bezier(0.8, 0, 0.2, 1);
+            border-left: 1px solid rgba(0, 242, 255, 0.2); padding: 40px;
+            display: flex; flex-direction: column;
+        }
+        #cart-sidebar.active { transform: translateX(0); }
+        .cart-header { font-family: 'Orbitron'; font-size: 1.2rem; border-bottom: 1px solid #222; padding-bottom: 20px; margin-bottom: 20px; display: flex; justify-content: space-between; }
+        .cart-items { flex-grow: 1; overflow-y: auto; }
+        .cart-item { display: flex; justify-content: space-between; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #111; font-size: 0.85rem; }
+        .cart-total { border-top: 1px solid #222; padding-top: 20px; font-family: 'Orbitron'; text-align: right; }
+        .checkout-btn { width: 100%; margin-top: 20px; padding: 18px; background: var(--n-blue); color: black; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; }
+
+        /* --- CONTENT --- */
+        .hero-container, .grid, .contact-box, .seo-footer { opacity: 0; transform: translateY(30px); }
+        .hero-container { margin: 180px auto 100px; width: 92%; max-width: 1300px; display: flex; align-items: center; gap: 40px; }
+        .hero-content h1 { font-family: 'Orbitron'; font-size: clamp(2.5rem, 8vw, 5.5rem); font-weight: 900; line-height: 0.9; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; padding: 0 5% 100px; }
+        .card { background: rgba(5,5,5,0.8); border: 1px solid #111; padding: 30px; border-radius: 15px; text-align: center; transition: 0.3s; }
+        .card:hover { border-color: var(--n-blue); transform: translateY(-5px); }
+        .img-box { height: 220px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+        .img-box img { max-width: 90%; max-height: 90%; }
+
+        .buy-btn { width: 100%; padding: 12px; background: transparent; border: 1px solid var(--n-blue); color: var(--n-blue); font-family: 'Orbitron'; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+        .buy-btn:hover { background: var(--n-blue); color: black; }
+
+        /* --- CONTACT & SEO --- */
+        .contact-box { max-width: 600px; margin: 0 auto 100px; padding: 0 5%; }
+        input, textarea { width: 100%; padding: 18px; background: #000; border: 1px solid #111; color: white; margin-bottom: 20px; border-radius: 6px; outline: none; }
+        .dsgvo-wrapper { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 20px; font-size: 0.75rem; color: #555; }
+        
+        .seo-footer { background: #020202; border-top: 1px solid #111; padding: 60px 5%; margin-top: 100px; }
+        .seo-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; }
+        .seo-item h4 { font-family: 'Orbitron'; color: var(--n-blue); font-size: 0.8rem; margin-bottom: 15px; }
+        .seo-item p { font-size: 0.75rem; color: #666; line-height: 1.8; }
+
+        #gateway-overlay { position: fixed; inset: 0; background: #000; z-index: 200000; display: none; align-items: center; justify-content: center; flex-direction: column; }
+        .terminal-loader { width: 85%; max-width: 450px; font-family: monospace; color: var(--n-blue); padding: 30px; background: #050505; border: 1px solid #111; }
+    </style>
+</head>
+<body>
+
+    <div id="intro-overlay">
+        <img src="IMG_7023.png" id="intro-logo">
+        <div id="intro-text">LEXORD®</div>
+    </div>
+
+    <div id="gateway-overlay"><div class="terminal-loader" id="log-container"></div></div>
+    <canvas id="star-canvas"></canvas>
+
+    <header id="main-header">
+        <div class="logo-area" onclick="location.href='index.html'">
+            <img src="IMG_7023.png">
+            <span class="brand-name">LEXORD<span style="color:var(--n-blue); vertical-align:super; font-size:0.8rem;">®</span></span>
+        </div>
+        <div class="nav-controls">
+            <div class="cart-toggle" onclick="toggleCart()">
+                <span style="font-family:'Orbitron'; font-size:0.7rem; letter-spacing:1px; margin-right:5px;">BAG</span>
+                <span class="cart-count" id="cart-count">0</span>
+            </div>
+            <div class="hamburger" id="menu-toggle"><span></span><span></span><span></span></div>
+        </div>
+    </header>
+
+    <nav id="nav-overlay">
+        <div class="nav-links">
+            <a href="index.html" onclick="closeMenu()">START</a>
+            <a href="modding.html" onclick="closeMenu()">MODDING</a>
+            <a href="3ddruck.html" onclick="closeMenu()">3D-DRUCK</a>
+            <a href="#contact" onclick="closeMenu()">KONTAKT</a>
+        </div>
+    </nav>
+
+    <div id="cart-sidebar">
+        <div class="cart-header"><span>YOUR_BAG</span><span style="cursor:pointer; color:var(--n-blue);" onclick="toggleCart()">CLOSE</span></div>
+        <div class="cart-items" id="cart-items-container"></div>
+        <div class="cart-total">TOTAL: <span id="cart-total-price">0.00</span>€</div>
+        <button class="checkout-btn" onclick="checkout()">ZUR KASSE</button>
+    </div>
+
+    <main>
+        <section class="hero-container">
+            <div class="hero-content">
+                <p style="color:var(--n-blue); font-family:'Orbitron'; font-size:0.7rem; letter-spacing:5px;">HALL-EFFECT & PADDLES</p>
+                <h1>BEYOND<br>LIMITS.</h1>
+            </div>
+            <img src="IMG_7023.png" style="width:110px; filter:drop-shadow(0 0 20px var(--n-blue));">
+        </section>
+
+        <section class="grid">
+            <div class="card">
+                <div class="img-box"><img src="Stickzange.PNG"></div>
+                <h4 class="orbitron">STICKZANGE PRO</h4>
+                <p style="font-size: 0.8rem; color: #555; margin-top: 5px;">Profi-Werkzeug für Stick-Reparatur</p>
+                <button class="buy-btn" onclick="addToCart('STICKZANGE PRO', 39.90)">ADD TO BAG (39.90€)</button>
+            </div>
+
+            <div class="card">
+                <div class="img-box"><img src="PADDLE SYSTEM.PNG"></div>
+                <h4 class="orbitron">PADDLE SYSTEM V2</h4>
+                <p style="font-size: 0.8rem; color: #555; margin-top: 5px;">4-Fach Rücktasten-System</p>
+                <button class="buy-btn" onclick="addToCart('PADDLE SYSTEM V2', 54.90)">ADD TO BAG (54.90€)</button>
+            </div>
+        </section>
+
+        <section class="contact-box" id="contact">
+            <form id="contact-form" onsubmit="return handleFormSubmit(event)">
+                <input type="text" placeholder="NAME" required>
+                <input type="email" placeholder="EMAIL" required>
+                <textarea placeholder="MODDING-ANFRAGE ODER 3D-DRUCK WUNSCH..." rows="5" required></textarea>
+                <div class="dsgvo-wrapper">
+                    <input type="checkbox" required>
+                    <label>Ich stimme der Datenverarbeitung gemäß DSGVO zu.</label>
+                </div>
+                <button type="submit" style="width:100%; padding:20px; background:white; color:black; border:none; font-family:'Orbitron'; font-weight:900; cursor:pointer;">ANFRAGE_SENDEN</button>
+            </form>
+        </section>
+    </main>
+
+    <section class="seo-footer">
+        <div class="seo-grid">
+            <div class="seo-item">
+                <h4>CONTROLLER EXPERTISE</h4>
+                <p>LEXORD® ist spezialisiert auf <strong>Hall-Effect Sticks</strong> gegen Stickdrift, <strong>Smart Trigger</strong> (Mausklick) und professionelle <strong>Paddle-Systeme</strong>. Besser als herkömmliche Controller.</p>
+            </div>
+            <div class="seo-item">
+                <h4>3D-DRUCK SERVICE</h4>
+                <p>Industrieller <strong>FDM & SLA 3D-Druck</strong> in Domsühl. Wir fertigen Prototypen und Endprodukte aus Carbon, PETG und Resin. Qualität made in Germany.</p>
+            </div>
+            <div class="seo-item">
+                <h4>IMPRESSUM</h4>
+                <p><strong>Leon Schulz</strong><br>An Der Domsühler Str. 2<br>19374 Domsühl<br>kontakt@lexord.de</p>
+            </div>
+        </div>
+        <p style="text-align:center; margin-top:50px; font-family:'Orbitron'; font-size:0.6rem; color:#1a1a1a; letter-spacing:5px;">© 2026 LEXORD® | ALL RIGHTS RESERVED</p>
+    </section>
+
+    <script>
+        // Warenkorb Logik
+        let cart = JSON.parse(localStorage.getItem('lexord_cart')) || [];
+        function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); }
+        function addToCart(name, price) { cart.push({name, price}); updateCart(); toggleCart(); }
+        function removeFromCart(index) { cart.splice(index, 1); updateCart(); }
+        function updateCart() {
+            localStorage.setItem('lexord_cart', JSON.stringify(cart));
+            const container = document.getElementById('cart-items-container');
+            container.innerHTML = '';
+            let total = 0;
+            cart.forEach((item, i) => {
+                total += item.price;
+                container.innerHTML += `<div class="cart-item"><span>${item.name}</span><span>${item.price.toFixed(2)}€ <span onclick="removeFromCart(${i})" style="color:red; cursor:pointer; margin-left:10px;">X</span></span></div>`;
+            });
+            document.getElementById('cart-count').innerText = cart.length;
+            document.getElementById('cart-total-price').innerText = total.toFixed(2);
+        }
+        updateCart();
+
+        // Menu & Animationen
+        const menuToggle = document.getElementById('menu-toggle');
+        const navOverlay = document.getElementById('nav-overlay');
+        menuToggle.onclick = () => { navOverlay.classList.toggle('active'); };
+        function closeMenu() { navOverlay.classList.remove('active'); }
+
+        const canvas = document.getElementById('star-canvas');
+        const ctx = canvas.getContext('2d');
+        let stars = []; let warpSpeed = 0.2;
+        function initStars() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; stars = []; for(let i=0; i<300; i++) stars.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: Math.random()*1.5, speed: Math.random()*0.5 }); }
+        function drawStars() { ctx.clearRect(0,0,canvas.width, canvas.height); ctx.fillStyle="white"; stars.forEach(s => { ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI*2); ctx.fill(); s.y += s.speed + warpSpeed; if(s.y > canvas.height) s.y = 0; }); requestAnimationFrame(drawStars); }
+        initStars(); drawStars();
+
+        window.onload = () => {
+            const tl = gsap.timeline();
+            warpSpeed = 15;
+            tl.to("#intro-logo", { opacity: 1, scale: 1, duration: 1.2 })
+              .to("#intro-text", { opacity: 1, duration: 0.6 }, "-=0.4")
+              .to("#intro-overlay", { opacity: 0, duration: 1, delay: 1.5, onComplete: () => { 
+                  document.getElementById('intro-overlay').style.display="none"; warpSpeed=0.2; 
+              }})
+              .to("#main-header", { opacity: 1, duration: 0.8 })
+              .to(".hero-container, .grid, .contact-box, .seo-footer", { opacity: 1, y: 0, duration: 1, stagger: 0.15 });
+        };
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const gateway = document.getElementById('gateway-overlay');
+            gateway.style.display = "flex";
+            document.getElementById('log-container').innerHTML = "<p>> ENCRYPTING DATA...</p><p>> SENDING ANFRAGE...</p>";
+            setTimeout(() => { gateway.style.display = "none"; alert("Erfolgreich gesendet!"); }, 2000);
+            return false;
+        }
+        function checkout() { alert("Checkout-Verbindung wird hergestellt..."); }
+    </script>
+</body>
+</html>

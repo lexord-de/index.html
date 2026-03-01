@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title translate="no">LEXORD® | High-End Engineering | Beste Scuf Alternative 2026</title>
+    
+    <meta name="description" content="LEXORD® Engineering: Die ultimative Premium Scuf Alternative. High-End Paddle Systeme, Stickzangen & Custom Controller Tuning. Made in Germany.">
+    
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+    <style>
+        :root { --n-blue: #00f2ff; --bg: #000000; --panel: #0a0a0a; --trust-green: #00b67a; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; width: 100%; top: 0 !important; }
+
+        /* --- OPTIMIERTER ÜBERSETZER (KEIN LOGO) --- */
+        #google_translate_element, .skiptranslate, .goog-te-banner-frame, #goog-gt-tt, .goog-te-spinner-pos { display: none !important; visibility: hidden !important; }
+        body { top: 0 !important; }
+        .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; }
+
+        #star-canvas { position: fixed; inset: 0; z-index: -1; background: #000; }
+        #intro-overlay { position: fixed; inset: 0; background: black; z-index: 100000; display: flex; align-items: center; justify-content: center; }
+
+        .floating-logo { width: 230px; filter: drop-shadow(0 0 20px var(--n-blue)); animation: floatLogo 4s ease-in-out infinite; }
+        @keyframes floatLogo { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+
+        header { position: fixed; top: 80px; width: 100%; z-index: 10000; padding: 0 6%; display: flex; justify-content: space-between; align-items: center; }
+        .brand-text { font-family: 'Orbitron'; font-weight: 900; font-size: 1.2rem; letter-spacing: 4px; }
+        
+        /* --- SUCHE IM MENÜ STYLES --- */
+        .search-container { width: 80%; margin-bottom: 30px; position: relative; }
+        .search-input { width: 100%; padding: 12px; background: #111; border: 1px solid #333; color: white; font-family: 'Orbitron'; font-size: 12px; border-radius: 5px; outline: none; }
+        .search-input:focus { border-color: var(--n-blue); }
+        .suggestions-box { position: absolute; top: 100%; left: 0; width: 100%; background: #050505; border: 1px solid var(--n-blue); display: none; z-index: 50001; max-height: 200px; overflow-y: auto; }
+        .suggestion-item { padding: 12px; font-size: 11px; cursor: pointer; border-bottom: 1px solid #111; color: #ccc; text-align: left; }
+        .suggestion-item:hover { background: #111; color: var(--n-blue); }
+
+        /* Highlight-Effekt bei Suche */
+        .found-highlight { border-color: var(--n-blue) !important; box-shadow: 0 0 30px var(--n-blue) !important; transform: scale(1.02); transition: 0.5s; }
+
+        /* FEATURE SEKTIONEN */
+        .feature-container { padding: 40px 6%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 60px; }
+        .feature-item { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+        .feature-img { width: 100%; border-radius: 15px; }
+        .feature-title { font-family: 'Orbitron'; font-size: 1.5rem; color: var(--n-blue); margin-bottom: 15px; }
+        .feature-desc { color: #ccc; line-height: 1.6; }
+
+        @media (max-width: 768px) { .feature-item { grid-template-columns: 1fr; text-align: center; } }
+
+        .burger-menu { cursor: pointer; width: 25px; height: 16px; display: flex; flex-direction: column; justify-content: space-between; z-index: 50000; }
+        .burger-bar { height: 1.5px; width: 100%; background: white; transition: 0.3s; }
+        #full-nav { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 40000; display: flex; flex-direction: column; align-items: center; justify-content: center; transform: translateX(100%); transition: 0.5s; }
+        #full-nav.active { transform: translateX(0); }
+        .nav-link { font-family: 'Orbitron'; font-size: 1.5rem; text-decoration: none; color: white; margin: 10px 0; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; padding: 60px 6%; max-width: 1400px; margin: 0 auto; }
+        .card { background: var(--panel); padding: 30px; border-radius: 15px; border: 1px solid #111; text-align: center; }
+        .submit-btn { width: 100%; padding: 18px; background: white; color: black; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; margin-top: 15px; text-transform: uppercase; }
+        
+        .legal-box { border: 1px solid #111; margin-bottom: 10px; border-radius: 5px; background: #050505; }
+        .legal-head { padding: 15px; cursor: pointer; font-family: 'Orbitron'; font-size: 10px; color: #555; display: flex; justify-content: space-between; }
+        .legal-body { max-height: 0; padding: 0 15px; transition: 0.4s; font-size: 11px; color: #777; overflow: hidden; }
+        .legal-box.open .legal-body { max-height: 1000px; padding: 15px; border-top: 1px solid #111; }
+    </style>
+</head>
+<body class="notranslate">
+
+    <div id="intro-overlay"><canvas id="warp-canvas"></canvas></div>
+    <canvas id="star-canvas"></canvas>
+    <div id="google_translate_element"></div>
+
+    <header>
+        <div class="brand-text notranslate">LEXORD®</div>
+        <div class="nav-controls" style="display:flex; align-items:center; gap:20px;">
+            <div style="display:flex; gap:10px;">
+                <span onclick="changeLang('de')" style="cursor:pointer; font-size:12px; font-family:'Orbitron';">DE</span>
+                <span onclick="changeLang('en')" style="cursor:pointer; font-size:12px; font-family:'Orbitron';">EN</span>
+            </div>
+            <div class="burger-menu" onclick="toggleMenu()">
+                <div class="burger-bar"></div><div class="burger-bar"></div><div class="burger-bar"></div>
+            </div>
+        </div>
+    </header>
+
+    <nav id="full-nav">
+        <div class="search-container">
+            <input type="text" class="search-input" id="menuSearch" placeholder="PRODUKT SUCHEN..." oninput="doSearch()" autocomplete="off">
+            <div id="suggestions" class="suggestions-box"></div>
+        </div>
+        <a href="#hero" class="nav-link" onclick="toggleMenu()">HOME</a>
+        <a href="#shop" class="nav-link" onclick="toggleMenu()">SHOP</a>
+        <a href="#contact" class="nav-link" onclick="toggleMenu()">KONTAKT</a>
+        <div style="margin-top:20px; display:flex; gap:20px;">
+            <a href="https://instagram.com/lexord.de" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" style="width:30px; filter:invert(1);"></a>
+            <a href="https://tiktok.com/@lexord.de" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" style="width:30px; filter:invert(1);"></a>
+        </div>
+    </nav>
+
+    <main id="main-content">
+        <section id="hero" style="height:70vh; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <img src="IMG_7023.png" class="floating-logo">
+            <h1 class="notranslate" style="font-family:'Orbitron'; font-size:clamp(1.2rem, 5vw, 2.5rem); margin-top:20px; letter-spacing:8px;">BEYOND LIMITS</h1>
+        </section>
+
+        <section class="feature-container">
+            <div class="feature-item" id="search-tmr">
+                <img src="Stick_TMR.png" class="feature-img">
+                <div class="feature-text">
+                    <h2 class="feature-title">BEYOND LIMITS TMR™ STICK</h2>
+                    <p class="feature-desc">Maximale Präzision ohne Drift. Die TMR-Magnettechnik sorgt für lebenslange Genauigkeit und direkte Eingaben.</p>
+                </div>
+            </div>
+
+            <div class="feature-item" id="search-paddles" style="direction:rtl;">
+                <img src="Paddle_Back.png" class="feature-img">
+                <div class="feature-text" style="direction:ltr;">
+                    <h2 class="feature-title">Paddles</h2>
+                    <p class="feature-desc">Zusätzliche Tasten auf der Rückseite für schnellere Reaktionen. Individuell belegbar für Profi-Gameplay.</p>
+                </div>
+            </div>
+
+            <div class="feature-item" id="search-trigger">
+                <img src="Trigger_System.png" class="feature-img">
+                <div class="feature-text">
+                    <h2 class="feature-title">Trigger Bumper System</h2>
+                    <p class="feature-desc">Digitaler Klick mit 1mm Auslöseweg. Fühlt sich an wie eine Maustaste für sofortiges Feuern.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid" id="shop">
+            <div class="card" id="search-zange">
+                <img src="Stickzange.PNG" style="width:100%; border-radius:10px;">
+                <h3 style="font-family:'Orbitron'; margin-top:15px;">STICKZANGE PRO</h3>
+                <p style="color:var(--n-blue); margin: 10px 0;">5,95 €</p>
+                <button class="submit-btn" onclick="window.open('https://ebay.us/m/tnyh7V', '_blank')">EBAY SHOP</button>
+            </div>
+            <div class="card" id="search-v2">
+                <img src="PADDLE SYSTEM.PNG" style="width:100%; border-radius:10px;">
+                <h3 style="font-family:'Orbitron'; margin-top:15px;">PADDLE SYSTEM V2</h3>
+                <p style="color:var(--n-blue); margin: 10px 0;">45,95 €</p>
+                <button class="submit-btn" onclick="window.open('https://ebay.us/m/KFiR3u', '_blank')">EBAY SHOP</button>
+            </div>
+        </section>
+
+        <section id="contact" style="padding:60px 6%; max-width:800px; margin: 0 auto;">
+            <div style="background:var(--panel); padding:35px; border-radius:15px; border:1px solid #111;">
+                <h2 style="font-family:'Orbitron'; margin-bottom:25px;">KONTAKT</h2>
+                <form onsubmit="event.preventDefault(); alert('Gesendet!');">
+                    <input type="text" placeholder="NAME" style="width:100%; padding:15px; background:#000; border:1px solid #222; color:white; margin-bottom:10px;">
+                    <textarea placeholder="NACHRICHT" rows="4" style="width:100%; padding:15px; background:#000; border:1px solid #222; color:white; margin-bottom:10px;"></textarea>
+                    <button type="submit" class="submit-btn">SENDEN</button>
+                </form>
+            </div>
+
+            <div style="margin-top:40px;">
+                <div class="legal-box">
+                    <div class="legal-head" onclick="this.parentElement.classList.toggle('open')">IMPRESSUM (PRIVAT) <span>+</span></div>
+                    <div class="legal-body">
+                        Leon Schulz | LEXORD Engineering<br>An Der Domsühler Str. 2 | 19374 Domsühl<br>E-Mail: Kontakt@Lexord.de
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type="text/javascript">
+        // ÜBERSETZER LOGIK
+        function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'de', autoDisplay: false}, 'google_translate_element'); }
+        function changeLang(l) { const s = document.querySelector('.goog-te-combo'); if(s) { s.value = l; s.dispatchEvent(new Event('change')); } }
+        
+        // SUCHE LOGIK
+        const products = [
+            { name: "BEYOND LIMITS TMR STICK", id: "search-tmr", tags: ["drift", "hall", "stick", "tmr"] },
+            { name: "PADDLES SYSTEM", id: "search-paddles", tags: ["scuf", "back", "paddles"] },
+            { name: "TRIGGER BUMPER", id: "search-trigger", tags: ["clicky", "digital", "l2", "r2"] },
+            { name: "STICKZANGE PRO", id: "search-zange", tags: ["werkzeug", "tool", "zange"] },
+            { name: "PADDLE SYSTEM V2", id: "search-v2", tags: ["v2", "kit", "umbau"] }
+        ];
+
+        function doSearch() {
+            const val = document.getElementById('menuSearch').value.toLowerCase();
+            const box = document.getElementById('suggestions');
+            box.innerHTML = '';
+            if(val.length < 1) { box.style.display = 'none'; return; }
+            
+            const matches = products.filter(p => p.name.toLowerCase().includes(val) || p.tags.some(t => t.includes(val)));
+            if(matches.length > 0) {
+                box.style.display = 'block';
+                matches.forEach(m => {
+                    const div = document.createElement('div');
+                    div.className = 'suggestion-item';
+                    div.innerText = m.name;
+                    div.onclick = () => {
+                        toggleMenu();
+                        const el = document.getElementById(m.id);
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        el.classList.add('found-highlight');
+                        setTimeout(() => el.classList.remove('found-highlight'), 2000);
+                        document.getElementById('menuSearch').value = '';
+                        box.style.display = 'none';
+                    };
+                    box.appendChild(div);
+                });
+            } else { box.style.display = 'none'; }
+        }
+
+        function toggleMenu() { document.getElementById('full-nav').classList.toggle('active'); }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script>
+        // Star Animation & Intro (Unverändert)
+        const wC = document.getElementById('warp-canvas'), wX = wC.getContext('2d');
+        function res() { wC.width = window.innerWidth; wC.height = window.innerHeight; }
+        window.onresize = res; res();
+        let p = []; for(let i=0; i<800; i++) p.push({x: Math.random()*wC.width-wC.width/2, y: Math.random()*wC.height-wC.height/2, z: Math.random()*wC.width});
+        function anim() { wX.fillStyle = "black"; wX.fillRect(0,0,wC.width, wC.height); wX.fillStyle = "white"; p.forEach(s => { s.z -= 15; if(s.z<=0) s.z=wC.width; let ox=s.x/s.z*wC.width+wC.width/2, oy=s.y/s.z*wC.width+wC.height/2; wX.fillRect(ox,oy,2,2); }); requestAnimationFrame(anim); }
+        anim();
+        window.addEventListener('load', () => { setTimeout(() => { gsap.to("#intro-overlay", { opacity: 0, duration: 1.2, onComplete: () => { document.getElementById('intro-overlay').style.display = "none"; }}); }, 1500); });
+    </script>
+</body>
+</html>

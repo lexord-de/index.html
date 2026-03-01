@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title translate="no">LEXORD® | High-End Engineering | Beste Scuf Alternative 2026</title>
+    
+    <meta name="description" content="LEXORD® Engineering: Die ultimative Premium Scuf Alternative. High-End Paddle Systeme, Stickzangen & Custom Controller Tuning. Made in Germany.">
+    
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+
+    <style>
+        :root { --n-blue: #00f2ff; --bg: #000000; --panel: #0a0a0a; --trust-green: #00b67a; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; width: 100%; top: 0 !important; }
+
+        /* Fix für Google Translate Bar */
+        .goog-te-banner-frame, .goog-te-balloon-frame, #goog-gt-tt, .goog-te-spinner-pos { display: none !important; }
+        .skiptranslate { display: none !important; }
+        body { top: 0 !important; }
+
+        #star-canvas { position: fixed; inset: 0; z-index: -1; background: #000; }
+        #intro-overlay { position: fixed; inset: 0; background: black; z-index: 100000; display: flex; align-items: center; justify-content: center; }
+
+        header { position: fixed; top: 60px; width: 100%; z-index: 10000; padding: 0 6%; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); height: 70px; }
+        .brand-text { font-family: 'Orbitron'; font-weight: 900; font-size: 1.2rem; letter-spacing: 4px; }
+        
+        .lang-switcher { display: flex; gap: 10px; font-family: 'Orbitron'; font-size: 10px; }
+        .lang-btn { cursor: pointer; color: #444; transition: 0.3s; padding: 5px; border: 1px solid transparent; }
+        .lang-btn.active { color: var(--n-blue); text-shadow: 0 0 8px var(--n-blue); border-bottom: 1px solid var(--n-blue); }
+
+        /* Search Styles */
+        .search-container { width: 100%; padding: 0 10%; margin-bottom: 20px; }
+        .search-input { width: 100%; padding: 12px; background: #111; border: 1px solid #222; color: white; font-family: 'Orbitron'; font-size: 12px; border-radius: 5px; outline: none; text-align: center; }
+        .search-input:focus { border-color: var(--n-blue); box-shadow: 0 0 10px var(--n-blue); }
+
+        /* Feature Sections mit Animation */
+        .feature-section { padding: 100px 6%; display: flex; align-items: center; gap: 60px; max-width: 1200px; margin: 0 auto; opacity: 0; transform: translateY(80px); transition: all 1s ease-out; }
+        .feature-section.reverse { flex-direction: row-reverse; }
+        .feature-image { flex: 1; text-align: center; }
+        .feature-image img { width: 100%; max-width: 450px; filter: drop-shadow(0 0 30px rgba(0, 242, 255, 0.15)); border-radius: 15px; }
+        .feature-content { flex: 1; }
+        .feature-content h2 { font-family: 'Orbitron'; font-size: 2.2rem; color: var(--n-blue); margin-bottom: 20px; text-transform: uppercase; }
+        .feature-content p { line-height: 1.8; color: #aaa; font-size: 1.1rem; }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 4px; background: transparent; border: 1px solid var(--n-blue); color: var(--n-blue); font-family: 'Orbitron'; font-weight: bold; font-size: 10px; margin-bottom: 15px; letter-spacing: 2px; }
+
+        .floating-logo { width: 230px; filter: drop-shadow(0 0 20px var(--n-blue)); animation: floatLogo 4s ease-in-out infinite; }
+        @keyframes floatLogo { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+
+        .burger-menu { cursor: pointer; width: 25px; height: 16px; display: flex; flex-direction: column; justify-content: space-between; }
+        .burger-bar { height: 1.5px; width: 100%; background: white; transition: 0.3s; }
+        #full-nav { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 40000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; transform: translateX(100%); transition: 0.6s cubic-bezier(0.7, 0, 0.3, 1); }
+        #full-nav.active { transform: translateX(0); }
+        .nav-link { font-family: 'Orbitron'; font-size: 1.3rem; text-decoration: none; color: white; letter-spacing: 3px; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; padding: 50px 6%; max-width: 1400px; margin: 0 auto; }
+        .card { background: var(--panel); padding: 30px; border-radius: 15px; border: 1px solid #111; text-align: center; }
+        .submit-btn { width: 100%; padding: 18px; background: white; color: black; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; margin-top: 15px; }
+        
+        /* Footer */
+        .footer-copyright { padding: 60px 6%; text-align: center; font-family: 'Orbitron'; font-size: 10px; color: #444; letter-spacing: 4px; border-top: 1px solid #111; margin-top: 80px; }
+
+        .ticker-wrapper { position: fixed; top: 0; width: 100%; z-index: 9000; font-family: 'Orbitron'; font-size: 9px; }
+        .ticker-row { overflow: hidden; white-space: nowrap; padding: 8px 0; border-bottom: 1px solid #111; background: black; }
+        .ticker-move { display: inline-block; animation: ticker-scroll 35s linear infinite; }
+        @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        @media (max-width: 768px) {
+            .feature-section, .feature-section.reverse { flex-direction: column; text-align: center; padding: 60px 6%; }
+            .feature-content h2 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body class="notranslate">
+
+    <div id="intro-overlay"><canvas id="warp-canvas"></canvas></div>
+    <canvas id="star-canvas"></canvas>
+
+    <div class="ticker-wrapper">
+        <div class="ticker-row"><div class="ticker-move">
+            <span style="margin-right:50px;">VERSAND INNERHALB VON 24 STUNDEN</span>
+            <span style="margin-right:50px;">MADE IN GERMANY</span>
+            <span style="margin-right:50px;">HALL EFFECT & TMR STICK UMBAU</span>
+            <span style="margin-right:50px;">LEXORD® ENGINEERING 2026</span>
+        </div></div>
+    </div>
+
+    <header>
+        <div class="brand-text" translate="no">LEXORD®</div>
+        <div style="display:flex; align-items:center; gap:20px;">
+            <div class="lang-switcher">
+                <div class="lang-btn active" id="btn-de" onclick="changeLang('de')">DE</div>
+                <div class="lang-btn" id="btn-en" onclick="changeLang('en')">EN</div>
+            </div>
+            <div class="burger-menu" onclick="toggleMenu()">
+                <div class="burger-bar"></div><div class="burger-bar"></div><div class="burger-bar"></div>
+            </div>
+        </div>
+    </header>
+
+    <nav id="full-nav">
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="PRODUKTE SUCHEN...">
+        </div>
+        <a href="#hero" class="nav-link" onclick="toggleMenu()">HOME</a>
+        <a href="#shop" class="nav-link" onclick="toggleMenu()">PRODUKTE</a>
+        <a href="#contact" class="nav-link" onclick="toggleMenu()">KONTAKT</a>
+    </nav>
+
+    <main>
+        <section id="hero" style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <img src="IMG_7023.png" class="floating-logo">
+            <h1 translate="no" style="font-family:'Orbitron'; font-size:clamp(1.2rem, 5vw, 2.5rem); margin-top:20px; letter-spacing:8px;">BEYOND LIMITS</h1>
+        </section>
+
+        <section class="feature-section">
+            <div class="feature-image">
+                <img src="https://r.jina.ai/i/6f874288b56d40f4886b4f74d75d691e" alt="Beyond Limits TMR">
+            </div>
+            <div class="feature-content">
+                <span class="badge">BELIEBT</span>
+                <h2>Beyond Limits TMR™ Sticks</h2>
+                <p>Beyond Limits TMR™ Sticks bringen deine Controller-Präzision auf ein neues Level: Dank kontaktloser TMR-Magnettechnik gibt es keinen Stickdrift, dauerhaft genaue Zentrierung und direkte Eingaben ohne Deadzones. Einbauen, spielen, nie wieder Drift – mit 10 Jahren Garantie.</p>
+            </div>
+        </section>
+
+        <section class="feature-section reverse">
+            <div class="feature-image">
+                <img src="https://r.jina.ai/i/0530776566414777b7381be93f538743" alt="Paddles">
+            </div>
+            <div class="feature-content">
+                <span class="badge">PRO</span>
+                <h2>Paddles</h2>
+                <p>Unsere Paddle sind zusätzliche Tasten auf der Rückseite deines Controllers, mit denen du wichtige Funktionen erreichst, ohne die Daumen vom Stick zu nehmen. Erhältlich als 2er- oder 4er-Variante – mit Remap, individueller oder fester Tastenbelegung. So reagierst du schneller.</p>
+            </div>
+        </section>
+
+        <section class="feature-section">
+            <div class="feature-image">
+                <img src="https://r.jina.ai/i/1c97a89f36f94796901804c81f3320c2" alt="Trigger">
+            </div>
+            <div class="feature-content">
+                <span class="badge">KLICK</span>
+                <h2>Trigger Bumper Sytem</h2>
+                <p>Ultraschneller Trigger mit nur 1 mm Auslöseweg und mechanischem Klick-Feedback. Reagiert direkt, fühlt sich präzise an und ist gemacht für ambitioniertes Gaming.</p>
+            </div>
+        </section>
+
+        <section class="grid" id="shop">
+            <div class="card">
+                <h3 style="font-family:'Orbitron';">STICKZANGE PRO</h3>
+                <button class="submit-btn" onclick="window.open('https://ebay.us/m/tnyh7V', '_blank')">EBAY SHOP</button>
+            </div>
+            <div class="card">
+                <h3 style="font-family:'Orbitron';">PADDLE SYSTEM V2</h3>
+                <button class="submit-btn" onclick="window.open('https://ebay.us/m/KFiR3u', '_blank')">EBAY SHOP</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer-copyright">
+        LEXORD® ALL RIGHTS RESERVED
+    </footer>
+
+    <div id="google_translate_element" style="display:none;"></div>
+
+    <script type="text/javascript">
+        // Reparatur der Übersetzungsfunktion
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'de', includedLanguages: 'de,en', autoDisplay: false}, 'google_translate_element');
+        }
+
+        function changeLang(l) {
+            const select = document.querySelector('.goog-te-combo');
+            if (select) {
+                select.value = l;
+                select.dispatchEvent(new Event('change'));
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                document.getElementById('btn-' + l).classList.add('active');
+            } else {
+                setTimeout(() => changeLang(l), 400);
+            }
+        }
+
+        function toggleMenu() { document.getElementById('full-nav').classList.toggle('active'); }
+
+        // Scroll Animationen Setup
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.utils.toArray(".feature-section").forEach(section => {
+            gsap.to(section, {
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top 85%",
+                    toggleActions: "play none none none"
+                },
+                opacity: 1,
+                y: 0,
+                duration: 1.5,
+                ease: "power4.out"
+            });
+        });
+
+        // Intro & Starfield
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                gsap.to("#intro-overlay", { opacity: 0, duration: 1.2, onComplete: () => { 
+                    document.getElementById('intro-overlay').style.display = "none"; 
+                }});
+            }, 1000);
+        });
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

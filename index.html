@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="de" class="notranslate">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="google" content="notranslate">
+    
+    <title translate="no">LEXORD® | High-End Engineering | Beste Scuf Alternative 2026</title>
+    
+    <meta name="description" content="LEXORD® Engineering: Die ultimative Premium Scuf Alternative. High-End Paddle Systeme, Stickzangen & Custom Controller Tuning. Made in Germany.">
+    <meta name="keywords" content="LEXORD, Scuf Alternative, Scuf Controller, PS5 Scuf, Xbox Scuf, Bitro, Bitro Shop, King Controller, AimControllers, Rocket Controller, Lux Controller, Stealth Controller, Gaming Engineering, Paddles nachrüsten, PS5 Paddles, Custom Controller Deutschland, Stick Drift Fix, Hall Effect Sticks, Digital Trigger, Clicky Buttons, Mouse Click Trigger, DualSense Edge Alternative, E-Sport Controller, Pro Controller, Controller Tuning, Stickzange, Löt frei Paddles, Rapid Fire, Drop Shot, Warzone Controller, Fortnite Scuf, Apex Legends Controller, Gaming Gear, High-End Gaming, Controller Umbau Service, Modding, Scuf Reflex, Scuf Instinct, Edge Controller Alternative, Hall Sensor Joysticks, No Drift, Gamer Hardware">
+    
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+    <script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+    <style>
+        :root { --n-blue: #00f2ff; --bg: #000000; --panel: #0a0a0a; --trust-green: #00b67a; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; width: 100%; top: 0 !important; }
+
+        .goog-te-banner-frame, .goog-te-balloon-frame, #goog-gt-tt, .skiptranslate, .goog-te-spinner-pos, .VIpgJd-y662hb-smUcard-WA1sre { display: none !important; }
+        body { top: 0 !important; }
+
+        .lang-switcher { display: flex; gap: 10px; font-family: 'Orbitron'; font-size: 10px; }
+        .lang-btn { cursor: pointer; color: #444; transition: 0.3s; padding: 5px; }
+        .lang-btn.active { color: var(--n-blue); text-shadow: 0 0 8px var(--n-blue); }
+
+        #star-canvas { position: fixed; inset: 0; z-index: -1; background: #000; }
+        #intro-overlay { position: fixed; inset: 0; background: black; z-index: 100000; display: flex; align-items: center; justify-content: center; }
+
+        header { position: fixed; top: 60px; width: 100%; z-index: 10000; padding: 0 6%; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); padding-bottom: 15px; }
+        .brand-text { font-family: 'Orbitron'; font-weight: 900; font-size: 1.2rem; letter-spacing: 4px; }
+        
+        /* LIVE SUCHE */
+        .search-container { position: relative; margin: 0 15px; flex-grow: 1; max-width: 300px; }
+        .search-input { width: 100%; padding: 8px 15px; background: #111; border: 1px solid #222; color: white; font-family: 'Orbitron'; font-size: 10px; border-radius: 20px; outline: none; }
+        #search-results { position: absolute; top: 110%; left: 0; width: 100%; background: #0a0a0a; border: 1px solid #111; border-radius: 8px; display: none; z-index: 11000; max-height: 400px; overflow-y: auto; }
+        .result-item { padding: 10px 15px; font-size: 11px; cursor: pointer; border-bottom: 1px solid #151515; display: flex; align-items: center; gap: 10px; }
+        .result-item:hover { background: #111; color: var(--n-blue); }
+        .result-item img { width: 35px; height: 35px; object-fit: cover; border-radius: 4px; }
+
+        .feature-container { padding: 100px 6%; max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 180px; } 
+        .feature-item { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .feature-reveal { opacity: 0; transform: translateY(50px); transition: 0.8s; }
+        .feature-reveal.active { opacity: 1; transform: translateY(0); }
+
+        .legal-box { border: 1px solid #111; margin-bottom: 10px; background: #050505; border-radius: 5px; }
+        .legal-head { padding: 15px; cursor: pointer; font-family: 'Orbitron'; font-size: 10px; color: #555; display: flex; justify-content: space-between; }
+        .legal-body { max-height: 0; padding: 0 15px; transition: 0.4s; font-size: 11px; color: #777; overflow: hidden; line-height: 1.6; }
+        .legal-box.open .legal-body { max-height: 3000px; padding: 15px; border-top: 1px solid #111; }
+
+        .ticker-wrapper { position: fixed; top: 0; width: 100%; z-index: 9000; font-family: 'Orbitron'; font-size: 9px; pointer-events: none; }
+        .ticker-row { overflow: hidden; white-space: nowrap; padding: 8px 0; border-bottom: 1px solid #111; background: black; }
+        .ticker-move { display: inline-block; animation: ticker-scroll 35s linear infinite; }
+        @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        .burger-menu { cursor: pointer; width: 25px; display: flex; flex-direction: column; gap: 5px; }
+        .burger-bar { height: 1.5px; width: 100%; background: white; }
+        #full-nav { position: fixed; inset: 0; background: black; z-index: 40000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; transform: translateX(100%); transition: 0.5s; }
+        #full-nav.active { transform: translateX(0); }
+        .nav-link { font-family: 'Orbitron'; font-size: 1.3rem; text-decoration: none; color: white; }
+        .submit-btn { width: 100%; padding: 18px; background: white; color: black; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; margin-top: 15px; text-transform: uppercase; }
+        .input-field { width: 100%; padding: 15px; background: #000; border: 1px solid #222; color: white; margin-bottom: 12px; }
+    </style>
+</head>
+<body class="notranslate">
+
+    <div id="intro-overlay"><canvas id="warp-canvas"></canvas></div>
+    <canvas id="star-canvas"></canvas>
+
+    <div class="ticker-wrapper">
+        <div class="ticker-row">
+            <div class="ticker-move">
+                <span style="margin-right:50px;">VERSAND INNERHALB VON 24 STUNDEN</span>
+                <span style="margin-right:50px;">MADE IN GERMANY</span>
+                <span style="margin-right:50px;">TOP BEWERTUNG</span>
+                <span style="margin-right:50px;">HALL EFFECT & TMR STICK UMBAU</span>
+                <span style="margin-right:50px;">SICHERER KAUF ÜBER KÄUFERSCHUTZ</span>
+                <span style="margin-right:50px;">CONTROLLER MODIFIKATIONEN & ZUBEHÖR</span>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <div class="brand-text notranslate" translate="no">LEXORD®</div>
+        
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="SUCHE..." oninput="liveSearch(this.value)">
+            <div id="search-results"></div>
+        </div>
+
+        <div class="nav-controls" style="display:flex; align-items:center; gap:25px;">
+            <div class="lang-switcher">
+                <div class="lang-btn active" id="btn-de" onclick="changeLang('de')">DE</div>
+                <div class="lang-btn" id="btn-en" onclick="changeLang('en')">EN</div>
+            </div>
+            <div class="burger-menu" onclick="toggleMenu()">
+                <div class="burger-bar"></div><div class="burger-bar"></div><div class="burger-bar"></div>
+            </div>
+        </div>
+    </header>
+
+    <nav id="full-nav">
+        <a href="#hero" class="nav-link" onclick="toggleMenu()">HOME</a>
+        <a href="#shop" class="nav-link" onclick="toggleMenu()">PRODUKTE</a>
+        <a href="#contact" class="nav-link" onclick="toggleMenu()">KONTAKT</a>
+    </nav>
+
+    <main>
+        <section id="hero" style="height:90vh; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <img src="IMG_7023.png" style="width:230px; filter: drop-shadow(0 0 20px var(--n-blue));">
+            <h1 class="notranslate" translate="no" style="font-family:'Orbitron'; font-size:2rem; margin-top:20px; letter-spacing:10px;">BEYOND LIMITS</h1>
+        </section>
+
+        <section class="feature-container">
+            <div class="feature-item feature-reveal">
+                <img src="Stick_TMR.png" style="width:100%; border-radius:15px; border:1px solid #111;">
+                <div>
+                    <h2 class="feature-title notranslate" translate="no">BEYOND LIMITS TMR™ STICK</h2>
+                    <p class="feature-desc">Maximale Präzision ohne Drift. Die TMR-Magnettechnik sorgt für lebenslange Genauigkeit und extrem direkte Eingaben für Pro-Gamer.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" style="padding:100px 6%; max-width:800px; margin:0 auto;">
+            <div style="background:var(--panel); padding:40px; border-radius:15px; border:1px solid #111;">
+                <h2 style="font-family:'Orbitron'; margin-bottom:20px;">KONTAKT</h2>
+                <form onsubmit="event.preventDefault();">
+                    <input type="text" placeholder="NAME" class="input-field" required>
+                    <input type="email" placeholder="E-MAIL" class="input-field" required>
+                    <textarea placeholder="DEINE ANFRAGE..." rows="4" class="input-field" required></textarea>
+                    <button type="submit" class="submit-btn">SENDEN</button>
+                </form>
+            </div>
+
+            <div style="margin-top:50px;">
+                <div class="legal-box open">
+                    <div class="legal-head" onclick="this.parentElement.classList.toggle('open')">IMPRESSUM <span>+</span></div>
+                    <div class="legal-body">
+                        <strong>Leon Schulz | LEXORD Engineering</strong><br>
+                        An Der Domsühler Str. 2<br>
+                        19374 Domsühl<br><br>
+                        <strong>Kontakt:</strong><br>
+                        E-Mail: Kontakt@Lexord.de<br><br>
+                        <strong>Umsatzsteuer-Identifikationsnummer:</strong><br>
+                        Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.
+                    </div>
+                </div>
+
+                <div class="legal-box">
+                    <div class="legal-head" onclick="this.parentElement.classList.toggle('open')">DATENSCHUTZERKLÄRUNG <span>+</span></div>
+                    <div class="legal-body">
+                        <strong>1. Datenschutz auf einen Blick</strong><br>
+                        Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen.<br><br>
+                        <strong>2. Datenerfassung auf dieser Website</strong><br>
+                        Die Datenverarbeitung erfolgt durch den Websitebetreiber. Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen (z.B. Kontaktformular), zum anderen automatisch durch unsere IT-Systeme (technische Daten wie Browser oder Uhrzeit).<br><br>
+                        <strong>3. Analyse-Tools</strong><br>
+                        Wir nutzen GoatCounter für datenschutzfreundliche Statistiken ohne Cookies.
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="google_translate_element" style="display:none;"></div>
+
+    <script>
+        const products = [
+            { name: "STICKZANGE PRO", price: "5,95 €", img: "Stickzange.PNG", link: "https://ebay.us/m/tnyh7V" },
+            { name: "PADDLE SYSTEM V2", price: "45,95 €", img: "PADDLE SYSTEM.PNG", link: "https://ebay.us/m/KFiR3u" },
+            { name: "TMR STICK MOD", price: "39,00 €", img: "Stick_TMR.png", link: "https://www.ebay.de/usr/lexord-de" }
+        ];
+
+        function liveSearch(q) {
+            const res = document.getElementById('search-results');
+            if (q.length < 1) { res.style.display = 'none'; return; }
+            const found = products.filter(p => p.name.toLowerCase().includes(q.toLowerCase()));
+            res.innerHTML = '';
+            if (found.length > 0) {
+                found.forEach(p => {
+                    const d = document.createElement('div');
+                    d.className = 'result-item';
+                    d.innerHTML = `<img src="${p.img}"> <div><b class="notranslate">${p.name}</b><br>${p.price}</div>`;
+                    d.onclick = () => window.open(p.link, '_blank');
+                    res.appendChild(d);
+                });
+                res.style.display = 'block';
+            } else { res.style.display = 'none'; }
+        }
+
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'de', includedLanguages: 'en,de', autoDisplay: false}, 'google_translate_element');
+        }
+
+        function changeLang(l) {
+            const s = document.querySelector('.goog-te-combo');
+            if(s) {
+                s.value = l;
+                s.dispatchEvent(new Event('change'));
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                document.getElementById('btn-'+l).classList.add('active');
+            }
+        }
+
+        function toggleMenu() { document.getElementById('full-nav').classList.toggle('active'); }
+
+        const obs = new IntersectionObserver((es) => {
+            es.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); });
+        }, {threshold: 0.1});
+        document.querySelectorAll('.feature-reveal').forEach(el => obs.observe(el));
+
+        // Warp Animation
+        const wC = document.getElementById('warp-canvas'), wX = wC.getContext('2d');
+        function res() { wC.width = window.innerWidth; wC.height = window.innerHeight; }
+        window.onresize = res; res();
+        let p = []; for(let i=0; i<800; i++) p.push({x: Math.random()*wC.width-wC.width/2, y: Math.random()*wC.height-wC.height/2, z: Math.random()*wC.width});
+        function anim() { wX.fillStyle = "black"; wX.fillRect(0,0,wC.width, wC.height); wX.fillStyle = "white"; p.forEach(s => { s.z -= 15; if(s.z<=0) s.z=wC.width; let ox=s.x/s.z*wC.width+wC.width/2, oy=s.y/s.z*wC.width+wC.height/2; wX.fillRect(ox,oy,2,2); }); requestAnimationFrame(anim); }
+        anim();
+        window.addEventListener('load', () => { setTimeout(() => { gsap.to("#intro-overlay", { opacity: 0, duration: 1.2, onComplete: () => { document.getElementById('intro-overlay').style.display = "none"; }}); }, 1500); });
+    </script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

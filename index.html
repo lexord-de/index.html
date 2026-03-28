@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>LEXORD® | High-End Scuf Umbau & TMR™ Engineering</title>
+    <meta name="description" content="LEXORD®: Die Nummer 1 für TMR™ Hall-Effect Sticks & Pro-Controller Mods. 0% Stick-Drift. Handgefertigt in Deutschland für E-Sportler.">
+    <meta name="keywords" content="Scuf Umbau, TMR Sticks, Hall Effect Controller, PS5 Modding, Stick Drift Fix, Gaming Gear Germany">
+    
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@200;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+
+    <style>
+        :root { 
+            --accent: #00f2ff; 
+            --accent-glow: rgba(0, 242, 255, 0.4);
+            --bg: #000000; 
+            --glass: rgba(12, 12, 12, 0.85);
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+        /* --- DYNAMIC BACKGROUND --- */
+        #star-field { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+        .glow-orb { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100vw; height: 60vh; background: radial-gradient(circle at 50% 0%, rgba(0, 242, 255, 0.07) 0%, transparent 70%); z-index: -1; }
+
+        /* --- SMART HEADER (MOBILE OPTIMIZED) --- */
+        .top-bar { background: #000; border-bottom: 1px solid var(--border); padding: 8px; font-family: 'Orbitron'; font-size: 8px; text-align: center; letter-spacing: 2px; color: var(--accent); position: fixed; width: 100%; top: 0; z-index: 10002; }
+        
+        header { 
+            position: fixed; top: 35px; width: 100%; height: 70px; z-index: 10001; 
+            background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--border); padding: 0 6%;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-family: 'Orbitron'; font-weight: 900; font-size: 1.4rem; letter-spacing: 6px; text-decoration: none; color: white; }
+        
+        nav { display: flex; gap: 30px; }
+        nav a { font-family: 'Orbitron'; font-size: 9px; color: #666; text-decoration: none; letter-spacing: 2px; transition: 0.3s; font-weight: 700; }
+        nav a:hover { color: var(--accent); }
+
+        .cart-btn { position: relative; cursor: pointer; display: flex; align-items: center; }
+        .cart-dot { position: absolute; -5px; right: -8px; background: var(--accent); color: #000; font-size: 9px; font-weight: 900; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px var(--accent-glow); }
+
+        /* --- HERO (PC & MOBILE) --- */
+        .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 120px 20px 60px; }
+        .hero h1 { font-family: 'Orbitron'; font-size: clamp(2.2rem, 9vw, 6.5rem); font-weight: 900; line-height: 0.95; margin-bottom: 20px; letter-spacing: -2px; }
+        .hero p { max-width: 500px; color: #555; font-size: 1rem; margin-bottom: 40px; font-weight: 400; }
+        .hero-img { width: 100%; max-width: 950px; filter: drop-shadow(0 20px 60px rgba(0,0,0,1)); transition: 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .hero-img:hover { transform: scale(1.02); }
+
+        /* --- GRID & CARDS --- */
+        .section { padding: 80px 6%; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
+
+        .p-card { 
+            background: #0a0a0a; border: 1px solid var(--border); border-radius: 24px; 
+            padding: 35px; transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); position: relative;
+        }
+        .p-card:hover { border-color: var(--accent); transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .p-card img { width: 100%; height: 280px; object-fit: contain; margin-bottom: 25px; }
+        
+        .p-badge { font-family: 'Orbitron'; font-size: 9px; color: var(--accent); letter-spacing: 3px; margin-bottom: 10px; display: block; }
+        .p-title { font-family: 'Orbitron'; font-size: 1.2rem; margin-bottom: 10px; }
+        .p-price { font-size: 1.5rem; font-weight: 800; margin-bottom: 25px; color: white; display: block; }
+
+        .btn-main { 
+            width: 100%; padding: 18px; background: white; color: black; border: none; 
+            font-family: 'Orbitron'; font-weight: 900; font-size: 10px; cursor: pointer; 
+            border-radius: 14px; transition: 0.3s; letter-spacing: 2px;
+        }
+        .btn-main:hover { background: var(--accent); box-shadow: 0 0 25px var(--accent-glow); }
+
+        /* --- PREMIUM SIDE CART --- */
+        #cart-sidebar { 
+            position: fixed; right: -100%; top: 0; width: 450px; height: 100%; 
+            background: #080808; border-left: 1px solid var(--border); z-index: 20000; 
+            transition: 0.6s cubic-bezier(0.85, 0, 0.15, 1); padding: 40px;
+            display: flex; flex-direction: column;
+        }
+        #cart-sidebar.active { right: 0; }
+        .cart-items-container { flex: 1; overflow-y: auto; margin: 30px 0; }
+
+        /* --- FOOTER --- */
+        footer { background: #030303; border-top: 1px solid var(--border); padding: 80px 6% 30px; }
+        .f-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 50px; }
+        .f-col h4 { font-family: 'Orbitron'; font-size: 11px; color: #fff; margin-bottom: 25px; letter-spacing: 3px; }
+        .f-col a { display: block; color: #444; text-decoration: none; font-size: 13px; margin-bottom: 12px; transition: 0.3s; cursor: pointer; }
+        .f-col a:hover { color: var(--accent); }
+
+        /* --- MODAL (LEGAL) --- */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 50000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-box { background: #0d0d0d; border: 1px solid var(--border); padding: 40px; border-radius: 25px; max-width: 800px; width: 100%; max-height: 80vh; overflow-y: auto; }
+        .modal.active { display: flex; }
+
+        /* --- RESPONSIVE ADAPTION --- */
+        @media (max-width: 768px) {
+            nav { display: none; }
+            #cart-sidebar { width: 100%; padding: 30px; }
+            .hero h1 { font-size: 2.8rem; }
+            header { height: 60px; padding: 0 20px; }
+            .section { padding: 60px 20px; }
+            .p-card { padding: 25px; }
+        }
+
+        .reveal { opacity: 0; transform: translateY(30px); }
+    </style>
+</head>
+<body>
+
+    <canvas id="star-field"></canvas>
+    <div class="glow-orb"></div>
+
+    <div class="top-bar">FREE WORLDWIDE SHIPPING ABOVE 200€ | ENGINEERED IN GERMANY</div>
+
+    <header>
+        <a href="#" class="logo">LEXORD</a>
+        <nav>
+            <a href="#hero">HOME</a>
+            <a href="#shop">SHOP</a>
+            <a href="#umbau">UMBAU</a>
+            <a href="#footer">LEGAL</a>
+        </nav>
+        <div class="cart-btn" onclick="toggleCart()">
+            <svg width="24" height="24" fill="none" stroke="white" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"></path></svg>
+            <div class="cart-dot" id="cart-count">0</div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" id="hero">
+            <div class="reveal">
+                <span style="font-family:'Orbitron'; color:var(--accent); font-size:10px; letter-spacing:5px;">LEXORD® PRECISION INSTRUMENTS</span>
+                <h1>UNRIVALED<br>CONTROL.</h1>
+                <p>TMR™ Hall-Effect Technologie trifft auf deutsches Engineering. Kein Verschleiß. Keine Grenzen.</p>
+                <button class="btn-main" style="max-width:250px;" onclick="location.href='#shop'">JETZT KONFIGURIEREN</button>
+            </div>
+            <img src="82AAE1DF-9784-4FAB-8264-A4C2E7A1BEC0.png" class="hero-img reveal">
+        </section>
+
+        <section class="section" id="shop">
+            <div class="grid">
+                <div class="p-card reveal">
+                    <span class="p-badge">NEW: TMR SERIES</span>
+                    <img src="Photoroom_20260305_123705.png" alt="LXRD Performance">
+                    <h3 class="p-title">LXRD PERFORMANCE</h3>
+                    <span class="p-price">240,00 €</span>
+                    <button class="btn-main" onclick="addToCart('LXRD PERFORMANCE', 240, 'Photoroom_20260305_123705.png')">IN DEN WARENKORB</button>
+                </div>
+                <div class="p-card reveal" id="umbau">
+                    <span class="p-badge">CUSTOM SERVICE</span>
+                    <div style="height:280px; display:flex; align-items:center; justify-content:center;">
+                        <svg width="80" height="80" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5" viewBox="0 0 24 24"><path d="M11.423 20.11L2.682 14.15a2.007 2.007 0 010-3.321l8.741-5.96a2 2 0 012.31 0l8.741 5.96a2.007 2.007 0 010 3.321l-8.741 5.96a2 2 0 01-2.31 0z"></path></svg>
+                    </div>
+                    <h3 class="p-title">EIGENER UMBAU</h3>
+                    <span class="p-price">Ab 89,00 €</span>
+                    <button class="btn-main" style="background:transparent; border:1px solid #fff; color:#fff;">DETAILS ANSEHEN</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="cart-sidebar">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2 style="font-family:'Orbitron'; font-size:14px; letter-spacing:3px;">CART</h2>
+            <span onclick="toggleCart()" style="cursor:pointer; font-size:24px;">✕</span>
+        </div>
+        <div class="cart-items-container" id="cart-list"></div>
+        <div style="border-top:1px solid #111; padding-top:30px;">
+            <div style="display:flex; justify-content:space-between; font-family:'Orbitron'; margin-bottom:25px;">
+                <span>TOTAL</span><span id="total-price" style="color:var(--accent);">0,00 €</span>
+            </div>
+            <button class="btn-main" style="background:var(--accent);">SECURE CHECKOUT</button>
+            <p style="text-align:center; font-size:9px; color:#444; margin-top:15px;">§ 19 UStG Kleinunternehmer | inkl. Versand</p>
+        </div>
+    </div>
+
+    <footer id="footer">
+        <div class="f-grid">
+            <div class="f-col">
+                <div class="logo" style="font-size:1rem; margin-bottom:20px;">LEXORD</div>
+                <p style="font-size:12px; color:#333; line-height:1.6;">Innovation in Gaming.<br>Precision in Engineering.</p>
+            </div>
+            <div class="f-col">
+                <h4>NAVIGATION</h4>
+                <a href="#hero">Home</a>
+                <a href="#shop">Store</a>
+                <a href="#umbau">Service</a>
+            </div>
+            <div class="f-col">
+                <h4>RECHTLICHES</h4>
+                <a onclick="showModal('impressum')">Impressum</a>
+                <a onclick="showModal('datenschutz')">Datenschutz</a>
+                <a onclick="showModal('agb')">AGB</a>
+                <a onclick="showModal('widerruf')">Widerruf</a>
+            </div>
+        </div>
+        <div style="text-align:center; padding-top:40px; border-top:1px solid #111; font-size:10px; color:#222; font-family:'Orbitron'; letter-spacing:1px;">
+            © 2026 LEXORD® PRECISION | MADE IN GERMANY
+        </div>
+    </footer>
+
+    <div id="legal-modal" class="modal" onclick="if(event.target==this)this.classList.remove('active')">
+        <div class="modal-box">
+            <span style="float:right; cursor:pointer;" onclick="document.getElementById('legal-modal').classList.remove('active')">✕</span>
+            <div id="legal-content" style="font-size:13px; line-height:1.7; color:#ccc;"></div>
+        </div>
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- ENTRANCE ---
+        window.onload = () => {
+            gsap.utils.toArray(".reveal").forEach(el => {
+                gsap.to(el, { scrollTrigger: el, opacity: 1, y: 0, duration: 1.2, ease: "power4.out" });
+            });
+        };
+
+        // --- BACKGROUND STAR ENGINE ---
+        const canvas = document.getElementById('star-field'), ctx = canvas.getContext('2d');
+        let dots = [];
+        function initStars() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            dots = [];
+            for(let i=0; i<120; i++) dots.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*1, v:Math.random()*0.2});
+        }
+        function drawStars() {
+            ctx.clearRect(0,0,canvas.width, canvas.height); ctx.fillStyle="rgba(255,255,255,0.15)";
+            dots.forEach(d => { ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, 7); ctx.fill(); d.y-=d.v; if(d.y<0) d.y=canvas.height; });
+            requestAnimationFrame(drawStars);
+        }
+        window.addEventListener('resize', initStars); initStars(); drawStars();
+
+        // --- CART LOGIC ---
+        let cart = [];
+        const toggleCart = () => document.getElementById('cart-sidebar').classList.toggle('active');
+        
+        function addToCart(name, price, img) {
+            cart.push({name, price, img});
+            updateUI();
+            if(!document.getElementById('cart-sidebar').classList.contains('active')) toggleCart();
+        }
+
+        function updateUI() {
+            document.getElementById('cart-count').innerText = cart.length;
+            const list = document.getElementById('cart-list');
+            let total = 0; list.innerHTML = "";
+            cart.forEach((item, i) => {
+                total += item.price;
+                list.innerHTML += `
+                    <div style="display:flex; gap:20px; align-items:center; margin-bottom:20px; background:rgba(255,255,255,0.03); padding:15px; border-radius:15px;">
+                        <img src="${item.img}" width="60">
+                        <div style="flex:1;">
+                            <p style="font-family:'Orbitron'; font-size:10px;">${item.name}</p>
+                            <p style="color:var(--accent); font-weight:800;">${item.price.toFixed(2)} €</p>
+                        </div>
+                        <span onclick="cart.splice(${i},1);updateUI()" style="cursor:pointer; opacity:0.2;">✕</span>
+                    </div>`;
+            });
+            document.getElementById('total-price').innerText = total.toFixed(2).replace('.', ',') + " €";
+        }
+
+        // --- LEGAL SYSTEM ---
+        const legalData = {
+            impressum: "<h2>Impressum</h2><br>LEXORD Engineering<br>Inhaber: [DEIN NAME]<br>Strasse Hausnr.<br>PLZ Ort<br><br>info@lexord.de<br>Steuernummer: [DEINE NR]<br>Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.",
+            datenschutz: "<h2>Datenschutz</h2><br>Sicherheit hat höchste Priorität. Ihre Daten werden nur zur Bestellabwicklung genutzt und SSL-verschlüsselt übertragen. Wir nutzen keine externen Analyse-Tools ohne Ihre Zustimmung.",
+            agb: "<h2>AGB</h2><br>1. Geltung: Diese Bedingungen gelten für alle Bestellungen.<br>2. Zahlung: Vorkasse, PayPal oder Kreditkarte.<br>3. Gewährleistung: Es gelten die gesetzlichen Bestimmungen.",
+            widerruf: "<h2>Widerrufsbelehrung</h2><br>Sie haben 14 Tage Widerrufsrecht.<br><br><b>WICHTIG:</b> Das Widerrufsrecht besteht NICHT bei Waren, die nach Kundenspezifikation angefertigt werden (§ 312g Abs. 2 Nr. 1 BGB). Da LEXORD-Controller individuell nach Ihren technischen Wünschen umgebaut werden (Custom Modding), ist ein Widerruf nach Beginn der Produktion ausgeschlossen."
+        };
+
+        function showModal(type) {
+            document.getElementById('legal-content').innerHTML = legalData[type];
+            document.getElementById('legal-modal').classList.add('active');
+        }
+    </script>
+</body>
+</html>

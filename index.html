@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title translate="no">LEXORD® | High-End Engineering</title>
+    
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+    
+    <script src="https://www.paypal.com/sdk/js?client-id=test&currency=EUR&components=buttons"></script>
+
+    <style>
+        :root { --n-blue: #00f2ff; --bg: #000000; --panel: #0a0a0a; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; width: 100%; }
+
+        /* --- UI ELEMENTS --- */
+        #side-cart { position: fixed; right: -100%; top: 0; width: 400px; height: 100%; background: rgba(5,5,5,0.98); backdrop-filter: blur(25px); border-left: 1px solid var(--n-blue); z-index: 50000; transition: 0.6s cubic-bezier(0.7, 0, 0.3, 1); padding: 40px; display: flex; flex-direction: column; }
+        #side-cart.active { right: 0; }
+        
+        #checkout-overlay { position: fixed; inset: 0; background: #000; z-index: 60000; display: none; padding: 20px; overflow-y: auto; }
+        
+        .input-field { width: 100%; padding: 15px; background: #080808; border: 1px solid #1a1a1a; color: white; margin-bottom: 12px; font-family: 'Inter'; border-radius: 4px; outline: none; }
+        .input-field:focus { border-color: var(--n-blue); }
+
+        /* --- DESIGN CORE --- */
+        #star-canvas { position: fixed; inset: 0; z-index: -1; background: #000; }
+        #intro-overlay { position: fixed; inset: 0; background: black; z-index: 100000; display: flex; align-items: center; justify-content: center; }
+        .floating-logo { width: 230px; filter: drop-shadow(0 0 20px var(--n-blue)); animation: floatLogo 4s ease-in-out infinite; }
+        @keyframes floatLogo { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+
+        header { position: fixed; top: 80px; width: 100%; z-index: 10000; padding: 0 6%; display: flex; justify-content: space-between; align-items: center; }
+        .brand-text { font-family: 'Orbitron'; font-weight: 900; font-size: 1.2rem; letter-spacing: 4px; }
+        
+        .cart-btn { cursor: pointer; position: relative; }
+        #cart-count { position: absolute; top: -8px; right: -12px; background: var(--n-blue); color: #000; font-size: 10px; font-weight: 900; padding: 2px 6px; border-radius: 10px; font-family: 'Orbitron'; }
+
+        .ticker-wrapper { position: fixed; top: 0; width: 100%; z-index: 9000; font-family: 'Orbitron'; font-size: 9px; background: black; border-bottom: 1px solid #111; padding: 8px 0; }
+        .ticker-move { display: inline-block; animation: ticker-scroll 35s linear infinite; white-space: nowrap; }
+        @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        .swiper { width: 100%; max-width: 500px; height: 520px; padding-bottom: 50px; }
+        .product-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.8s; transform-style: preserve-3d; cursor: pointer; }
+        .swiper-slide:hover .product-card-inner { transform: rotateY(180deg); }
+        .card-front, .card-back { position: absolute; inset: 0; backface-visibility: hidden; background: #080808; border-radius: 25px; padding: 30px; border: 1px solid #111; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .card-back { transform: rotateY(180deg); border-color: var(--n-blue); background: #050505; }
+        
+        .price-tag { font-family: 'Orbitron'; color: var(--n-blue); font-size: 18px; margin: 10px 0; }
+        .submit-btn { width: 100%; padding: 18px; background: white; color: black; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; border-radius: 4px; transition: 0.3s; }
+        .submit-btn:hover { background: var(--n-blue); box-shadow: 0 0 20px var(--n-blue); }
+
+        .reveal { opacity: 0; transform: translateY(50px); }
+        .feature-box { padding: 100px 6%; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; max-width: 1300px; margin: 0 auto; }
+        @media (max-width: 850px) { .feature-box { grid-template-columns: 1fr; text-align: center; } #side-cart { width: 100%; } }
+
+        .placeholder-box { border: 2px dashed #111; border-radius: 20px; height: 350px; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+    </style>
+</head>
+<body>
+
+    <div id="intro-overlay"><canvas id="warp-canvas"></canvas><img src="IMG_7023.png" class="floating-logo" style="position:absolute;"></div>
+    <canvas id="star-canvas"></canvas>
+
+    <div id="side-cart">
+        <div style="display:flex; justify-content:space-between; margin-bottom:40px;">
+            <span style="font-family:'Orbitron'; font-size:14px; letter-spacing:2px;">WARENKORB</span>
+            <span onclick="toggleCart()" style="cursor:pointer; opacity:0.5; font-size:12px;">✕</span>
+        </div>
+        <div id="cart-items" style="flex-grow:1; overflow-y:auto;"></div>
+        <div style="border-top:1px solid #222; padding-top:25px;">
+            <div style="display:flex; justify-content:space-between; font-family:'Orbitron'; margin-bottom:25px;">
+                <span>TOTAL</span>
+                <span id="total-price" style="color:var(--n-blue);">0,00 €</span>
+            </div>
+            <button class="submit-btn" onclick="openCheckout()">CHECKOUT</button>
+        </div>
+    </div>
+
+    <div id="checkout-overlay">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 40px;">
+            <h2 style="font-family:'Orbitron'; color:var(--n-blue); font-size: 22px; letter-spacing: 2px;">CHECKOUT</h2>
+            <span onclick="closeCheckout()" style="cursor:pointer; font-family:'Inter'; font-size:10px; color:#555; letter-spacing:1px;">SCHLIESSEN</span>
+        </div>
+
+        <div id="co-item-preview" style="border-bottom: 1px solid #111; padding-bottom: 20px; margin-bottom: 30px;"></div>
+
+        <div style="max-width: 500px; margin: 0 auto;">
+            <h3 style="font-family:'Orbitron'; font-size:12px; margin-bottom:15px; letter-spacing:1px;">VERSANDADRESSE</h3>
+            <input type="text" placeholder="NAME" class="input-field">
+            <input type="text" placeholder="STRASSE & NR" class="input-field">
+            <div style="display:flex; gap:10px;">
+                <input type="text" placeholder="PLZ" class="input-field" style="width:35%;">
+                <input type="text" placeholder="STADT" class="input-field">
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin: 40px 0; font-family:'Orbitron';">
+                <span style="font-size: 18px; letter-spacing: 2px;">TOTAL</span>
+                <span id="co-total" style="color:var(--n-blue); font-size: 20px;">0,00 €</span>
+            </div>
+
+            <div id="paypal-button-container" style="margin-bottom: 15px;"></div>
+            
+            <div style="text-align: center; margin-bottom: 30px;">
+                <span style="font-style: italic; color: #444; font-size: 12px;">Abgewickelt durch </span>
+                <span style="color: #003087; font-weight: bold; font-size: 14px;">Pay</span><span style="color: #009cde; font-weight: bold; font-size: 14px;">Pal</span>
+            </div>
+
+            <button class="submit-btn" style="background: transparent; border: 1px solid #1a1a1a; color: white; letter-spacing: 1px; font-size: 12px;" onclick="alert('Bankdaten folgen per Mail')">
+                BANKÜBERWEISUNG
+            </button>
+        </div>
+    </div>
+
+    <div class="ticker-wrapper">
+        <div class="ticker-move">
+            <span style="margin-right:60px;">MADE IN GERMANY</span>
+            <span style="margin-right:60px;">TMR™ MAGNET STICKS</span>
+            <span style="margin-right:60px;">NO STICK DRIFT</span>
+            <span style="margin-right:60px;">HALL EFFECT TECHNOLOGY</span>
+        </div>
+    </div>
+
+    <header>
+        <div class="brand-text">LEXORD®</div>
+        <div class="cart-btn" onclick="toggleCart()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+            <div id="cart-count">0</div>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" style="min-height:90vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding-top: 100px;">
+            <img src="IMG_7023.png" class="floating-logo">
+            <h1 style="font-family:'Orbitron'; font-size:clamp(1.5rem, 6vw, 3rem); margin-top:30px; letter-spacing:10px;">LEXORD</h1>
+            <img src="82AAE1DF-9784-4FAB-8264-A4C2E7A1BEC0.png" style="width:90%; max-width:900px; margin-top:60px; border-radius:20px; border:1px solid rgba(0,242,255,0.2);">
+        </section>
+
+        <section class="reveal" style="padding:100px 0;">
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="product-card-inner">
+                            <div class="card-front">
+                                <img src="Photoroom_20260305_123705.png" style="width:100%; height:250px; object-fit:contain;">
+                                <div style="font-family:'Orbitron'; font-size:11px; letter-spacing:2px;">LXRD PERFORMANCE</div>
+                                <div class="price-tag">240,00 €</div>
+                            </div>
+                            <div class="card-back">
+                                <button class="submit-btn" onclick="addItem('LXRD PERFORMANCE', 240, 'Photoroom_20260305_123705.png')">IN DEN WARENKORB</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="product-card-inner">
+                            <div class="card-front">
+                                <img src="Photoroom_20260305_140346.png" style="width:100%; height:250px; object-fit:contain;">
+                                <div style="font-family:'Orbitron'; font-size:11px; letter-spacing:2px;">LXRD PLUS</div>
+                                <div class="price-tag">180,00 €</div>
+                            </div>
+                            <div class="card-back">
+                                <button class="submit-btn" onclick="addItem('LXRD PLUS', 180, 'Photoroom_20260305_140346.png')">IN DEN WARENKORB</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="feature-box reveal">
+            <div style="text-align: center; grid-column: 1 / -1;">
+                <img src="IMG_9062.jpeg" style="width:100%; max-width:700px; border-radius:20px; border:1px solid #111;">
+                <h2 style="font-family:'Orbitron'; color:var(--n-blue); margin-top:40px;">TMR™ MAGNET STICKS</h2>
+            </div>
+        </section>
+
+        <section class="feature-box reveal">
+            <img src="IMG_9052.jpeg" style="width:100%; border-radius:20px;">
+            <div>
+                <h2 style="font-family:'Orbitron'; color:var(--n-blue); margin-bottom:20px;">PADDLE V2</h2>
+                <p style="color:#666; font-size:14px;">Ergonomische Präzision für kompetitives Gaming.</p>
+            </div>
+        </section>
+
+        <section class="reveal" style="padding:100px 6%; max-width:1300px; margin: 0 auto;">
+            <h2 style="font-family:'Orbitron'; font-size:1rem; text-align:center; letter-spacing:4px; margin-bottom:50px;">NEXT GENERATION</h2>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
+                <div class="placeholder-box"><div style="font-size:30px; opacity:0.1;">?</div></div>
+                <div class="placeholder-box"><div style="font-size:30px; opacity:0.1;">?</div></div>
+            </div>
+        </section>
+
+        <footer style="padding:100px 6%; text-align:center; border-top:1px solid #111;">
+            <div class="brand-text" style="font-size:0.8rem; opacity:0.5;">LEXORD® ALL RIGHTS RESERVED</div>
+        </footer>
+    </main>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+        let cart = [];
+
+        new Swiper(".mySwiper", { effect: "coverflow", grabCursor: true, centeredSlides: true, slidesPerView: "auto", coverflowEffect: { rotate: 20, stretch: 0, depth: 100, modifier: 1, slideShadows: false } });
+
+        function toggleCart() { document.getElementById('side-cart').classList.toggle('active'); }
+        
+        function addItem(name, price, img) {
+            cart.push({name, price, img});
+            updateUI();
+            toggleCart();
+        }
+
+        function updateUI() {
+            const container = document.getElementById('cart-items');
+            const total = document.getElementById('total-price');
+            const count = document.getElementById('cart-count');
+            container.innerHTML = "";
+            let sum = 0;
+            cart.forEach((item, i) => {
+                sum += item.price;
+                container.innerHTML += `<div style="display:flex; gap:15px; margin-bottom:20px; align-items:center; background:#0a0a0a; padding:15px; border-radius:12px;">
+                    <img src="${item.img}" style="width:50px; height:50px; object-fit:contain;">
+                    <div style="flex-grow:1;"><div style="font-family:'Orbitron'; font-size:10px;">${item.name}</div><div style="color:var(--n-blue); font-size:12px;">${item.price.toFixed(2)} €</div></div>
+                    <span onclick="cart.splice(${i},1); updateUI();" style="cursor:pointer; opacity:0.3;">✕</span>
+                </div>`;
+            });
+            count.innerText = cart.length;
+            total.innerText = sum.toFixed(2).replace('.', ',') + " €";
+        }
+
+        function openCheckout() {
+            if(cart.length === 0) return;
+            document.getElementById('checkout-overlay').style.display = "block";
+            const preview = document.getElementById('co-item-preview');
+            const coTotal = document.getElementById('co-total');
+            preview.innerHTML = "";
+            let sum = 0;
+            cart.forEach(item => {
+                sum += item.price;
+                preview.innerHTML += `
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <img src="${item.img}" style="width:40px; height:40px; object-fit:contain;">
+                            <div><div style="font-size:10px; font-family:'Orbitron';">${item.name}</div><div style="color:var(--n-blue); font-size:11px;">${item.price.toFixed(2)} €</div></div>
+                        </div>
+                    </div>`;
+            });
+            coTotal.innerText = sum.toFixed(2).replace('.', ',') + " €";
+            initPayPal(sum);
+        }
+
+        function closeCheckout() { document.getElementById('checkout-overlay').style.display = "none"; }
+
+        function initPayPal(amount) {
+            document.getElementById('paypal-button-container').innerHTML = "";
+            paypal.Buttons({
+                style: { layout: 'vertical', color: 'blue', shape: 'rect', label: 'paypal' },
+                createOrder: (data, actions) => { return actions.order.create({ purchase_units: [{ amount: { value: amount.toFixed(2) } }] }); },
+                onApprove: (data, actions) => { return actions.order.capture().then(() => { alert('Zahlung erfolgreich!'); }); }
+            }).render('#paypal-button-container');
+        }
+
+        // WARP & STARS
+        const wC = document.getElementById('warp-canvas'), wX = wC.getContext('2d');
+        function rW() { wC.width = window.innerWidth; wC.height = window.innerHeight; }
+        window.addEventListener('resize', rW); rW();
+        let pts = []; for(let i=0; i<800; i++) pts.push({x: Math.random()*wC.width-wC.width/2, y: Math.random()*wC.height-wC.height/2, z: Math.random()*wC.width});
+        function aW() { wX.fillStyle = "black"; wX.fillRect(0,0,wC.width, wC.height); wX.fillStyle = "white"; pts.forEach(s => { s.z -= 15; if(s.z<=0) s.z=wC.width; let ox=s.x/s.z*wC.width+wC.width/2, oy=s.y/s.z*wC.width+wC.height/2; wX.fillRect(ox,oy,1.5,1.5); }); requestAnimationFrame(aW); }
+        aW();
+
+        window.addEventListener('load', () => { 
+            setTimeout(() => { gsap.to("#intro-overlay", { opacity: 0, duration: 1.5, onComplete: () => { 
+                document.getElementById('intro-overlay').style.display = "none"; 
+                gsap.utils.toArray(".reveal").forEach(el => { gsap.to(el, { scrollTrigger: { trigger: el, start: "top 90%" }, opacity: 1, y: 0, duration: 1.2 }); });
+            }}); }, 2500); 
+        });
+
+        const sc = document.getElementById('star-canvas'), sx = sc.getContext('2d'); 
+        function rS() { sc.width = window.innerWidth; sc.height = window.innerHeight; }
+        window.addEventListener('resize', rS); rS();
+        let st = []; for(let i=0; i<120; i++) st.push({x:Math.random()*sc.width, y:Math.random()*sc.height, v:Math.random()*0.2});
+        function dS() { sx.clearRect(0,0,sc.width, sc.height); sx.fillStyle="white"; st.forEach(s => { s.y -= s.v; if(s.y<0) s.y=sc.height; sx.fillRect(s.x,s.y,1,1); }); requestAnimationFrame(dS); }
+        dS();
+    </script>
+</body>
+</html>

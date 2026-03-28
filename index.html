@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title translate="no">LEXORD® | High-End Engineering</title>
+    
+    <meta name="description" content="LEXORD® Engineering: Die ultimative Premium Scuf Alternative.">
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+
+    <style>
+        :root { --n-blue: #00f2ff; --n-purple: #bc13fe; --bg: #000000; --panel: #0a0a0a; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+        /* --- NEU: SHOPIFY STYLE CHECKOUT --- */
+        #checkout-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+            z-index: 99999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px);
+        }
+        .checkout-window {
+            background: #0d0d0d; border: 1px solid #222; width: 95%; max-width: 500px;
+            padding: 30px; border-radius: 15px; font-family: 'Inter', sans-serif;
+        }
+        .checkout-title { font-family: 'Orbitron'; color: var(--n-blue); margin-bottom: 20px; font-size: 18px; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .payment-method {
+            border: 1px solid #333; padding: 15px; border-radius: 8px; margin-bottom: 10px;
+            cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: 0.3s;
+        }
+        .payment-method:hover { border-color: var(--n-blue); background: rgba(0,242,255,0.05); }
+        .payment-method.active { border-color: var(--n-blue); background: rgba(0,242,255,0.1); }
+        .pay-icon { height: 25px; filter: grayscale(1) invert(1); }
+        .active .pay-icon { filter: none; }
+        .buy-now-btn { width: 100%; background: white; color: black; border: none; padding: 15px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; border-radius: 5px; margin-top: 20px; }
+        
+        /* --- PRODUKTBESCHREIBUNG STYLE (Power-Controller Look) --- */
+        .desc-box { background: #050505; border: 1px solid #111; border-radius: 10px; padding: 15px; margin-top: 15px; text-align: left; }
+        .desc-item { font-size: 11px; color: #888; margin-bottom: 5px; display: flex; align-items: center; }
+        .desc-item::before { content: '✓'; color: var(--n-blue); margin-right: 8px; font-weight: bold; }
+
+        /* Deine originalen Animationen & Header beibehalten */
+        header { position: fixed; top: 40px; width: 100%; z-index: 10000; padding: 0 6%; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); height: 70px; }
+        .brand-text { font-family: 'Orbitron'; font-weight: 900; font-size: 1.2rem; letter-spacing: 4px; }
+        #star-canvas { position: fixed; inset: 0; z-index: -1; background: #000; }
+        #intro-overlay { position: fixed; inset: 0; background: black; z-index: 100000; display: flex; align-items: center; justify-content: center; }
+        
+        /* Deine Grid-Strukturen & Swiper-Karten */
+        .swiper { width: 100%; max-width: 500px; padding: 50px 0; }
+        .card-front, .card-back { background: #080808; border-radius: 20px; padding: 25px; border: 1px solid #111; }
+        .price-tag { color: var(--n-blue); font-family: 'Orbitron'; font-size: 20px; margin: 10px 0; }
+        .config-img { width: 100%; height: 220px; object-fit: contain; }
+
+        .submit-btn { width: 100%; padding: 15px; background: white; color: black; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; transition: 0.3s; }
+        .submit-btn:hover { background: var(--n-blue); }
+
+        /* Ticker & Nav beibehalten */
+        .ticker-wrapper { position: fixed; top: 0; width: 100%; z-index: 11000; font-family: 'Orbitron'; font-size: 9px; background: black; border-bottom: 1px solid #111; padding: 8px 0; }
+        .ticker-move { display: inline-block; animation: ticker-scroll 35s linear infinite; white-space: nowrap; }
+        @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    </style>
+</head>
+<body class="notranslate">
+
+    <div id="intro-overlay"><canvas id="warp-canvas"></canvas></div>
+    <canvas id="star-canvas"></canvas>
+
+    <div id="checkout-overlay">
+        <div class="checkout-window">
+            <div style="text-align:right; cursor:pointer; color:#555;" onclick="closeCheckout()">SCHLIESSEN ✕</div>
+            <div class="checkout-title">SICHERER CHECKOUT</div>
+            
+            <div id="checkout-product-info" style="margin-bottom: 20px;">
+                <h4 id="check-name" style="font-family:'Orbitron';">PRODUKT NAME</h4>
+                <p id="check-price" style="color:var(--n-blue); font-weight:bold;">0,00 €</p>
+            </div>
+
+            <div class="payment-method" id="pay-paypal" onclick="setPayment('paypal')">
+                <span>PayPal (Käuferschutz)</span>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" class="pay-icon" style="filter:none;">
+            </div>
+
+            <div class="payment-method" id="pay-bank" onclick="setPayment('bank')">
+                <span>Banküberweisung</span>
+                <img src="https://cdn-icons-png.flaticon.com/512/2830/2830284.png" class="pay-icon">
+            </div>
+
+            <div style="font-size:10px; color:#555; margin-top:15px;">
+                * Versand erfolgt versichert über DHL innerhalb von 24h nach Zahlungseingang.
+            </div>
+
+            <button class="buy-now-btn" onclick="executePurchase()">JETZT BEZAHLEN</button>
+        </div>
+    </div>
+
+    <div class="ticker-wrapper">
+        <div class="ticker-move">
+            <span style="margin-right:50px;">VERSAND INNERHALB VON 24 STUNDEN</span>
+            <span style="margin-right:50px;">MADE IN GERMANY</span>
+            <span style="margin-right:50px;">TOP BEWERTUNG</span>
+            <span style="margin-right:50px;">HALL EFFECT & TMR STICK UMBAU</span>
+        </div>
+    </div>
+
+    <header>
+        <div class="brand-text">LEXORD®</div>
+        <div style="display:flex; gap:20px;">
+            <div class="brand-text" style="font-size:10px; cursor:pointer;" onclick="location.href='#shop'">SHOP</div>
+            <div class="brand-text" style="font-size:10px; cursor:pointer;" onclick="location.href='#contact'">KONTAKT</div>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <section id="hero" style="min-height:90vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding-top: 100px;">
+            <img src="IMG_7023.png" style="width:200px;" class="floating-logo">
+            <h1 style="font-family:'Orbitron'; font-size:2rem; margin-top:20px; letter-spacing:8px;">BEYOND LIMITS</h1>
+            <img src="82AAE1DF-9784-4FAB-8264-A4C2E7A1BEC0.png" style="width:90%; max-width:800px; margin-top:40px; border-radius:15px; border:1px solid rgba(0,242,255,0.2);">
+        </section>
+
+        <section class="config-section reveal" id="shop">
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    
+                    <div class="swiper-slide">
+                        <div class="card-front" onclick="openCheckout('LXRD PERFORMANCE BLACK', '240,00 €')">
+                            <img src="Photoroom_20260305_123705.png" class="config-img">
+                            <div class="prod-title">LXRD PERFORMANCE BLACK</div>
+                            <div class="price-tag">240,00 €</div>
+                            <div class="desc-box">
+                                <div class="desc-item">TMR™ Sticks (No Drift)</div>
+                                <div class="desc-item">Digital Clicky Triggers</div>
+                                <div class="desc-item">V2 Paddle System</div>
+                            </div>
+                            <button class="submit-btn" style="margin-top:20px;">IN DEN WARENKORB</button>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <div class="card-front" onclick="openCheckout('LXRD PLUS BLACK', '180,00 €')">
+                            <img src="Photoroom_20260305_140346.png" class="config-img">
+                            <div class="prod-title">LXRD PLUS BLACK</div>
+                            <div class="price-tag">180,00 €</div>
+                            <div class="desc-box">
+                                <div class="desc-item">Hall Effect Sticks</div>
+                                <div class="desc-item">2-Paddle Mod</div>
+                                <div class="desc-item">Ergonomic Grip</div>
+                            </div>
+                            <button class="submit-btn" style="margin-top:20px;">IN DEN WARENKORB</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </section>
+
+        <section class="feature-box reveal" style="padding: 80px 6%; text-align: center;">
+             <h2 style="font-family:'Orbitron'; color:var(--n-blue); margin-bottom:20px;">TECHNOLOGY</h2>
+             <img src="IMG_9062.jpeg" style="width:100%; max-width:600px; border-radius:15px; border:1px solid #222;">
+        </section>
+
+        <section id="contact" style="padding: 60px 6%; max-width: 600px; margin: 0 auto;">
+            <div style="background:var(--panel); padding:30px; border-radius:15px; border:1px solid #111;">
+                <h3 style="font-family:'Orbitron'; margin-bottom:20px;">SUPPORT ANFRAGE</h3>
+                <form onsubmit="event.preventDefault(); alert('Anfrage gesendet!');">
+                    <input type="text" placeholder="NAME" class="input-field" style="width:100%; padding:15px; background:black; border:1px solid #222; color:white; margin-bottom:10px;">
+                    <input type="email" placeholder="E-MAIL" class="input-field" style="width:100%; padding:15px; background:black; border:1px solid #222; color:white; margin-bottom:10px;">
+                    <textarea placeholder="NACHRICHT" class="input-field" style="width:100%; padding:15px; background:black; border:1px solid #222; color:white; margin-bottom:10px;"></textarea>
+                    <button type="submit" class="submit-btn">SENDEN</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- CHECKOUT LOGIK ---
+        let selectedMethod = '';
+        function openCheckout(name, price) {
+            document.getElementById('check-name').innerText = name;
+            document.getElementById('check-price').innerText = price;
+            document.getElementById('checkout-overlay').style.display = 'flex';
+        }
+        function closeCheckout() { document.getElementById('checkout-overlay').style.display = 'none'; }
+        
+        function setPayment(method) {
+            selectedMethod = method;
+            document.querySelectorAll('.payment-method').forEach(el => el.classList.remove('active'));
+            document.getElementById('pay-' + method).classList.add('active');
+        }
+
+        function executePurchase() {
+            if(!selectedMethod) { alert("Bitte Zahlungsmethode wählen!"); return; }
+            const name = document.getElementById('check-name').innerText;
+            alert("Bestellung für " + name + " wird via " + selectedMethod + " eingeleitet...");
+            // Hier würde die Weiterleitung zu PayPal erfolgen
+        }
+
+        // --- DEINE ORIGINALEN ANIMATIONEN (Warp/Stars) ---
+        var swiper = new Swiper(".mySwiper", {
+            effect: "coverflow", centeredSlides: true, slidesPerView: "auto",
+            coverflowEffect: { rotate: 20, stretch: 0, depth: 100, modifier: 1, slideShadows: false },
+            pagination: { el: ".swiper-pagination", clickable: true },
+        });
+
+        // Warp Canvas & Stars (Dein Original-Code integriert)
+        const wC = document.getElementById('warp-canvas'), wX = wC.getContext('2d');
+        function rW() { wC.width = window.innerWidth; wC.height = window.innerHeight; }
+        window.addEventListener('resize', rW); rW();
+        let pts = []; for(let i=0; i<800; i++) pts.push({x: Math.random()*wC.width-wC.width/2, y: Math.random()*wC.height-wC.height/2, z: Math.random()*wC.width});
+        function aW() { wX.fillStyle = "black"; wX.fillRect(0,0,wC.width, wC.height); wX.fillStyle = "white"; pts.forEach(s => { s.z -= 15; if(s.z<=0) s.z=wC.width; let ox=s.x/s.z*wC.width+wC.width/2, oy=s.y/s.z*wC.width+wC.height/2; wX.fillRect(ox,oy,2,2); }); requestAnimationFrame(aW); }
+        aW();
+
+        window.addEventListener('load', () => {
+            gsap.to("#intro-overlay", { opacity: 0, duration: 1.2, delay: 1.5, onComplete: () => { 
+                document.getElementById('intro-overlay').style.display = "none";
+                gsap.utils.toArray(".reveal").forEach(el => {
+                    gsap.to(el, { scrollTrigger: { trigger: el, start: "top 85%" }, opacity: 1, y: 0, duration: 1.2 });
+                });
+            }});
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>LEXORD® | High-End Scuf Umbau & TMR™ Controller Engineering</title>
+    <meta name="description" content="LEXORD® bietet Premium Scuf Umbau, TMR™ Hall-Effect Sticks & Pro-Controller Mods. 0% Stick-Drift, Clicky Triggers & Paddles. Made in Germany.">
+    <meta name="keywords" content="Scuf Umbau, PS5 Controller Modding, TMR Sticks, Hall Effect Controller, Stick Drift Reparatur, Gaming Controller Custom">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Inter:wght@200;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+
+    <style>
+        :root { 
+            --n-blue: #00f2ff; 
+            --n-blue-glow: rgba(0, 242, 255, 0.4);
+            --bg: #050505; 
+            --glass: rgba(15, 15, 15, 0.9);
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        html { scroll-behavior: smooth; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+        /* --- BACKGROUND --- */
+        #star-canvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.5; }
+
+        /* --- NAVIGATION --- */
+        .top-bar { position: fixed; top: 0; width: 100%; height: 35px; background: #000; z-index: 10001; display: flex; align-items: center; border-bottom: 1px solid var(--border); overflow: hidden; }
+        .ticker { white-space: nowrap; font-family: 'Orbitron'; font-size: 8px; letter-spacing: 2px; color: var(--n-blue); animation: ticker 30s linear infinite; }
+        @keyframes ticker { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+
+        header { 
+            position: fixed; top: 50px; left: 50%; transform: translateX(-50%); width: 95%; max-width: 1400px; 
+            background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border); 
+            padding: 12px 30px; border-radius: 15px; z-index: 10000; display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-family: 'Orbitron'; font-weight: 900; font-size: 1.2rem; letter-spacing: 5px; color: #fff; text-decoration: none; }
+
+        nav { display: flex; gap: 25px; font-family: 'Orbitron'; font-size: 9px; font-weight: 600; letter-spacing: 1px; }
+        nav a { color: rgba(255,255,255,0.6); text-decoration: none; transition: 0.3s; }
+        nav a:hover { color: var(--n-blue); }
+
+        /* Mobile Menu */
+        .burger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
+        .burger div { width: 25px; height: 2px; background: white; }
+
+        /* --- HERO --- */
+        .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 100px 20px; }
+        .hero h1 { font-family: 'Orbitron'; font-size: clamp(2.5rem, 8vw, 6rem); font-weight: 900; line-height: 1; margin: 20px 0; }
+        .hero-img { width: 90%; max-width: 900px; filter: drop-shadow(0 0 30px rgba(0,0,0,0.8)); margin-top: 40px; }
+
+        /* --- SPECS --- */
+        .specs { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); border-top: 1px solid var(--border); }
+        .spec-card { padding: 60px 40px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); text-align: center; }
+        .spec-card h3 { font-family: 'Orbitron'; color: var(--n-blue); font-size: 11px; margin-bottom: 15px; }
+        .spec-card p { font-size: 14px; opacity: 0.5; line-height: 1.6; }
+
+        /* --- PRODUCTS --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; padding: 100px 6%; }
+        .card { background: #0a0a0a; border: 1px solid var(--border); border-radius: 20px; padding: 30px; transition: 0.4s; position: relative; }
+        .card:hover { border-color: var(--n-blue); transform: translateY(-10px); }
+        .card img { width: 100%; height: 250px; object-fit: contain; margin-bottom: 20px; }
+        .btn { width: 100%; padding: 15px; background: #fff; color: #000; border: none; font-family: 'Orbitron'; font-weight: 900; font-size: 10px; cursor: pointer; border-radius: 8px; transition: 0.3s; }
+        .btn:hover { background: var(--n-blue); box-shadow: 0 0 20px var(--n-blue-glow); }
+
+        /* --- MODALS (RECHTSTEXTE) --- */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 200000; display: none; align-items: center; justify-content: center; padding: 40px; }
+        .modal-content { background: #111; padding: 40px; border-radius: 20px; max-width: 800px; max-height: 80vh; overflow-y: auto; border: 1px solid var(--border); }
+        .modal.active { display: flex; }
+        .close-modal { cursor: pointer; float: right; font-size: 24px; color: var(--n-blue); }
+
+        /* --- FOOTER --- */
+        footer { padding: 80px 6%; border-top: 1px solid var(--border); background: #000; }
+        .f-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 40px; }
+        .f-col h4 { font-family: 'Orbitron'; font-size: 10px; color: var(--n-blue); margin-bottom: 20px; }
+        .f-col a { display: block; color: #555; text-decoration: none; font-size: 12px; margin-bottom: 10px; cursor: pointer; }
+        .f-col a:hover { color: #fff; }
+
+        /* --- RESPONSIVE HANDY --- */
+        @media (max-width: 768px) {
+            nav { display: none; } /* Simples Menü für Mobile aus Platzgründen */
+            .burger { display: flex; }
+            .hero h1 { font-size: 3rem; }
+            header { padding: 10px 20px; }
+            .spec-card { padding: 40px 20px; }
+        }
+
+        .reveal { opacity: 0; transform: translateY(30px); }
+    </style>
+</head>
+<body>
+
+    <div id="intro" style="position:fixed; inset:0; background:#000; z-index:300000; display:flex; align-items:center; justify-content:center;">
+        <img src="IMG_7023.png" style="width:150px; filter: drop-shadow(0 0 20px var(--n-blue));">
+    </div>
+
+    <canvas id="star-canvas"></canvas>
+
+    <div class="top-bar">
+        <div class="ticker">+++ LEXORD® ENGINEERING: TMR™ MAGNET-STICKS JETZT VERFÜGBAR +++ KEIN STICK-DRIFT MEHR +++ MADE IN GERMANY +++ SCUF UMBAU DER NÄCHSTEN GENERATION +++</div>
+    </div>
+
+    <header>
+        <a href="#" class="logo">LEXORD</a>
+        <nav>
+            <a href="#hero">HOME</a>
+            <a href="#produkte">SHOP</a>
+            <a href="#tech">TECHNIK</a>
+            <a href="#footer">KONTAKT</a>
+        </nav>
+        <div onclick="document.getElementById('cart-side').classList.add('active')" style="cursor:pointer; font-family:'Orbitron'; font-size:10px;">
+            🛒 <span id="cart-count">0</span>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" id="hero">
+            <h1 class="reveal">PRECISION<br><span style="color:var(--n-blue)">ENGINEERED.</span></h1>
+            <p class="reveal" style="max-width:500px; opacity:0.5; font-size:14px; line-height:1.6;">Dein ultimativer Vorteil im Spiel. LEXORD® modifiziert Controller auf E-Sport Niveau mit magnetischer TMR™ Technologie.</p>
+            <img src="82AAE1DF-9784-4FAB-8264-A4C2E7A1BEC0.png" class="hero-img reveal">
+        </section>
+
+        <section class="specs" id="tech">
+            <div class="spec-card reveal"><h3>TMR™ MAGNET STICKS</h3><p>Nie wieder Stick-Drift. Kontaktlose Sensoren für ewige Präzision.</p></div>
+            <div class="spec-card reveal"><h3>CLICKY BUTTONS</h3><p>Maus-Klick Feedback für Triggers und Bumpers. Sofortige Reaktion.</p></div>
+            <div class="spec-card reveal"><h3>PRO PADDLES</h3><p>Ergonomische Rücktasten für komplexes Movement ohne Verzögerung.</p></div>
+        </section>
+
+        <section id="produkte" class="grid">
+            <div class="card reveal">
+                <img src="Photoroom_20260305_123705.png" alt="LXRD PS5 Controller">
+                <h3 style="font-family:'Orbitron'; font-size:16px;">LXRD PERFORMANCE</h3>
+                <p style="color:var(--n-blue); font-weight:900; margin:10px 0;">240,00 €</p>
+                <p style="font-size:11px; opacity:0.4; margin-bottom:20px;">Full TMR™ Mod, 4er Paddles, Clicky Triggers.</p>
+                <button class="btn" onclick="addToCart('LXRD PERFORMANCE', 240)">IN DEN WARENKORB</button>
+            </div>
+            </section>
+    </main>
+
+    <footer id="footer">
+        <div class="f-grid">
+            <div class="f-col">
+                <h4>LEXORD®</h4>
+                <p style="font-size:11px; color:#333;">Handgefertigte Gaming Hardware aus Deutschland.</p>
+            </div>
+            <div class="f-col">
+                <h4>RECHTLICHES</h4>
+                <a onclick="openModal('impressum')">Impressum</a>
+                <a onclick="openModal('datenschutz')">Datenschutz</a>
+                <a onclick="openModal('agb')">AGB</a>
+                <a onclick="openModal('widerruf')">Widerrufsbelehrung</a>
+            </div>
+            <div class="f-col">
+                <h4>SERVICE</h4>
+                <a href="mailto:support@lexord.de">E-Mail Support</a>
+                <a href="#">Umbau-Anleitung</a>
+            </div>
+        </div>
+        <div style="margin-top:50px; font-size:9px; color:#222; text-align:center;">
+            © 2026 LEXORD® | Kleinunternehmer gemäß § 19 UStG. Alle Preise inkl. Versand.
+        </div>
+    </footer>
+
+    <div id="modal-box" class="modal" onclick="if(event.target==this)this.classList.remove('active')">
+        <div class="modal-content">
+            <span class="close-modal" onclick="document.getElementById('modal-box').classList.remove('active')">×</span>
+            <div id="modal-text" style="font-size:13px; line-height:1.6; color:#ccc; font-family:'Inter';"></div>
+        </div>
+    </div>
+
+    <script>
+        // GSAP & Intro
+        window.onload = () => {
+            setTimeout(() => {
+                gsap.to("#intro", { opacity:0, duration:1, onComplete: () => {
+                    document.getElementById('intro').style.display="none";
+                    gsap.utils.toArray(".reveal").forEach(el => {
+                        gsap.to(el, { scrollTrigger:el, opacity:1, y:0, duration:1 });
+                    });
+                }});
+            }, 800);
+        };
+
+        // Modal Content Filler
+        const legalTexts = {
+            impressum: "<h2>Impressum</h2><br>LEXORD Engineering<br>Inhaber: [Dein Name]<br>Straße Hausnr.<br>PLZ Ort<br>Kontakt: info@lexord.de<br><br>Registergericht: Amtsort<br>Steuernummer: 123/456/789<br>Gemäß § 19 UStG wird keine Umsatzsteuer ausgewiesen.",
+            datenschutz: "<h2>Datenschutz</h2><br>Wir erheben Daten nur zur Bestellabwicklung. Ihre Daten werden nicht an Dritte weitergegeben, außer an Versanddienstleister (DHL/GLS). Sie haben jederzeit das Recht auf Auskunft und Löschung.",
+            agb: "<h2>AGB</h2><br>1. Geltungsbereich: Diese Bedingungen gelten für alle Lieferungen von LEXORD an Verbraucher.<br>2. Vertragsschluss: Der Vertrag kommt durch Bestätigung der Bestellung zustande.<br>3. Gewährleistung: Es gelten die gesetzlichen Mängelhaftungsrechte.",
+            widerruf: "<h2>Widerrufsbelehrung</h2><br>Sie haben das Recht, binnen 14 Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen. Die Frist beginnt ab Erhalt der Ware. Ausgenommen sind individuell nach Kundenwunsch gefertigte Controller (Customizing)."
+        };
+
+        function openModal(type) {
+            document.getElementById('modal-text').innerHTML = legalTexts[type];
+            document.getElementById('modal-box').classList.add('active');
+        }
+
+        // Cart
+        let count = 0;
+        function addToCart(name, price) {
+            count++;
+            document.getElementById('cart-count').innerText = count;
+            alert(name + " wurde hinzugefügt!");
+        }
+
+        // Star Background
+        const canvas = document.getElementById('star-canvas'), ctx = canvas.getContext('2d');
+        let stars = [];
+        function init() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            for(let i=0; i<150; i++) stars.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*1.2});
+        }
+        function draw() {
+            ctx.clearRect(0,0,canvas.width, canvas.height); ctx.fillStyle="white";
+            stars.forEach(s => { ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 7); ctx.fill(); });
+            requestAnimationFrame(draw);
+        }
+        init(); draw();
+    </script>
+</body>
+</html>

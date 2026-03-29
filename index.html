@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title translate="no">LEXORD® | Premium Checkout</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+
+    <style>
+        :root { --n-blue: #00f2ff; --n-purple: #bc13fe; --bg: #000000; --panel: #0a0a0a; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+        /* HEADER & CART ICON */
+        header { position: fixed; top: 0; width: 100%; z-index: 10000; padding: 20px 6%; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); }
+        .cart-btn { cursor: pointer; position: relative; }
+        .cart-count { position: absolute; top: -8px; right: -8px; background: var(--n-blue); color: black; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 50%; font-family: 'Orbitron'; }
+
+        /* CHECKOUT MODAL */
+        #checkout-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 20000; display: none; overflow-y: auto; padding: 40px 20px; }
+        .checkout-container { max-width: 600px; margin: 0 auto; background: #080808; border: 1px solid #1a1a1a; border-radius: 20px; padding: 30px; }
+        
+        .checkout-header { font-family: 'Orbitron'; color: var(--n-blue); margin-bottom: 20px; text-align: center; font-size: 1.5rem; }
+        
+        /* FORMULAR */
+        .address-form h3 { font-family: 'Orbitron'; font-size: 12px; margin: 20px 0 10px; color: #555; letter-spacing: 2px; }
+        .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .input-field { width: 100%; padding: 12px; background: #000; border: 1px solid #222; color: white; margin-bottom: 10px; border-radius: 5px; font-size: 14px; outline: none; }
+        .input-field:focus { border-color: var(--n-blue); }
+
+        /* WARENKORB ÜBERSICHT */
+        .cart-summary { border-bottom: 1px solid #1a1a1a; padding-bottom: 15px; margin-bottom: 20px; }
+        .cart-item { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px; }
+
+        /* PAYPAL BUTTONS (ANIMIERT) */
+        .pay-btn { display: flex; align-items: center; justify-content: center; padding: 14px; border-radius: 8px; cursor: pointer; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: none; font-weight: 700; margin-bottom: 10px; text-decoration: none; position: relative; overflow: hidden; }
+        .pay-btn:hover { transform: scale(1.03); filter: brightness(1.1); }
+        .pay-btn:active { transform: scale(0.98); }
+
+        .pp-blue { background: #0070ba; color: white; }
+        .pp-white { background: #ffffff; color: #111; }
+        .pp-gray { background: #2c2e2f; color: white; }
+        .pp-black { background: transparent; border: 1px solid var(--n-blue); color: var(--n-blue); font-family: 'Orbitron'; font-size: 11px; }
+
+        .pp-label { text-align: center; font-size: 10px; color: #666; margin-top: 5px; font-family: sans-serif; }
+        .pp-label span { color: #0070ba; font-weight: bold; }
+
+        .close-checkout { position: absolute; top: 20px; right: 20px; color: white; font-family: 'Orbitron'; cursor: pointer; font-size: 12px; }
+
+        /* SHOP CARDS */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 120px 6%; }
+        .card { background: #0a0a0a; padding: 20px; border-radius: 15px; border: 1px solid #111; text-align: center; }
+        .card img { width: 100%; border-radius: 10px; margin-bottom: 15px; }
+        .add-to-cart { width: 100%; padding: 15px; background: var(--n-blue); color: black; border: none; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; transition: 0.3s; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div style="font-family:'Orbitron'; font-weight:900; letter-spacing:4px;">LEXORD®</div>
+        <div class="cart-btn" onclick="toggleCheckout()">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+            <span class="cart-count" id="cart-count">0</span>
+        </div>
+    </header>
+
+    <div id="checkout-modal">
+        <div class="close-checkout" onclick="toggleCheckout()">SCHLIESSEN [X]</div>
+        <div class="checkout-container">
+            <h2 class="checkout-header">DEIN WARENKORB</h2>
+            
+            <div class="cart-summary" id="cart-items">
+                </div>
+
+            <div class="address-form">
+                <h3>LIEFERADRESSE</h3>
+                <input type="text" placeholder="Vorname & Nachname" class="input-field">
+                <input type="text" placeholder="Straße & Hausnummer" class="input-field">
+                <div class="input-group">
+                    <input type="text" placeholder="PLZ" class="input-field">
+                    <input type="text" placeholder="Stadt" class="input-field">
+                </div>
+                <input type="email" placeholder="E-Mail für Bestätigung" class="input-field">
+            </div>
+
+            <h3 style="font-family:'Orbitron'; font-size:12px; margin: 30px 0 15px; color:#555; text-align:center;">ZAHLUNGSMETHODE WÄHLEN</h3>
+            
+            <div class="premium-checkout">
+                <button class="pay-btn pp-blue" onclick="processPayment('PayPal')">Mit <i>PayPal</i> zahlen</button>
+                <button class="pay-btn pp-white" onclick="processPayment('SEPA')">Mit <span style="color:#0070ba">SEPA</span> zahlen</button>
+                <button class="pay-btn pp-gray" onclick="processPayment('Karte')">Debit- oder Kreditkarte</button>
+                <div class="pp-label">Abgewickelt durch <span>PayPal</span></div>
+                <button class="pay-btn pp-black" style="margin-top:15px;" onclick="processPayment('Bank')">BANKÜBERWEISUNG</button>
+            </div>
+        </div>
+    </div>
+
+    <section class="grid">
+        <div class="card">
+            <img src="Stickzange.PNG" alt="Stickzange">
+            <h3 style="font-family:'Orbitron';">STICKZANGE PRO</h3>
+            <p style="color:var(--n-blue); margin: 10px 0;">5,95 €</p>
+            <button class="add-to-cart" onclick="addToCart('Stickzange Pro', 5.95)">IN DEN WARENKORB</button>
+        </div>
+        <div class="card">
+            <img src="Photoroom_20260304_212902.png" alt="Paddle System">
+            <h3 style="font-family:'Orbitron';">PADDLE SYSTEM V2</h3>
+            <p style="color:var(--n-blue); margin: 10px 0;">45,95 €</p>
+            <button class="add-to-cart" onclick="addToCart('Paddle System V2', 45.95)">IN DEN WARENKORB</button>
+        </div>
+    </section>
+
+    <script>
+        let cart = [];
+
+        function addToCart(name, price) {
+            cart.push({name, price});
+            updateCartUI();
+            
+            // Kleine Animation beim Hinzufügen
+            gsap.fromTo(".cart-btn", {scale: 1}, {scale: 1.3, duration: 0.1, yoyo: true, repeat: 1});
+        }
+
+        function updateCartUI() {
+            document.getElementById('cart-count').innerText = cart.length;
+            const container = document.getElementById('cart-items');
+            container.innerHTML = "";
+            
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price;
+                container.innerHTML += `
+                    <div class="cart-item">
+                        <span>${item.name}</span>
+                        <span>${item.price.toFixed(2)} €</span>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML += `
+                <div class="cart-item" style="margin-top:15px; font-weight:bold; color:var(--n-blue); border-top: 1px solid #222; padding-top:10px;">
+                    <span>GESAMT</span>
+                    <span>${total.toFixed(2)} €</span>
+                </div>
+            `;
+        }
+
+        function toggleCheckout() {
+            const modal = document.getElementById('checkout-modal');
+            const isVisible = modal.style.display === 'block';
+            modal.style.display = isVisible ? 'none' : 'block';
+            
+            if(!isVisible) {
+                gsap.from(".checkout-container", {y: 50, opacity: 0, duration: 0.5, ease: "back.out"});
+            }
+        }
+
+        function processPayment(type) {
+            if(cart.length === 0) {
+                alert("Dein Warenkorb ist leer!");
+                return;
+            }
+            alert("Vielen Dank! Deine Zahlung per " + type + " wird vorbereitet. (Dies ist eine Demo)");
+        }
+    </script>
+</body>
+</html>

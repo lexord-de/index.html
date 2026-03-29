@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title translate="no">LEXORD® | High-End Engineering | Beste Scuf Alternative 2026</title>
+    
+    <meta name="description" content="LEXORD® Engineering: Die ultimative Premium Scuf Alternative. High-End Paddle Systeme, Stickzangen & Custom Controller Tuning. Made in Germany.">
+    <meta name="keywords" content="LEXORD, Scuf Alternative, Scuf Controller, PS5 Scuf, Xbox Scuf, Bitro, Bitro Shop, King Controller, AimControllers, Rocket Controller, Lux Controller, Stealth Controller, Gaming Engineering, Paddles nachrüsten, PS5 Paddles, Custom Controller Deutschland, Stick Drift Fix, Hall Effect Sticks, Digital Trigger, Clicky Buttons, Mouse Click Trigger, DualSense Edge Alternative, E-Sport Controller, Pro Controller, Controller Tuning, Stickzange, Löt frei Paddles, Rapid Fire, Drop Shot, Warzone Controller, Fortnite Scuf, Apex Legends Controller, Gaming Gear, High-End Gaming, Controller Umbau Service, Modding, Scuf Reflex, Scuf Instinct, Edge Controller Alternative, Hall Sensor Joysticks, No Drift, Gamer Hardware">
+    
+    <script src="https://www.paypal.com/sdk/js?client-id=DEINE_PAYPAL_CLIENT_ID&currency=EUR&disable-funding=credit"></script>
+
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+    <script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+    <style>
+        :root { --n-blue: #00f2ff; --n-purple: #bc13fe; --bg: #000000; --panel: #0a0a0a; --trust-green: #00b67a; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; width: 100%; top: 0 !important; }
+
+        #star-canvas { position: fixed; inset: 0; z-index: -1; background: #000; }
+        #intro-overlay { position: fixed; inset: 0; background: black; z-index: 100000; display: flex; align-items: center; justify-content: center; }
+
+        .floating-logo { width: 230px; filter: drop-shadow(0 0 20px var(--n-blue)); animation: floatLogo 4s ease-in-out infinite; }
+        @keyframes floatLogo { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+
+        header { position: fixed; top: 80px; width: 100%; z-index: 10000; padding: 0 6%; display: flex; justify-content: space-between; align-items: center; }
+        .brand-text { font-family: 'Orbitron'; font-weight: 900; font-size: 1.2rem; letter-spacing: 4px; }
+        
+        /* SLIDER & CARD FLIP */
+        .config-section { width: 100%; padding: 60px 0; background: transparent; }
+        .swiper { width: 100%; max-width: 500px; padding-bottom: 50px; }
+        .swiper-slide { perspective: 1000px; height: 500px; }
+
+        .product-card-inner {
+            position: relative; width: 100%; height: 100%;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d; cursor: pointer;
+        }
+        .swiper-slide:hover .product-card-inner { transform: rotateY(180deg); }
+
+        .card-front, .card-back {
+            position: absolute; inset: 0; backface-visibility: hidden;
+            background: #080808; border-radius: 25px; padding: 25px;
+            border: 1px solid #111; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .card-back { transform: rotateY(180deg); border-color: var(--n-blue); background: #050505; justify-content: flex-start; padding-top: 30px; }
+
+        .config-img { width: 100%; height: 200px; object-fit: contain; margin-bottom: 15px; }
+        .prod-title { font-family: 'Orbitron'; font-size: 13px; letter-spacing: 2px; margin-bottom: 8px; color: white; }
+        .price-tag { font-family: 'Orbitron'; color: var(--n-blue); font-size: 18px; font-weight: 700; margin-bottom: 15px; }
+
+        /* PayPal Button Slot */
+        .paypal-slot { width: 100%; margin-top: 10px; min-height: 150px; }
+
+        .reveal { opacity: 0; transform: translateY(50px); }
+        .bundle-btn { background: #000; border: 1px solid var(--n-blue); padding: 12px 25px; color: white; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; border-radius: 50px; text-decoration: none; }
+
+        /* Ticker */
+        .ticker-wrapper { position: fixed; top: 0; width: 100%; z-index: 9000; font-family: 'Orbitron'; font-size: 9px; background: black; padding: 8px 0; border-bottom: 1px solid #111; }
+        .ticker-move { display: inline-block; white-space: nowrap; animation: ticker-scroll 35s linear infinite; }
+        @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    </style>
+</head>
+<body>
+
+    <div id="intro-overlay"><canvas id="warp-canvas"></canvas></div>
+    <canvas id="star-canvas"></canvas>
+
+    <div class="ticker-wrapper">
+        <div class="ticker-move">
+            <span style="margin-right:50px;">VERSAND INNERHALB VON 24 STUNDEN</span>
+            <span style="margin-right:50px;">MADE IN GERMANY</span>
+            <span style="margin-right:50px;">SICHERER PAYPAL CHECKOUT</span>
+            <span style="margin-right:50px;">HALL EFFECT & TMR STICK UMBAU</span>
+            <span style="margin-right:50px;">VERSAND INNERHALB VON 24 STUNDEN</span>
+        </div>
+    </div>
+
+    <header>
+        <div class="brand-text">LEXORD®</div>
+    </header>
+
+    <main id="main-content">
+        <section id="hero" style="min-height:90vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding-top: 100px;">
+            <img src="IMG_7023.png" class="floating-logo">
+            <h1 style="font-family:'Orbitron'; font-size:clamp(1.2rem, 5vw, 2.5rem); margin-top:20px; letter-spacing:8px;">BEYOND LIMITS</h1>
+        </section>
+
+        <section class="config-section reveal">
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    
+                    <div class="swiper-slide">
+                        <div class="product-card-inner">
+                            <div class="card-front">
+                                <img src="Photoroom_20260305_123705.png" class="config-img">
+                                <div class="prod-title">LXRD PERFORMANCE BLACK</div>
+                                <div class="price-tag">240,00 €</div>
+                                <p style="font-size:10px; color:#555;">Klick für Details & Kauf</p>
+                            </div>
+                            <div class="card-back">
+                                <div class="prod-title" style="color:var(--n-blue);">CHECKOUT</div>
+                                <div id="paypal-performance" class="paypal-slot"></div>
+                                <p style="font-size:9px; color:#777; margin-top:10px;">TMR-Sticks, Clicky Triggers, Pro Paddles.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <div class="product-card-inner">
+                            <div class="card-front">
+                                <img src="Photoroom_20260305_140346.png" class="config-img">
+                                <div class="prod-title">LXRD PLUS BLACK</div>
+                                <div class="price-tag">180,00 €</div>
+                                <p style="font-size:10px; color:#555;">Klick für Details & Kauf</p>
+                            </div>
+                            <div class="card-back">
+                                <div class="prod-title" style="color:var(--n-blue);">CHECKOUT</div>
+                                <div id="paypal-plus" class="paypal-slot"></div>
+                                <p style="font-size:9px; color:#777; margin-top:10px;">Hall Effect Sticks, 2er Paddles.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <div class="product-card-inner">
+                            <div class="card-front">
+                                <img src="Photoroom_20260305_124906.png" class="config-img">
+                                <div class="prod-title">LXRD BASIC BLACK</div>
+                                <div class="price-tag">105,00 €</div>
+                                <p style="font-size:10px; color:#555;">Klick für Details & Kauf</p>
+                            </div>
+                            <div class="card-back">
+                                <div class="prod-title" style="color:var(--n-blue);">CHECKOUT</div>
+                                <div id="paypal-basic" class="paypal-slot"></div>
+                                <p style="font-size:9px; color:#777; margin-top:10px;">2er Paddles Umbau Kit.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Swiper
+        var swiper = new Swiper(".mySwiper", {
+            effect: "coverflow",
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: "auto",
+            coverflowEffect: { rotate: 20, stretch: 0, depth: 100, modifier: 1, slideShadows: false },
+        });
+
+        // PAYPAL CHECKOUT LOGIK
+        function initPayPalButton(id, price, desc) {
+            paypal.Buttons({
+                style: { layout: 'vertical', color: 'blue', shape: 'rect', label: 'checkout', height: 40 },
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{ description: desc, amount: { currency_code: 'EUR', value: price } }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        alert('Zahlung erfolgreich! Danke für deine Bestellung, ' + details.payer.name.given_name);
+                    });
+                }
+            }).render('#' + id);
+        }
+
+        window.addEventListener('load', () => {
+            // Initialisierung der Buttons mit deinen Preisen
+            initPayPalButton('paypal-performance', '240.00', 'LXRD PERFORMANCE BLACK');
+            initPayPalButton('paypal-plus', '180.00', 'LXRD PLUS BLACK');
+            initPayPalButton('paypal-basic', '105.00', 'LXRD BASIC BLACK');
+
+            // Intro & Reveal
+            setTimeout(() => {
+                gsap.to("#intro-overlay", { opacity: 0, duration: 1, onComplete: () => {
+                    document.getElementById('intro-overlay').style.display = "none";
+                    gsap.utils.toArray(".reveal").forEach(el => {
+                        gsap.to(el, { scrollTrigger: el, opacity: 1, y: 0, duration: 1 });
+                    });
+                }});
+            }, 1500);
+        });
+
+        // Starfield Canvas
+        const sc = document.getElementById('star-canvas'), sx = sc.getContext('2d');
+        function rS() { sc.width = window.innerWidth; sc.height = window.innerHeight; }
+        window.addEventListener('resize', rS); rS();
+        let st = []; for(let i=0; i<100; i++) st.push({x:Math.random()*sc.width, y:Math.random()*sc.height, v:Math.random()*0.5});
+        function dS() { sx.clearRect(0,0,sc.width, sc.height); sx.fillStyle="white"; st.forEach(s => { s.y -= s.v; if(s.y<0) s.y=sc.height; sx.fillRect(s.x,s.y,1,1); }); requestAnimationFrame(dS); }
+        dS();
+    </script>
+</body>
+</html>

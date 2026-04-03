@@ -22,6 +22,33 @@
     <script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
     <style>
+        
+    /* Premium Shopify-Style Animation */
+    @keyframes truck-move {
+        0% { transform: translateX(0); }
+        50% { transform: translateX(6px); }
+        100% { transform: translateX(0); }
+    }
+
+    .truck-icon {
+        display: inline-block;
+        animation: truck-move 2.5s infinite ease-in-out;
+    }
+
+    .delivery-box {
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 229, 255, 0.1);
+        cursor: default;
+    }
+
+    /* Der Shopify-Effekt: Kasten hebt sich leicht und wird heller */
+    .delivery-box:hover {
+        background: rgba(0, 229, 255, 0.15) !important;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 229, 255, 0.2);
+        border-color: rgba(0, 229, 255, 0.4);
+    }
+</style>
         :root { --n-blue: #00f2ff; --n-purple: #bc13fe; --bg: #000000; --panel: #0a0a0a; --trust-green: #00b67a; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
         body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; width: 100%; top: 0 !important; }
@@ -426,12 +453,21 @@
             <div class="card">
                 <img src="Stickzange.PNG" style="width:100%; border-radius:10px;">
                 <h3 style="font-family:'Orbitron'; margin-top:15px; font-size:12px;">STICKZANGE PRO</h3>
-               <p style="color:var(--n-blue); margin: 10px 0;">5,00 €</p>
+               <p style="color:var(--n-blue); margin: 10px 0; font-weight: bold; font-size: 1.2em;">5,00 €</p>
 
-               <div style="margin-top: 10px; font-size: 0.9em; color: #00e5ff; font-family: 'Orbitron', sans-serif;">
-             <span style="color: #444;">📦</span> 
-             Lieferung voraussichtlich: <span class="delivery-date" style="font-weight: bold;">Wird berechnet...</span>
-             </div> <button onclick="addToCart('Stickzange Pro', 5.00, 'Stickzange.PNG')">IN DEN WARENKORB</button>
+<div class="delivery-box" style="margin: 20px 0; padding: 12px; background: rgba(0, 229, 255, 0.07); border-left: 4px solid #00e5ff; border-radius: 8px; font-family: 'Orbitron', sans-serif;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+        <span class="truck-icon" style="font-size: 1.4em;">🚚</span>
+        <div style="display: flex; flex-direction: column;">
+            <span style="font-size: 0.65em; color: #00e5ff; text-transform: uppercase; letter-spacing: 2px; font-weight: bold;">Blitzversand Aktiv</span>
+            <span style="font-size: 0.85em; color: #fff;">
+                Ankunft: <span class="delivery-date" style="color: #fff; font-weight: bold; text-decoration: underline; decoration-color: #00e5ff;">Wird berechnet...</span>
+            </span>
+        </div>
+    </div>
+</div>
+
+<button class="submit-btn" style="width: 100%;" onclick="addToCart('Stickzange Pro', 5.00, 'Stickzange.PNG')">IN DEN WARENKORB</button>
             </div>
             <div class="card">
                 <img src="Photoroom_20260304_212902.png" style="width:100%; border-radius:10px;">
@@ -838,22 +874,31 @@
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3c6ec1bd38fd4f4ab26d11d5caad2642"}'></script>
     <script>
-        function updateDeliveryDate() {
-            const display = document.getElementById('delivery-date');
-            if (!display) return;
-            
-            let deliveryDate = new Date();
-            deliveryDate.setDate(deliveryDate.getDate() + 4); // +4 Tage
+    function showPremiumDate() {
+        const displays = document.querySelectorAll('.delivery-date');
+        
+        let d = new Date();
+        // Wir nehmen 3 Tage für Premium-Gefühl
+        d.setDate(d.getDate() + 3); 
 
-            if (deliveryDate.getDay() === 0) {
-                deliveryDate.setDate(deliveryDate.getDate() + 1);
-            }
+        // Wochenende-Check
+        if (d.getDay() === 0) d.setDate(d.getDate() + 1);
+        if (d.getDay() === 6) d.setDate(d.getDate() + 2);
 
-            const options = { day: '2-digit', month: 'long' };
-            display.innerText = deliveryDate.toLocaleDateString('de-DE', options);
-        }
-        window.onload = updateDeliveryDate;
-    </script>
+        const options = { day: '2-digit', month: 'long' };
+        const dateText = d.toLocaleDateString('de-DE', options);
+
+        displays.forEach((el) => {
+            el.style.opacity = "0";
+            setTimeout(() => {
+                el.innerText = dateText;
+                el.style.transition = "opacity 0.8s ease";
+                el.style.opacity = "1";
+            }, 500); // Kleiner Delay für den "Lade-Effekt"
+        });
+    }
+    window.addEventListener('load', showPremiumDate);
+</script>
 </body>
 </html>
 

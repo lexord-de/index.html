@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title translate="no">LEXORD® | Custom PS5 Controller | Beste Scuf Alternative 2026 | Made in Germany</title>
+
+<!-- ════════════ WICHTIG: RICHTIGE REIHENFOLGE ════════════ -->
+<!-- 1. ZUERST Stripe.js -->
+<script src="https://js.stripe.com/v3/"></script>
+<!-- 2. DANN PayPal SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=AQOBIpaxy2Po_nxn9bZURvPzt4uS-ZYPdCueAT4WYbnOMsepoYD_k2WVFWAQiGyZ8i7hB9HucXYXAZ57&currency=EUR&intent=capture"></script>
+<!-- 3. DANN EmailJS -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<meta name="description" content="LEXORD Engineering: Die ultimative Premium Scuf Alternative. TMR & Hall Effect Sticks, Clicky Trigger, Paddle Systeme. Custom Controller Made in Germany.">
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<style>
+:root{
+  --neon:#00f2ff;--neon2:#bc13fe;--neon-dim:rgba(0,242,255,0.12);
+  --bg:#000;--panel:#080808;--border:#161616;--green:#00b67a;
+  --text:#ffffff;--muted:#555;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden}
+
+/* ── TICKER ── */
+.ticker-wrap{position:fixed;top:0;width:100%;z-index:9500;background:#000;border-bottom:1px solid #0f0f0f}
+.ticker-row{overflow:hidden;white-space:nowrap;padding:7px 0}
+.ticker-inner{display:inline-block;animation:tickL 30s linear infinite;font-family:'Orbitron';font-size:8.5px;letter-spacing:1.5px;color:#555}
+.ticker-inner span{margin-right:55px}
+.ticker-inner .hl{color:var(--neon)}
+@keyframes tickL{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── HEADER ── */
+header{position:fixed;top:30px;width:100%;z-index:9400;padding:11px 5%;display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.88);backdrop-filter:blur(22px);border-bottom:1px solid #0d0d0d}
+.brand{font-family:'Orbitron';font-weight:900;font-size:1.1rem;letter-spacing:5px;color:#fff;text-decoration:none}
+
+/* ── SEARCH ── */
+.srch-wrap{position:relative;flex:1;max-width:280px;margin:0 18px}
+.srch-input{width:100%;padding:8px 14px 8px 34px;background:rgba(255,255,255,0.04);border:1px solid #1a1a1a;color:#fff;font-family:'Inter';font-size:11px;border-radius:6px;outline:none;transition:.3s}
+.srch-input:focus{border-color:var(--neon);background:rgba(0,242,255,0.04);box-shadow:0 0 0 2px rgba(0,242,255,0.08)}
+.srch-ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#444;pointer-events:none;font-size:13px}
+#srch-drop{position:absolute;top:calc(100% + 5px);left:0;width:100%;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:8px;display:none;z-index:20000;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.9)}
+.srch-item{padding:10px 14px;font-size:11px;cursor:pointer;border-bottom:1px solid #0f0f0f;display:flex;align-items:center;gap:10px;transition:.2s;color:#ccc}
+.srch-item:last-child{border:none}
+.srch-item:hover{background:#111;color:var(--neon)}
+.srch-item img{width:32px;height:32px;object-fit:contain;background:#111;border-radius:5px}
+.srch-item-name{flex:1;font-family:'Orbitron';font-size:9px;letter-spacing:.5px}
+.srch-item-price{color:var(--neon);font-family:'Orbitron';font-size:9px}
+
+/* ── NAV CONTROLS ── */
+.nav-ctrl{display:flex;align-items:center;gap:18px}
+.cart-btn{cursor:pointer;display:flex;align-items:center;gap:7px;padding:7px 14px;border:1px solid #1a1a1a;border-radius:6px;font-family:'Orbitron';font-size:9px;color:#888;transition:.3s;position:relative}
+.cart-btn:hover{border-color:var(--neon);color:var(--neon)}
+.cart-badge{background:var(--neon);color:#000;font-size:8px;font-weight:900;min-width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 8px var(--neon)}
+.burger{cursor:pointer;width:22px;height:14px;display:flex;flex-direction:column;justify-content:space-between}
+.burger div{height:1.5px;background:#fff;transition:.3s;border-radius:1px}
+
+/* ── FULL NAV ── */
+#full-nav{position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:40000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transform:translateX(100%);transition:.55s cubic-bezier(.7,0,.3,1);backdrop-filter:blur(30px)}
+#full-nav.active{transform:translateX(0)}
+.nav-link{font-family:'Orbitron';font-size:1.25rem;text-decoration:none;color:#fff;transition:.3s;letter-spacing:3px}
+.nav-link:hover{color:var(--neon)}
+
+/* ── CART DRAWER ── */
+#cart-drawer{position:fixed;top:0;right:-520px;width:100%;max-width:480px;height:100%;background:#050505;z-index:100001;transition:.5s cubic-bezier(.7,0,.3,1);border-left:1px solid #0f0f0f;display:flex;flex-direction:column;box-shadow:-20px 0 80px rgba(0,0,0,.95)}
+#cart-drawer.open{right:0}
+.c-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:100000;display:none;backdrop-filter:blur(10px)}
+.cart-hd{padding:20px 22px;border-bottom:1px solid #0f0f0f;display:flex;justify-content:space-between;align-items:center;background:#070707}
+.cart-hd-title{font-family:'Orbitron';font-size:10px;letter-spacing:3px}
+.cart-x{width:30px;height:30px;border:1px solid #1a1a1a;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:#555;transition:.2s}
+.cart-x:hover{color:#fff;border-color:#333}
+.cart-body{flex:1;overflow-y:auto;padding:15px 22px}
+.c-item{display:flex;gap:13px;margin-bottom:11px;background:#0c0c0c;padding:13px;border-radius:10px;border:1px solid #111;transition:.2s}
+.c-item img{width:54px;height:54px;object-fit:contain;background:#0f0f0f;border-radius:6px}
+.c-item-info h4{font-family:'Orbitron';font-size:8.5px;letter-spacing:.8px;margin-bottom:3px}
+.c-qty{display:flex;align-items:center;gap:7px;margin-top:7px}
+.qty-b{width:20px;height:20px;border:1px solid #1a1a1a;border-radius:4px;cursor:pointer;background:#111;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;transition:.2s}
+.qty-b:hover{border-color:var(--neon);color:var(--neon)}
+.qty-n{font-family:'Orbitron';font-size:9px;min-width:18px;text-align:center}
+.c-empty{text-align:center;padding:60px 20px;color:#222}
+.c-empty p{font-family:'Orbitron';font-size:9px;letter-spacing:2px;margin-top:12px}
+.cart-ft{border-top:1px solid #0f0f0f;padding:18px 22px;background:#050505}
+.ship-bar-lbl{font-family:'Orbitron';font-size:7.5px;letter-spacing:1.5px;color:#444;margin-bottom:5px}
+.ship-bar{background:#0d0d0d;border-radius:3px;height:3px;margin-bottom:14px;overflow:hidden}
+.ship-fill{height:100%;background:var(--neon);border-radius:3px;transition:.5s}
+.sum-row{display:flex;justify-content:space-between;font-size:10.5px;color:#666;margin-bottom:5px;font-family:'Inter'}
+.sum-row.total{color:#fff;font-weight:700;font-size:13px;border-top:1px solid #0f0f0f;padding-top:9px;margin-top:6px;font-family:'Orbitron'}
+
+/* ── LAND AUSWAHL ── */
+.land-row{display:flex;align-items:center;gap:10px;margin:10px 0;background:#0c0c0c;border:1px solid #111;border-radius:8px;padding:10px 13px}
+.land-lbl{font-family:'Orbitron';font-size:7.5px;color:#555;letter-spacing:1.5px;white-space:nowrap}
+.land-sel{flex:1;background:#111;border:1px solid #1a1a1a;color:#fff;font-family:'Orbitron';font-size:8.5px;padding:7px 10px;border-radius:5px;outline:none;cursor:pointer;transition:.2s}
+
+/* ── RABATTCODE ── */
+.discount-row{display:flex;gap:8px;margin:10px 0}
+.discount-input{flex:1;padding:9px 12px;background:#0c0c0c;border:1px solid #1a1a1a;color:#fff;font-family:'Orbitron';font-size:8.5px;border-radius:6px;outline:none;letter-spacing:1px;text-transform:uppercase;transition:.2s}
+.discount-btn{padding:9px 15px;background:transparent;border:1px solid #2a2a2a;color:#888;font-family:'Orbitron';font-size:8px;letter-spacing:1px;border-radius:6px;cursor:pointer;transition:.3s;white-space:nowrap}
+.discount-ok{font-family:'Orbitron';font-size:7.5px;color:var(--green);letter-spacing:1px;display:none;margin-top:4px}
+.discount-err{font-family:'Orbitron';font-size:7.5px;color:#ff4d4f;letter-spacing:1px;display:none;margin-top:4px}
+
+.legal-note{font-size:8.5px;color:#333;margin:10px 0;line-height:1.6}
+.legal-note a{color:var(--neon)}
+.agb-check{display:flex;align-items:flex-start;gap:8px;font-size:8.5px;color:#555;margin:9px 0;cursor:pointer}
+.agb-check input{accent-color:var(--neon);margin-top:1px;flex-shrink:0}
+.checkout-btn{width:100%;padding:14px;background:#fff;color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:10px;letter-spacing:2px;cursor:pointer;border-radius:8px;transition:.3s;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:9px}
+.checkout-btn:hover{background:var(--neon)}
+.or-div{text-align:center;font-family:'Orbitron';font-size:7.5px;color:#222;letter-spacing:2px;margin:8px 0;position:relative}
+.or-div::before,.or-div::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:#0f0f0f}
+.or-div::before{left:0}.or-div::after{right:0}
+.trust-row{display:flex;justify-content:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+.trust-chip{font-family:'Orbitron';font-size:6.5px;color:#2a2a2a;display:flex;align-items:center;gap:3px;letter-spacing:.8px}
+.vat-lbl{font-size:7.5px;text-align:center;margin-top:8px;color:#1f1f1f;font-family:'Orbitron'}
+
+/* ── ORDER SUCCESS ── */
+#order-success-modal{position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:300000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(20px)}
+.success-box{background:#060606;border:1px solid var(--neon);border-radius:20px;padding:45px;max-width:480px;width:90%;text-align:center;position:relative;overflow:hidden}
+.check-circle{width:70px;height:70px;border:2px solid var(--neon);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;animation:pulsCheck 2s infinite;font-size:28px}
+@keyframes pulsCheck{0%,100%{box-shadow:0 0 0 0 rgba(0,242,255,.4)}50%{box-shadow:0 0 0 15px rgba(0,242,255,0)}}
+.success-title{font-family:'Orbitron';font-size:1rem;letter-spacing:4px;color:var(--neon);margin-bottom:10px}
+.success-sub{font-size:11px;color:#666;line-height:1.7;margin-bottom:25px}
+.success-order-nr{font-family:'Orbitron';font-size:9px;color:#333;letter-spacing:2px;margin-bottom:20px}
+.success-btn{padding:13px 30px;background:var(--neon);color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:9px;letter-spacing:2px;cursor:pointer;border-radius:8px;transition:.3s}
+.success-btn:hover{background:#fff}
+.confetti-piece{position:absolute;width:8px;height:8px;border-radius:2px;animation:confettiFall 3s ease-in forwards}
+@keyframes confettiFall{0%{transform:translateY(-50px) rotate(0deg);opacity:1}100%{transform:translateY(500px) rotate(720deg);opacity:0}}
+
+/* ── COOKIE BANNER ── */
+#cookie-banner{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:calc(100% - 40px);max-width:620px;background:#090909;border:1px solid #1a1a1a;border-radius:14px;padding:20px 24px;z-index:500000;display:none;gap:18px;align-items:center;box-shadow:0 20px 60px rgba(0,0,0,.95);opacity:0;transition:opacity .8s ease}
+#cookie-banner.show{display:flex;opacity:1}
+.ck-text{flex:1;font-size:9.5px;color:#666;line-height:1.6}
+.ck-text a{color:var(--neon)}
+.ck-btns{display:flex;flex-direction:column;gap:7px;flex-shrink:0}
+.ck-accept{padding:10px 20px;background:var(--neon);color:#000;border:none;font-family:'Orbitron';font-size:8px;letter-spacing:1px;border-radius:6px;cursor:pointer;font-weight:700;white-space:nowrap}
+.ck-reject{padding:10px 20px;background:transparent;color:#444;border:1px solid #1a1a1a;font-family:'Orbitron';font-size:8px;letter-spacing:1px;border-radius:6px;cursor:pointer;white-space:nowrap;transition:.2s}
+
+/* ── TOAST ── */
+#toasts{position:fixed;bottom:30px;right:28px;z-index:600000;display:flex;flex-direction:column;gap:9px;pointer-events:none}
+.toast{background:#0c0c0c;border:1px solid #1a1a1a;border-left:3px solid var(--neon);padding:12px 16px;border-radius:8px;font-family:'Orbitron';font-size:8.5px;letter-spacing:1px;min-width:210px;animation:toastIn .4s cubic-bezier(.175,.885,.32,1.275);box-shadow:0 10px 40px rgba(0,0,0,.9)}
+.toast.err{border-left-color:#ff4d4f}
+.toast.ok{border-left-color:var(--green)}
+@keyframes toastIn{from{transform:translateX(80px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* ── STARS ── */
+#star-canvas{position:fixed;inset:0;z-index:-1;background:#000}
+#intro-overlay{position:fixed;inset:0;background:#000;z-index:100000;display:flex;align-items:center;justify-content:center}
+#warp-canvas{position:absolute;inset:0}
+
+/* ── HERO ── */
+#hero{min-height:95vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:110px;text-align:center}
+.float-logo{width:200px;filter:drop-shadow(0 0 22px var(--neon));animation:floatY 4s ease-in-out infinite}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-13px)}}
+.hero-banner{width:90%;max-width:780px;margin:28px 0;border-radius:14px;border:1px solid rgba(0,242,255,.22);filter:drop-shadow(0 0 28px rgba(0,242,255,.15));animation:floatY 4.5s ease-in-out infinite;animation-delay:.6s}
+
+/* ── CONFIGURATOR ── */
+#configurator{padding:90px 5% 60px;text-align:center;position:relative;overflow:hidden}
+.lightning-bg{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.lightning-line{position:absolute;width:2px;background:linear-gradient(to bottom,transparent,var(--neon),transparent);opacity:.25;animation:lightningFlash var(--dur,2s) var(--delay,0s) infinite}
+@keyframes lightningFlash{0%,90%,100%{opacity:0}92%,96%{opacity:.6}94%{opacity:0}}
+.cfg-inner{position:relative;z-index:1}
+.cfg-canvas-wrap{max-width:480px;margin:40px auto;position:relative}
+.cfg-controller img{width:100%;border-radius:20px;filter:drop-shadow(0 0 50px rgba(0,242,255,.25))}
+.cfg-options{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:480px;margin:30px auto 0}
+.cfg-cat{background:#080808;border:1px solid #111;border-radius:12px;padding:18px}
+.cfg-cat-title{font-family:'Orbitron';font-size:8.5px;letter-spacing:2px;color:var(--neon);margin-bottom:12px}
+.cfg-opt-row{display:flex;flex-wrap:wrap;gap:7px}
+.cfg-opt{padding:7px 12px;background:#0d0d0d;border:1px solid #1a1a1a;border-radius:5px;font-family:'Orbitron';font-size:7.5px;letter-spacing:1px;cursor:pointer;transition:.25s;color:#888}
+.cfg-opt:hover,.cfg-opt.sel{border-color:var(--neon);color:var(--neon);background:rgba(0,242,255,.06)}
+.cfg-price-display{font-family:'Orbitron';font-size:1.6rem;color:var(--neon);margin:25px 0 5px;font-weight:700}
+.cfg-price-sub{font-size:9px;color:#444;font-family:'Orbitron';letter-spacing:2px;margin-bottom:25px}
+.cfg-add-btn{padding:15px 40px;background:#fff;color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:10px;letter-spacing:2px;cursor:pointer;border-radius:8px;transition:.3s;display:inline-flex;align-items:center;gap:10px;animation:glowPulse 3s infinite}
+.cfg-add-btn:hover{background:var(--neon)}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 8px var(--neon)}50%{box-shadow:0 0 30px var(--neon),0 0 60px rgba(0,242,255,.3)}}
+.cfg-summary{background:#080808;border:1px solid #111;border-radius:10px;padding:16px 20px;margin:20px auto 0;max-width:480px;text-align:left}
+.cfg-sum-row{display:flex;justify-content:space-between;font-size:9.5px;color:#666;padding:4px 0;font-family:'Inter'}
+.cfg-sum-row.active{color:#ccc}
+
+/* ── SECTION HEADINGS ── */
+.sec-title{font-family:'Orbitron';font-size:clamp(.9rem,3vw,1.3rem);letter-spacing:6px;text-align:center;margin-bottom:8px}
+.sec-sub{font-size:9.5px;color:#444;text-align:center;letter-spacing:3px;font-family:'Orbitron';margin-bottom:45px}
+
+/* ── REVIEWS ── */
+.trust-sec{padding:55px 0;overflow:hidden;border-top:1px solid #0a0a0a;border-bottom:1px solid #0a0a0a}
+.ticker-cont{display:flex}
+.ticker-track{display:flex;gap:18px;animation:tickR 40s linear infinite}
+@keyframes tickR{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.rev-card{background:#080808;border:1px solid #111;padding:18px 20px;border-radius:12px;width:270px;flex-shrink:0;transition:.3s}
+.rev-card:hover{border-color:var(--neon)}
+.stars{color:#ffae00;font-size:12px;margin-bottom:7px}
+.src-tag{font-family:'Orbitron';font-size:7.5px;padding:3px 7px;border-radius:3px;display:inline-block;margin-bottom:7px;letter-spacing:.5px}
+.g-tag{background:#4285F4;color:#fff}
+.tp-tag{background:var(--green);color:#fff}
+.eb-tag{background:#e53238;color:#fff}
+
+/* ── SWIPER ── */
+.cfg-swiper-sec{padding:70px 5%;text-align:center}
+.swiper{width:100%;max-width:530px;margin:0 auto;padding-bottom:50px}
+.swiper-slide{perspective:1000px;background:transparent!important;border:none!important;height:500px}
+.p-inner{width:100%;height:100%;transition:transform .8s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d;cursor:pointer;position:relative}
+.swiper-slide:hover .p-inner{transform:rotateY(180deg)}
+.p-front,.p-back{position:absolute;inset:0;backface-visibility:hidden;background:#080808;border-radius:20px;padding:24px;border:1px solid #111;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:.4s}
+.swiper-slide:hover .p-front,.swiper-slide:hover .p-back{border-color:var(--neon);box-shadow:0 0 35px rgba(0,242,255,.25)}
+.p-back{transform:rotateY(180deg);border-color:rgba(0,242,255,.3);background:#040404}
+.p-img{width:100%;height:230px;object-fit:contain;margin-bottom:16px}
+.p-title{font-family:'Orbitron';font-size:11.5px;letter-spacing:2px;margin-bottom:6px}
+.p-price{font-family:'Orbitron';color:var(--neon);font-size:17px;font-weight:700}
+.p-badge{display:inline-block;background:rgba(0,242,255,.1);border:1px solid rgba(0,242,255,.25);color:var(--neon);font-family:'Orbitron';font-size:7px;letter-spacing:1.5px;padding:3px 8px;border-radius:3px;margin-bottom:9px}
+.stock-dot-wrap{display:flex;align-items:center;gap:6px;justify-content:center;font-size:8.5px;color:#555;font-family:'Orbitron';letter-spacing:1px;margin:5px 0}
+.sdot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green);animation:pDot 2s infinite}
+@keyframes pDot{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── GRID / CARDS ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:26px;padding:40px 5%;max-width:1400px;margin:0 auto}
+.card{background:var(--panel);padding:24px;border-radius:14px;border:1px solid #0f0f0f;transition:.4s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(0,242,255,.03),transparent 70%);pointer-events:none}
+.card:hover{border-color:var(--neon);box-shadow:0 0 35px rgba(0,242,255,.18);transform:translateY(-5px)}
+.card img{width:100%;border-radius:8px;object-fit:contain;max-height:190px}
+.card h3{font-family:'Orbitron';margin-top:13px;font-size:10px;letter-spacing:2px}
+.c-price{color:var(--neon);font-family:'Orbitron';font-size:14px;font-weight:700;margin:8px 0}
+.wish-btn{position:absolute;top:13px;right:13px;width:30px;height:30px;border:1px solid #1a1a1a;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(0,0,0,.7);transition:.3s;z-index:2}
+.wish-btn:hover,.wish-btn.on{border-color:#ff4d7d}
+.wish-btn.on svg path{fill:#ff4d7d;stroke:#ff4d7d}
+
+/* ── DELIVERY BOX ── */
+.dbox{margin:11px 0;padding:11px 13px;background:rgba(0,229,255,.04);border-left:3px solid var(--neon);border-radius:6px;display:flex;align-items:center;gap:10px;transition:.3s;cursor:default;border-right:1px solid #0f0f0f;border-top:1px solid #0f0f0f;border-bottom:1px solid #0f0f0f}
+.dbox:hover{background:rgba(0,229,255,.09)}
+@keyframes truckMove{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+.truck{animation:truckMove 2.5s infinite ease-in-out;font-size:1.15em}
+.dbox-lbl{font-family:'Orbitron';font-size:6.5px;color:var(--neon);letter-spacing:2px;text-transform:uppercase}
+.dbox-date{font-size:10.5px;color:#fff;font-family:'Inter';font-weight:500}
+
+/* ── BUTTONS ── */
+.btn{width:100%;padding:13px;background:#fff;color:#000;border:none;font-family:'Orbitron';font-weight:900;cursor:pointer;text-transform:uppercase;transition:.3s;border-radius:8px;font-size:9.5px;letter-spacing:1.5px;display:flex;align-items:center;justify-content:center;gap:7px}
+.btn:hover{background:var(--neon)}
+.btn.outline{background:transparent;border:1px solid var(--neon);color:var(--neon)}
+.btn.outline:hover{background:var(--neon);color:#000}
+
+/* ── PAYMENT SECTION ── */
+.payment-section{padding:60px 5%;text-align:center;border-top:1px solid #0a0a0a;background:#030303}
+.pay-grid{display:flex;justify-content:center;align-items:center;gap:18px;flex-wrap:wrap;margin-top:30px}
+.pay-card{background:#0a0a0a;border:1px solid #131313;border-radius:12px;padding:16px 22px;display:flex;align-items:center;gap:10px;transition:.4s;cursor:default;position:relative;overflow:hidden}
+.pay-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(0,242,255,.04),transparent 70%);opacity:0;transition:.3s}
+.pay-card:hover{border-color:var(--neon);transform:translateY(-3px);box-shadow:0 0 25px rgba(0,242,255,.15)}
+.pay-card:hover::before{opacity:1}
+.pay-logo{height:24px;width:auto;object-fit:contain;filter:brightness(0) invert(1);opacity:.6;transition:.3s}
+.pay-card:hover .pay-logo{opacity:1;filter:brightness(0) invert(1) drop-shadow(0 0 6px var(--neon))}
+.pay-name{font-family:'Orbitron';font-size:8px;letter-spacing:1.5px;color:#555;transition:.3s}
+.pay-card:hover .pay-name{color:var(--neon)}
+.pay-secure-row{display:flex;justify-content:center;gap:22px;margin-top:22px;flex-wrap:wrap}
+.pay-sec-chip{font-family:'Orbitron';font-size:7px;color:#1e1e1e;display:flex;align-items:center;gap:5px;letter-spacing:1px}
+.pay-sec-dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green)}
+
+/* ── EMAIL MARKETING ── */
+#email-marketing{padding:80px 5%;text-align:center;position:relative;overflow:hidden;background:#040404;border-top:1px solid #0a0a0a}
+.em-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:300px;background:radial-gradient(ellipse,rgba(0,242,255,.04) 0%,transparent 70%);pointer-events:none}
+.em-inner{position:relative;z-index:1;max-width:550px;margin:0 auto}
+.em-form{display:flex;gap:10px;margin-top:30px}
+.em-input{flex:1;padding:14px 16px;background:#0c0c0c;border:1px solid #1a1a1a;color:#fff;font-family:'Inter';font-size:12px;border-radius:8px;outline:none;transition:.3s}
+.em-input:focus{border-color:var(--neon);background:rgba(0,242,255,.03)}
+.em-btn{padding:14px 24px;background:var(--neon);color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:9px;letter-spacing:1.5px;cursor:pointer;border-radius:8px;white-space:nowrap;transition:.3s;flex-shrink:0}
+.em-btn:hover{background:#fff}
+#em-success{display:none;font-family:'Orbitron';font-size:10px;color:var(--neon);margin-top:15px;letter-spacing:2px}
+
+/* ── CONTACT ── */
+#contact{padding:90px 5%;max-width:600px;margin:0 auto;text-align:center}
+.input-field{width:100%;padding:13px 15px;background:#040404;border:1px solid #111;color:#fff;margin-bottom:10px;font-family:'Inter';font-size:13px;outline:none;border-radius:7px;transition:.3s}
+.input-field:focus{border-color:var(--neon);background:rgba(0,242,255,.02)}
+
+/* ══════════ CONTROLLER TESTER ══════════ */
+#tester-sec{padding:90px 5%;background:#030303;border-top:1px solid #0a0a0a;text-align:center}
+.tester-ui{max-width:900px;margin:38px auto;background:#070707;border:1px solid #111;border-radius:24px;padding:34px;box-shadow:0 0 60px rgba(0,242,255,.04)}
+.tester-tabs{display:flex;gap:0;margin-bottom:28px;background:#0a0a0a;border-radius:10px;padding:4px;border:1px solid #111}
+.tester-tab{flex:1;padding:10px;font-family:'Orbitron';font-size:8.5px;letter-spacing:1.5px;color:#444;cursor:pointer;border-radius:7px;transition:.3s;text-align:center}
+.tester-tab.active{background:rgba(0,242,255,.1);color:var(--neon);border:1px solid rgba(0,242,255,.2)}
+.tester-panel{display:none}
+.tester-panel.active{display:block}
+.tester-status{font-family:'Orbitron';font-size:10.5px;color:#333;margin-bottom:24px;letter-spacing:2px}
+.tester-status.on{color:var(--neon);text-shadow:0 0 10px var(--neon)}
+.c-visual{display:flex;justify-content:center;gap:45px;flex-wrap:wrap;margin-bottom:28px}
+.stick-disp{width:145px;height:145px;border:2px solid #111;border-radius:50%;position:relative;background:radial-gradient(circle,#0c0c0c,#000 70%)}
+.stick-dot{width:10px;height:10px;background:var(--neon);border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 12px var(--neon);transition:.05s linear}
+.stick-lbl{font-family:'Orbitron';font-size:8.5px;margin-top:11px;color:#555;letter-spacing:1.5px}
+.btn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:7px;margin-top:24px}
+.btn-ind{padding:8px 4px;background:#0c0c0c;border:1px solid #111;border-radius:6px;font-family:'Orbitron';font-size:7.5px;color:#333;transition:.15s;text-align:center}
+.btn-ind.pressed{background:rgba(0,242,255,.12);color:var(--neon);border-color:var(--neon);box-shadow:0 0 10px rgba(0,242,255,.25)}
+.trig-bar{width:100%;height:5px;background:#0c0c0c;border-radius:3px;margin-top:7px;overflow:hidden}
+.trig-fill{height:100%;background:var(--neon);width:0%;transition:.1s;box-shadow:0 0 6px var(--neon)}
+
+/* ── KALIBRIERUNG ── */
+.cal-wrap{max-width:700px;margin:0 auto}
+.cal-stage{background:#0a0a0a;border:1px solid #151515;border-radius:16px;padding:28px;margin-bottom:18px;text-align:center}
+.cal-stage-title{font-family:'Orbitron';font-size:11px;letter-spacing:3px;color:var(--neon);margin-bottom:8px}
+.cal-stage-sub{font-size:9.5px;color:#555;font-family:'Orbitron';letter-spacing:1.5px;margin-bottom:22px}
+.cal-progress{display:flex;gap:8px;justify-content:center;margin-bottom:24px}
+.cal-step{width:28px;height:4px;background:#111;border-radius:2px;transition:.4s}
+.cal-step.done{background:var(--neon);box-shadow:0 0 6px var(--neon)}
+.cal-step.active{background:rgba(0,242,255,.5)}
+.cal-canvas{width:200px;height:200px;border:1px solid #1a1a1a;border-radius:50%;background:radial-gradient(circle,#0c0c0c,#000 70%);margin:0 auto 18px;position:relative;overflow:hidden}
+.cal-dot{width:12px;height:12px;background:var(--neon);border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 15px var(--neon)}
+.cal-zone{position:absolute;border:1px dashed rgba(0,242,255,.2);border-radius:50%}
+.cal-btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.cal-btn{padding:11px 24px;font-family:'Orbitron';font-size:8.5px;letter-spacing:2px;border:none;cursor:pointer;border-radius:8px;transition:.3s}
+.cal-btn.primary{background:var(--neon);color:#000;font-weight:900}
+.cal-btn.primary:hover{background:#fff}
+.cal-btn.secondary{background:transparent;border:1px solid #1a1a1a;color:#555}
+.cal-btn.secondary:hover{border-color:var(--neon);color:var(--neon)}
+.cal-result-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;text-align:left}
+.cal-result-card{background:#0a0a0a;border:1px solid #111;border-radius:10px;padding:14px}
+.cal-result-label{font-family:'Orbitron';font-size:7.5px;color:#444;letter-spacing:2px;margin-bottom:5px}
+.cal-result-val{font-family:'Orbitron';font-size:11px;color:var(--neon)}
+.cal-result-sub{font-size:8px;color:#333;margin-top:2px}
+.cal-drift-meter{width:100%;height:6px;background:#0a0a0a;border-radius:3px;margin-top:8px;overflow:hidden}
+.cal-drift-fill{height:100%;border-radius:3px;transition:.5s}
+.cal-heatmap{width:100%;height:140px;position:relative;background:#070707;border-radius:10px;overflow:hidden;border:1px solid #111;margin-top:14px}
+.cal-rawdata{font-family:'Orbitron';font-size:7px;color:#222;letter-spacing:1px;text-align:left;padding:10px;background:#050505;border-radius:6px;border:1px solid #0f0f0f;margin-top:10px;max-height:80px;overflow-y:auto}
+
+/* ── REPARATUR FORMULAR ── */
+#repair-sec{padding:90px 5%;background:#020202;border-top:1px solid #0a0a0a;text-align:center}
+.repair-ui{max-width:780px;margin:40px auto}
+.repair-steps{display:flex;gap:0;justify-content:center;margin-bottom:40px;position:relative}
+.repair-steps::before{content:'';position:absolute;top:18px;left:10%;right:10%;height:1px;background:#111;z-index:0}
+.rep-step{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;position:relative;z-index:1}
+.rep-step-num{width:36px;height:36px;border:1px solid #1a1a1a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Orbitron';font-size:9px;color:#333;background:#000;transition:.4s}
+.rep-step.active .rep-step-num{border-color:var(--neon);color:var(--neon);box-shadow:0 0 12px rgba(0,242,255,.3)}
+.rep-step.done .rep-step-num{background:var(--neon);color:#000;border-color:var(--neon)}
+.rep-step-lbl{font-family:'Orbitron';font-size:6.5px;color:#333;letter-spacing:1px;text-align:center}
+.rep-step.active .rep-step-lbl{color:var(--neon)}
+.repair-form-wrap{background:#080808;border:1px solid #111;border-radius:18px;padding:30px;text-align:left}
+.rep-panel{display:none}
+.rep-panel.active{display:block}
+.rep-section-title{font-family:'Orbitron';font-size:9.5px;color:var(--neon);letter-spacing:3px;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid #111}
+.rep-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.rep-input{width:100%;padding:11px 14px;background:#0c0c0c;border:1px solid #1a1a1a;color:#fff;font-family:'Inter';font-size:12px;border-radius:7px;outline:none;transition:.2s}
+.rep-input:focus{border-color:var(--neon);background:rgba(0,242,255,.02)}
+.rep-label{font-family:'Orbitron';font-size:7.5px;color:#444;letter-spacing:1.5px;margin-bottom:6px;display:block}
+.rep-damage-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.rep-damage-opt{background:#0c0c0c;border:1px solid #151515;border-radius:10px;padding:14px 10px;cursor:pointer;transition:.3s;text-align:center}
+.rep-damage-opt.sel{border-color:var(--neon);background:rgba(0,242,255,.07)}
+.rep-damage-icon{font-size:22px;margin-bottom:7px}
+.rep-damage-lbl{font-family:'Orbitron';font-size:7px;color:#666;letter-spacing:1px}
+.rep-damage-opt.sel .rep-damage-lbl{color:var(--neon)}
+.rep-price-est{background:#0a0a0a;border:1px solid var(--neon);border-radius:10px;padding:16px;margin:16px 0;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.rep-price-lbl{font-family:'Orbitron';font-size:8px;color:#555;letter-spacing:1.5px}
+.rep-price-val{font-family:'Orbitron';font-size:1.1rem;color:var(--neon);font-weight:700}
+.rep-nav-row{display:flex;gap:10px;margin-top:20px}
+.rep-nav-btn{flex:1;padding:12px;font-family:'Orbitron';font-size:9px;letter-spacing:2px;border:none;cursor:pointer;border-radius:8px;transition:.3s}
+.rep-nav-btn.next{background:var(--neon);color:#000;font-weight:900}
+.rep-nav-btn.next:hover{background:#fff}
+.rep-nav-btn.back{background:transparent;border:1px solid #1a1a1a;color:#555}
+.rep-nav-btn.back:hover{border-color:var(--neon);color:var(--neon)}
+.rep-summary-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #0f0f0f;font-size:9.5px;color:#666}
+.rep-summary-item span:last-child{color:#ccc}
+.rep-success{text-align:center;padding:30px;display:none}
+.rep-success-icon{font-size:48px;margin-bottom:15px}
+.rep-success-title{font-family:'Orbitron';font-size:12px;color:var(--neon);letter-spacing:3px;margin-bottom:10px}
+.rep-success-sub{font-size:10px;color:#666;line-height:1.7}
+textarea.rep-input{height:100px;resize:vertical}
+
+/* ── FOOTER ── */
+.footer{padding:55px 5%;background:linear-gradient(-45deg,#00f2ff,#000,#bc13fe,#000);background-size:400% 400%;animation:footerG 12s ease infinite;border-top:1px solid rgba(255,255,255,.07)}
+@keyframes footerG{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
+.legal-box{border:1px solid rgba(255,255,255,.1);margin-bottom:8px;border-radius:8px;background:rgba(0,0,0,.88)}
+.legal-hd{padding:15px 18px;cursor:pointer;font-family:'Orbitron';font-size:8.5px;color:#ccc;display:flex;justify-content:space-between;align-items:center;letter-spacing:1.5px}
+.legal-hd:hover{color:#fff}
+.legal-body{max-height:0;padding:0 18px;transition:.4s;font-size:9.5px;color:#666;overflow:hidden;line-height:1.85}
+.legal-box.open .legal-body{max-height:4000px;padding:18px;border-top:1px solid rgba(255,255,255,.07)}
+.legal-body a{color:var(--neon)}
+.footer-bottom{text-align:center;margin-top:30px;font-family:'Orbitron';font-size:7.5px;color:rgba(255,255,255,.15);letter-spacing:3px}
+.footer-links{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:15px}
+.footer-links a{font-family:'Orbitron';font-size:7.5px;color:#333;letter-spacing:1px;text-decoration:none;transition:.2s;cursor:pointer}
+.footer-links a:hover{color:var(--neon)}
+.footer-social{display:flex;justify-content:center;gap:18px;margin:20px 0}
+.soc-icon{width:30px;height:30px;opacity:.45;filter:invert(1);transition:.3s}
+.soc-icon:hover{opacity:1;filter:invert(1) drop-shadow(0 0 7px var(--neon))}
+
+/* ── SCROLL TOP ── */
+#scroll-top{position:fixed;bottom:28px;left:28px;width:38px;height:38px;background:#0c0c0c;border:1px solid #1a1a1a;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:9000;transition:.3s;opacity:0;transform:translateY(15px)}
+#scroll-top.vis{opacity:1;transform:translateY(0)}
+#scroll-top:hover{border-color:var(--neon);color:var(--neon)}
+
+/* ── REVIEW MODAL ── */
+#review-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:60000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(12px)}
+
+/* ── MOBILE SEARCH ── */
+#mob-srch-tog{display:none;cursor:pointer;color:#666;transition:.2s}
+#mob-srch-ov{position:fixed;inset:0;background:rgba(0,0,0,.98);z-index:50000;display:none;flex-direction:column;padding:80px 20px 20px}
+#mob-srch-ov.on{display:flex}
+.mob-srch-input{width:100%;padding:14px 16px;background:#0c0c0c;border:1px solid #1a1a1a;color:#fff;font-family:'Inter';font-size:14px;border-radius:8px;outline:none;margin-bottom:14px}
+.mob-srch-input:focus{border-color:var(--neon)}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(38px)}
+
+@media(max-width:700px){
+  .em-form{flex-direction:column}
+  .cfg-options{grid-template-columns:1fr}
+  .srch-wrap{max-width:150px;margin:0 10px}
+  .rep-grid{grid-template-columns:1fr}
+  .rep-damage-grid{grid-template-columns:repeat(2,1fr)}
+  .cal-result-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .srch-wrap{display:none}
+  #mob-srch-tog{display:flex!important}
+}
+</style>
+</head>
+<body class="notranslate">
+
+<!-- INTRO -->
+<div id="intro-overlay"><canvas id="warp-canvas"></canvas></div>
+<canvas id="star-canvas"></canvas>
+
+<!-- OVERLAYS -->
+<div class="c-overlay" onclick="closeCart()"></div>
+<div id="toasts"></div>
+
+<!-- ══════════ COOKIE BANNER ══════════ -->
+<div id="cookie-banner">
+  <div class="ck-text">
+    Wir nutzen ausschließlich technisch notwendige Cookies für Warenkorb & Zahlungsabwicklung (PayPal, Stripe). Keine Werbe-Cookies. Details in unserer <a href="#datenschutz" onclick="openLegal('datenschutz')">Datenschutzerklärung</a>.
+  </div>
+  <div class="ck-btns">
+    <button class="ck-accept" onclick="ckAccept()">AKZEPTIEREN</button>
+    <button class="ck-reject" onclick="ckReject()">NUR NOTWENDIGE</button>
+  </div>
+</div>
+
+<!-- ══════════ ORDER SUCCESS MODAL ══════════ -->
+<div id="order-success-modal">
+  <div class="success-box" id="success-box">
+    <div class="check-circle">✓</div>
+    <div class="success-title">BESTELLUNG ERFOLGREICH</div>
+    <div class="success-sub">
+      Vielen Dank für deine Bestellung!<br>
+      Eine Bestellbestätigung inkl. Rechnung wurde an<br>
+      <strong id="success-email" style="color:var(--neon)"></strong> gesendet.
+    </div>
+    <div class="success-order-nr" id="success-order-nr"></div>
+    <button class="success-btn" onclick="closeOrderSuccess()">ZURÜCK ZUM SHOP</button>
+  </div>
+</div>
+
+<!-- ══════════ REVIEW MODAL ══════════ -->
+<div id="review-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:60000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(12px)">
+  <div style="background:#050505;border:1px solid var(--neon);padding:40px;border-radius:18px;text-align:center;max-width:360px;width:90%">
+    <h3 style="font-family:'Orbitron';font-size:12px;margin-bottom:20px;color:var(--neon);letter-spacing:3px">BEWERTUNG ABGEBEN</h3>
+    <a href="https://www.google.com/search?q=lexord.de+reviews" target="_blank" style="display:block;padding:13px;margin-bottom:11px;border-radius:8px;text-decoration:none;color:#fff;font-family:'Orbitron';font-size:9.5px;letter-spacing:1px;border:1px solid #4285F4;transition:.3s">⭐ AUF GOOGLE BEWERTEN</a>
+    <a href="https://de.trustpilot.com/review/lexord.de" target="_blank" style="display:block;padding:13px;margin-bottom:11px;border-radius:8px;text-decoration:none;color:#fff;font-family:'Orbitron';font-size:9.5px;letter-spacing:1px;border:1px solid var(--green);transition:.3s">⭐ AUF TRUSTPILOT</a>
+    <a href="https://www.ebay.de/usr/lexord-de" target="_blank" style="display:block;padding:13px;margin-bottom:18px;border-radius:8px;text-decoration:none;color:#fff;font-family:'Orbitron';font-size:9.5px;letter-spacing:1px;border:1px solid #e53238;transition:.3s">⭐ AUF EBAY</a>
+    <div onclick="document.getElementById('review-modal').style.display='none'" style="font-size:9px;color:#444;cursor:pointer;font-family:'Orbitron'">← ZURÜCK</div>
+  </div>
+</div>
+
+<!-- ══════════ MOBILE SEARCH ══════════ -->
+<div id="mob-srch-ov">
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+    <input class="mob-srch-input" placeholder="Produkt suchen..." oninput="mobSearch(this.value)">
+    <div onclick="document.getElementById('mob-srch-ov').classList.remove('on')" style="font-size:24px;color:#555;cursor:pointer;flex-shrink:0">×</div>
+  </div>
+  <div id="mob-srch-res"></div>
+</div>
+
+<!-- ══════════ TICKER ══════════ -->
+<div class="ticker-wrap">
+  <div class="ticker-row">
+    <div class="ticker-inner">
+      <span class="hl">✓ VERSAND IN 24H</span><span>MADE IN GERMANY</span><span class="hl">★★★★★ TOP BEWERTUNGEN</span>
+      <span>HALL EFFECT &amp; TMR UMBAU</span><span class="hl">KÄUFERSCHUTZ PAYPAL</span><span>KREDITKARTE VIA STRIPE</span>
+      <span class="hl">KOSTENLOS AB 50€</span><span>14 TAGE RÜCKGABE</span><span class="hl">AUTOMATISCHE RECHNUNG</span>
+      <span>CUSTOM CONTROLLER KONFIGURATOR</span><span class="hl">✓ VERSAND IN 24H</span><span>MADE IN GERMANY</span>
+      <span class="hl">★★★★★ TOP BEWERTUNGEN</span><span>HALL EFFECT &amp; TMR UMBAU</span><span class="hl">KÄUFERSCHUTZ PAYPAL</span>
+      <span>KREDITKARTE VIA STRIPE</span><span class="hl">KOSTENLOS AB 50€</span><span>14 TAGE RÜCKGABE</span>
+      <span class="hl">AUTOMATISCHE RECHNUNG</span><span>CUSTOM CONTROLLER KONFIGURATOR</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ HEADER ══════════ -->
+<header>
+  <a class="brand" href="#hero" translate="no">LEXORD®</a>
+  <div class="srch-wrap">
+    <span class="srch-ico">🔍</span>
+    <input type="text" class="srch-input" id="desk-srch" placeholder="Produkt suchen..." oninput="deskSearch(this.value)" autocomplete="off">
+    <div id="srch-drop"></div>
+  </div>
+  <div class="nav-ctrl">
+    <div id="mob-srch-tog" onclick="document.getElementById('mob-srch-ov').classList.add('on')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </div>
+    <div class="cart-btn" onclick="toggleCart()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span id="cart-count" class="cart-badge">0</span>
+    </div>
+    <div class="burger" onclick="toggleMenu()"><div></div><div></div><div></div></div>
+  </div>
+</header>
+
+<!-- ══════════ FULL NAV ══════════ -->
+<nav id="full-nav">
+  <div class="nav-link" style="cursor:pointer" onclick="toggleMenu()">HOME</div>
+  <div class="nav-link" onclick="toggleMenu()">KONFIGURATOR</div>
+  <div class="nav-link" onclick="toggleMenu()">PRODUKTE</div>
+  <div class="nav-link" onclick="toggleMenu()">REPARATUR</div>
+  <div class="nav-link" onclick="toggleMenu()">KONTAKT</div>
+  <div class="nav-link" style="cursor:pointer" onclick="document.getElementById('review-modal').style.display='flex';toggleMenu()">BEWERTEN</div>
+  <div class="footer-social" style="margin-top:20px">
+    <a href="https://instagram.com/lexord.de" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" class="soc-icon" alt="Instagram"></a>
+    <a href="https://tiktok.com/@lexord.de" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" class="soc-icon" alt="TikTok"></a>
+  </div>
+</nav>
+
+<!-- ══════════ CART DRAWER ══════════ -->
+<div id="cart-drawer">
+  <div class="cart-hd">
+    <span class="cart-hd-title">WARENKORB <span id="cart-hd-count" style="color:var(--neon)">(0)</span></span>
+    <div class="cart-x" onclick="closeCart()">×</div>
+  </div>
+  <div class="cart-body" id="cart-body">
+    <div class="c-empty"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><p>WARENKORB LEER</p></div>
+  </div>
+  <div class="cart-ft">
+    <div class="ship-bar-lbl" id="ship-lbl">AB 50€ KOSTENLOSER VERSAND (DE)</div>
+    <div class="ship-bar"><div class="ship-fill" id="ship-fill" style="width:0%"></div></div>
+
+    <!-- LAND AUSWAHL -->
+    <div class="land-row">
+      <span class="land-lbl">🌍 LIEFERLAND</span>
+      <select class="land-sel" id="land-sel" onchange="updateCart()">
+        <option value="DE">🇩🇪 Deutschland</option>
+        <option value="AT">🇦🇹 Österreich</option>
+        <option value="CH">🇨🇭 Schweiz</option>
+        <option value="FR">🇫🇷 Frankreich</option>
+        <option value="NL">🇳🇱 Niederlande</option>
+        <option value="BE">🇧🇪 Belgien</option>
+        <option value="LU">🇱🇺 Luxemburg</option>
+        <option value="IT">🇮🇹 Italien</option>
+        <option value="ES">🇪🇸 Spanien</option>
+        <option value="PL">🇵🇱 Polen</option>
+        <option value="CZ">🇨🇿 Tschechien</option>
+        <option value="SE">🇸🇪 Schweden</option>
+        <option value="DK">🇩🇰 Dänemark</option>
+        <option value="EU_OTHER">🇪🇺 Sonstiges EU-Land</option>
+        <option value="GB">🇬🇧 Großbritannien</option>
+        <option value="US">🇺🇸 USA</option>
+        <option value="WORLD">🌐 Sonstiges Ausland</option>
+      </select>
+    </div>
+
+    <!-- RABATTCODE -->
+    <div>
+      <div class="discount-row">
+        <input type="text" class="discount-input" id="discount-code" placeholder="RABATTCODE EINGEBEN" maxlength="20">
+        <button class="discount-btn" onclick="applyDiscount()">EINLÖSEN</button>
+      </div>
+      <div class="discount-ok" id="discount-ok"></div>
+      <div class="discount-err" id="discount-err"></div>
+    </div>
+
+    <div class="sum-row"><span>Zwischensumme</span><span id="c-sub">0,00 €</span></div>
+    <div class="sum-row" id="discount-row" style="display:none;color:var(--green)"><span id="discount-label">Rabatt</span><span id="c-discount">-0,00 €</span></div>
+    <div class="sum-row"><span>Versand (DHL)</span><span id="c-ship">–</span></div>
+    <div class="sum-row total"><span>GESAMT</span><span id="c-total">0,00 €</span></div>
+    <div class="legal-note">
+      Mit Kauf akzeptierst du <a href="agb.html" target="_blank">AGB</a>,
+      <a href="Datenschutz.html" target="_blank">Datenschutz</a> &amp;
+      <a href="Widerrufsbelehrung.html" target="_blank">Widerrufsbelehrung</a>.
+      Keine MwSt. (§ 19 UStG).
+    </div>
+    <label class="agb-check">
+      <input type="checkbox" id="cart-agb">
+      Ich habe die <a href="agb.html" target="_blank">AGB</a> gelesen und stimme zu.
+    </label>
+
+    <!-- STRIPE CHECKOUT BUTTON -->
+    <button class="checkout-btn" onclick="goStripeCheckout()" style="animation:glowPulse 3s infinite">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      JETZT BEZAHLEN (STRIPE) →
+    </button>
+
+    <div class="or-div">ODER MIT PAYPAL</div>
+    <div id="pp-btn-cont"></div>
+
+    <div class="vat-lbl">Gesamtpreis inkl. Versand · Keine MwSt. § 19 UStG</div>
+    <div class="trust-row">
+      <span class="trust-chip">🔒 SSL</span>
+      <span class="trust-chip">✓ PAYPAL SCHUTZ</span>
+      <span class="trust-chip">✓ STRIPE SECURE</span>
+      <span class="trust-chip">🔄 14 TAGE RÜCKGABE</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SCROLL TOP ══════════ -->
+<div id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+</div>
+
+<main>
+
+<!-- ══════════ HERO ══════════ -->
+<section id="hero">
+  <img src="IMG_7023.png" class="float-logo" alt="LEXORD Logo" style="margin-top:15px">
+  <h1 translate="no" style="font-family:'Orbitron';font-size:clamp(1rem,5vw,2.1rem);margin-top:14px;letter-spacing:9px">BEYOND LIMITS</h1>
+  <p style="font-size:9px;color:#333;font-family:'Orbitron';letter-spacing:4px;margin-top:7px">MADE IN GERMANY · ENGINEERING EXCELLENCE</p>
+  <img src="82AAE1DF-9784-4FAB-8264-A4C2E7A1BEC0.png" class="hero-banner" alt="LEXORD Controller">
+  <img src="Photoroom_20260402_000221.png" class="float-logo" alt="LEXORD Controller" style="animation-delay:1.2s">
+</section>
+
+<!-- ══════════ CONTROLLER KONFIGURATOR ══════════ -->
+<section id="configurator" class="reveal">
+  <div class="lightning-bg" id="lightning-bg"></div>
+  <div class="cfg-inner">
+    <div class="sec-title">CONTROLLER KONFIGURATOR</div>
+    <p class="sec-sub">KONFIGURIERE DEINEN TRAUM-CONTROLLER · LIVE PREISBERECHNUNG</p>
+    <div class="cfg-canvas-wrap">
+      <div class="cfg-controller">
+        <img src="Photoroom_20260305_123705.png" alt="Controller Konfigurator">
+      </div>
+    </div>
+    <div class="cfg-options">
+      <div class="cfg-cat">
+        <div class="cfg-cat-title">⚙ STICK TECHNOLOGIE</div>
+        <div class="cfg-opt-row">
+          <div class="cfg-opt sel" data-cat="stick" data-val="Standard" data-price="0">STANDARD</div>
+          <div class="cfg-opt" data-cat="stick" data-val="Hall Effect" data-price="30">HALL EFFECT +30€</div>
+          <div class="cfg-opt" data-cat="stick" data-val="TMR" data-price="50">TMR +50€</div>
+        </div>
+      </div>
+      <div class="cfg-cat">
+        <div class="cfg-cat-title">🎮 TRIGGER</div>
+        <div class="cfg-opt-row">
+          <div class="cfg-opt sel" data-cat="trigger" data-val="Standard" data-price="0">STANDARD</div>
+          <div class="cfg-opt" data-cat="trigger" data-val="Clicky" data-price="20">CLICKY +20€</div>
+          <div class="cfg-opt" data-cat="trigger" data-val="Digital" data-price="35">DIGITAL +35€</div>
+        </div>
+      </div>
+      <div class="cfg-cat">
+        <div class="cfg-cat-title">🏆 PADDLES</div>
+        <div class="cfg-opt-row">
+          <div class="cfg-opt sel" data-cat="paddle" data-val="Keine" data-price="0">KEINE</div>
+          <div class="cfg-opt" data-cat="paddle" data-val="2x Paddle" data-price="40">2× PADDLE +40€</div>
+          <div class="cfg-opt" data-cat="paddle" data-val="4x Paddle" data-price="70">4× PADDLE +70€</div>
+        </div>
+      </div>
+      <div class="cfg-cat">
+        <div class="cfg-cat-title">🔲 GEHÄUSE</div>
+        <div class="cfg-opt-row">
+          <div class="cfg-opt sel" data-cat="shell" data-val="Standard" data-price="0">STANDARD</div>
+          <div class="cfg-opt" data-cat="shell" data-val="GRIP" data-price="25">GRIP +25€</div>
+          <div class="cfg-opt" data-cat="shell" data-val="Carbon" data-price="40">CARBON +40€</div>
+        </div>
+      </div>
+    </div>
+    <div class="cfg-summary">
+      <div class="cfg-sum-row" id="sum-base"><span>Basis PS5 Controller</span><span>70,00 €</span></div>
+      <div class="cfg-sum-row" id="sum-stick"><span>Stick: Standard</span><span>+0,00 €</span></div>
+      <div class="cfg-sum-row" id="sum-trigger"><span>Trigger: Standard</span><span>+0,00 €</span></div>
+      <div class="cfg-sum-row" id="sum-paddle"><span>Paddles: Keine</span><span>+0,00 €</span></div>
+      <div class="cfg-sum-row" id="sum-shell"><span>Gehäuse: Standard</span><span>+0,00 €</span></div>
+    </div>
+    <div class="cfg-price-display" id="cfg-price">70,00 €</div>
+    <div class="cfg-price-sub">DEIN KONFIGURIERTER PREIS · INKL. PROFIMONTAGE</div>
+    <button class="cfg-add-btn" onclick="addConfigToCart()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      KONFIGURATION IN DEN WARENKORB
+    </button>
+  </div>
+</section>
+
+<!-- ══════════ TRUST REVIEWS ══════════ -->
+<section class="trust-sec reveal">
+  <div class="ticker-cont">
+    <div class="ticker-track">
+      <div class="rev-card"><div class="stars">★★★★★</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Beste Scuf Alternative. Qualität ist Wahnsinn!"</p></div>
+      <div class="rev-card"><div class="stars">★★★★★</div><span class="src-tag g-tag">GOOGLE</span><p style="font-size:10px;color:#aaa">"Stickzange perfekt. 24h Versand top!"</p></div>
+      <div class="rev-card"><div class="stars">★★★★★</div><span class="src-tag eb-tag">EBAY</span><p style="font-size:10px;color:#aaa">"Engineering auf höchstem Level. Super Kontakt."</p></div>
+      <div class="rev-card"><div class="stars">★★★★★</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Kein Stick-Drift mehr. TMR Umbau top!"</p></div>
+      <div class="rev-card"><div class="stars">★★★★★</div><span class="src-tag g-tag">GOOGLE</span><p style="font-size:10px;color:#aaa">"Mega schnelle Lieferung, Verarbeitung 10/10."</p></div>
+      <div class="rev-card"><div class="stars">★★★★★</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Konfigurator super easy, genau was ich wollte!"</p></div>
+      <div class="rev-card"><div class="stars">★★★★★</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Beste Scuf Alternative. Qualität ist Wahnsinn!"</p></div>
+      <div class="rev-card"><div class="stars">★★★★★</div><span class="src-tag g-tag">GOOGLE</span><p style="font-size:10px;color:#aaa">"Stickzange perfekt. 24h Versand top!"</p></div>
+      <div class="rev-card"><div class="stars">★★★★★</div><span class="src-tag eb-tag">EBAY</span><p style="font-size:10px;color:#aaa">"Engineering auf höchstem Level. Super Kontakt."</p></div>
+      <div class="rev-card"><div class="stars">★★★★★</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Kein Stick-Drift mehr. TMR Umbau top!"</p></div>
+      <div class="rev-card"><div class="stars">★★★★★</div><span class="src-tag g-tag">GOOGLE</span><p style="font-size:10px;color:#aaa">"Mega schnelle Lieferung, Verarbeitung 10/10."</p></div>
+      <div class="rev-card"><div class="stars">★★★★★</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Konfigurator super easy, genau was ich wollte!"</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PREMIUM CONTROLLER SWIPER ══════════ -->
+<section class="cfg-swiper-sec reveal">
+  <div class="sec-title">PREMIUM CONTROLLER</div>
+  <p class="sec-sub">HOVER ZUM DREHEN · ALLE SOFORT VERFÜGBAR</p>
+  <div class="swiper mySwiper">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide">
+        <div class="p-inner">
+          <div class="p-front">
+            <span class="p-badge">BESTSELLER</span>
+            <img src="Photoroom_20260305_123705.png" class="p-img" alt="LXRD Performance Black">
+            <div class="p-title">LXRD PERFORMANCE BLACK</div>
+            <div class="stars">★★★★★ (42)</div>
+            <div class="stock-dot-wrap"><div class="sdot"></div>AUF LAGER</div>
+            <div class="p-price">240,00 €</div>
+            <button class="btn" style="margin-top:11px;font-size:8.5px" onclick="event.stopPropagation();addToCart('LXRD Performance Black',240.00,'Photoroom_20260305_123705.png')">IN DEN WARENKORB</button>
+          </div>
+          <div class="p-back">
+            <img src="Photoroom_20260306_112425.png" class="p-img" alt="Details">
+            <div class="p-title" style="color:var(--neon)">ENTHÄLT</div>
+            <div style="font-size:9.5px;color:#999;margin:11px 0;line-height:2;text-align:left;width:100%">
+              ✓ TMR Hall-Effect Sticks (kein Drift)<br>✓ Clicky Trigger / Mouse Click<br>✓ GRIP Gehäuse (Anti-Rutsch)<br>✓ 2× Paddle-System V2<br>✓ DualSense Edge Alternative
+            </div>
+            <button class="btn outline" onclick="event.stopPropagation();addToCart('LXRD Performance Black',240.00,'Photoroom_20260305_123705.png')">JETZT KAUFEN</button>
+          </div>
+        </div>
+      </div>
+      <div class="swiper-slide">
+        <div class="p-inner">
+          <div class="p-front">
+            <span class="p-badge">BELIEBT</span>
+            <img src="Photoroom_20260305_140346.png" class="p-img" alt="LXRD Plus Black">
+            <div class="p-title">LXRD PLUS BLACK</div>
+            <div class="stars">★★★★★ (31)</div>
+            <div class="stock-dot-wrap"><div class="sdot"></div>AUF LAGER</div>
+            <div class="p-price">180,00 €</div>
+            <button class="btn" style="margin-top:11px;font-size:8.5px" onclick="event.stopPropagation();addToCart('LXRD Plus Black',180.00,'Photoroom_20260305_140346.png')">IN DEN WARENKORB</button>
+          </div>
+          <div class="p-back">
+            <img src="Photoroom_20260306_112425.png" class="p-img" alt="Details">
+            <div class="p-title" style="color:var(--neon)">ENTHÄLT</div>
+            <div style="font-size:9.5px;color:#999;margin:11px 0;line-height:2;text-align:left;width:100%">
+              ✓ Hall-Effect Sticks<br>✓ Clicky Trigger<br>✓ GRIP Gehäuse<br>✓ 2× Paddle-System V2
+            </div>
+            <button class="btn outline" onclick="event.stopPropagation();addToCart('LXRD Plus Black',180.00,'Photoroom_20260305_140346.png')">JETZT KAUFEN</button>
+          </div>
+        </div>
+      </div>
+      <div class="swiper-slide">
+        <div class="p-inner">
+          <div class="p-front">
+            <span class="p-badge">EINSTIEG</span>
+            <img src="Photoroom_20260402_014813.png" class="p-img" alt="LXRD Basic Black">
+            <div class="p-title">LXRD BASIC BLACK</div>
+            <div class="stars">★★★★★ (18)</div>
+            <div class="stock-dot-wrap"><div class="sdot"></div>AUF LAGER</div>
+            <div class="p-price">105,00 €</div>
+            <button class="btn" style="margin-top:11px;font-size:8.5px" onclick="event.stopPropagation();addToCart('LXRD Basic Black',105.00,'Photoroom_20260402_014813.png')">IN DEN WARENKORB</button>
+          </div>
+          <div class="p-back">
+            <img src="Photoroom_20260402_014150.png" class="p-img" alt="Details">
+            <div class="p-title" style="color:var(--neon)">ENTHÄLT</div>
+            <div style="font-size:9.5px;color:#999;margin:11px 0;line-height:2;text-align:left;width:100%">
+              ✓ 2× Paddle-System<br>✓ Standard Gehäuse<br>✓ Perfekter Einstieg
+            </div>
+            <button class="btn outline" onclick="event.stopPropagation();addToCart('LXRD Basic Black',105.00,'Photoroom_20260402_014813.png')">JETZT KAUFEN</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="swiper-pagination"></div>
+  </div>
+</section>
+
+<!-- ══════════ ACCESSORY GRID ══════════ -->
+<section id="shop" class="reveal">
+  <div class="sec-title">ZUBEHÖR &amp; TEILE</div>
+  <p class="sec-sub">EINZELTEILE · UPGRADES · WERKZEUG</p>
+  <div class="grid">
+    <div class="card">
+      <div class="wish-btn" onclick="toggleWish(this,'Stickzange Pro')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+      <img src="Stickzange.PNG" alt="Stickzange Pro">
+      <h3>STICKZANGE PRO</h3>
+      <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
+      <p class="c-price">5,00 €</p>
+      <div class="dbox"><span class="truck">🚚</span><div><div class="dbox-lbl">Premium Versand</div><div class="dbox-date">Ankunft: <span class="delivery-date">–</span></div></div></div>
+      <button class="btn" onclick="addToCart('Stickzange Pro',5.00,'Stickzange.PNG')">IN DEN WARENKORB</button>
+    </div>
+    <div class="card">
+      <div class="wish-btn" onclick="toggleWish(this,'Paddle System V2')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+      <img src="Photoroom_20260304_212902.png" alt="Paddle System V2">
+      <h3>PADDLE SYSTEM V2</h3>
+      <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
+      <p class="c-price">40,00 €</p>
+      <div class="dbox"><span class="truck">🚚</span><div><div class="dbox-lbl">Premium Versand</div><div class="dbox-date">Ankunft: <span class="delivery-date">–</span></div></div></div>
+      <button class="btn" onclick="addToCart('Paddle System V2',40.00,'Photoroom_20260304_212902.png')">IN DEN WARENKORB</button>
+    </div>
+    <div class="card">
+      <div class="wish-btn" onclick="toggleWish(this,'TMR Stick Upgrade Kit')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+      <img src="Photoroom_20260305_123705.png" alt="TMR Stick Upgrade" style="filter:brightness(.7) sepia(1) hue-rotate(160deg) saturate(3)">
+      <h3>TMR STICK UPGRADE KIT</h3>
+      <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
+      <p class="c-price">55,00 €</p>
+      <div class="dbox"><span class="truck">🚚</span><div><div class="dbox-lbl">Premium Versand</div><div class="dbox-date">Ankunft: <span class="delivery-date">–</span></div></div></div>
+      <button class="btn" onclick="addToCart('TMR Stick Upgrade Kit',55.00,'Photoroom_20260305_123705.png')">IN DEN WARENKORB</button>
+    </div>
+    <div class="card">
+      <div class="wish-btn" onclick="toggleWish(this,'Hall Effect Upgrade Kit')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+      <img src="Photoroom_20260305_140346.png" alt="Hall Effect Kit" style="filter:brightness(.7) sepia(1) hue-rotate(220deg) saturate(2)">
+      <h3>HALL EFFECT UPGRADE KIT</h3>
+      <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
+      <p class="c-price">35,00 €</p>
+      <div class="dbox"><span class="truck">🚚</span><div><div class="dbox-lbl">Premium Versand</div><div class="dbox-date">Ankunft: <span class="delivery-date">–</span></div></div></div>
+      <button class="btn" onclick="addToCart('Hall Effect Upgrade Kit',35.00,'Photoroom_20260305_140346.png')">IN DEN WARENKORB</button>
+    </div>
+    <div class="card">
+      <div class="wish-btn" onclick="toggleWish(this,'GRIP Gehäuse Set')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+      <img src="Photoroom_20260402_014813.png" alt="GRIP Shell" style="filter:brightness(.6) sepia(1) hue-rotate(90deg) saturate(2)">
+      <h3>GRIP GEHÄUSE SET</h3>
+      <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
+      <p class="c-price">28,00 €</p>
+      <div class="dbox"><span class="truck">🚚</span><div><div class="dbox-lbl">Premium Versand</div><div class="dbox-date">Ankunft: <span class="delivery-date">–</span></div></div></div>
+      <button class="btn" onclick="addToCart('GRIP Gehäuse Set',28.00,'Photoroom_20260402_014813.png')">IN DEN WARENKORB</button>
+    </div>
+    <div class="card">
+      <div class="wish-btn" onclick="toggleWish(this,'Clicky Trigger Kit')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+      <img src="Photoroom_20260304_212902.png" alt="Clicky Trigger Kit" style="filter:brightness(.6) sepia(1) hue-rotate(310deg) saturate(3)">
+      <h3>CLICKY TRIGGER KIT</h3>
+      <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
+      <p class="c-price">22,00 €</p>
+      <div class="dbox"><span class="truck">🚚</span><div><div class="dbox-lbl">Premium Versand</div><div class="dbox-date">Ankunft: <span class="delivery-date">–</span></div></div></div>
+      <button class="btn" onclick="addToCart('Clicky Trigger Kit',22.00,'Photoroom_20260304_212902.png')">IN DEN WARENKORB</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ RECENTLY VIEWED ══════════ -->
+<section id="recently" class="reveal">
+  <div class="sec-title" style="font-size:.95rem;margin-bottom:6px">ZULETZT ANGESEHEN</div>
+  <div class="rec-scroll" id="rec-grid"></div>
+</section>
+
+<!-- ══════════ EMAIL MARKETING ══════════ -->
+<section id="email-marketing" class="reveal">
+  <div class="em-glow"></div>
+  <div class="em-inner">
+    <div class="sec-title">BLEIB AUF DEM LAUFENDEN</div>
+    <p class="sec-sub">EXKLUSIVE DEALS · NEU ANKÜNFTE · 10% RABATT AUF ERSTE BESTELLUNG</p>
+    <div class="em-form">
+      <input type="email" class="em-input" id="em-email" placeholder="deine@email.de" autocomplete="email">
+      <button class="em-btn" onclick="subscribeEmail()">ABONNIEREN →</button>
+    </div>
+    <div id="em-success" style="display:none;font-family:'Orbitron';font-size:10px;color:var(--neon);margin-top:15px;letter-spacing:2px">✓ DEIN RABATTCODE: <strong>WILLKOMMEN10</strong> — SCHAU IN DEIN POSTFACH!</div>
+  </div>
+</section>
+
+<!-- ══════════ CONTACT ══════════ -->
+<section id="contact" class="reveal">
+  <div class="sec-title">KONTAKT</div>
+  <p class="sec-sub" style="margin-bottom:28px">WIR ANTWORTEN INNERHALB VON 24H</p>
+  <form id="contact-form" onsubmit="sendContact(event)">
+    <input type="text" placeholder="NAME" class="input-field" id="cf-name" required>
+    <input type="email" placeholder="E-MAIL" class="input-field" id="cf-email" required>
+    <input type="text" placeholder="BETREFF (Bestellung / Frage / Rückgabe)" class="input-field" id="cf-subject">
+    <textarea placeholder="NACHRICHT" class="input-field" id="cf-message" style="height:140px;resize:vertical" required></textarea>
+    <label style="display:flex;align-items:center;gap:8px;font-size:9px;color:#666;margin:10px 0;cursor:pointer">
+      <input type="checkbox" required style="accent-color:var(--neon)">
+      Ich akzeptiere die <a href="Datenschutz.html" target="_blank" style="color:var(--neon)">Datenschutzbestimmungen</a>.
+    </label>
+    <button type="submit" class="btn" id="send-btn">NACHRICHT SENDEN</button>
+  </form>
+  <div id="contact-success" style="display:none;font-family:'Orbitron';color:var(--neon);margin-top:20px;font-size:11px;letter-spacing:2px">✓ NACHRICHT ERFOLGREICH ÜBERMITTELT</div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer class="footer reveal">
+  <div style="max-width:820px;margin:0 auto">
+    <div class="footer-social">
+      <a href="https://instagram.com/lexord.de" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" class="soc-icon" alt="Instagram"></a>
+      <a href="https://tiktok.com/@lexord.de" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" class="soc-icon" alt="TikTok"></a>
+    </div>
+    <div class="footer-links">
+      <a href="agb.html" target="_blank">AGB</a>
+      <a href="Datenschutz.html" target="_blank">DATENSCHUTZ</a>
+      <a href="Widerrufsbelehrung.html" target="_blank">WIDERRUF</a>
+      <a href="#contact">KONTAKT</a>
+      <a href="#configurator">KONFIGURATOR</a>
+      <a href="#repair-sec">REPARATUR</a>
+      <a onclick="document.getElementById('review-modal').style.display='flex'">BEWERTUNG</a>
+    </div>
+
+    <!-- IMPRESSUM -->
+    <div class="legal-box">
+      <div class="legal-hd" onclick="this.parentElement.classList.toggle('open')">IMPRESSUM <span>+</span></div>
+      <div class="legal-body">
+        <strong>Angaben gemäß § 5 TMG</strong><br><br>
+        Leon Schulz | LEXORD Engineering<br>
+        An Der Domsühler Str. 2 · 19374 Domsühl<br><br>
+        <strong>Kontakt:</strong><br>
+        E-Mail: <a href="/cdn-cgi/l/email-protection#eca78382988d8798aca08994839e88c28889"><span class="__cf_email__" data-cfemail="410a2e2f35202a35010d24392e33256f2524">[email&#160;protected]</span></a><br>
+        Telefon: 0152 047 18720<br><br>
+        <strong>Umsatzsteuer:</strong><br>
+        Kleinunternehmer gem. § 19 UStG — keine Umsatzsteuerausweisung.<br><br>
+        <strong>Verantwortlich gem. § 55 Abs. 2 RStV:</strong><br>
+        Leon Schulz, An Der Domsühler Str. 2, 19374 Domsühl<br><br>
+        <strong>Haftungshinweis:</strong><br>
+        LEXORD ist ein spezialisierter Veredeler von PlayStation-Controllern und steht in keiner Verbindung zur Sony Interactive Entertainment Europe Ltd. PlayStation® ist ein eingetragenes Warenzeichen von Sony Interactive Entertainment Inc.
+      </div>
+    </div>
+
+    <!-- DATENSCHUTZ -->
+    <div class="legal-box" id="datenschutz">
+      <div class="legal-hd" onclick="this.parentElement.classList.toggle('open')">DATENSCHUTZERKLÄRUNG <span>+</span></div>
+      <div class="legal-body">
+        <strong>1. Verantwortlicher (Art. 13 DSGVO)</strong><br>
+        Leon Schulz · An Der Domsühler Str. 2 · 19374 Domsühl<br><br>
+        <strong>2. Erhebung und Verarbeitung personenbezogener Daten</strong><br>
+        Wir erheben Name, E-Mail-Adresse, Lieferadresse und Zahlungsdaten ausschließlich zur Vertragserfüllung.<br><br>
+        <strong>3. Cookies</strong><br>
+        Wir verwenden ausschließlich technisch notwendige Cookies. Keine Werbe- oder Tracking-Cookies.<br><br>
+        <strong>4. SSL-Verschlüsselung</strong><br>
+        Diese Website nutzt TLS-Verschlüsselung (SHA-256). Erkennbar am „https://" und Schloss-Symbol.
+      </div>
+    </div>
+
+    <!-- AGB -->
+    <div class="legal-box">
+      <div class="legal-hd" onclick="this.parentElement.classList.toggle('open')">ALLGEMEINE GESCHÄFTSBEDINGUNGEN <span>+</span></div>
+      <div class="legal-body">
+        <strong>§ 1 Geltungsbereich</strong><br>
+        Diese AGB gelten für alle Bestellungen über lexord.de zwischen Leon Schulz (LEXORD Engineering) und Kunden.<br><br>
+        <strong>§ 2 Preise und Steuern</strong><br>
+        Alle Preise sind Endpreise in Euro. Keine Mehrwertsteuer gem. § 19 UStG.<br><br>
+        <strong>§ 3 Zahlung</strong><br>
+        Akzeptiert: PayPal, Kreditkarte via Stripe (Visa/Mastercard/Amex), Apple Pay, Google Pay, SEPA-Lastschrift, Klarna.
+      </div>
+    </div>
+
+    <div class="footer-bottom">LEXORD® ALL RIGHTS RESERVED · 2026 · MADE IN GERMANY · www.lexord.de</div>
+  </div>
+</footer>
+</main>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- JAVASCRIPT – HIER IST DIE MAGIE! -->
+<!-- ══════════════════════════════════════════════ -->
+<script>
+// ══════════════════════════════════════════════════════════════════════
+// 🎯 EMAILJS SETUP – KEIN TEMPLATE NÖTIG!
+// ══════════════════════════════════════════════════════════════════════
+
+// Deine EmailJS Zugangsdaten (Falls du doch ein Template hast)
+const EMAILJS_PUBLIC_KEY = 'mDh8p4g4NEdRDOAc3';
+const EMAILJS_SERVICE_ID = 'service_szcbwhs';
+const EMAILJS_TEMPLATE_ID = 'template_xxxxxxxxxxxxx'; // Falls vorhanden, sonst leer lassen
+
+// EmailJS Status
+let emailjsReady = false;
+
+// EmailJS initialisieren
+function initEmailJS() {
+  if (typeof emailjs !== 'undefined') {
+    try {
+      emailjs.init({publicKey: EMAILJS_PUBLIC_KEY});
+      emailjsReady = true;
+      console.log('✅ EmailJS geladen!');
+      
+      // Test-E-Mail senden um zu prüfen ob es funktioniert
+      testEmailJS();
+    } catch(e) {
+      console.warn('⚠️ EmailJS Fehler:', e);
+      emailjsReady = false;
+    }
+  } else {
+    console.warn('⚠️ EmailJS nicht gefunden!');
+    emailjsReady = false;
+  }
+}
+
+// EmailJS testen
+async function testEmailJS() {
+  if (!emailjsReady) return;
+  
+  try {
+    const result = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID || 'test', {
+      to_email: 'test@lexord.de',
+      message: 'EmailJS Test',
+      from_name: 'LEXORD Test'
+    });
+    console.log('✅ EmailJS Test OK:', result);
+  } catch(e) {
+    console.error('❌ EmailJS Test fehlgeschlagen:', e);
+    emailjsReady = false;
+  }
+}
+
+// 🔥 UNIVERSELLE E-MAIL SENDEN FUNKTION (MIT FALLBACK!)
+async function sendEmail(toEmail, subject, htmlBody, replyTo = 'Kontakt@Lexord.de') {
+  
+  // 1. Versuch: EmailJS (falls bereit)
+  if (emailjsReady && EMAILJS_TEMPLATE_ID && EMAILJS_TEMPLATE_ID !== 'template_xxxxxxxxxxxxx') {
+    try {
+      const params = {
+        to_email: toEmail,
+        subject: subject,
+        message_html: htmlBody,
+        from_name: 'LEXORD Engineering',
+        reply_to: replyTo,
+      };
+      
+      const result = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params);
+      console.log('✅ E-Mail via EmailJS gesendet:', result.status);
+      return { success: true, method: 'emailjs' };
+    } catch(e) {
+      console.warn('⚠️ EmailJS Fehler, nutze Fallback:', e);
+    }
+  }
+  
+  // 2. FALLBACK: Lokale Speicherung + Browser Mail öffnen
+  console.log('📧 Sende E-Mail mit Fallback...');
+  
+  // In localStorage speichern (für deine Records)
+  const emails = JSON.parse(localStorage.getItem('lexord_emails') || '[]');
+  emails.push({
+    to: toEmail,
+    subject: subject,
+    body: htmlBody,
+    date: new Date().toISOString(),
+    sent: false
+  });
+  localStorage.setItem('lexord_emails', JSON.stringify(emails));
+  
+  // Browser-Mail öffnen
+  const mailtoLink = `mailto:${toEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent('Vielen Dank! Ihre Anfrage wurde empfangen. Wir melden uns schnellstmöglich.')}`;
+  
+  // Toast zeigen
+  toast('📧 E-Mail Client wird geöffnet...', 'ok');
+  
+  // Nach 2 Sekunden Mailto öffnen
+  setTimeout(() => {
+    window.location.href = mailtoLink;
+  }, 1500);
+  
+  return { success: true, method: 'fallback' };
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// STRIPE SETUP – ALLE ZAHLUNGSMETHODEN!
+// ══════════════════════════════════════════════════════════════════════
+
+const STRIPE_PK = 'pk_live_51TIFCNC2AosEtm15ffNnWAvLP5WWJF13Nnf12n3npWsIuDgx9vIVeQSwrGp7tg64K00RVRKhkfiTHBvebnEELOD00npVnbvU1';
+let stripeInstance = null;
+
+// Stripe initialisieren
+function initStripe() {
+  if (typeof Stripe !== 'undefined' && STRIPE_PK) {
+    try {
+      stripeInstance = Stripe(STRIPE_PK);
+      console.log('✅ Stripe geladen!');
+      return true;
+    } catch(e) {
+      console.error('❌ Stripe Fehler:', e);
+      return false;
+    }
+  }
+  return false;
+}
+
+// Stripe Elements für Embedded Checkout
+let stripeElements = null;
+let stripePayEl = null;
+
+// ══════════════════════════════════════════════════════════════════════
+// PRODUKTDATEN
+// ══════════════════════════════════════════════════════════════════════
+
+const PRODUCTS = [
+  {name:'LXRD Performance Black',price:240,img:'Photoroom_20260305_123705.png',cat:'Controller'},
+  {name:'LXRD Plus Black',price:180,img:'Photoroom_20260305_140346.png',cat:'Controller'},
+  {name:'LXRD Basic Black',price:105,img:'Photoroom_20260402_014813.png',cat:'Controller'},
+  {name:'Stickzange Pro',price:5,img:'Stickzange.PNG',cat:'Werkzeug'},
+  {name:'Paddle System V2',price:40,img:'Photoroom_20260304_212902.png',cat:'Zubehör'},
+  {name:'TMR Stick Upgrade Kit',price:55,img:'Photoroom_20260305_123705.png',cat:'Zubehör'},
+  {name:'Hall Effect Upgrade Kit',price:35,img:'Photoroom_20260305_140346.png',cat:'Zubehör'},
+  {name:'GRIP Gehäuse Set',price:28,img:'Photoroom_20260402_014813.png',cat:'Zubehör'},
+  {name:'Clicky Trigger Kit',price:22,img:'Photoroom_20260304_212902.png',cat:'Zubehör'},
+];
+
+// DHL Versandkosten
+function getShipping(land, sub) {
+  const costs = {
+    'DE': sub >= 50 ? 0 : 6.99,
+    'AT': 14.49, 'BE': 14.49, 'NL': 14.49, 'LU': 14.49, 'PL': 14.49, 'CZ': 14.49,
+    'FR': 16.49, 'IT': 16.49, 'ES': 16.49, 'SE': 16.49, 'DK': 16.49,
+    'CH': 20.99, 'GB': 19.99, 'US': 24.99, 'WORLD': 22.49,
+    'EU_OTHER': 16.49
+  };
+  return costs[land] || 22.49;
+}
+
+// Rabattcodes
+const DISCOUNT_CODES = {
+  'WILLKOMMEN10': { type:'percent', value:10, label:'10% NEWSLETTER-RABATT' },
+  'LEXORD15':     { type:'percent', value:15, label:'15% TREUE-RABATT' },
+};
+
+let activeDiscount = null;
+let cart = [], recentlyViewed = [];
+
+// Rabattcode anwenden
+function applyDiscount() {
+  const code = document.getElementById('discount-code').value.trim().toUpperCase();
+  const ok = document.getElementById('discount-ok');
+  const err = document.getElementById('discount-err');
+  ok.style.display = 'none';
+  err.style.display = 'none';
+
+  if (!code) { err.innerText = 'BITTE CODE EINGEBEN'; err.style.display = 'block'; return; }
+
+  const d = DISCOUNT_CODES[code];
+  if (!d) {
+    err.innerText = '✗ UNGÜLTIGER RABATTCODE';
+    err.style.display = 'block';
+    activeDiscount = null;
+  } else {
+    activeDiscount = { ...d, code };
+    ok.innerText = `✓ ${d.label} AKTIVIERT`;
+    ok.style.display = 'block';
+    toast(`✓ Rabattcode ${code} aktiviert!`, 'ok');
+  }
+  updateCart();
+}
+
+function calcDiscount(sub) {
+  if (!activeDiscount) return 0;
+  if (activeDiscount.type === 'percent') return sub * activeDiscount.value / 100;
+  return Math.min(activeDiscount.value, sub);
+}
+
+// Suche
+function deskSearch(v) {
+  const d = document.getElementById('srch-drop');
+  if (v.length < 2) { d.style.display = 'none'; return; }
+  const f = PRODUCTS.filter(p => 
+    p.name.toLowerCase().includes(v.toLowerCase()) || 
+    p.cat.toLowerCase().includes(v.toLowerCase())
+  );
+  if (!f.length) { 
+    d.innerHTML = '<div class="srch-empty">KEINE ERGEBNISSE</div>'; 
+    d.style.display = 'block'; 
+    return; 
+  }
+  d.innerHTML = f.map(p => `
+    <div class="srch-item" onclick="handleSrch('${p.name}',${p.price}','${p.img}')">
+      <img src="${p.img}" alt="${p.name}">
+      <span class="srch-item-name">${p.name}</span>
+      <span class="srch-item-price">${p.price.toFixed(2)} €</span>
+    </div>`).join('');
+  d.style.display = 'block';
+}
+
+function handleSrch(n, p, i) {
+  addToCart(n, p, i);
+  document.getElementById('desk-srch').value = '';
+  document.getElementById('srch-drop').style.display = 'none';
+}
+
+function mobSearch(v) {
+  const r = document.getElementById('mob-srch-res');
+  if (v.length < 2) { r.innerHTML = ''; return; }
+  const f = PRODUCTS.filter(p => p.name.toLowerCase().includes(v.toLowerCase()));
+  r.innerHTML = f.map(p => `
+    <div class="srch-item" onclick="addToCart('${p.name}',${p.price}','${p.img}');document.getElementById('mob-srch-ov').classList.remove('on')" 
+         style="background:#0c0c0c;border-radius:8px;margin-bottom:8px;border:1px solid #111">
+      <img src="${p.img}" alt="${p.name}">
+      <span class="srch-item-name">${p.name}</span>
+      <span class="srch-item-price">${p.price.toFixed(2)} €</span>
+    </div>`).join('') || '<div class="srch-empty">KEINE ERGEBNISSE</div>';
+}
+
+document.addEventListener('click', e => { 
+  if (!e.target.closest('.srch-wrap')) 
+    document.getElementById('srch-drop').style.display = 'none'; 
+});
+
+// Warenkorb Funktionen
+function toggleCart() { 
+  document.getElementById('cart-drawer').classList.toggle('open'); 
+  document.querySelector('.c-overlay').style.display = 'block'; 
+}
+
+function closeCart() { 
+  document.getElementById('cart-drawer').classList.remove('open'); 
+  document.querySelector('.c-overlay').style.display = 'none'; 
+}
+
+function toggleMenu() { 
+  document.getElementById('full-nav').classList.toggle('active'); 
+}
+
+function addToCart(name, price, img) {
+  const ex = cart.find(i => i.name === name);
+  if (ex) ex.qty++; else cart.push({ name, price, img, qty: 1 });
+  updateCart();
+  if (!document.getElementById('cart-drawer').classList.contains('open')) toggleCart();
+  toast(`✓ ${name} hinzugefügt`, 'ok');
+  trackRecent(name, price, img);
+}
+
+function remFromCart(i) { cart.splice(i, 1); updateCart(); }
+
+function changeQty(i, d) { 
+  cart[i].qty += d; 
+  if (cart[i].qty <= 0) cart.splice(i, 1); 
+  updateCart(); 
+}
+
+function updateCart() {
+  const body = document.getElementById('cart-body');
+  const land = document.getElementById('land-sel').value || 'DE';
+  const sub = cart.reduce((a, i) => a + i.price * i.qty, 0);
+  const totalItems = cart.reduce((a, i) => a + i.qty, 0);
+  const disc = calcDiscount(sub);
+  const discSub = sub - disc;
+  const shipNum = getShipping(land, discSub);
+  const total = discSub + shipNum;
+
+  if (!cart.length) {
+    body.innerHTML = '<div class="c-empty"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><p>WARENKORB LEER</p></div>';
+  } else {
+    body.innerHTML = cart.map((it, i) => `
+      <div class="c-item">
+        <img src="${it.img}" alt="${it.name}">
+        <div class="c-item-info">
+          <h4>${it.name}</h4>
+          <p style="color:var(--neon);font-size:10.5px;font-family:'Orbitron';margin:3px 0">${(it.price * it.qty).toFixed(2)} €</p>
+          <div class="c-qty">
+            <div class="qty-b" onclick="changeQty(${i},-1)">−</div>
+            <span class="qty-n">${it.qty}</span>
+            <div class="qty-b" onclick="changeQty(${i},1)">+</div>
+            <span onclick="remFromCart(${i})" style="font-size:7.5px;color:#333;cursor:pointer;font-family:'Orbitron';margin-left:5px">ENTF.</span>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  // Free shipping bar
+  if (land === 'DE') {
+    const pct = Math.min((sub / 50) * 100, 100);
+    document.getElementById('ship-fill').style.width = pct + '%';
+    document.getElementById('ship-lbl').innerText = sub >= 50 ? '✓ KOSTENLOSER VERSAND FREIGESCHALTET' : `NOCH ${(50 - sub).toFixed(2)} € BIS KOSTENLOSER VERSAND`;
+  } else {
+    document.getElementById('ship-fill').style.width = '0%';
+    document.getElementById('ship-lbl').innerText = 'VERSANDKOSTEN NACH LIEFERLAND';
+  }
+
+  document.getElementById('c-sub').innerText = sub.toFixed(2).replace('.', ',') + ' €';
+
+  // Rabatt
+  const discRow = document.getElementById('discount-row');
+  if (disc > 0) {
+    discRow.style.display = 'flex';
+    document.getElementById('discount-label').innerText = activeDiscount.label;
+    document.getElementById('c-discount').innerText = '-' + disc.toFixed(2).replace('.', ',') + ' €';
+  } else {
+    discRow.style.display = 'none';
+  }
+
+  document.getElementById('c-ship').innerText = shipNum === 0 ? 'Kostenlos' : shipNum.toFixed(2).replace('.', ',') + ' €';
+  document.getElementById('c-total').innerText = total.toFixed(2).replace('.', ',') + ' €';
+  document.getElementById('cart-count').innerText = totalItems;
+  document.getElementById('cart-hd-count').innerText = '(' + totalItems + ')';
+
+  renderPP(discSub, shipNum, land);
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// 🔥 STRIPE EMBEDDED CHECKOUT – MIT ALLEN ZAHLUNGSMETHODEN!
+// ══════════════════════════════════════════════════════════════════════
+
+function goStripeCheckout() {
+  if (!document.getElementById('cart-agb').checked) { 
+    toast('Bitte AGB akzeptieren', 'err'); 
+    return; 
+  }
+  if (!cart.length) { 
+    toast('Warenkorb ist leer', 'err'); 
+    return; 
+  }
+  
+  // Stripe Modal öffnen
+  openStripeModal();
+}
+
+// Stripe Modal erstellen
+function buildStripeModal() {
+  if (document.getElementById('stripe-modal')) return;
+  
+  const modal = document.createElement('div');
+  modal.id = 'stripe-modal';
+  modal.innerHTML = `
+    <div style="position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:999999;display:none;align-items:center;justify-content:center;backdrop-filter:blur(20px);padding:20px" onclick="if(event.target===this)closeStripeModal()">
+      <div style="background:#0a0a0a;border:1px solid #00f2ff;border-radius:20px;width:100%;max-width:550px;max-height:90vh;overflow-y:auto;position:relative">
+        
+        <!-- Header -->
+        <div style="background:#000;padding:24px;border-bottom:1px solid #111;display:flex;justify-content:space-between;align-items:center;border-radius:18px 18px 0 0">
+          <div>
+            <div style="font-family:'Orbitron';font-size:11px;color:#00f2ff;letter-spacing:3px">🔒 SECURE CHECKOUT</div>
+            <div style="font-size:8px;color:#555;margin-top:4px">256-BIT SSL · PCI DSS LEVEL 1 · STRIPE</div>
+          </div>
+          <div onclick="closeStripeModal()" style="width:36px;height:36px;border:1px solid #333;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#888;font-size:20px">×</div>
+        </div>
+        
+        <!-- Zahlungsmethoden Ticker -->
+        <div style="padding:12px 24px;background:#050505;border-bottom:1px solid #111;overflow:hidden">
+          <div style="font-family:'Orbitron';font-size:7px;color:#00f2ff;letter-spacing:2px;margin-bottom:8px">💳 ALLE ZAHLUNGSMETHODEN VERFÜGBAR:</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+            ${['💳 Visa','💳 Mastercard','💳 Amex','🍎 Apple Pay','🔵 Google Pay','🏦 SEPA','🛍 Klarna','🇳 iDEAL','🇧 Bancontact','🏧 Giropay','📊 EPS','🔗 Sofort','🔷 PayPal'].map(m => 
+              `<span style="padding:6px 12px;background:#0a0a0a;border:1px solid #222;border-radius:6px;font-size:8px;color:#666">${m}</span>`
+            ).join('')}
+          </div>
+        </div>
+        
+        <!-- Bestellung -->
+        <div style="padding:20px 24px">
+          <div style="font-family:'Orbitron';font-size:8px;color:#00f2ff;letter-spacing:2px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #111">BESTELLUNG</div>
+          <div id="stripe-items"></div>
+          
+          <div style="background:#080808;border:1px solid #111;border-radius:10px;padding:14px;margin:16px 0">
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:#888;margin-bottom:6px">
+              <span>Zwischensumme</span>
+              <span id="sm-sub">–</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:#00b67a;margin-bottom:6px" id="sm-disc-row" style="display:none">
+              <span>Rabatt</span>
+              <span id="sm-disc">–</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:#888;margin-bottom:6px">
+              <span>Versand (<span id="sm-land">DE</span>)</span>
+              <span id="sm-ship">–</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-family:'Orbitron';font-size:16px;font-weight:700;color:#fff;padding-top:8px;border-top:1px solid #111">
+              <span>GESAMT</span>
+              <span id="sm-total" style="color:#00f2ff">–</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Adresse -->
+        <div style="padding:0 24px 20px">
+          <div style="font-family:'oribtron';font-size:8px;color:#00f2ff;letter-spacing:2px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #111">LIEFERADRESSE</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <input type="text" id="sm-fn" placeholder="Vorname *" style="padding:12px;background:#0a0a0a;border:1px solid #222;color:#fff;font-size:13px;border-radius:8px;outline:none">
+            <input type="text" id="sm-ln" placeholder="Nachname *" style="padding:12px;background:#0a0a0a;border:1px solid #222;color:#fff;font-size:13px;border-radius:8px;outline:none">
+          </div>
+          <input type="email" id="sm-email" placeholder="E-Mail *" style="padding:12px;background:#0a0a0a;border:1px solid #222;color:#fff;font-size:13px;border-radius:8px;outline:none;margin-bottom:10px">
+          <input type="text" id="sm-str" placeholder="Straße & Hausnummer *" style="padding:12px;background:#0a0a0a;border:1px solid #222;color:#fff;font-size:13px;border-radius:8px;outline:none;margin-bottom:10px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <input type="text" id="sm-plz" placeholder="PLZ *" style="padding:12px;background:#0a0a0a;border:1px solid #222;color:#fff;font-size:13px;border-radius:8px;outline:none">
+            <input type="text" id="sm-ort" placeholder="Stadt *" style="padding:12px;background:#0a0a0a;border:1px solid #222;color:#fff;font-size:13px;border-radius:8px;outline:none">
+          </div>
+          <select id="sm-land" onchange="updateStripeShipping()" style="padding:12px;background:#0a0a0a;border:1px solid #222;color:#fff;font-size:11px;border-radius:8px;outline:none;cursor:pointer;margin-bottom:20px">
+            <option value="DE">🇩🇪 Deutschland</option>
+            <option value="AT">🇦🇹 Österreich</option>
+            <option value="CH">🇨🇭 Schweiz</option>
+            <option value="FR">🇫🇷 Frankreich</option>
+            <option value="NL">🇳🇱 Niederlande</option>
+            <option value="BE">🇧🇪 Belgien</option>
+            <option value="EU_OTHER">🇪🇺 EU Sonstiges</option>
+            <option value="GB">🇬🇧 Großbritannien</option>
+            <option value="US">🇺🇸 USA</option>
+            <option value="WORLD">🌍 Weltweit</option>
+          </select>
+        </div>
+        
+        <!-- STRIPE PAYMENT ELEMENT -->
+        <div style="padding:0 24px 20px">
+          <div style="font-family:'oribtron';font-size:8px;color:#00f2ff;letter-spacing:2px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #111">ZAHLUNGSART</div>
+          
+          <div id="stripe-element" style="background:#0a0a0a;border:1px solid #222;border-radius:12px;min-height:150px;padding:16px;margin-bottom:12px">
+            <div id="stripe-loader" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:20px">
+              <div style="width:20px;height:20px;border:2px solid #222;border-top-color:#00f2ff;border-radius:50%;animation:spin .8s linear infinite"></div>
+              <span style="color:#555;font-size:11px">Lade Zahlungsmethoden...</span>
+            </div>
+          </div>
+          
+          <div id="stripe-error" style="color:#ff4d4f;font-size:11px;margin-bottom:12px;display:none"></div>
+        </div>
+        
+        <!-- Bezahlen Button -->
+        <button onclick="processStripePayment()" id="pay-btn"
+                style="width:100%;padding:18px;background:linear-gradient(135deg,#00f2ff,#0080ff);color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:13px;letter-spacing:2px;cursor:pointer;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:10px;transition:.3s;margin-bottom:12px">
+          <span>🔒 JETZT SICHER BEZAHLEN</span>
+        </button>
+        
+        <div style="text-align:center;font-size:8px;color:#333;margin:8px 0">
+          🔒 SSL verschlüsselt · Keine Kartendaten gespeichert
+        </div>
+        
+        <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;opacity:.5">
+          ${['Visa','Mastercard','Amex','Apple Pay','Google Pay','SEPA','Klarna'].map(p => 
+            `<span style="font-size:9px;color:#555">${p}</span>`
+          ).join('<span style="color:#222">·</span>')}
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+}
+
+// Stripe Modal öffnen
+async function openStripeModal() {
+  buildStripeModal();
+  
+  const modal = document.getElementById('stripe-modal');
+  modal.style.display = 'flex';
+  
+  // Daten füllen
+  const land = document.getElementById('land-sel').value || 'DE';
+  document.getElementById('sm-land').value = land;
+  
+  const sub = cart.reduce((a,i) => a + i.price * i.qty, 0);
+  const disc = calcDiscount(sub);
+  const discSub = sub - disc;
+  const ship = getShipping(land, discSub);
+  const total = discSub + ship;
+  
+  document.getElementById('sm-sub').textContent = sub.toFixed(2) + ' €';
+  document.getElementById('sm-ship').textContent = ship === 0 ? 'Kostenlos' : ship.toFixed(2) + ' €';
+  document.getElementById('sm-total').textContent = total.toFixed(2) + ' €';
+  document.getElementById('sm-land').textContent = land;
+  
+  if (disc > 0) {
+    document.getElementById('sm-disc-row').style.display = 'flex';
+    document.getElementById('sm-disc').textContent = '-' + disc.toFixed(2) + ' €';
+  } else {
+    document.getElementById('sm-disc-row').style.display = 'none';
+  }
+  
+  // Items
+  document.getElementById('stripe-items').innerHTML = cart.map(it => `
+    <div style="display:flex;align-items:center;gap:12px;padding:12px;background:#080808;border:1px solid #111;border-radius:8px;margin-bottom:8px">
+      <img src="${it.img}" style="width:50px;height:50px;object-fit:contain;background:#0a0a0a;border-radius:6px">
+      <div style="flex:1">
+        <div style="font-family:'Orbitron';font-size:8px;color:#ccc">${it.name}</div>
+        <div style="font-size:9px;color:#555;margin-top:2px">× ${it.qty}</div>
+      </div>
+      <div style="font-family:'Orbitron';font-size:13px;color:#00f2ff">${(it.price*it.qty).toFixed(2)} €</div>
+    </div>
+  `).join('');
+  
+  // Stripe Elements laden
+  await loadStripeElements(total);
+}
+
+// Stripe Payment Element laden
+async function loadStripeElements(amount) {
+  const loader = document.getElementById('stripe-loader');
+  const elementContainer = document.getElementById('stripe-element');
+  const errorEl = document.getElementById('stripe-error');
+  
+  if (!initStripe()) {
+    loader.innerHTML = '<span style="color:#ff4d4f">⚠️ Stripe nicht verfügbar</span>';
+    return;
+  }
+  
+  try {
+    // Alle Zahlungsmethoden aktivieren!
+    stripeElements = stripeInstance.elements({
+      mode: 'payment',
+      currency: 'eur',
+      amount: Math.round(amount * 100), // In Cent!
+      locale: 'de',
+      // 🔥 ALLE METHODEN:
+      paymentMethodTypes: [
+        'card',           // Kreditkarten
+        'sepa_debit',    // SEPA Lastschrift
+        'klarna',         // Kauf auf Rechnung
+        'ideal',          // iDEAL (NL)
+        'bancontact',     // Bancontact (BE)
+        'giropay',        // Giropay (DE)
+        'eps',            // EPS (AT)
+        'p24',            // Przelewy 24 (PL)
+        'sofort',         // Sofortüberweisung
+        'link',           // Link (PayPal via Stripe)
+        'apple_pay',      // Apple Pay
+        'google_pay'      // Google Pay
+      ],
+      appearance: {
+        theme: 'night',
+        variables: {
+          colorPrimary: '#00f2ff',
+          colorBackground: '#0a0a0a',
+          colorText: '#ffffff',
+          colorDanger: '#ff4d4f',
+          borderRadius: '8px',
+          fontSizeBase: '14px',
+        },
+        rules: {
+          '.Input': {
+            border: '1px solid #2a2a2a',
+            backgroundColor: '#111111',
+            color: '#ffffff',
+          },
+          '.Input:focus': {
+            border: '1px solid #00f2ff',
+            boxShadow: '0 0 0 3px rgba(0,242,255,.15)',
+          },
+          '.Label': { color: '#888', fontSize: '11px' },
+          '.Tab': { border: '1px solid #1a1a1a', backgroundColor: '#0c0c0c', color: '#666' },
+          '.Tab--selected': { border: '1px solid #00f2ff', backgroundColor: 'rgba(0,242,255,.1)', color: '#00f2ff' },
+          '.Block': { backgroundColor: '#0c0c0c', border: '1px solid #1a1a1a' },
+          '.Error': { color: '#ff4d4f' },
+        }
+      },
+    });
+    
+    // Payment Element erstellen
+    stripePayEl = stripeElements.create('payment', {
+      layout: {
+        type: 'accordion',
+        defaultCollapsed: false,
+        radios: true,
+        spacedAccordionItems: true,
+      },
+      wallets: {
+        applePay: 'auto',
+        googlePay: 'auto',
+      },
+    });
+    
+    // Loader ausblenden
+    loader.style.display = 'none';
+    
+    // Mounten
+    stripePayEl.mount('#stripe-element');
+    
+    console.log('✅ Stripe Elements geladen mit allen Methoden!');
+    
+  } catch(e) {
+    console.error('❌ Stripe Elements Fehler:', e);
+    loader.innerHTML = '<span style="color:#ff4d4f">⚠️ Zahlungsfehler</span>';
+    errorEl.textContent = 'Zahlungsarten konnten nicht geladen werden.';
+    errorEl.style.display = 'block';
+  }
+}
+
+// Versandkosten im Stripe Modal aktualisieren
+function updateStripeShipping() {
+  const land = document.getElementById('sm-land').value;
+  const sub = cart.reduce((a,i) => a + i.price * i.qty, 0);
+  const disc = calcDiscount(sub);
+  const discSub = sub - disc;
+  const ship = getShipping(land, discSub);
+  const total = discSub + ship;
+  
+  document.getElementById('sm-ship').textContent = ship === 0 ? 'Kostenlos' : ship.toFixed(2) + ' €';
+  document.getElementById('sm-total').textContent = total.toFixed(2) + ' €';
+  document.getElementById('sm-land').textContent = land;
+  
+  // Auch im Haupt-Warenkorb synchronisieren
+  document.getElementById('land-sel').value = land;
+  updateCart();
+}
+
+// Stripe Zahlung verarbeiten
+async function processStripePayment() {
+  const fn = document.getElementById('sm-fn').value.trim();
+  const ln = document.getElementById('sm-ln').value.trim();
+  const email = document.getElementById('sm-email').value.trim();
+  const str = document.getElementById('sm-str').value.trim();
+  const plz = document.getElementById('sm-plz').value.trim();
+  const ort = document.getElementById('sm-ort').value.trim();
+  const land = document.getElementById('sm-land').value;
+  
+  // Validierung
+  if (!fn || !ln || !email || !str || !plz || !ort) {
+    toast('Bitte alle Felder ausfüllen', 'err');
+    return;
+  }
+  
+  if (!email.includes('@')) {
+    toast('Bitte gültige E-Mail eingeben', 'err');
+    return;
+  }
+  
+  const btn = document.getElementById('pay-btn');
+  const errorEl = document.getElementById('stripe-error');
+  
+  // Loading State
+  btn.disabled = true;
+  btn.innerHTML = '<span style="display:inline-block;width:16px;height:16px;border:2px solid transparent;border-top-color:#000;border-radius:50%;animation:spin .8s linear infinite;margin-right:8px"></span>VERARBEITET...';
+  errorEl.style.display = 'none';
+  
+  try {
+    // 1. Elements validieren
+    const {error: submitError} = await stripeElements.submit();
+    if (submitError) throw submitError;
+    
+    // 2. Client Secret vom Server holen (simuliert für Demo)
+    // In Produktion: Hier deinen Netlify Function Endpoint aufrufen!
+    const clientSecret = await createPaymentIntent();
+    
+    // 3. Zahlung bestätigen
+    const {error} = await stripeInstance.confirmPayment({
+      elements: stripeElements,
+      clientSecret,
+      confirmParams: {
+        return_url: window.location.origin + '/?success=true',
+        payment_method_data: {
+          billing_details: {
+            name: fn + ' ' + ln,
+            email: email,
+            address: {
+              line1: str,
+              postal_code: plz,
+              city: ort,
+              country: land,
+            }
+          }
+        }
+      },
+    });
+    
+    if (error) throw error;
+    
+    // Erfolg!
+    closeStripeModal();
+    
+    // E-Mail senden
+    await sendOrderConfirmation(email);
+    
+    // Success Modal zeigen
+    showSuccess(email);
+    
+  } catch (err) {
+    console.error('❌ Zahlungsfehler:', err);
+    btn.disabled = false;
+    btn.innerHTML = '🔒 JETZT SICHER BEZAHLEN';
+    errorEl.textContent = err.message || 'Zahlung fehlgeschlagen. Bitte erneut versuchen.';
+    errorEl.style.display = 'block';
+  }
+}
+
+// Payment Intent erstellen (Simuliert - In Produktion durch Server ersetzen!)
+async function createPaymentIntent() {
+  const land = document.getElementById('sm-land').value;
+  const sub = cart.reduce((a,i) => a + i.price * i.qty, 0);
+  const disc = calcDiscount(sub);
+  const discSub = sub - disc;
+  const ship = getShipping(land, discSub);
+  const total = discSub + ship;
+  
+  // SIMULIERT - In Produktion durch deinen Server ersetzen!
+  // Hier würde normalerweise dein Netlify Function aufgerufen werden
+  
+  console.log('💳 Erstelle Payment Intent:', {total, land, currency: 'eur'});
+  
+  // Fake Client Secret für Demo (NICHT IN PRODUKTION VERWENDEN!)
+  return 'pi_test_' + Date.now();
+}
+
+// Stripe Modal schließen
+function closeStripeModal() {
+  const modal

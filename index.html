@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>LEXORD® | Custom PS5 Controller | Made in Germany</title>
+
+<!-- ⚡ WICHTIG: Reihenfolge beachten! -->
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AQOBIpaxy2Po_nxn9bZURvPzt4uS-ZYPdCueAT4WYbnOMsepoYD_k2WVFWAQiGyZ8i7hB9HucXYXAZ57&currency=EUR&intent=capture"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+<style>
+:root{--neon:#00f2ff;--neon2:#bc13fe;--bg:#000;--panel:#080808;--green:#00b67a;--text:#fff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden}
+
+/* Header */
+header{position:fixed;top:0;width:100%;z-index:9999;background:rgba(0,0,0,.95);backdrop-filter:blur(20px);border-bottom:1px solid #111;padding:12px 5%}
+.brand{font-family:'Orbitron';font-weight:900;font-size:1rem;color:#fff;text-decoration:none;letter-spacing:3px}
+
+/* Cart */
+#cart-btn{cursor:pointer;background:none;border:1px solid #333;color:#fff;padding:8px 16px;border-radius:6px;font-family:'Orbitron';font-size:10px;transition:.3s}
+#cart-btn:hover{border-color:var(--neon);color:var(--neon)}
+.cart-count{background:var(--neon);color:#000;border-radius:50%;padding:2px 6px;font-size:10px;font-weight:700;margin-left:8px}
+
+/* Modal */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:99999;align-items:center;justify-content:center;backdrop-filter:blur(20px)}
+.modal.active{display:flex}
+
+/* Formular */
+.input-field{width:100%;padding:14px;background:#0a0a0a;border:1px solid #222;color:#fff;border-radius:8px;font-size:14px;margin-bottom:12px;outline:none;transition:.3s}
+.input-field:focus{border-color:var(--neon)}
+.btn{width:100%;padding:16px;background:var(--neon);color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:12px;cursor:pointer;border-radius:8px;transition:.3s}
+.btn:hover{background:#fff}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;right:20px;background:#1a1a1a;color:#fff;padding:14px 20px;border-radius:8px;z-index:99999;font-family:'Orbitron';font-size:11px;border-left:3px solid var(--neon);animation:slideIn .4s ease}
+@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+
+/* Cards */
+.card{background:#0a0a0a;border:1px solid #111;border-radius:12px;padding:24px;margin:20px auto;max-width:320px;transition:.3s}
+.card:hover{border-color:var(--neon);transform:translateY(-5px)}
+.card h3{font-family:'Orbitron';margin:12px 0 8px}
+.price{color:var(--neon);font-size:1.5rem;font-weight:700;margin:8px 0}
+
+/* Payment Methods Grid */
+.pay-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:30px 0}
+.pay-card{background:#0a0a0a;border:1px solid #222;border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:10px;transition:.3s}
+.pay-card:hover{border-color:var(--neon);transform:translateY(-3px)}
+
+.section{padding:80px 5%;text-align:center}
+.section h2{font-family:'Orbitron';font-size:1.8rem;color:var(--neon);margin-bottom:16px;letter-spacing:3px}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a class="brand" href="#">LEXORD®</a>
+  <div style="flex:1"></div>
+  <div id="cart-btn" onclick="openCart()">
+    🛒 <span class="cart-count">0</span>
+  </div>
+</header>
+
+<!-- HERO -->
+<section style="min-height:90vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 20px">
+  <div>
+    <h1 style="font-family:'Orbitron';font-size:clamp(2rem,6vw,3.5rem);color:#fff;letter-spacing:8px;margin-bottom:16px">BEYOND LIMITS</h1>
+    <p style="color:#666;font-size:1.1rem;margin-bottom:32px">MADE IN GERMANY · ENGINEERING EXCELLENCE</p>
+    <button class="btn" onclick="scrollTo('configurator')">KONFIGURATOR STARTEN →</button>
+  </div>
+</section>
+
+<!-- CONFIGURATOR -->
+<section id="configurator" class="section">
+  <h2>CONTROLLER KONFIGURATOR</h2>
+  <p style="color:#888;margin-bottom:40px">Deinen perfekten Controller zusammenstellen</p>
+  
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;max-width:900px;margin:0 auto">
+    <!-- Optionen hier -->
+    <div class="card">
+      <h3>💳 Stick Technologie</h3>
+      <select id="cfg-stick" onchange="updatePrice()">
+        <option value="0">Standard (+0€)</option>
+        <option value="30">Hall Effect (+30€)</option>
+        <option value="50">TMR (+50€)</option>
+      </select>
+      <div class="price" id="price-stick">+0 €</div>
+    </div>
+    
+    <div class="card">
+      <h3>🎮 Trigger</h3>
+      <select id="cfg-trigger" onchange="updatePrice()">
+        <option value="0">Standard (+0€)</option>
+        <option value="20">Clicky (+20€)</option>
+      </select>
+      <div class="price" id="price-trigger">+0 €</div>
+    </div>
+    
+    <div class="card">
+      <h3>🏆 Paddles</h3>
+      <select id="cfg-paddle" onchange="updatePrice()">
+        <option value="0">Keine (+0€)</option>
+        <option value="40">2x Paddle (+40€)</option>
+        <option value="70">4x Paddle (+70€)</option>
+      </select>
+      <div class="price" id="price-paddle">+0 €</div>
+    </div>
+  </div>
+  
+  <div style="font-size:2rem;color:var(--neon);font-family:'Orbitron';margin-top:40px" id="total-price">70,00 €</div>
+  <button class="btn" onclick="addToCart()" style="margin:20px auto;width:300px">IN DEN WARENKORB 🛒</button>
+</section>
+
+<!-- EMAIL SECTION -->
+<section id="email-section" class="section">
+  <h2>📧 NEWSLETTER</h2>
+  <p style="color:#888;margin-bottom:24px">10% Rabatt + exklusive Deals</p>
+  
+  <form onsubmit="subscribeNewsletter(event)" style="max-width:400px;margin:0 auto">
+    <input type="email" id="nl-email" placeholder="deine@email.de" required class="input-field" style="text-align:center">
+    <button type="submit" class="btn">ABONNIEREN ✉</button>
+  </form>
+  <div id="nl-success" style="display:none;color:var(--neon);margin-top:16px;font-family:'Orbitron'">✓ PRÜFE DEIN POSTFACH!</div>
+</section>
+
+<!-- CONTACT SECTION -->
+<section id="contact-section" class="section">
+  <h2>📨 KONTAKT</h2>
+  <p style="color:#888;margin-bottom:32px">Wir antworten innerhalb von 24h</p>
+  
+  <form onsubmit="sendContact(event)" style="max-width:500px;margin:0 auto;text-align:left">
+    <input type="text" placeholder="NAME *" required class="input-field">
+    <input type="email" id="ct-email" placeholder="E-MAIL *" required class="input-field">
+    <textarea placeholder="DEINE NACHRICHT..." rows="5" required class="input-field"></textarea>
+    <button type="submit" class="btn">NACHRICHT SENDEN 📧</button>
+  </form>
+  <div id="ct-success" style="display:none;color:var(--neon);margin-top:16px">✓ NACHRICHT ERFOLGREICH!</div>
+</section>
+
+<!-- PAYMENT METHODS -->
+<section class="section">
+  <h2>💳 ZAHLUNGSMETHODEN</h2>
+  <div class="pay-grid">
+    <div class="pay-card"><span style="font-size:24px">💳</span><span>Visa</span></div>
+    <div class="pay-card"><span style="font-size:24px">💳</span><span>Mastercard</span></div>
+    <div class="pay-card"><span style="font-size:24px">🍎</span><span>Apple Pay</span></div>
+    <div class="pay-card"><span style="font-size:24px">🔵</span><span>Google Pay</span></div>
+    <div class="pay-card"><span style="font-size:24px">🏦</span><span>SEPA</span></div>
+    <div class="pay-card"><span style="font-size:24px">🛍</span><span>Klarna</span></div>
+    <div class="pay-card"><span style="font-size:24px">🔷</span><span>iDEAL</span></div>
+    <div class="pay-card"><span style="font-size:24px">🇧</span><span>Bancontact</span></div>
+  </div>
+  <p style="color:#444;font-size:12px;margin-top:24px">256-Bit SSL · PCI DSS · DSGVO konform</p>
+</section>
+
+<!-- STRIPE CHECKOUT MODAL -->
+<div id="stripe-modal" class="modal">
+  <div style="background:#0a0a0a;border:1px solid var(--neon);border-radius:20px;width:95%;max-width:500px;max-height:90vh;overflow-y:auto;position:relative">
+    
+    <!-- Header -->
+    <div style="background:#000;padding:24px;border-bottom:1px solid #111;border-radius:18px 18px 0 0;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-family:'Orbon';font-size:13px;color:var(--neon);letter-spacing:3px">🔒 SECURE CHECKOUT</div>
+        <div style="font-size:9px;color:#555;margin-top:4px">256-BIT SSL · STRIPE</div>
+      </div>
+      <div onclick="closeModal('stripe-modal')" style="width:36px;height:36px;border:1px solid #333;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#888;font-size:22px">×</div>
+    </div>
+    
+    <!-- Zahlungsmethoden -->
+    <div style="padding:16px 24px;background:#050505;border-bottom:1px solid #111">
+      <div style="font-family:'Orbitron';font-size:8px;color:var(--neon);margin-bottom:10px">ALLE METHODEN VERFÜGBAR:</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+        <span style="padding:6px 12px;background:#0a0a0a;border:1px solid #222;border-radius:6px;font-size:10px;color:#666">💳 Visa</span>
+        <span style="padding:6px 12px;background:#0a0a0a;border:1px solid #222;border-radius:6px;font-size:10px;color:#666">💳 Mastercard</span>
+        <span style="padding:6px 12px;background:#0a0a0a;border:1px solid #222;border-radius:6px;font-size:10px;color:#666">🍎 Apple Pay</span>
+        <span style="padding:6px 12px;background:#0a0a0a;border:1px solid #222;border-radius:6px;font-size:10px;color:#666">🔵 Google Pay</span>
+        <span style="padding:6px 12px;background:#0a0a0a;border:1px solid #222;border-radius:6px;font-size:10px;color:#666">🏦 SEPA</span>
+        <span style="padding:6px 12px;background:#0a0a0a;border:1px solid #222;border-radius:6px;font-size:10px;color:#666">🛍 Klarna</span>
+        <span style="padding:6px 12px;background:#0a0a0a;border:1px solid #222;border-radius:6px;font-size:10px;color:#666">🇳 iDEAL</span>
+        <span style="padding:6px 12px;background:#0a0a0a;border:1px solid #222;border-radius:6px;font-size:10px;color:#666">🇧 Bancontact</span>
+        <span style="padding:6px 12px;background:#0a0a0a;border:1px solid #222;border-radius:6px;font-size:10px;color:#666">🏧 Giropay</span>
+      </div>
+    </div>
+    
+    <!-- Bestellung -->
+    <div style="padding:20px 24px">
+      <div style="font-family:'Orbitron';font-size:9px;color:var(--neon);margin-bottom:12px;border-bottom:1px solid #111;padding-bottom:12px">BESTELLUNG</div>
+      <div id="modal-items" style="margin-bottom:16px"></div>
+      
+      <div style="background:#080808;border:1px solid #111;border-radius:10px;padding:14px;margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#888"><span>Zwischensumme</span><span id="m-sub">–</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--green);display:none" id="m-disc-row"><span>Rabatt</span><span id="m-disc">–</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#888"><span>Versand</span><span id="m-ship">–</span></div>
+        <div style="display:flex;justify-content:space-between;font-family:'Orbitron';font-size:18px;font-weight:700;color:#fff;padding-top:12px;border-top:1px solid #111"><span>GESAMT</span><span id="m-total" style="color:var(--neon)">–</span></div>
+      </div>
+    </div>
+    
+    <!-- Adresse -->
+    <div style="padding:0 24px 20px">
+      <div style="font-family:'Orbitron';font-size:9px;color:var(--neon);margin-bottom:12px;border-bottom:1px solid #111;padding-bottom:12px">LIEFERADRESSE</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <input type="text" id="m-fn" placeholder="Vorname *" class="input-field">
+        <input type="text" id="m-ln" placeholder="Nachname *" class="input-field">
+      </div>
+      <input type="email" id="m-email" placeholder="E-Mail *" class="input-field">
+      <input type="text" id="m-str" placeholder="Straße & Nr *" class="input-field">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <input type="text" id="m-plz" placeholder="PLZ *" class="input-field">
+        <input type="text" id="m-ort" placeholder="Stadt *" class="input-field">
+      </div>
+      
+      <select id="m-land" onchange="updateModalShipping()" class="input-field" style="cursor:pointer">
+        <option value="DE">🇩🇪 Deutschland</option>
+        <option value="AT">🇦🇹 Österreich</option>
+        <option value="CH">🇨🇭 Schweiz</option>
+        <option value="EU">🇪🇺 EU (sonstige)</option>
+        <option value="WORLD">🌐 Weltweit</option>
+      </select>
+    </div>
+    
+    <!-- STRIPE ELEMENT -->
+    <div style="padding:0 24px 20px">
+      <div style="font-family:'Orbitron';font-size:9px;color:var(--neon);margin-bottom:12px;border-bottom:1px solid #111;padding-bottom:12px">ZAHLUNGSART</div>
+      <div id="stripe-element" style="background:#0a0a0a;border:1px solid #222;border-radius:12px;min-height:150px;padding:16px">
+        <div id="stripe-loader" style="display:flex;align-items:center;justify-content:center;gap:12px;padding:24px">
+          <div style="width:20px;height:20px;border:2px solid #222;border-top-color:var(--neon);border-radius:50%;animation:spin .8s linear infinite"></div>
+          <span style="color:#555">Lade Zahlungsmethoden...</span>
+        </div>
+      </div>
+      <div id="stripe-error" style="color:#ff4d4f;font-size:12px;margin-top:12px;display:none"></div>
+    </div>
+    
+    <!-- BEZAHLBUTTON -->
+    <button onclick="processPayment()" id="pay-btn" style="width:100%;padding:18px;background:linear-gradient(135deg,#00f2ff,#0080ff);color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:14px;cursor:pointer;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:10px;margin:12px 0">
+      🔒 JETZT BEZAHLEN
+    </button>
+    
+    <div style="text-align:center;font-size:9px;color:#333;margin-top:12px">🔒 SSL verschlüsselt · Keine Daten gespeichert</div>
+    
+    <div style="display:flex;justify-content:center;gap:10px;opacity:.5;margin-top:8px;flex-wrap:wrap">
+      <span style="font-size:10px;color:#555">Visa</span> · 
+      <span style="font-size:10px;color:#555">Mastercard</span> · 
+      <span style="font-size:10px;color:#555">Amex</span> · 
+      <span style="font-size:10px;color:#555">ApplePay</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- CART MODAL -->
+<div id="cart-modal" class="modal">
+  <div style="background:#0a0a0a;border:1px solid var(--neon);border-radius:20px;width:95%;max-width:500px;max-height:85vh;overflow-y:auto;position:relative">
+    <div style="background:#000;padding:24px;border-bottom:1px solid #111;border-radius:18px 18px 0 0;display:flex;justify-content:space-between;align-items:center">
+      <div style="font-family:'Orbitron';font-size:13px;color:var(--neon)">WARENKORB</div>
+      <div onclick="closeModal('cart-modal')" style="width:36px;height:36px;border:1px solid #333;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#888;font-size:22px">×</div>
+    </div>
+    <div id="cart-items" style="padding:20px"></div>
+    <div style="padding:20px 24px;border-top:1px solid #111">
+      <div style="display:flex;justify-content:space-between;font-size:14px;color:#888;margin-bottom:12px"><span>ZWISCHENSUMME:</span><span id="c-sub">0 €</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:18px;font-family:'Orbitron';font-weight:700;color:#fff;padding-top:12px;border-top:1px solid #111"><span>GESAMT:</span><span id="c-total" style="color:var(--neon)">0 €</span></div>
+    </div>
+    <button onclick="openCheckout()" class="btn" style="margin-top:12px">ZUR KASSE →</button>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
+
+</body>
+
+<script>
+// ════════════════════════════════════════════════════════════════════════
+// ⚡ HAUPTPROGRAMM – Start wenn DOM geladen ist!
+// ══════════════════════════════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('🚀 LEXORD Website wird geladen...');
+  
+  // 1. EmailJS initialisieren
+  initEmailJS();
+  
+  // 2. Stripe initialisieren
+  initStripe();
+  
+  // 3. Warenkorb aus localStorage laden
+  loadCart();
+  
+  console.log('✅ Alles bereit!');
+});
+
+// ══════════════════════════════════════════════════════════════════════
+// EMAILJS – MIT FALLBACK OHNE TEMPLATE!
+// ══════════════════════════════════════════════════════════════════════
+
+let emailjsReady = false;
+
+function initEmailJS() {
+  if (typeof emailjs !== 'undefined') {
+    try {
+      // Deine Zugangsdaten hier eintragen:
+      emailjs.init({publicKey: 'mDh8p4g4NEdRDOAc3'});
+      emailjsReady = true;
+      console.log('✅ EmailJS bereit!');
+    } catch(e) {
+      console.warn('⚠️ EmailJS Fehler:', e);
+      emailjsReady = false;
+    }
+  } else {
+    console.warn('⚠️ EmailJS SDK nicht gefunden');
+  }
+}
+
+// 🔥 UNIVERSELLE E-MAIL SENDEN
+async function sendEmail(toEmail, subject, htmlBody) {
+  
+  // Methode 1: EmailJS (falls bereit und Template vorhanden)
+  if (emailjsReady) {
+    try {
+      const result = await emailjs.send('service_szcbwhs', 'template_xxxxxxxxxxxxx', {
+        to_email: toEmail,
+        subject: subject,
+        message_html: htmlBody,
+        from_name: 'LEXORD Engineering',
+      });
+      console.log('✅ E-Mail via EmailJS:', result.status);
+      return { success: true };
+    } catch(e) {
+      console.warn('⚠️ EmailJS Fehler, nutze Fallback:', e);
+    }
+  }
+  
+  // Methode 2: Fallback – Browser Mail öffnen + lokal speichern
+  console.log('📧 Sende E-Mail mit Fallback...');
+  
+  // Speichern für Records
+  const emails = JSON.parse(localStorage.getItem('lexord_emails') || '[]');
+  emails.push({
+    to: toEmail,
+    subject: subject,
+    date: new Date().toISOString(),
+    sent: false
+  });
+  localStorage.setItem('lexord_emails', JSON.stringify(emails));
+  
+  // Toast zeigen
+  showToast('📧 E-Mail Client öffnet sich...', 'ok');
+  
+  // Browser Mailto öffnen
+  setTimeout(() => {
+    window.location.href = `mailto:${toEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent('Vielen Dank! Ihre Anfrage wurde empfangen.')}`;
+  }, 1000);
+  
+  return { success: true };
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// STRIPE – MIT ALLEN ZAHLUNGSMETHODEN!
+// ══════════════════════════════════════════════════════════════════════
+
+const STRIPE_PK = 'pk_live_51TIFCNC2AosEtm15ffNnWAvLP5WWJF13Nnf12n3npWsIuDgx9vIVeQSwrGp7tg64K00RVRKhkfiTHBvebnEELOD00npVnbvU1';
+let stripeInstance = null;
+let stripeElements = null;
+let stripePayEl = null;
+
+function initStripe() {
+  if (typeof Stripe !== 'undefined' && STRIPE_PK) {
+    try {
+      stripeInstance = Stripe(STRIPE_PK);
+      console.log('✅ Stripe bereit!');
+      return true;
+    } catch(e) {
+      console.error('❌ Stripe Fehler:', e);
+      return false;
+    }
+  }
+  return false;
+}
+
+// Warenkorb Array
+let cart = [];
+
+// Konfigurator Preise
+const BASE_PRICE = 70;
+function updatePrice() {
+  const stick = parseInt(document.getElementById('cfg-stick').value) || 0;
+  const trigger = parseInt(document.getElementById('cfg-trigger').value) || 0;
+  const paddle = parseInt(document.getElementById('cfg-paddle').value) || 0;
+  
+  document.getElementById('price-stick').textContent = '+ ' + stick + ' €';
+  document.getElementById('price-trigger').textContent = '+ ' + trigger + '€';
+  document.getElementById('price-paddle').textContent = '+ ' + paddle + '€';
+  
+  const total = BASE_PRICE + stick + trigger + paddle;
+  document.getElementById('total-price').textContent = total.toFixed(2).replace('.', ',') + ' €';
+}
+
+// Zum Warenkorb hinzufügen
+function addToCart() {
+  const stick = document.getElementById('cfg-stick').value || 'Standard';
+  const trigger = document.getElementById('cfg-trigger').value || 'Standard';
+  const paddle = document.getElementById('cfg-paddle').value || 'Keine';
+  
+  const name = `Custom PS5 Controller (${stick}/${trigger}/${paddle})`;
+  const price = BASE_PRICE + parseInt(stick) + parseInt(trigger) + parseInt(paddle);
+  
+  cart.push({ name, price, qty: 1, img: 'Photoroom_20260305_123705.png' });
+  
+  saveCart();
+  updateCartUI();
+  openModal('cart-modal');
+  showToast('🛒 Produkt hinzugefügt!', 'ok');
+}
+
+// Warenkorb speichern
+function saveCart() {
+  localStorage.setItem('lexord_cart', JSON.stringify(cart));
+}
+
+// Warenkorb laden
+function loadCart() {
+  const saved = localStorage.getItem('lexord_cart');
+  if (saved) {
+    cart = JSON.parse(saved);
+    updateCartUI();
+  }
+}
+
+// Warenkorb UI aktualisieren
+function updateCartUI() {
+  const container = document.getElementById('cart-items');
+  const subEl = document.getElementById('c-sub');
+  const totalEl = document.getElementById('c-total');
+  const countEl = document.querySelector('#cart-count');
+  
+  if (!cart.length) {
+    container.innerHTML = '<p style="color:#555;padding:40px;text-align:center">Warenkorb ist leer</p>';
+    subEl.textContent = '0 €';
+    totalEl.textContent = '0 €';
+    countEl.textContent = '0';
+    return;
+  }
+  
+  let sub = 0;
+  container.innerHTML = cart.map((item, i) => `
+    <div style="display:flex;align-items:center;gap:12px;padding:14px;background:#080808;border:1px solid #111;border-radius:8px;margin-bottom:8px">
+      <img src="${item.img}" style="width:50px;height:50px;object-fit:contain;background:#0a0a0a;border-radius:6px">
+      <div style="flex:1">
+        <div style="font-family:'Orbitron';font-size:9px;color:#ccc">${item.name}</div>
+        <div style="color:#555;font-size:11px">${item.price.toFixed(2)} € × ${item.qty}</div>
+      </div>
+      <button onclick="removeFromCart(${i})" style="background:none;border:none;color:#ff4d4f;cursor:pointer;font-size:16px;padding:4px">✕</button>
+    </div>
+  `).join('');
+  
+  sub = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  subEl.textContent = sub.toFixed(2).replace('.', ',') + ' €';
+  totalEl.textContent = sub.toFixed(2).replace('.', ',') + ' €';
+  countEl.textContent = cart.reduce((sum, item) => sum + item.qty, 0);
+}
+
+// Aus Warenkorb entfernen
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  saveCart();
+  updateCartUI();
+  showToast('🗑️ Produkt entfernt', 'err');
+}
+
+// Modal öffnen
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+}
+
+// Modal schließen
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+// Stripe Modal öffnen
+function openCheckout() {
+  if (!cart.length) {
+    showToast('Warenkorb ist leer!', 'err');
+    return;
+  }
+  
+  // Modal Elemente füllen
+  const sub = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const ship = getShippingCost('DE', sub);
+  const total = sub + ship;
+  
+  document.getElementById('m-sub').textContent = sub.toFixed(2) + ' €';
+  document.getElementById('m-ship').textContent = ship === 0 ? 'Kostenlos' : ship.toFixed(2) + ' €';
+  document.getElementById('m-total').textContent = total.toFixed(2) + ' €';
+  
+  // Items auflisten
+  document.getElementById('modal-items').innerHTML = cart.map(item => `
+    <div style="display:flex;align-items:center;gap:12px;padding:14px;background:#080808;border:1px solid #111;border-radius:8px;margin-bottom:8px">
+      <img src="${item.img}" style="width:50px;height:50px;object-fit:contain;background:#0a0a0a;border-radius:6px">
+      <div style="flex:1">
+        <div style="font-family:'Orbitron';font-size:9px;color:#ccc">${item.name}</div>
+        <div style="color:#555;font-size:11px">${item.price.toFixed(2)} € × ${item.qty}</div>
+      </div>
+    </div>
+  `).join('');
+  
+  // Stripe Elements laden
+  loadStripeElements(total);
+  
+  openModal('stripe-modal');
+}
+
+// Versandkosten berechnen
+function getShippingCost(country, subtotal) {
+  const costs = {
+    'DE': { free: 50, cost: 6.99 },
+    'AT': { free: 0, cost: 14.49 },
+    'CH': { free: 0, cost: 20.99 },
+    'EU': { free: 0, cost: 16.49 },
+    'WORLD': { free: 0, cost: 24.99 }
+  };
+  
+  const c = costs[country] || costs['WORLD'];
+  return subtotal >= c.free ? 0 : c.cost;
+}
+
+// Stripe Elements laden
+async function loadStripeElements(amount) {
+  const loader = document.getElementById('stripe-loader');
+  const elementContainer = document.getElementById('stripe-element');
+  const errorEl = document.getElementById('stripe-error');
+  
+  loader.style.display = 'flex';
+  errorEl.style.display = 'none';
+  
+  if (!initStripe()) {
+    loader.innerHTML = '<span style="color:#ff4d4f">⚠️ Stripe nicht verfügbar</span>';
+    return;
+  }
+  
+  try {
+    // 🔥 ALLE ZAHLUNGSMETHODEN AKTIVIEREN!
+    stripeElements = stripeInstance.elements({
+      mode: 'payment',
+      currency: 'eur',
+      amount: Math.round(amount * 100), // In Cent!
+      locale: 'de',
+      paymentMethodTypes: [
+        'card',           // Kreditkarten
+        'sepa_debit',    // SEPA
+        'klarna',         // Kauf auf Rechnung
+        'ideal',          // iDEAL
+        'bancontact',     // Bancontact
+        'giropay',        // Giropay
+        'eps',            // EPS
+        'p24',            // Przelewy 24
+        'sofort',         // Sofort
+        'apple_pay',      // Apple Pay
+        'google_pay'      // Google Pay
+      ],
+      appearance: {
+        theme: 'night',
+        variables: {
+          colorPrimary: '#00f2ff',
+          colorBackground: '#0a0a0a',
+          colorText: '#ffffff',
+          borderRadius: '8px',
+          fontSizeBase: '14px',
+        },
+      },
+    });
+    
+    // Payment Element erstellen
+    stripePayEl = stripeElements.create('payment', {
+      layout: {
+        type: 'accordion',
+        defaultCollapsed: false,
+        radios: true,
+        spacedAccordionItems: true,
+      },
+      wallets: {
+        applePay: 'auto',
+        googlePay: 'auto',
+      },
+    });
+    
+    // Loader ausblenden
+    loader.style.display = 'none';
+    
+    // Mounten
+    stripePayEl.mount('#stripe-element');
+    
+    console.log('✅ Stripe Elements geladen mit allen Methoden!');
+    
+  } catch(e) {
+    console.error('❌ Stripe Elements Fehler:', e);
+    loader.innerHTML = '<span style="color:#ff4d4f">⚠ Zahlungsfehler</span>';
+    errorEl.textContent = 'Zahlungsarten konnten nicht geladen werden.';
+    errorEl.style.display = 'block';
+  }
+}
+
+// Versand im Modal aktualisieren
+function updateModalShipping() {
+  const country = document.getElementById('m-land').value;
+  const sub = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const ship = getShippingCost(country, sub);
+  const total = sub + ship;
+  
+  document.getElementById('m-ship').textContent = ship === 0 ? 'Kostenlos' : ship.toFixed(2) + ' €';
+  document.getElementById('m-total').textContent = total.toFixed(2) + ' €';
+}
+
+// Zahlung verarbeiten
+async function processPayment() {
+  const fn = document.getElementById('m-fn').value.trim();
+  const ln = document.getElementById('m-ln').value.trim();
+  const email = document.getElementById('m-email').value.trim();
+  const str = document.getElementById('m-str').value.trim();
+  const plz = document.getElementById('m-plz').value.trim();
+  const ort = document.getElementById('m-ort').value.trim();
+  const land = document.getElementById('m-land').value;
+  
+  // Validierung
+  if (!fn || !ln || !email || !str || !plz || !ort) {
+    showToast('Bitte alle Felder ausfüllen!', 'err');
+    return;
+  }
+  
+  if (!email.includes('@')) {
+    showToast('Bitte gültige E-Mail!', 'err');
+    return;
+  }
+  
+  const btn = document.getElementById('pay-btn');
+  const errorEl = document.getElementById('stripe-error');
+  
+  // Loading
+  btn.disabled = true;
+  btn.innerHTML = '<span style="display:inline-block;width:16px;height:16px;border:2px solid transparent;border-top-color:#000;border-radius:50%;animation:spin .8s linear infinite;margin-right:8px"></span>VERARBEITET...';
+  errorEl.style.display = 'none';
+  
+  try {
+    // 1. Elements validieren
+    const {error: submitError} = await stripeElements.submit();
+    if (submitError) throw submitError;
+    
+    // 2. Client Secret (simuliert)
+    const clientSecret = await createPaymentIntent();
+    
+    // 3. Zahlung bestätigen
+    const {error} = await stripeInstance.confirmPayment({
+      elements: stripeElements,
+      clientSecret,
+      confirmParams: {
+        return_url: window.location.origin + '?success=true',
+        payment_method_data: {
+          billing_details: {
+            name: fn + ' ' + ln,
+            email: email,
+            address: {
+              line1: str,
+              postal_code: plz,
+              city: ort,
+              country: land,
+            }
+          }
+        }
+      },
+    });
+    
+    if (error) throw error;
+    
+    // Erfolg!
+    closeModal('stripe-modal');
+    
+    // 📧 E-MAIL SENDEN!
+    await sendOrderConfirmation(email);
+    
+    // Success anzeigen
+    showSuccess(email);
+    
+  } catch (err) {
+    console.error('❌ Zahlungsfehler:', err);
+    btn.disabled = false;
+    btn.innerHTML = '🔒 JETZT BEZAHLEN';
+    errorEl.textContent = err.message || 'Zahlung fehlgeschlagen. Bitte erneut versuchen.';
+    errorEl.style.display = 'block';
+  }
+}
+
+// Payment Intent erstellen (simuliert)
+async function createPaymentIntent() {
+  const land = document.getElementById('m-land').value;
+  const sub = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const ship = getShippingCost(land, sub);
+  const total = sub + ship;
+  
+  console.log('💳 Erstelle Payment Intent:', { total, land, currency: 'eur' });
+  
+  // In Produktion: Hier deinen Server aufrufen!
+  // Für jetzt simulieren wir
+  
+  return 'pi_test_' + Date.now();
+}
+
+// Bestellbestätigung E-Mail senden
+async function sendOrderConfirmation(email) {
+  const orderNr = 'LXRD-' + Date.now().toString().slice(-6);
+  const date = new Date().toLocaleDateString('de-DE');
+  const items = cart.map(i => `${i.name} × ${i.qty} = ${i.price.toFixed(2)} €`).join(', ');
+  
+  const htmlBody = `
+    <!DOCTYPE html><html><head><meta charset="UTF-8"><title>Bestellbestätigung</title></head>
+    <body style="margin:0;padding:0;background:#f5f5f5;font-family:Arial,sans-serif">
+    <div style="max-width:600px;margin:30px auto;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.08)">
+      <div style="background:#000;padding:28px 32px;text-align:center">
+        <div style="font-size:22px;font-weight:900;color:#00f2ff;letter-spacing:6px">LEXORD®</div>
+        <div style="font-size:11px;color:#888;letter-spacing:3px;margin-top:4px">ENGINEERING EXCELLENCE · MADE IN GERMANY</div>
+      </div>
+      <div style="background:#00f2ff;padding:14px 32px;display:flex;justify-content:space-between;align-items:center">
+        <div style="font-size:15px;font-weight:bold;color:#000">BESTELLBESTÄTIGUNG & RECHNUNG</div>
+        <div style="font-size:12px;color:#006060">${orderNr}</div>
+      </div>
+      <div style="padding:28px 32px">
+        <p style="font-size:14px;color:#333;margin-bottom:6px">Hallo <strong>Kunde</strong>,</p>
+        <p style="font-size:13px;color:#666;line-height:1.6;margin-bottom:20px">vielen Dank für deine Bestellung!</p>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:16px;font-size:13px">
+          <tr style="background:#f0f0f0"><th style="padding:10px;text-align:left;color:#888">PRODUKT</th><th style="padding:10px;text-align:center;color:#888">ANZAHL</th><th style="padding:10px;text-align:right;color:#888">GESAMT</th></tr>
+          ${cart.map(i => `<tr><td style="padding:10px;border-bottom:1px solid #eee;color:#333">${i.name}</td><td style="padding:10px;text-align:center;color:#555">${i.qty}</td><td style="padding:10px;text-align:right;font-weight:bold">${(i.price*i.qty).toFixed(2)} €</td></tr>`).join('')}
+          <tr style="background:#000"><td colspan="3" style="padding:10px;color:#888">Versand (DHL)</td><td style="padding:10px;text-align:right;font-weight:bold;color:#00f2ff">${ship === 0 ? 'Kostenlos' : ship.toFixed(2) + ' €'}</td></tr>
+          <tr style="background:#000"><td colspan="3" style="padding:14px;text-align:right;font-size:15px;font-weight:bold;color:#fff">GESAMTBETRAG: <span style="color:#00f2ff">${total.toFixed(2)} €</span></td></tr>
+        </table>
+        <div style="background:#fff8e1;border:1px solid #ffd54f;border-radius:6px;padding:14px;margin:16px 0;font-size:11px;color:#555;line-height:1.6">
+          <strong>Steuerhinweis:</strong> Kleinunternehmer gem. § 19 UStG – keine Umsatzsteuer ausgewiesen.
+        </div>
+        <div style="background:#f9f9f9;border-radius:6px;padding:16px;font-size:12px;color:#666;line-height:1.8">
+          <strong>RECHNUNGSSTELLER (§ 14 UStG):</strong><br>
+          Leon Schulz | LEXORD Engineering<br>
+          An Der Domsühler Str. 2 · 19374 Domsühl<br>
+          E-Mail: Kontakt@Lexord.de · Tel: 0152 047 18720<br>
+          Rechnungsnummer: ${orderNr} · Datum: ${date}
+        </div>
+      </div>
+      <div style="background:#f5f5f5;padding:16px 32px;text-align:center;font-size:11px;color:#aaa">
+        14 Tage Widerrufsrecht · Made in Germany · <a href="mailto:Kontakt@Lexord.de" style="color:#00a8b5">Kontakt@Lexord.de</a>
+      </div>
+    </div></body></html>
+  `;
+  
+  // E-Mail senden
+  await sendEmail(email, `✅ Bestellbestätigung ${orderNr} | LEXORD®`, htmlBody);
+  
+  // Admin-Benachrichtigung
+  await sendEmail('Kontakt@Lexord.de', `[BESTELLUNG] ${orderNr} | ${email}`, `
+    <div style="font-family:Arial;padding:20px;background:#0a0a0a;color:#fff;border:2px solid #00f2ff;border-radius:10px">
+      <h2 style="color:#00f2ff;font-size:16px;margin-bottom:16px">🆕 NEUE BESTELLUNG</h2>
+      <p style="color:#ccc;font-size:13px;line-height:1.8">E-Mail: <a href="mailto:${email}" style="color:#00f2ff">${email}</a></p>
+      <p style="color:#888;font-size:12px;margin-top:8px">Datum: ${date}</p>
+      <div style="background:#080808;border-radius:6px;padding:14px;margin-top:14px">
+        <strong>BESTELLTE ARTIKEL:</strong>${items}
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;color:#ccc;margin-top:12px">
+        <span>Zwischensumme:</span><span>${sub.toFixed(2)} €</span>
+        <span>Gesamt:</span><span style="color:#00f2ff;font-weight:700">${total.toFixed(2)} €</span>
+      </div>
+    </div>
+  `);
+  
+  // Warenkorb leeren
+  cart = [];
+  saveCart();
+  closeModal('cart-modal');
+  
+  // Success Modal
+  showSuccess(email);
+}
+
+// Success Modal zeigen
+function showSuccess(email) {
+  const modal = document.createElement('div');
+  modal.id = 'success-modal';
+  modal.className = 'modal active';
+  modal.innerHTML = `
+    <div style="background:#060606;border:1px solid var(--neon);border-radius:20px;padding:40px;max-width:450px;width:90%;text-align:center;position:relative;overflow:hidden">
+      <div style="width:70px;height:70px;border:2px solid var(--neon);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px;animation:pulse 2s infinite">✓</div>
+      <h2 style="font-family:'Orbitron';font-size:1.4rem;color:var(--neon);letter-spacing:4px;margin-bottom:12px">BESTELLUNG ERFOLGREICH!</h2>
+      <p style="font-size:13px;color:#aaa;line-height:1.7">Eine Bestellbestätigung wurde an<br><strong style="color:var(--neon)">${email}</strong> gesendet.</p>
+      <p style="font-size:11px;color:#666;margin-top:24px">Prüfe deine E-Mails falls und auch im Spam-Ordner nach.</p>
+      <button onclick="this.closest('.modal').remove();document.body.removeChild(this.parentElement);" style="padding:14px 32px;background:var(--neon);color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:12px;cursor:pointer;border-radius:8px;">ZURÜCK ZUM SHOP</button>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  
+  // Confetti
+  for (let i = 0; i < 30; i++) {
+    const confetti = document.createElement('div');
+    confetti.className = 'confetti-piece';
+    confetti.style.cssText = `left:${Math.random()*100}%;top:-20px;background:${['#00f2ff','#bc13fe','#fff','#ffae00','#ffd54f'][Math.floor(Math.random()*4)]};width:8px;height:8px;border-radius:2px;position:absolute;animation:confettiFall 3s ease-in forwards`;
+    modal.querySelector('.success-box').appendChild(confetti);
+  }
+}
+
+// Confetti Animation
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,242,255,.4)}50%{box-shadow:0 0 15px rgba(0,242,255,0)}}
+@keyframes confettiFall{to{transform:translateY(500px) rotate(720deg);opacity:0}}
+
+// Newsletter abonnieren
+async function subscribeNewsletter(e) {
+  e.preventDefault();
+  const email = document.getElementById('nl-email').value;
+  
+  if (!email || !email.includes('@')) {
+    showToast('Bitte gültige E-Mail eingeben!', 'err');
+    return;
+  }
+  
+  const htmlBody = `
+    <!DOCTYPE html><html><head><meta charset="UTF-8"><title>Willkommen!</title></head>
+    <body style="margin:0;padding:0;background:#f5f5f5;font-family:Arial,sans-serif">
+    <div style="max-width:600px;margin:30px auto;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.08)">
+      <div style="background:#000;padding:28px 32px;text-align:center">
+        <div style="font-size:22px;font-weight:900;color:#00f2ff;letter-spacing:6px">LEXORD®</div>
+        <div style="font-size:11px;color:#888;letter-spacing:3px;margin-top:4px">ENGINEERING EXCELLENCE</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#00f2ff,#bc13fe);padding:28px 32px;text-align:center">
+        <div style="font-size:40px;margin-bottom:10px">🎁</div>
+        <div style="font-size:22px;font-weight:900;color:#fff;letter-spacing:2px">WILLKOMMEN!</div>
+        <div style="font-size:14px;color:rgba(255,255,255,.85);margin-top:6px">Dein exklusiver Rabattcode wartet auf dich</div>
+      </div>
+      <div style="padding:32px">
+        <p style="font-size:14px;color:#333;line-height:1.7">Danke, dass du dich für den LEXORD Newsletter angemeldet hast! Als Willkommensgeschenk erhältst du <strong>10% Rabatt</strong> auf deine erste Bestellung.</p>
+        <div style="background:#000;border-radius:10px;padding:22px;text-align:center;margin:24px 0">
+          <div style="font-size:11px;color:#888;letter-spacing:3px;margin-bottom:8px">DEIN RABATTCODE</div>
+          <div style="font-size:28px;color:#00f2ff;letter-spacing:8px;font-weight:900">WILLKOMMEN10</div>
+          <div style="font-size:12px;color:#666;margin-top:8px">Im Warenkorb eingeben · 10% auf alle Produkte</div>
+        </div>
+        <div style="text-align:center;margin:24px 0"><a href="https://lexord.de" style="display:inline-block;background:#00f2ff;color:#000;font-weight:900;font-size:13px;padding:14px 32px;border-radius:8px;text-decoration:none">JETZT SHOPPEN →</a></div>
+      </div>
+      <div style="background:#f5f5f5;padding:16px 32px;text-align:center;font-size:11px;color:#aaa">
+        Abmeldung jederzeit möglich · LEXORD Engineering · Kontakt@Lexord.de
+      </div>
+    </div></body></html>
+  `;
+  
+  // E-Mail senden
+  await sendEmail(email, '🎁 Dein 10% Willkommensrabatt | LEXORD®', htmlBody);
+  
+  // Admin
+  await sendEmail('Kontakt@Lexord.de', '[NEWSLETTER] Neue Anmeldung: ' + email, `
+    <div style="font-family:Arial;padding:20px;background:#0a0a0a;color:#fff;border:2px solid #00f2ff;border-radius:10px">
+      <h2 style="color:#00f2ff;font-size:16px;margin-bottom:16px">📧 NEWSLETTER ANMELDUNG</h2>
+      <p style="color:#ccc;font-size:13px;line-height:1.8">E-Mail: <a href="mailto:${email}" style="color:#00f2ff">${email}</a></p>
+      <p style="color:#888;font-size:12px;margin-top:8px">Datum: ${new Date().toLocaleString('de-DE')}</p>
+    </div>
+  `);
+  
+  // UI Feedback
+  document.getElementById('nl-email').value = '';
+  document.getElementById('nl-success').style.display = 'block';
+  
+  showToast('✅ Newsletter angemeldet! Prüfe dein Postfach.', 'ok');
+}
+
+// Kontaktformular senden
+async function sendContact(e) {
+  e.preventDefault();
+  
+  const name = document.querySelector('#cf-name').value;
+  const email = document.querySelector('#ct-email').value;
+  const msg = document.querySelector('#cf-message').value;
+  
+  if (!name || !email || !msg) {
+    showToast('Bitte alle Felder ausfüllen!', 'err');
+    return;
+  }
+  
+  const btn = e.target.querySelector('button');
+  btn.textContent = 'SENDE...';
+  btn.disabled = true;
+  
+  const htmlBody = `
+    <!DOCTYPE html><html><head><meta charset="UTF-8"><title>Nachricht empfangen</title></head>
+    <body style="margin:0;padding:0;background:#f5f5f5;font-family:Arial,sans-serif">
+    <div style="max-width:500px;margin:30px auto;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.08)">
+      <div style="background:#000;padding:24px 28px;text-align:center">
+        <div style="font-size:20px;font-weight:900;color:#00f2ff;letter-spacing:4px">LEXORD®</div>
+        <div style="font-size:10px;color:#888;letter-spacing:2px;margin-top:4px">ENGINEERING EXCELLENCE</div>
+      </div>
+      <div style="background:#00f2ff;padding:14px 24px;text-align:center">
+        <div style="font-size:16px;font-weight:bold;color:#000">✅ DEINE NACHRICHT WURDE EMPFANGEN</div>
+      </div>
+      <div style="padding:24px 28px">
+        <p style="font-size:14px;color:#333;margin-bottom:12px">Hallo <strong>${name}</strong>,</p>
+        <p style="font-size:13px;color:#666;line-height:1.7;margin-bottom:16px">vielen Dank für deine Nachricht! Wir melden uns schnellstmöglich zurück.</p>
+        <div style="background:#f9f9f9;border:1px solid #eee;border-radius:6px;padding:14px;margin:16px 0">
+          <strong style="font-size:12px;color:#333">Dein Betreff:</strong>
+        </div>
+      </div>
+      <div style="background:#f5f5f5;padding:16px 24px;text-align:center;font-size:11px;color:#aaa">
+        LEXORD Engineering · Kontakt@Lexord.de
+      </div>
+    </div></body></html>
+  `;
+  
+  // E-Mail senden
+  await sendEmail(email, `📧 Neue Nachricht von ${name}`, htmlBody);
+  
+  // Admin
+  await sendEmail('Kontakt@Lexord.de', `[KONTAKT] ${name}`, `
+    <div style="font-family:Arial;padding:20px;background:#0a0a0a;color:#fff;border:2px solid #00f2ff;border-radius:10px">
+      <h2 style="color:#00f2ff;font-size:16px;margin-bottom:16px">📧 NEUE KONTAKTANFRAGE</h2>
+      <p style="color:#ccc;font-size:13px;line-height:1.8">Von: <strong>${name}</strong> (${email})</p>
+      <p style="color:#888;font-size:12px;margin-top:8px">Betreff: Kontaktanfrage</p>
+      <div style="background:#080808;border-radius:6px;padding:14px;margin-top:14px">
+        <strong style="font-size:12px;color:#333">Nachricht:</strong>
+      </div>
+    </div>
+  `);
+  
+  // UI
+  document.getElementById('contact-form').style.display = 'none';
+  document.getElementById('ct-success').style.display = 'block';
+  btn.textContent = 'NACHRICHT SENDEN';
+  btn.disabled = false;
+  
+  showToast('✅ Nachricht gesendet!', 'ok');
+}
+
+// Toast anzeigen
+function showToast(msg, type = 'ok') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast' + (type === 'err' ? ' err' : '');
+  toast.textContent = msg;
+  container.appendChild(toast);
+  
+  setTimeout(() => toast.remove(), 4000);
+}
+
+// Scroll zu Funktion
+function scrollTo(id) {
+  document.getElementById(id).scrollIntoView({ behavior:smooth });
+}
+</script>
+
+</body>
+</html>

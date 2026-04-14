@@ -1,0 +1,2228 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title translate="no">LEXORDu00ae | Custom PS5 Controller | Beste Scuf Alternative 2026 | Made in Germany</title>
+<!-- Stripe.js v3 -->
+<script src="https://js.stripe.com/v3/"></script>
+<!-- PayPal SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=AQOBIpaxy2Po_nxn9bZURvPzt4uS-ZYPdCueAT4WYbnOMsepoYD_k2WVFWAQiGyZ8i7hB9HucXYXAZ57&currency=EUR&intent=capture"></script>
+<meta name="description" content="LEXORDu00ae Engineering: Die ultimative Premium Scuf Alternative. TMR & Hall Effect Sticks, Clicky Trigger, Paddle Systeme. Custom Controller Made in Germany.">
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+<!-- u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550
+  WEB3FORMS u2013 KOSTENLOS, KEIN TEMPLATE Nu00d6TIG
+  Einzige Einrichtung: 1x auf web3forms.com gehen,
+  mit Kontakt@Lexord.de registrieren u2192 API Key kopieren
+  u2192 unten bei WEB3FORMS_KEY eintragen u2192 FERTIG.
+  Du bekommst alle E-Mails direkt in dein Postfach.
+u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550 -->
+
+<style>
+:root{
+  --neon:#00f2ff;--neon2:#bc13fe;--neon-dim:rgba(0,242,255,0.12);
+  --bg:#000;--panel:#080808;--border:#161616;--green:#00b67a;
+  --text:#ffffff;--muted:#555;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden}
+
+/* u2500u2500 TICKER u2500u2500 */
+.ticker-wrap{position:fixed;top:0;width:100%;z-index:9500;background:#000;border-bottom:1px solid #0f0f0f}
+.ticker-row{overflow:hidden;white-space:nowrap;padding:7px 0}
+.ticker-inner{display:inline-block;animation:tickL 30s linear infinite;font-family:'Orbitron';font-size:8.5px;letter-spacing:1.5px;color:#555}
+.ticker-inner span{margin-right:55px}
+.ticker-inner .hl{color:var(--neon)}
+@keyframes tickL{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* u2500u2500 HEADER u2500u2500 */
+header{position:fixed;top:30px;width:100%;z-index:9400;padding:11px 5%;display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.88);backdrop-filter:blur(22px);border-bottom:1px solid #0d0d0d}
+.brand{font-family:'Orbitron';font-weight:900;font-size:1.1rem;letter-spacing:5px;color:#fff;text-decoration:none}
+
+/* u2500u2500 SEARCH u2500u2500 */
+.srch-wrap{position:relative;flex:1;max-width:280px;margin:0 18px}
+.srch-input{width:100%;padding:8px 14px 8px 34px;background:rgba(255,255,255,0.04);border:1px solid #1a1a1a;color:#fff;font-family:'Inter';font-size:11px;border-radius:6px;outline:none;transition:.3s}
+.srch-input:focus{border-color:var(--neon);background:rgba(0,242,255,0.04);box-shadow:0 0 0 2px rgba(0,242,255,0.08)}
+.srch-ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#444;pointer-events:none;font-size:13px}
+#srch-drop{position:absolute;top:calc(100% + 5px);left:0;width:100%;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:8px;display:none;z-index:20000;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.9)}
+.srch-item{padding:10px 14px;font-size:11px;cursor:pointer;border-bottom:1px solid #0f0f0f;display:flex;align-items:center;gap:10px;transition:.2s;color:#ccc}
+.srch-item:last-child{border:none}
+.srch-item:hover{background:#111;color:var(--neon)}
+.srch-item img{width:32px;height:32px;object-fit:contain;background:#111;border-radius:5px}
+.srch-item-name{flex:1;font-family:'Orbitron';font-size:9px;letter-spacing:.5px}
+.srch-item-price{color:var(--neon);font-family:'Orbitron';font-size:9px}
+.srch-empty{padding:14px;text-align:center;font-family:'Orbitron';font-size:9px;color:#333;letter-spacing:2px}
+
+/* u2500u2500 NAV CONTROLS u2500u2500 */
+.nav-ctrl{display:flex;align-items:center;gap:18px}
+.cart-btn{cursor:pointer;display:flex;align-items:center;gap:7px;padding:7px 14px;border:1px solid #1a1a1a;border-radius:6px;font-family:'Orbitron';font-size:9px;color:#888;transition:.3s;position:relative}
+.cart-btn:hover{border-color:var(--neon);color:var(--neon)}
+.cart-badge{background:var(--neon);color:#000;font-size:8px;font-weight:900;min-width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 8px var(--neon)}
+.burger{cursor:pointer;width:22px;height:14px;display:flex;flex-direction:column;justify-content:space-between}
+.burger div{height:1.5px;background:#fff;transition:.3s;border-radius:1px}
+
+/* u2500u2500 FULL NAV u2500u2500 */
+#full-nav{position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:40000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transform:translateX(100%);transition:.55s cubic-bezier(.7,0,.3,1);backdrop-filter:blur(30px)}
+#full-nav.active{transform:translateX(0)}
+.nav-link{font-family:'Orbitron';font-size:1.25rem;text-decoration:none;color:#fff;transition:.3s;letter-spacing:3px}
+.nav-link:hover{color:var(--neon)}
+.nav-sub{font-family:'Inter';font-size:.68rem;color:#333;letter-spacing:3px;text-transform:uppercase}
+
+/* u2500u2500 CART DRAWER u2500u2500 */
+#cart-drawer{position:fixed;top:0;right:-520px;width:100%;max-width:480px;height:100%;background:#050505;z-index:100001;transition:.5s cubic-bezier(.7,0,.3,1);border-left:1px solid #0f0f0f;display:flex;flex-direction:column;box-shadow:-20px 0 80px rgba(0,0,0,.95)}
+#cart-drawer.open{right:0}
+.c-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:100000;display:none;backdrop-filter:blur(10px)}
+.cart-hd{padding:20px 22px;border-bottom:1px solid #0f0f0f;display:flex;justify-content:space-between;align-items:center;background:#070707}
+.cart-hd-title{font-family:'Orbitron';font-size:10px;letter-spacing:3px}
+.cart-x{width:30px;height:30px;border:1px solid #1a1a1a;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:#555;transition:.2s}
+.cart-x:hover{color:#fff;border-color:#333}
+.cart-body{flex:1;overflow-y:auto;padding:15px 22px}
+.cart-body::-webkit-scrollbar{width:3px}
+.cart-body::-webkit-scrollbar-thumb{background:#1a1a1a;border-radius:3px}
+.c-item{display:flex;gap:13px;margin-bottom:11px;background:#0c0c0c;padding:13px;border-radius:10px;border:1px solid #111;transition:.2s}
+.c-item:hover{border-color:#1a1a1a}
+.c-item img{width:54px;height:54px;object-fit:contain;background:#0f0f0f;border-radius:6px}
+.c-item-info{flex:1}
+.c-item-info h4{font-family:'Orbitron';font-size:8.5px;letter-spacing:.8px;margin-bottom:3px}
+.c-qty{display:flex;align-items:center;gap:7px;margin-top:7px}
+.qty-b{width:20px;height:20px;border:1px solid #1a1a1a;border-radius:4px;cursor:pointer;background:#111;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;transition:.2s}
+.qty-b:hover{border-color:var(--neon);color:var(--neon)}
+.qty-n{font-family:'Orbitron';font-size:9px;min-width:18px;text-align:center}
+.c-empty{text-align:center;padding:60px 20px;color:#222}
+.c-empty p{font-family:'Orbitron';font-size:9px;letter-spacing:2px;margin-top:12px}
+.cart-ft{border-top:1px solid #0f0f0f;padding:18px 22px;background:#050505}
+.ship-bar-lbl{font-family:'Orbitron';font-size:7.5px;letter-spacing:1.5px;color:#444;margin-bottom:5px}
+.ship-bar{background:#0d0d0d;border-radius:3px;height:3px;margin-bottom:14px;overflow:hidden}
+.ship-fill{height:100%;background:var(--neon);border-radius:3px;transition:.5s}
+.sum-row{display:flex;justify-content:space-between;font-size:10.5px;color:#666;margin-bottom:5px;font-family:'Inter'}
+.sum-row.total{color:#fff;font-weight:700;font-size:13px;border-top:1px solid #0f0f0f;padding-top:9px;margin-top:6px;font-family:'Orbitron'}
+
+/* u2500u2500 LAND AUSWAHL u2500u2500 */
+.land-row{display:flex;align-items:center;gap:10px;margin:10px 0;background:#0c0c0c;border:1px solid #111;border-radius:8px;padding:10px 13px}
+.land-lbl{font-family:'Orbitron';font-size:7.5px;color:#555;letter-spacing:1.5px;white-space:nowrap}
+.land-sel{flex:1;background:#111;border:1px solid #1a1a1a;color:#fff;font-family:'Orbitron';font-size:8.5px;padding:7px 10px;border-radius:5px;outline:none;cursor:pointer;transition:.2s}
+.land-sel:focus{border-color:var(--neon)}
+
+/* u2500u2500 RABATTCODE u2500u2500 */
+.discount-row{display:flex;gap:8px;margin:10px 0}
+.discount-input{flex:1;padding:9px 12px;background:#0c0c0c;border:1px solid #1a1a1a;color:#fff;font-family:'Orbitron';font-size:8.5px;border-radius:6px;outline:none;letter-spacing:1px;text-transform:uppercase;transition:.2s}
+.discount-input:focus{border-color:var(--neon)}
+.discount-btn{padding:9px 15px;background:transparent;border:1px solid #2a2a2a;color:#888;font-family:'Orbitron';font-size:8px;letter-spacing:1px;border-radius:6px;cursor:pointer;transition:.3s;white-space:nowrap}
+.discount-btn:hover{border-color:var(--neon);color:var(--neon)}
+.discount-ok{font-family:'Orbitron';font-size:7.5px;color:var(--green);letter-spacing:1px;display:none;margin-top:4px}
+.discount-err{font-family:'Orbitron';font-size:7.5px;color:#ff4d4f;letter-spacing:1px;display:none;margin-top:4px}
+
+.legal-note{font-size:8.5px;color:#333;margin:10px 0;line-height:1.6}
+.legal-note a{color:var(--neon)}
+.agb-check{display:flex;align-items:flex-start;gap:8px;font-size:8.5px;color:#555;margin:9px 0;cursor:pointer}
+.agb-check input{accent-color:var(--neon);margin-top:1px;flex-shrink:0}
+.agb-check a{color:var(--neon)}
+.checkout-btn{width:100%;padding:14px;background:#fff;color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:10px;letter-spacing:2px;cursor:pointer;border-radius:8px;transition:.3s;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:9px}
+.checkout-btn:hover{background:var(--neon)}
+.or-div{text-align:center;font-family:'Orbitron';font-size:7.5px;color:#222;letter-spacing:2px;margin:8px 0;position:relative}
+.or-div::before,.or-div::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:#0f0f0f}
+.or-div::before{left:0}.or-div::after{right:0}
+.trust-row{display:flex;justify-content:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+.trust-chip{font-family:'Orbitron';font-size:6.5px;color:#2a2a2a;display:flex;align-items:center;gap:3px;letter-spacing:.8px}
+.vat-lbl{font-size:7.5px;text-align:center;margin-top:8px;color:#1f1f1f;font-family:'Orbitron'}
+
+/* u2500u2500 ORDER SUCCESS u2500u2500 */
+#order-success-modal{position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:300000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(20px)}
+.success-box{background:#060606;border:1px solid var(--neon);border-radius:20px;padding:45px;max-width:480px;width:90%;text-align:center;position:relative;overflow:hidden}
+.success-box::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(0,242,255,.06) 0%,transparent 70%);pointer-events:none}
+.check-circle{width:70px;height:70px;border:2px solid var(--neon);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;animation:pulsCheck 2s infinite;font-size:28px}
+@keyframes pulsCheck{0%,100%{box-shadow:0 0 0 0 rgba(0,242,255,.4)}50%{box-shadow:0 0 0 15px rgba(0,242,255,0)}}
+.success-title{font-family:'Orbitron';font-size:1rem;letter-spacing:4px;color:var(--neon);margin-bottom:10px}
+.success-sub{font-size:11px;color:#666;line-height:1.7;margin-bottom:25px}
+.success-order-nr{font-family:'Orbitron';font-size:9px;color:#333;letter-spacing:2px;margin-bottom:20px}
+.success-btn{padding:13px 30px;background:var(--neon);color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:9px;letter-spacing:2px;cursor:pointer;border-radius:8px;transition:.3s}
+.success-btn:hover{background:#fff}
+.confetti-piece{position:absolute;width:8px;height:8px;border-radius:2px;animation:confettiFall 3s ease-in forwards}
+@keyframes confettiFall{0%{transform:translateY(-50px) rotate(0deg);opacity:1}100%{transform:translateY(500px) rotate(720deg);opacity:0}}
+
+/* u2500u2500 COOKIE BANNER u2500u2500 */
+#cookie-banner{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);width:calc(100% - 40px);max-width:620px;background:#090909;border:1px solid #1a1a1a;border-radius:14px;padding:20px 24px;z-index:500000;display:none;gap:18px;align-items:center;box-shadow:0 20px 60px rgba(0,0,0,.95);opacity:0;transition:opacity .8s ease}
+#cookie-banner.show{display:flex;opacity:1}
+.ck-text{flex:1;font-size:9.5px;color:#666;line-height:1.6}
+.ck-text a{color:var(--neon)}
+.ck-btns{display:flex;flex-direction:column;gap:7px;flex-shrink:0}
+.ck-accept{padding:10px 20px;background:var(--neon);color:#000;border:none;font-family:'Orbitron';font-size:8px;letter-spacing:1px;border-radius:6px;cursor:pointer;font-weight:700;white-space:nowrap}
+.ck-reject{padding:10px 20px;background:transparent;color:#444;border:1px solid #1a1a1a;font-family:'Orbitron';font-size:8px;letter-spacing:1px;border-radius:6px;cursor:pointer;white-space:nowrap;transition:.2s}
+.ck-reject:hover{color:#fff;border-color:#333}
+
+/* u2500u2500 TOAST u2500u2500 */
+#toasts{position:fixed;bottom:30px;right:28px;z-index:600000;display:flex;flex-direction:column;gap:9px;pointer-events:none}
+.toast{background:#0c0c0c;border:1px solid #1a1a1a;border-left:3px solid var(--neon);padding:12px 16px;border-radius:8px;font-family:'Orbitron';font-size:8.5px;letter-spacing:1px;min-width:210px;animation:toastIn .4s cubic-bezier(.175,.885,.32,1.275);box-shadow:0 10px 40px rgba(0,0,0,.9)}
+.toast.err{border-left-color:#ff4d4f}
+.toast.ok{border-left-color:var(--green)}
+@keyframes toastIn{from{transform:translateX(80px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* u2500u2500 STARS u2500u2500 */
+#star-canvas{position:fixed;inset:0;z-index:-1;background:#000}
+#intro-overlay{position:fixed;inset:0;background:#000;z-index:100000;display:flex;align-items:center;justify-content:center}
+#warp-canvas{position:absolute;inset:0}
+
+/* u2500u2500 HERO u2500u2500 */
+#hero{min-height:95vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:110px;text-align:center}
+.float-logo{width:200px;filter:drop-shadow(0 0 22px var(--neon));animation:floatY 4s ease-in-out infinite}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-13px)}}
+.hero-banner{width:90%;max-width:780px;margin:28px 0;border-radius:14px;border:1px solid rgba(0,242,255,.22);filter:drop-shadow(0 0 28px rgba(0,242,255,.15));animation:floatY 4.5s ease-in-out infinite;animation-delay:.6s}
+
+/* u2500u2500 CONFIGURATOR u2500u2500 */
+#configurator{padding:90px 5% 60px;text-align:center;position:relative;overflow:hidden}
+.lightning-bg{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.lightning-line{position:absolute;width:2px;background:linear-gradient(to bottom,transparent,var(--neon),transparent);opacity:.25;animation:lightningFlash var(--dur,2s) var(--delay,0s) infinite}
+@keyframes lightningFlash{0%,90%,100%{opacity:0}92%,96%{opacity:.6}94%{opacity:0}}
+.cfg-inner{position:relative;z-index:1}
+.cfg-canvas-wrap{max-width:480px;margin:40px auto;position:relative}
+.cfg-controller img{width:100%;border-radius:20px;filter:drop-shadow(0 0 50px rgba(0,242,255,.25))}
+.cfg-options{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:480px;margin:30px auto 0}
+.cfg-cat{background:#080808;border:1px solid #111;border-radius:12px;padding:18px}
+.cfg-cat-title{font-family:'Orbitron';font-size:8.5px;letter-spacing:2px;color:var(--neon);margin-bottom:12px}
+.cfg-opt-row{display:flex;flex-wrap:wrap;gap:7px}
+.cfg-opt{padding:7px 12px;background:#0d0d0d;border:1px solid #1a1a1a;border-radius:5px;font-family:'Orbitron';font-size:7.5px;letter-spacing:1px;cursor:pointer;transition:.25s;color:#888}
+.cfg-opt:hover,.cfg-opt.sel{border-color:var(--neon);color:var(--neon);background:rgba(0,242,255,.06)}
+.cfg-price-display{font-family:'Orbitron';font-size:1.6rem;color:var(--neon);margin:25px 0 5px;font-weight:700}
+.cfg-price-sub{font-size:9px;color:#444;font-family:'Orbitron';letter-spacing:2px;margin-bottom:25px}
+.cfg-add-btn{padding:15px 40px;background:#fff;color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:10px;letter-spacing:2px;cursor:pointer;border-radius:8px;transition:.3s;display:inline-flex;align-items:center;gap:10px;animation:glowPulse 3s infinite}
+.cfg-add-btn:hover{background:var(--neon)}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 8px var(--neon)}50%{box-shadow:0 0 30px var(--neon),0 0 60px rgba(0,242,255,.3)}}
+.cfg-summary{background:#080808;border:1px solid #111;border-radius:10px;padding:16px 20px;margin:20px auto 0;max-width:480px;text-align:left}
+.cfg-sum-row{display:flex;justify-content:space-between;font-size:9.5px;color:#666;padding:4px 0;font-family:'Inter'}
+.cfg-sum-row.active{color:#ccc}
+
+/* u2500u2500 SECTION HEADINGS u2500u2500 */
+.sec-title{font-family:'Orbitron';font-size:clamp(.9rem,3vw,1.3rem);letter-spacing:6px;text-align:center;margin-bottom:8px}
+.sec-sub{font-size:9.5px;color:#444;text-align:center;letter-spacing:3px;font-family:'Orbitron';margin-bottom:45px}
+
+/* u2500u2500 REVIEWS u2500u2500 */
+.trust-sec{padding:55px 0;overflow:hidden;border-top:1px solid #0a0a0a;border-bottom:1px solid #0a0a0a}
+.ticker-cont{display:flex}
+.ticker-track{display:flex;gap:18px;animation:tickR 40s linear infinite}
+@keyframes tickR{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.rev-card{background:#080808;border:1px solid #111;padding:18px 20px;border-radius:12px;width:270px;flex-shrink:0;transition:.3s}
+.rev-card:hover{border-color:var(--neon)}
+.stars{color:#ffae00;font-size:12px;margin-bottom:7px}
+.src-tag{font-family:'Orbitron';font-size:7.5px;padding:3px 7px;border-radius:3px;display:inline-block;margin-bottom:7px;letter-spacing:.5px}
+.g-tag{background:#4285F4;color:#fff}
+.tp-tag{background:var(--green);color:#fff}
+.eb-tag{background:#e53238;color:#fff}
+
+/* u2500u2500 SWIPER u2500u2500 */
+.cfg-swiper-sec{padding:70px 5%;text-align:center}
+.swiper{width:100%;max-width:530px;margin:0 auto;padding-bottom:50px}
+.swiper-slide{perspective:1000px;background:transparent!important;border:none!important;height:500px}
+.p-inner{width:100%;height:100%;transition:transform .8s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d;cursor:pointer;position:relative}
+.swiper-slide:hover .p-inner{transform:rotateY(180deg)}
+.p-front,.p-back{position:absolute;inset:0;backface-visibility:hidden;background:#080808;border-radius:20px;padding:24px;border:1px solid #111;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:.4s}
+.swiper-slide:hover .p-front,.swiper-slide:hover .p-back{border-color:var(--neon);box-shadow:0 0 35px rgba(0,242,255,.25)}
+.p-back{transform:rotateY(180deg);border-color:rgba(0,242,255,.3);background:#040404}
+.p-img{width:100%;height:230px;object-fit:contain;margin-bottom:16px}
+.p-title{font-family:'Orbitron';font-size:11.5px;letter-spacing:2px;margin-bottom:6px}
+.p-price{font-family:'Orbitron';color:var(--neon);font-size:17px;font-weight:700}
+.p-badge{display:inline-block;background:rgba(0,242,255,.1);border:1px solid rgba(0,242,255,.25);color:var(--neon);font-family:'Orbitron';font-size:7px;letter-spacing:1.5px;padding:3px 8px;border-radius:3px;margin-bottom:9px}
+.stock-dot-wrap{display:flex;align-items:center;gap:6px;justify-content:center;font-size:8.5px;color:#555;font-family:'Orbitron';letter-spacing:1px;margin:5px 0}
+.sdot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green);animation:pDot 2s infinite}
+@keyframes pDot{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* u2500u2500 GRID / CARDS u2500u2500 */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:26px;padding:40px 5%;max-width:1400px;margin:0 auto}
+.card{background:var(--panel);padding:24px;border-radius:14px;border:1px solid #0f0f0f;transition:.4s;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(0,242,255,.03),transparent 70%);pointer-events:none}
+.card:hover{border-color:var(--neon);box-shadow:0 0 35px rgba(0,242,255,.18);transform:translateY(-5px)}
+.card img{width:100%;border-radius:8px;object-fit:contain;max-height:190px}
+.card h3{font-family:'Orbitron';margin-top:13px;font-size:10px;letter-spacing:2px}
+.c-price{color:var(--neon);font-family:'Orbitron';font-size:14px;font-weight:700;margin:8px 0}
+.wish-btn{position:absolute;top:13px;right:13px;width:30px;height:30px;border:1px solid #1a1a1a;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(0,0,0,.7);transition:.3s;z-index:2}
+.wish-btn:hover,.wish-btn.on{border-color:#ff4d7d}
+.wish-btn.on svg path{fill:#ff4d7d;stroke:#ff4d7d}
+
+/* u2500u2500 DELIVERY BOX u2500u2500 */
+.dbox{margin:11px 0;padding:11px 13px;background:rgba(0,229,255,.04);border-left:3px solid var(--neon);border-radius:6px;display:flex;align-items:center;gap:10px;transition:.3s;cursor:default;border-right:1px solid #0f0f0f;border-top:1px solid #0f0f0f;border-bottom:1px solid #0f0f0f}
+.dbox:hover{background:rgba(0,229,255,.09)}
+@keyframes truckMove{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+.truck{animation:truckMove 2.5s infinite ease-in-out;font-size:1.15em}
+.dbox-lbl{font-family:'Orbitron';font-size:6.5px;color:var(--neon);letter-spacing:2px;text-transform:uppercase}
+.dbox-date{font-size:10.5px;color:#fff;font-family:'Inter';font-weight:500}
+
+/* u2500u2500 BUTTONS u2500u2500 */
+.btn{width:100%;padding:13px;background:#fff;color:#000;border:none;font-family:'Orbitron';font-weight:900;cursor:pointer;text-transform:uppercase;transition:.3s;border-radius:8px;font-size:9.5px;letter-spacing:1.5px;display:flex;align-items:center;justify-content:center;gap:7px}
+.btn:hover{background:var(--neon)}
+.btn.outline{background:transparent;border:1px solid var(--neon);color:var(--neon)}
+.btn.outline:hover{background:var(--neon);color:#000}
+
+/* u2500u2500 PAYMENT SECTION u2500u2500 */
+.payment-section{padding:60px 5%;text-align:center;border-top:1px solid #0a0a0a;background:#030303}
+.pay-grid{display:flex;justify-content:center;align-items:center;gap:18px;flex-wrap:wrap;margin-top:30px}
+.pay-card{background:#0a0a0a;border:1px solid #131313;border-radius:12px;padding:16px 22px;display:flex;align-items:center;gap:10px;transition:.4s;cursor:default;position:relative;overflow:hidden}
+.pay-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(0,242,255,.04),transparent 70%);opacity:0;transition:.3s}
+.pay-card:hover{border-color:var(--neon);transform:translateY(-3px);box-shadow:0 0 25px rgba(0,242,255,.15)}
+.pay-card:hover::before{opacity:1}
+.pay-logo{height:24px;width:auto;object-fit:contain;filter:brightness(0) invert(1);opacity:.6;transition:.3s}
+.pay-card:hover .pay-logo{opacity:1;filter:brightness(0) invert(1) drop-shadow(0 0 6px var(--neon))}
+.pay-name{font-family:'Orbitron';font-size:8px;letter-spacing:1.5px;color:#555;transition:.3s}
+.pay-card:hover .pay-name{color:var(--neon)}
+.pay-secure-row{display:flex;justify-content:center;gap:22px;margin-top:22px;flex-wrap:wrap}
+.pay-sec-chip{font-family:'Orbitron';font-size:7px;color:#1e1e1e;display:flex;align-items:center;gap:5px;letter-spacing:1px}
+.pay-sec-dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green)}
+
+/* u2500u2500 RECENTLY VIEWED u2500u2500 */
+#recently{padding:40px 5%;border-top:1px solid #0a0a0a;display:none}
+.rec-scroll{display:flex;gap:13px;overflow-x:auto;padding-bottom:8px}
+.rec-scroll::-webkit-scrollbar{height:2px}
+.rec-scroll::-webkit-scrollbar-thumb{background:#1a1a1a}
+.rec-card{background:#0a0a0a;border:1px solid #0f0f0f;border-radius:10px;padding:13px;min-width:120px;cursor:pointer;transition:.3s;text-align:center;flex-shrink:0}
+.rec-card:hover{border-color:var(--neon)}
+.rec-card img{width:55px;height:55px;object-fit:contain;margin-bottom:7px}
+.rec-name{font-family:'Orbitron';font-size:6.5px;letter-spacing:.8px;margin-bottom:3px}
+.rec-price{color:var(--neon);font-family:'Orbitron';font-size:8.5px}
+
+/* u2500u2500 EMAIL MARKETING u2500u2500 */
+#email-marketing{padding:80px 5%;text-align:center;position:relative;overflow:hidden;background:#040404;border-top:1px solid #0a0a0a}
+.em-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:300px;background:radial-gradient(ellipse,rgba(0,242,255,.04) 0%,transparent 70%);pointer-events:none}
+.em-inner{position:relative;z-index:1;max-width:550px;margin:0 auto}
+.em-form{display:flex;gap:10px;margin-top:30px}
+.em-input{flex:1;padding:14px 16px;background:#0c0c0c;border:1px solid #1a1a1a;color:#fff;font-family:'Inter';font-size:12px;border-radius:8px;outline:none;transition:.3s}
+.em-input:focus{border-color:var(--neon);background:rgba(0,242,255,.03)}
+.em-btn{padding:14px 24px;background:var(--neon);color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:9px;letter-spacing:1.5px;cursor:pointer;border-radius:8px;white-space:nowrap;transition:.3s;flex-shrink:0}
+.em-btn:hover{background:#fff}
+.em-perks{display:flex;justify-content:center;gap:25px;margin-top:20px;flex-wrap:wrap}
+.em-perk{font-size:9px;color:#444;font-family:'Orbitron';letter-spacing:1px;display:flex;align-items:center;gap:5px}
+.em-perk-dot{width:4px;height:4px;border-radius:50%;background:var(--neon)}
+
+/* u2500u2500 CONTACT u2500u2500 */
+#contact{padding:90px 5%;max-width:600px;margin:0 auto;text-align:center}
+.input-field{width:100%;padding:13px 15px;background:#040404;border:1px solid #111;color:#fff;margin-bottom:10px;font-family:'Inter';font-size:13px;outline:none;border-radius:7px;transition:.3s}
+.input-field:focus{border-color:var(--neon);background:rgba(0,242,255,.02)}
+
+/* u2500u2500 CONTROLLER TESTER u2500u2500 */
+#tester-sec{padding:90px 5%;background:#030303;border-top:1px solid #0a0a0a;text-align:center}
+.tester-ui{max-width:900px;margin:38px auto;background:#070707;border:1px solid #111;border-radius:24px;padding:34px;box-shadow:0 0 60px rgba(0,242,255,.04)}
+.tester-tabs{display:flex;gap:0;margin-bottom:28px;background:#0a0a0a;border-radius:10px;padding:4px;border:1px solid #111}
+.tester-tab{flex:1;padding:10px;font-family:'Orbitron';font-size:8.5px;letter-spacing:1.5px;color:#444;cursor:pointer;border-radius:7px;transition:.3s;text-align:center}
+.tester-tab.active{background:rgba(0,242,255,.1);color:var(--neon);border:1px solid rgba(0,242,255,.2)}
+.tester-panel{display:none}
+.tester-panel.active{display:block}
+.tester-status{font-family:'Orbitron';font-size:10.5px;color:#333;margin-bottom:24px;letter-spacing:2px}
+.tester-status.on{color:var(--neon);text-shadow:0 0 10px var(--neon)}
+.c-visual{display:flex;justify-content:center;gap:45px;flex-wrap:wrap;margin-bottom:28px}
+.stick-disp{width:145px;height:145px;border:2px solid #111;border-radius:50%;position:relative;background:radial-gradient(circle,#0c0c0c,#000 70%)}
+.stick-dot{width:10px;height:10px;background:var(--neon);border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 12px var(--neon);transition:.05s linear}
+.stick-lbl{font-family:'Orbitron';font-size:8.5px;margin-top:11px;color:#555;letter-spacing:1.5px}
+.btn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:7px;margin-top:24px}
+.btn-ind{padding:8px 4px;background:#0c0c0c;border:1px solid #111;border-radius:6px;font-family:'Orbitron';font-size:7.5px;color:#333;transition:.15s;text-align:center}
+.btn-ind.pressed{background:rgba(0,242,255,.12);color:var(--neon);border-color:var(--neon);box-shadow:0 0 10px rgba(0,242,255,.25)}
+.trig-bar{width:100%;height:5px;background:#0c0c0c;border-radius:3px;margin-top:7px;overflow:hidden}
+.trig-fill{height:100%;background:var(--neon);width:0%;transition:.1s;box-shadow:0 0 6px var(--neon)}
+.cal-wrap{max-width:700px;margin:0 auto}
+.cal-stage{background:#0a0a0a;border:1px solid #151515;border-radius:16px;padding:28px;margin-bottom:18px;text-align:center}
+.cal-stage-title{font-family:'Orbitron';font-size:11px;letter-spacing:3px;color:var(--neon);margin-bottom:8px}
+.cal-stage-sub{font-size:9.5px;color:#555;font-family:'Orbitron';letter-spacing:1.5px;margin-bottom:22px}
+.cal-progress{display:flex;gap:8px;justify-content:center;margin-bottom:24px}
+.cal-step{width:28px;height:4px;background:#111;border-radius:2px;transition:.4s}
+.cal-step.done{background:var(--neon);box-shadow:0 0 6px var(--neon)}
+.cal-step.active{background:rgba(0,242,255,.5)}
+.cal-canvas{width:200px;height:200px;border:1px solid #1a1a1a;border-radius:50%;background:radial-gradient(circle,#0c0c0c,#000 70%);margin:0 auto 18px;position:relative;overflow:hidden}
+.cal-dot{width:12px;height:12px;background:var(--neon);border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 15px var(--neon)}
+.cal-zone{position:absolute;border:1px dashed rgba(0,242,255,.2);border-radius:50%}
+.cal-btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.cal-btn{padding:11px 24px;font-family:'Orbitron';font-size:8.5px;letter-spacing:2px;border:none;cursor:pointer;border-radius:8px;transition:.3s}
+.cal-btn.primary{background:var(--neon);color:#000;font-weight:900}
+.cal-btn.primary:hover{background:#fff}
+.cal-btn.secondary{background:transparent;border:1px solid #1a1a1a;color:#555}
+.cal-btn.secondary:hover{border-color:var(--neon);color:var(--neon)}
+.cal-result-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;text-align:left}
+.cal-result-card{background:#0a0a0a;border:1px solid #111;border-radius:10px;padding:14px}
+.cal-result-label{font-family:'Orbitron';font-size:7.5px;color:#444;letter-spacing:2px;margin-bottom:5px}
+.cal-result-val{font-family:'Orbitron';font-size:11px;color:var(--neon)}
+.cal-result-sub{font-size:8px;color:#333;margin-top:2px}
+.cal-drift-meter{width:100%;height:6px;background:#0a0a0a;border-radius:3px;margin-top:8px;overflow:hidden}
+.cal-drift-fill{height:100%;border-radius:3px;transition:.5s}
+.cal-heatmap{width:100%;height:140px;position:relative;background:#070707;border-radius:10px;overflow:hidden;border:1px solid #111;margin-top:14px}
+.cal-rawdata{font-family:'Orbitron';font-size:7px;color:#222;letter-spacing:1px;text-align:left;padding:10px;background:#050505;border-radius:6px;border:1px solid #0f0f0f;margin-top:10px;max-height:80px;overflow-y:auto}
+
+/* u2500u2500 REPARATUR u2500u2500 */
+#repair-sec{padding:90px 5%;background:#020202;border-top:1px solid #0a0a0a;text-align:center}
+.repair-ui{max-width:780px;margin:40px auto}
+.repair-steps{display:flex;gap:0;justify-content:center;margin-bottom:40px;position:relative}
+.repair-steps::before{content:'';position:absolute;top:18px;left:10%;right:10%;height:1px;background:#111;z-index:0}
+.rep-step{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;position:relative;z-index:1}
+.rep-step-num{width:36px;height:36px;border:1px solid #1a1a1a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Orbitron';font-size:9px;color:#333;background:#000;transition:.4s}
+.rep-step.active .rep-step-num{border-color:var(--neon);color:var(--neon);box-shadow:0 0 12px rgba(0,242,255,.3)}
+.rep-step.done .rep-step-num{background:var(--neon);color:#000;border-color:var(--neon)}
+.rep-step-lbl{font-family:'Orbitron';font-size:6.5px;color:#333;letter-spacing:1px;text-align:center}
+.rep-step.active .rep-step-lbl{color:var(--neon)}
+.repair-form-wrap{background:#080808;border:1px solid #111;border-radius:18px;padding:30px;text-align:left}
+.rep-panel{display:none}
+.rep-panel.active{display:block}
+.rep-section-title{font-family:'Orbitron';font-size:9.5px;color:var(--neon);letter-spacing:3px;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid #111}
+.rep-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.rep-input{width:100%;padding:11px 14px;background:#0c0c0c;border:1px solid #1a1a1a;color:#fff;font-family:'Inter';font-size:12px;border-radius:7px;outline:none;transition:.2s}
+.rep-input:focus{border-color:var(--neon);background:rgba(0,242,255,.02)}
+.rep-label{font-family:'Orbitron';font-size:7.5px;color:#444;letter-spacing:1.5px;margin-bottom:6px;display:block}
+.rep-damage-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.rep-damage-opt{background:#0c0c0c;border:1px solid #151515;border-radius:10px;padding:14px 10px;cursor:pointer;transition:.3s;text-align:center}
+.rep-damage-opt.sel{border-color:var(--neon);background:rgba(0,242,255,.07)}
+.rep-damage-icon{font-size:22px;margin-bottom:7px}
+.rep-damage-lbl{font-family:'Orbitron';font-size:7px;color:#666;letter-spacing:1px}
+.rep-damage-opt.sel .rep-damage-lbl{color:var(--neon)}
+.rep-price-est{background:#0a0a0a;border:1px solid var(--neon);border-radius:10px;padding:16px;margin:16px 0;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.rep-price-lbl{font-family:'Orbitron';font-size:8px;color:#555;letter-spacing:1.5px}
+.rep-price-val{font-family:'Orbitron';font-size:1.1rem;color:var(--neon);font-weight:700}
+.rep-nav-row{display:flex;gap:10px;margin-top:20px}
+.rep-nav-btn{flex:1;padding:12px;font-family:'Orbitron';font-size:9px;letter-spacing:2px;border:none;cursor:pointer;border-radius:8px;transition:.3s}
+.rep-nav-btn.next{background:var(--neon);color:#000;font-weight:900}
+.rep-nav-btn.next:hover{background:#fff}
+.rep-nav-btn.back{background:transparent;border:1px solid #1a1a1a;color:#555}
+.rep-nav-btn.back:hover{border-color:var(--neon);color:var(--neon)}
+.rep-summary-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #0f0f0f;font-size:9.5px;color:#666}
+.rep-summary-item span:last-child{color:#ccc}
+.rep-success{text-align:center;padding:30px;display:none}
+.rep-success-icon{font-size:48px;margin-bottom:15px}
+.rep-success-title{font-family:'Orbitron';font-size:12px;color:var(--neon);letter-spacing:3px;margin-bottom:10px}
+.rep-success-sub{font-size:10px;color:#666;line-height:1.7}
+textarea.rep-input{height:100px;resize:vertical}
+
+/* u2500u2500 FOOTER u2500u2500 */
+.footer{padding:55px 5%;background:linear-gradient(-45deg,#00f2ff,#000,#bc13fe,#000);background-size:400% 400%;animation:footerG 12s ease infinite;border-top:1px solid rgba(255,255,255,.07)}
+@keyframes footerG{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
+.legal-box{border:1px solid rgba(255,255,255,.1);margin-bottom:8px;border-radius:8px;background:rgba(0,0,0,.88)}
+.legal-hd{padding:15px 18px;cursor:pointer;font-family:'Orbitron';font-size:8.5px;color:#ccc;display:flex;justify-content:space-between;align-items:center;letter-spacing:1.5px}
+.legal-hd:hover{color:#fff}
+.legal-body{max-height:0;padding:0 18px;transition:.4s;font-size:9.5px;color:#666;overflow:hidden;line-height:1.85}
+.legal-box.open .legal-body{max-height:4000px;padding:18px;border-top:1px solid rgba(255,255,255,.07)}
+.legal-body a{color:var(--neon)}
+.footer-bottom{text-align:center;margin-top:30px;font-family:'Orbitron';font-size:7.5px;color:rgba(255,255,255,.15);letter-spacing:3px}
+.footer-links{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:15px}
+.footer-links a{font-family:'Orbitron';font-size:7.5px;color:#333;letter-spacing:1px;text-decoration:none;transition:.2s;cursor:pointer}
+.footer-links a:hover{color:var(--neon)}
+.footer-social{display:flex;justify-content:center;gap:18px;margin:20px 0}
+.soc-icon{width:30px;height:30px;opacity:.45;filter:invert(1);transition:.3s}
+.soc-icon:hover{opacity:1;filter:invert(1) drop-shadow(0 0 7px var(--neon))}
+
+/* u2500u2500 SCROLL TOP u2500u2500 */
+#scroll-top{position:fixed;bottom:28px;left:28px;width:38px;height:38px;background:#0c0c0c;border:1px solid #1a1a1a;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:9000;transition:.3s;opacity:0;transform:translateY(15px)}
+#scroll-top.vis{opacity:1;transform:translateY(0)}
+#scroll-top:hover{border-color:var(--neon);color:var(--neon)}
+
+/* u2500u2500 REVIEW MODAL u2500u2500 */
+#review-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:60000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(12px)}
+
+/* u2500u2500 MOBILE SEARCH u2500u2500 */
+#mob-srch-tog{display:none;cursor:pointer;color:#666;transition:.2s}
+#mob-srch-ov{position:fixed;inset:0;background:rgba(0,0,0,.98);z-index:50000;display:none;flex-direction:column;padding:80px 20px 20px}
+#mob-srch-ov.on{display:flex}
+.mob-srch-input{width:100%;padding:14px 16px;background:#0c0c0c;border:1px solid #1a1a1a;color:#fff;font-family:'Inter';font-size:14px;border-radius:8px;outline:none;margin-bottom:14px}
+.mob-srch-input:focus{border-color:var(--neon)}
+
+/* u2500u2500 REVEAL u2500u2500 */
+.reveal{opacity:0;transform:translateY(38px)}
+
+@media(max-width:700px){
+  .em-form{flex-direction:column}
+  .cfg-options{grid-template-columns:1fr}
+  .srch-wrap{max-width:150px;margin:0 10px}
+  .rep-grid{grid-template-columns:1fr}
+  .rep-damage-grid{grid-template-columns:repeat(2,1fr)}
+  .cal-result-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .srch-wrap{display:none}
+  #mob-srch-tog{display:flex!important}
+}
+
+/* ── WHATSAPP ── */
+#wa-btn{position:fixed;bottom:90px;right:20px;z-index:8000;width:54px;height:54px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.45);text-decoration:none;animation:waPulse 2.5s infinite}
+#wa-btn:hover{transform:scale(1.1)}
+@keyframes waPulse{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.45)}50%{box-shadow:0 0 0 12px rgba(37,211,102,0),0 4px 20px rgba(37,211,102,.45)}}
+/* ── SOCIAL PROOF ── */
+#social-proof{position:fixed;bottom:158px;right:20px;z-index:7900;background:#0c0c0c;border:1px solid #1a1a1a;border-radius:20px;padding:7px 13px;display:none;align-items:center;gap:7px;font-family:'Orbitron';font-size:7.5px;color:#666;letter-spacing:1px;white-space:nowrap}
+.sp-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green);animation:pDot 1.5s infinite;flex-shrink:0}
+/* ── STICKY BUY BAR ── */
+#sticky-buy-bar{position:fixed;bottom:0;left:0;right:0;z-index:7800;background:rgba(4,4,4,.98);border-top:1px solid #111;padding:10px 5%;transform:translateY(100%);transition:.4s cubic-bezier(.4,0,.2,1);backdrop-filter:blur(20px)}
+#sticky-buy-bar.vis{transform:translateY(0)}
+.sbb-inner{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.sbb-name{font-family:'Orbitron';font-size:8.5px;color:#666;letter-spacing:1px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sbb-price{font-family:'Orbitron';font-size:14px;color:var(--neon);font-weight:700;flex-shrink:0}
+.sbb-btn{padding:10px 18px;background:var(--neon);color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:8px;letter-spacing:1.5px;cursor:pointer;border-radius:6px;transition:.2s;white-space:nowrap;flex-shrink:0}
+.sbb-btn:hover{background:#fff}
+/* ── URGENCY ── */
+.urgency-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,69,0,.1);border:1px solid rgba(255,80,0,.25);color:#ff6030;font-family:'Orbitron';font-size:7px;letter-spacing:1px;padding:4px 9px;border-radius:4px;margin:6px 0}
+.urgency-dot{width:5px;height:5px;border-radius:50%;background:#ff4500;animation:pDot 1s infinite;flex-shrink:0}
+@media(max-width:480px){#wa-btn{right:12px;width:48px;height:48px}#social-proof{display:none!important}}
+</style>
+
+</head>
+<body class="notranslate">
+
+<!-- INTRO -->
+
+<div id="intro-overlay"><canvas id="warp-canvas"></canvas></div>
+<canvas id="star-canvas"></canvas>
+
+<!-- OVERLAYS -->
+
+<a id="wa-btn" href="https://wa.me/4915204718720?text=Hallo%20LEXORD%2C%20ich%20habe%20eine%20Frage!" target="_blank" rel="noopener" aria-label="WhatsApp Chat">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff" width="26" height="26"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.49"/></svg>
+</a>
+<div id="social-proof"><div class="sp-dot"></div><span id="sp-text">3 Personen schauen gerade</span></div>
+<div id="sticky-buy-bar">
+  <div class="sbb-inner">
+    <div class="sbb-name">LXRD Performance Black</div>
+    <div class="sbb-price">240,00 €</div>
+    <button class="sbb-btn" onclick="addToCart('LXRD Performance Black',240,'Photoroom_20260305_123705.png')">IN DEN WARENKORB</button>
+  </div>
+</div>
+<div class="c-overlay" onclick="closeCart()"></div>
+<div id="toasts"></div>
+
+<!-- COOKIE BANNER -->
+
+<div id="cookie-banner">
+  <div class="ck-text">
+    Wir nutzen ausschlieu00dflich technisch notwendige Cookies fu00fcr Warenkorb &amp; Zahlungsabwicklung (PayPal, Stripe). Keine Werbe-Cookies. Details in unserer <a href="#datenschutz" onclick="openLegal('datenschutz')">Datenschutzerklu00e4rung</a>.
+  </div>
+  <div class="ck-btns">
+    <button class="ck-accept" onclick="ckAccept()">AKZEPTIEREN</button>
+    <button class="ck-reject" onclick="ckReject()">NUR NOTWENDIGE</button>
+  </div>
+</div>
+
+<!-- ORDER SUCCESS MODAL -->
+
+<div id="order-success-modal">
+  <div class="success-box" id="success-box">
+    <div class="check-circle">u2713</div>
+    <div class="success-title">BESTELLUNG ERFOLGREICH</div>
+    <div class="success-sub">
+      Vielen Dank fu00fcr deine Bestellung!<br>
+      Eine Bestellbestu00e4tigung wurde an<br>
+      <strong id="success-email" style="color:var(--neon)"></strong> gesendet.
+    </div>
+    <div class="success-order-nr" id="success-order-nr"></div>
+    <button class="success-btn" onclick="closeOrderSuccess()">ZURu00dcCK ZUM SHOP</button>
+  </div>
+</div>
+
+<!-- REVIEW MODAL -->
+
+<div id="review-modal">
+  <div style="background:#050505;border:1px solid var(--neon);padding:40px;border-radius:18px;text-align:center;max-width:360px;width:90%">
+    <h3 style="font-family:'Orbitron';font-size:12px;margin-bottom:20px;color:var(--neon);letter-spacing:3px">BEWERTUNG ABGEBEN</h3>
+    <a href="https://www.google.com/search?q=lexord.de+reviews" target="_blank" style="display:block;padding:13px;margin-bottom:11px;border-radius:8px;text-decoration:none;color:#fff;font-family:'Orbitron';font-size:9.5px;letter-spacing:1px;border:1px solid #4285F4;transition:.3s">u2b50 AUF GOOGLE BEWERTEN</a>
+    <a href="https://de.trustpilot.com/review/lexord.de" target="_blank" style="display:block;padding:13px;margin-bottom:11px;border-radius:8px;text-decoration:none;color:#fff;font-family:'Orbitron';font-size:9.5px;letter-spacing:1px;border:1px solid var(--green);transition:.3s">u2b50 AUF TRUSTPILOT</a>
+    <a href="https://www.ebay.de/usr/lexord-de" target="_blank" style="display:block;padding:13px;margin-bottom:18px;border-radius:8px;text-decoration:none;color:#fff;font-family:'Orbitron';font-size:9.5px;letter-spacing:1px;border:1px solid #e53238;transition:.3s">u2b50 AUF EBAY</a>
+    <div onclick="document.getElementById('review-modal').style.display='none'" style="font-size:9px;color:#444;cursor:pointer;font-family:'Orbitron'">u2190 ZURu00dcCK</div>
+  </div>
+</div>
+
+<!-- MOBILE SEARCH -->
+
+<div id="mob-srch-ov">
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+    <input class="mob-srch-input" placeholder="Produkt suchen..." oninput="mobSearch(this.value)">
+    <div onclick="document.getElementById('mob-srch-ov').classList.remove('on')" style="font-size:24px;color:#555;cursor:pointer;flex-shrink:0">u00d7</div>
+  </div>
+  <div id="mob-srch-res"></div>
+</div>
+
+<!-- TICKER -->
+
+<div class="ticker-wrap">
+  <div class="ticker-row">
+    <div class="ticker-inner">
+      <span class="hl">u2713 VERSAND IN 24H</span><span>MADE IN GERMANY</span><span class="hl">u2605u2605u2605u2605u2605 TOP BEWERTUNGEN</span>
+      <span>HALL EFFECT &amp; TMR UMBAU</span><span class="hl">Ku00c4UFERSCHUTZ PAYPAL</span><span>KREDITKARTE VIA STRIPE</span>
+      <span class="hl">KOSTENLOS AB 50u20ac</span><span>14 TAGE Ru00dcCKGABE</span><span class="hl">AUTOMATISCHE RECHNUNG</span>
+      <span>CUSTOM CONTROLLER KONFIGURATOR</span><span class="hl">u2713 VERSAND IN 24H</span><span>MADE IN GERMANY</span>
+      <span class="hl">u2605u2605u2605u2605u2605 TOP BEWERTUNGEN</span><span>HALL EFFECT &amp; TMR UMBAU</span><span class="hl">Ku00c4UFERSCHUTZ PAYPAL</span>
+      <span>KREDITKARTE VIA STRIPE</span><span class="hl">KOSTENLOS AB 50u20ac</span><span>14 TAGE Ru00dcCKGABE</span>
+      <span class="hl">AUTOMATISCHE RECHNUNG</span><span>CUSTOM CONTROLLER KONFIGURATOR</span>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+
+<header>
+  <a class="brand" href="#hero" translate="no">LEXORDu00ae</a>
+  <div class="srch-wrap">
+    <span class="srch-ico">ud83dudd0d</span>
+    <input type="text" class="srch-input" id="desk-srch" placeholder="Produkt suchen..." oninput="deskSearch(this.value)" autocomplete="off">
+    <div id="srch-drop"></div>
+  </div>
+  <div class="nav-ctrl">
+    <div id="mob-srch-tog" onclick="document.getElementById('mob-srch-ov').classList.add('on')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </div>
+    <div class="cart-btn" onclick="toggleCart()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span id="cart-count" class="cart-badge">0</span>
+    </div>
+    <div class="burger" onclick="toggleMenu()"><div></div><div></div><div></div></div>
+  </div>
+</header>
+
+<!-- FULL NAV -->
+
+<nav id="full-nav">
+  <div class="nav-sub">Navigation</div>
+  <a href="#hero" class="nav-link" onclick="toggleMenu()">HOME</a>
+  <div class="nav-sub" style="margin-top:8px">Konfigurator</div>
+  <a href="#configurator" class="nav-link" onclick="toggleMenu()">KONFIGURATOR</a>
+  <div class="nav-sub" style="margin-top:8px">Shop</div>
+  <a href="#shop" class="nav-link" onclick="toggleMenu()">PRODUKTE</a>
+  <div class="nav-sub" style="margin-top:8px">Reparatur</div>
+  <a href="#repair-sec" class="nav-link" onclick="toggleMenu()">REPARATUR</a>
+  <div class="nav-sub" style="margin-top:8px">Support</div>
+  <a href="#contact" class="nav-link" onclick="toggleMenu()">KONTAKT</a>
+  <div class="nav-sub" style="margin-top:8px">Feedback</div>
+  <div class="nav-link" style="cursor:pointer" onclick="document.getElementById('review-modal').style.display='flex';toggleMenu()">BEWERTEN</div>
+  <div class="footer-social" style="margin-top:20px">
+    <a href="https://instagram.com/lexord.de" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" class="soc-icon" alt="Instagram"></a>
+    <a href="https://tiktok.com/@lexord.de" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" class="soc-icon" alt="TikTok"></a>
+  </div>
+</nav>
+
+<!-- CART DRAWER -->
+
+<div id="cart-drawer">
+  <div class="cart-hd">
+    <span class="cart-hd-title">WARENKORB <span id="cart-hd-count" style="color:var(--neon)">(0)</span></span>
+    <div class="cart-x" onclick="closeCart()">u00d7</div>
+  </div>
+  <div class="cart-body" id="cart-body">
+    <div class="c-empty"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><p>WARENKORB LEER</p></div>
+  </div>
+  <div class="cart-ft">
+    <div class="ship-bar-lbl" id="ship-lbl">AB 50u20ac KOSTENLOSER VERSAND (DE)</div>
+    <div class="ship-bar"><div class="ship-fill" id="ship-fill" style="width:0%"></div></div>
+
+```
+<div class="land-row">
+  <span class="land-lbl">ud83cudf0d LIEFERLAND</span>
+  <select class="land-sel" id="land-sel" onchange="updateCart()">
+    <option value="DE">ud83cudde9ud83cuddea Deutschland</option>
+    <option value="AT">ud83cudde6ud83cuddf9 u00d6sterreich</option>
+    <option value="CH">ud83cudde8ud83cudded Schweiz</option>
+    <option value="FR">ud83cuddebud83cuddf7 Frankreich</option>
+    <option value="NL">ud83cuddf3ud83cuddf1 Niederlande</option>
+    <option value="BE">ud83cudde7ud83cuddea Belgien</option>
+    <option value="LU">ud83cuddf1ud83cuddfa Luxemburg</option>
+    <option value="IT">ud83cuddeeud83cuddf9 Italien</option>
+    <option value="ES">ud83cuddeaud83cuddf8 Spanien</option>
+    <option value="PL">ud83cuddf5ud83cuddf1 Polen</option>
+    <option value="CZ">ud83cudde8ud83cuddff Tschechien</option>
+    <option value="SE">ud83cuddf8ud83cuddea Schweden</option>
+    <option value="DK">ud83cudde9ud83cuddf0 Du00e4nemark</option>
+    <option value="EU_OTHER">ud83cuddeaud83cuddfa Sonstiges EU-Land</option>
+    <option value="GB">ud83cuddecud83cudde7 Grou00dfbritannien</option>
+    <option value="US">ud83cuddfaud83cuddf8 USA</option>
+    <option value="WORLD">ud83cudf10 Sonstiges Ausland</option>
+  </select>
+</div>
+
+<div>
+  <div class="discount-row">
+    <input type="text" class="discount-input" id="discount-code" placeholder="RABATTCODE EINGEBEN" maxlength="20">
+    <button class="discount-btn" onclick="applyDiscount()">EINLu00d6SEN</button>
+  </div>
+  <div class="discount-ok" id="discount-ok"></div>
+  <div class="discount-err" id="discount-err"></div>
+</div>
+
+<div class="sum-row"><span>Zwischensumme</span><span id="c-sub">0,00 u20ac</span></div>
+<div class="sum-row" id="discount-row" style="display:none;color:var(--green)"><span id="discount-label">Rabatt</span><span id="c-discount">-0,00 u20ac</span></div>
+<div class="sum-row"><span>Versand (DHL)</span><span id="c-ship">u2013</span></div>
+<div class="sum-row total"><span>GESAMT</span><span id="c-total">0,00 u20ac</span></div>
+<div class="legal-note">
+  Mit Kauf akzeptierst du <a href="agb.html" target="_blank">AGB</a>,
+  <a href="Datenschutz.html" target="_blank">Datenschutz</a> &amp;
+  <a href="Widerrufsbelehrung.html" target="_blank">Widerrufsbelehrung</a>.
+  Keine MwSt. (u00a7 19 UStG).
+</div>
+<label class="agb-check">
+  <input type="checkbox" id="cart-agb">
+  Ich habe die <a href="agb.html" target="_blank">AGB</a> gelesen und stimme zu.
+</label>
+
+<!-- STRIPE CHECKOUT BUTTON -->
+<button class="checkout-btn" onclick="goStripeCheckout()" style="animation:glowPulse 3s infinite">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+  JETZT BEZAHLEN (STRIPE) u2192
+</button>
+
+<div class="or-div">ODER MIT PAYPAL</div>
+<div id="pp-btn-cont"></div>
+
+<div class="vat-lbl">Gesamtpreis inkl. Versand u00b7 Keine MwSt. u00a7 19 UStG</div>
+<div class="trust-row">
+  <span class="trust-chip">ud83dudd12 SSL</span>
+  <span class="trust-chip">u2713 PAYPAL SCHUTZ</span>
+  <span class="trust-chip">u2713 STRIPE SECURE</span>
+  <span class="trust-chip">ud83dudd04 14 TAGE Ru00dcCKGABE</span>
+</div>
+```
+
+  </div>
+</div>
+
+<!-- SCROLL TOP -->
+
+<div id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+</div>
+
+<main>
+
+<!-- HERO -->
+
+<section id="hero">
+  <img src="IMG_7023.png" class="float-logo" alt="LEXORD Logo" style="margin-top:15px">
+  <h1 translate="no" style="font-family:'Orbitron';font-size:clamp(1rem,5vw,2.1rem);margin-top:14px;letter-spacing:9px">BEYOND LIMITS</h1>
+  <p style="font-size:9px;color:#333;font-family:'Orbitron';letter-spacing:4px;margin-top:7px">MADE IN GERMANY u00b7 ENGINEERING EXCELLENCE</p>
+  <img src="82AAE1DF-9784-4FAB-8264-A4C2E7A1BEC0.png" class="hero-banner" alt="LEXORD Controller">
+  <img src="Photoroom_20260402_000221.png" class="float-logo" alt="LEXORD Controller" style="animation-delay:1.2s">
+</section>
+
+<!-- KONFIGURATOR -->
+
+<section id="configurator" class="reveal">
+  <div class="lightning-bg" id="lightning-bg"></div>
+  <div class="cfg-inner">
+    <div class="sec-title">CONTROLLER KONFIGURATOR</div>
+    <p class="sec-sub">KONFIGURIERE DEINEN TRAUM-CONTROLLER u00b7 LIVE PREISBERECHNUNG</p>
+    <div class="cfg-canvas-wrap">
+      <div class="cfg-controller">
+        <img src="Photoroom_20260305_123705.png" alt="Controller Konfigurator">
+      </div>
+    </div>
+    <div class="cfg-options">
+      <div class="cfg-cat">
+        <div class="cfg-cat-title">u2699 STICK TECHNOLOGIE</div>
+        <div class="cfg-opt-row">
+          <div class="cfg-opt sel" data-cat="stick" data-val="Standard" data-price="0">STANDARD</div>
+          <div class="cfg-opt" data-cat="stick" data-val="Hall Effect" data-price="30">HALL EFFECT +30u20ac</div>
+          <div class="cfg-opt" data-cat="stick" data-val="TMR" data-price="50">TMR +50u20ac</div>
+        </div>
+      </div>
+      <div class="cfg-cat">
+        <div class="cfg-cat-title">ud83cudfae TRIGGER</div>
+        <div class="cfg-opt-row">
+          <div class="cfg-opt sel" data-cat="trigger" data-val="Standard" data-price="0">STANDARD</div>
+          <div class="cfg-opt" data-cat="trigger" data-val="Clicky" data-price="20">CLICKY +20u20ac</div>
+          <div class="cfg-opt" data-cat="trigger" data-val="Digital" data-price="35">DIGITAL +35u20ac</div>
+        </div>
+      </div>
+      <div class="cfg-cat">
+        <div class="cfg-cat-title">ud83cudfc6 PADDLES</div>
+        <div class="cfg-opt-row">
+          <div class="cfg-opt sel" data-cat="paddle" data-val="Keine" data-price="0">KEINE</div>
+          <div class="cfg-opt" data-cat="paddle" data-val="2x Paddle" data-price="40">2u00d7 PADDLE +40u20ac</div>
+          <div class="cfg-opt" data-cat="paddle" data-val="4x Paddle" data-price="70">4u00d7 PADDLE +70u20ac</div>
+        </div>
+      </div>
+      <div class="cfg-cat">
+        <div class="cfg-cat-title">ud83dudd32 GEHu00c4USE</div>
+        <div class="cfg-opt-row">
+          <div class="cfg-opt sel" data-cat="shell" data-val="Standard" data-price="0">STANDARD</div>
+          <div class="cfg-opt" data-cat="shell" data-val="GRIP" data-price="25">GRIP +25u20ac</div>
+          <div class="cfg-opt" data-cat="shell" data-val="Carbon" data-price="40">CARBON +40u20ac</div>
+        </div>
+      </div>
+    </div>
+    <div class="cfg-summary">
+      <div class="cfg-sum-row" id="sum-base"><span>Basis PS5 Controller</span><span>70,00 u20ac</span></div>
+      <div class="cfg-sum-row" id="sum-stick"><span>Stick: Standard</span><span>+0,00 u20ac</span></div>
+      <div class="cfg-sum-row" id="sum-trigger"><span>Trigger: Standard</span><span>+0,00 u20ac</span></div>
+      <div class="cfg-sum-row" id="sum-paddle"><span>Paddles: Keine</span><span>+0,00 u20ac</span></div>
+      <div class="cfg-sum-row" id="sum-shell"><span>Gehu00e4use: Standard</span><span>+0,00 u20ac</span></div>
+    </div>
+    <div class="cfg-price-display" id="cfg-price">70,00 u20ac</div>
+    <div class="cfg-price-sub">DEIN KONFIGURIERTER PREIS u00b7 INKL. PROFIMONTAGE</div>
+    <button class="cfg-add-btn" onclick="addConfigToCart()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      KONFIGURATION IN DEN WARENKORB
+    </button>
+  </div>
+</section>
+
+<!-- TRUST REVIEWS -->
+
+<section class="trust-sec reveal">
+  <div class="ticker-cont">
+    <div class="ticker-track">
+      <div class="rev-card"><div class="stars">u2605u2605u2605u2605u2605</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Beste Scuf Alternative. Qualitu00e4t ist Wahnsinn!"</p></div>
+      <div class="rev-card"><div class="stars">u2605u2605u2605u2605u2605</div><span class="src-tag g-tag">GOOGLE</span><p style="font-size:10px;color:#aaa">"Stickzange perfekt. 24h Versand top!"</p></div>
+      <div class="rev-card"><div class="stars">u2605u2605u2605u2605u2605</div><span class="src-tag eb-tag">EBAY</span><p style="font-size:10px;color:#aaa">"Engineering auf hu00f6chstem Level. Super Kontakt."</p></div>
+      <div class="rev-card"><div class="stars">u2605u2605u2605u2605u2605</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Kein Stick-Drift mehr. TMR Umbau top!"</p></div>
+      <div class="rev-card"><div class="stars">u2605u2605u2605u2605u2605</div><span class="src-tag g-tag">GOOGLE</span><p style="font-size:10px;color:#aaa">"Mega schnelle Lieferung, Verarbeitung 10/10."</p></div>
+      <div class="rev-card"><div class="stars">u2605u2605u2605u2605u2605</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Konfigurator super easy, genau was ich wollte!"</p></div>
+      <div class="rev-card"><div class="stars">u2605u2605u2605u2605u2605</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Beste Scuf Alternative. Qualitu00e4t ist Wahnsinn!"</p></div>
+      <div class="rev-card"><div class="stars">u2605u2605u2605u2605u2605</div><span class="src-tag g-tag">GOOGLE</span><p style="font-size:10px;color:#aaa">"Stickzange perfekt. 24h Versand top!"</p></div>
+      <div class="rev-card"><div class="stars">u2605u2605u2605u2605u2605</div><span class="src-tag eb-tag">EBAY</span><p style="font-size:10px;color:#aaa">"Engineering auf hu00f6chstem Level. Super Kontakt."</p></div>
+      <div class="rev-card"><div class="stars">u2605u2605u2605u2605u2605</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Kein Stick-Drift mehr. TMR Umbau top!"</p></div>
+      <div class="rev-card"><div class="stars">u2605u2605u2605u2605u2605</div><span class="src-tag g-tag">GOOGLE</span><p style="font-size:10px;color:#aaa">"Mega schnelle Lieferung, Verarbeitung 10/10."</p></div>
+      <div class="rev-card"><div class="stars">u2605u2605u2605u2605u2605</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Konfigurator super easy, genau was ich wollte!"</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PREMIUM CONTROLLER SWIPER -->
+
+<section class="cfg-swiper-sec reveal">
+  <div class="sec-title">PREMIUM CONTROLLER</div>
+  <p class="sec-sub">HOVER ZUM DREHEN u00b7 ALLE SOFORT VERFu00dcGBAR</p>
+  <div class="swiper mySwiper">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide">
+        <div class="p-inner">
+          <div class="p-front">
+            <span class="p-badge">BESTSELLER</span>
+            <img src="Photoroom_20260305_123705.png" class="p-img" alt="LXRD Performance Black">
+            <div class="p-title">LXRD PERFORMANCE BLACK</div>
+            <div class="stars">u2605u2605u2605u2605u2605 (42)</div>
+            <div class="stock-dot-wrap"><div class="sdot"></div>AUF LAGER</div>
+            <div class="p-price">240,00 u20ac</div>
+            <button class="btn" style="margin-top:11px;font-size:8.5px" onclick="event.stopPropagation();addToCart('LXRD Performance Black',240.00,'Photoroom_20260305_123705.png')">IN DEN WARENKORB</button>
+          </div>
+          <div class="p-back">
+            <img src="Photoroom_20260306_112425.png" class="p-img" alt="Details">
+            <div class="p-title" style="color:var(--neon)">ENTHu00c4LT</div>
+            <div style="font-size:9.5px;color:#999;margin:11px 0;line-height:2;text-align:left;width:100%">
+              u2713 TMR Hall-Effect Sticks (kein Drift)<br>u2713 Clicky Trigger / Mouse Click<br>u2713 GRIP Gehu00e4use (Anti-Rutsch)<br>u2713 2u00d7 Paddle-System V2<br>u2713 DualSense Edge Alternative
+            </div>
+            <button class="btn outline" onclick="event.stopPropagation();addToCart('LXRD Performance Black',240.00,'Photoroom_20260305_123705.png')">JETZT KAUFEN</button>
+          </div>
+        </div>
+      </div>
+      <div class="swiper-slide">
+        <div class="p-inner">
+          <div class="p-front">
+            <span class="p-badge">BELIEBT</span>
+            <img src="Photoroom_20260305_140346.png" class="p-img" alt="LXRD Plus Black">
+            <div class="p-title">LXRD PLUS BLACK</div>
+            <div class="stars">u2605u2605u2605u2605u2605 (31)</div>
+            <div class="stock-dot-wrap"><div class="sdot"></div>AUF LAGER</div>
+            <div class="p-price">180,00 u20ac</div>
+            <button class="btn" style="margin-top:11px;font-size:8.5px" onclick="event.stopPropagation();addToCart('LXRD Plus Black',180.00,'Photoroom_20260305_140346.png')">IN DEN WARENKORB</button>
+          </div>
+          <div class="p-back">
+            <img src="Photoroom_20260306_112425.png" class="p-img" alt="Details">
+            <div class="p-title" style="color:var(--neon)">ENTHu00c4LT</div>
+            <div style="font-size:9.5px;color:#999;margin:11px 0;line-height:2;text-align:left;width:100%">
+              u2713 Hall-Effect Sticks<br>u2713 Clicky Trigger<br>u2713 GRIP Gehu00e4use<br>u2713 2u00d7 Paddle-System V2
+            </div>
+            <button class="btn outline" onclick="event.stopPropagation();addToCart('LXRD Plus Black',180.00,'Photoroom_20260305_140346.png')">JETZT KAUFEN</button>
+          </div>
+        </div>
+      </div>
+      <div class="swiper-slide">
+        <div class="p-inner">
+          <div class="p-front">
+            <span class="p-badge">EINSTIEG</span>
+            <img src="Photoroom_20260402_014813.png" class="p-img" alt="LXRD Basic Black">
+            <div class="p-title">LXRD BASIC BLACK</div>
+            <div class="stars">u2605u2605u2605u2605u2605 (18)</div>
+            <div class="stock-dot-wrap"><div class="sdot"></div>AUF LAGER</div>
+            <div class="p-price">105,00 u20ac</div>
+            <button class="btn" style="margin-top:11px;font-size:8.5px" onclick="event.stopPropagation();addToCart('LXRD Basic Black',105.00,'Photoroom_20260402_014813.png')">IN DEN WARENKORB</button>
+          </div>
+          <div class="p-back">
+            <img src="Photoroom_20260402_014150.png" class="p-img" alt="Details">
+            <div class="p-title" style="color:var(--neon)">ENTHu00c4LT</div>
+            <div style="font-size:9.5px;color:#999;margin:11px 0;line-height:2;text-align:left;width:100%">
+              u2713 2u00d7 Paddle-System<br>u2713 Standard Gehu00e4use<br>u2713 Perfekter Einstieg
+            </div>
+            <button class="btn outline" onclick="event.stopPropagation();addToCart('LXRD Basic Black',105.00,'Photoroom_20260402_014813.png')">JETZT KAUFEN</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="swiper-pagination"></div>
+  </div>
+</section>
+
+<!-- ACCESSORY GRID -->
+
+<section id="shop" class="reveal">
+  <div class="sec-title">ZUBEHu00d6R &amp; TEILE</div>
+  <p class="sec-sub">EINZELTEILE u00b7 UPGRADES u00b7 WERKZEUG</p>
+  <div class="grid">
+    <div class="card">
+      <div class="wish-btn" onclick="toggleWish(this,'Stickzange Pro')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+      <img src="Stickzange.PNG" alt="Stickzange Pro">
+      <h3>STICKZANGE PRO</h3>
+      <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
+      <p class="c-price">5,00 u20ac</p>
+      <div class="dbox"><span class="truck">ud83dude9a</span><div><div class="dbox-lbl">Premium Versand</div><div class="dbox-date">Ankunft: <span class="delivery-date">u2013</span></div></div></div>
+      <button class="btn" onclick="addToCart('Stickzange Pro',5.00,'Stickzange.PNG')">IN DEN WARENKORB</button>
+    </div>
+    <div class="card">
+      <div class="wish-btn" onclick="toggleWish(this,'Paddle System V2')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+      <img src="Photoroom_20260304_212902.png" alt="Paddle System V2">
+      <h3>PADDLE SYSTEM V2</h3>
+      <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
+      <p class="c-price">40,00 u20ac</p>
+      <div class="dbox"><span class="truck">ud83dude9a</span><div><div class="dbox-lbl">Premium Versand</div><div class="dbox-date">Ankunft: <span class="delivery-date">u2013</span></div></div></div>
+      <button class="btn" onclick="addToCart('Paddle System V2',40.00,'Photoroom_20260304_212902.png')">IN DEN WARENKORB</button>
+    </div>
+    <div class="card">
+      <div class="wish-btn" onclick="toggleWish(this,'TMR Stick Upgrade Kit')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+      <img src="Photoroom_20260305_123705.png" alt="TMR Stick Upgrade" style="filter:brightness(.7) sepia(1) hue-rotate(160deg) saturate(3)">
+      <h3>TMR STICK UPGRADE KIT</h3>
+      <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
+      <p class="c-price">55,00 u20ac</p>
+      <div class="dbox"><span class="truck">ud83dude9a</span><div><div class="dbox-lbl">Premium Versand</div><div class="dbox-date">Ankunft: <span class="delivery-date">u2013</span></div></div></div>
+      <button class="btn" onclick="addToCart('TMR Stick Upgrade Kit',55.00,'Photoroom_20260305_123705.png')">IN DEN WARENKORB</button>
+    </div>
+    <div class="card">
+      <div class="wish-btn" onclick="toggleWish(this,'Hall Effect Upgrade Kit')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+      <img src="Photoroom_20260305_140346.png" alt="Hall Effect Kit" style="filter:brightness(.7) sepia(1) hue-rotate(220deg) saturate(2)">
+      <h3>HALL EFFECT UPGRADE KIT</h3>
+      <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
+      <p class="c-price">35,00 u20ac</p>
+      <div class="dbox"><span class="truck">ud83dude9a</span><div><div class="dbox-lbl">Premium Versand</div><div class="dbox-date">Ankunft: <span class="delivery-date">u2013</span></div></div></div>
+      <button class="btn" onclick="addToCart('Hall Effect Upgrade Kit',35.00,'Photoroom_20260305_140346.png')">IN DEN WARENKORB</button>
+    </div>
+    <div class="card">
+      <div class="wish-btn" onclick="toggleWish(this,'GRIP Gehu00e4use Set')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+      <img src="Photoroom_20260402_014813.png" alt="GRIP Shell" style="filter:brightness(.6) sepia(1) hue-rotate(90deg) saturate(2)">
+      <h3>GRIP GEHu00c4USE SET</h3>
+      <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
+      <p class="c-price">28,00 u20ac</p>
+      <div class="dbox"><span class="truck">ud83dude9a</span><div><div class="dbox-lbl">Premium Versand</div><div class="dbox-date">Ankunft: <span class="delivery-date">u2013</span></div></div></div>
+      <button class="btn" onclick="addToCart('GRIP Gehu00e4use Set',28.00,'Photoroom_20260402_014813.png')">IN DEN WARENKORB</button>
+    </div>
+    <div class="card">
+      <div class="wish-btn" onclick="toggleWish(this,'Clicky Trigger Kit')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+      <img src="Photoroom_20260304_212902.png" alt="Clicky Trigger Kit" style="filter:brightness(.6) sepia(1) hue-rotate(310deg) saturate(3)">
+      <h3>CLICKY TRIGGER KIT</h3>
+      <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
+      <p class="c-price">22,00 u20ac</p>
+      <div class="dbox"><span class="truck">ud83dude9a</span><div><div class="dbox-lbl">Premium Versand</div><div class="dbox-date">Ankunft: <span class="delivery-date">u2013</span></div></div></div>
+      <button class="btn" onclick="addToCart('Clicky Trigger Kit',22.00,'Photoroom_20260304_212902.png')">IN DEN WARENKORB</button>
+    </div>
+  </div>
+</section>
+
+<!-- RECENTLY VIEWED -->
+
+<section id="recently" class="reveal">
+  <div class="sec-title" style="font-size:.95rem;margin-bottom:6px">ZULETZT ANGESEHEN</div>
+  <div class="rec-scroll" id="rec-grid"></div>
+</section>
+
+<!-- EMAIL NEWSLETTER -->
+
+<section id="email-marketing" class="reveal">
+  <div class="em-glow"></div>
+  <div class="em-inner">
+    <div class="sec-title">BLEIB AUF DEM LAUFENDEN</div>
+    <p class="sec-sub">EXKLUSIVE DEALS u00b7 NEU ANKu00dcNFTE u00b7 10% RABATT AUF ERSTE BESTELLUNG</p>
+    <div class="em-form">
+      <input type="email" class="em-input" id="em-email" placeholder="deine@email.de" autocomplete="email">
+      <button class="em-btn" onclick="subscribeEmail()">ABONNIEREN u2192</button>
+    </div>
+    <div class="em-perks">
+      <span class="em-perk"><span class="em-perk-dot"></span>10% AUF ERSTE BESTELLUNG</span>
+      <span class="em-perk"><span class="em-perk-dot"></span>FRu00dcHER ZUGANG ZU DROPS</span>
+      <span class="em-perk"><span class="em-perk-dot"></span>EXKLUSIVE ANGEBOTE</span>
+    </div>
+    <div style="font-size:8.5px;color:#222;margin-top:12px;font-family:'Inter'">
+      Mit Anmeldung akzeptierst du unsere <a href="Datenschutz.html" target="_blank" style="color:var(--neon)">Datenschutzerklu00e4rung</a>.
+    </div>
+    <div id="em-success" style="display:none;font-family:'Orbitron';font-size:10px;color:var(--neon);margin-top:15px;letter-spacing:2px">u2713 DEIN RABATTCODE: <strong>WILLKOMMEN10</strong> u2014 SCHAU IN DEIN POSTFACH!</div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+
+<section id="contact" class="reveal">
+  <div class="sec-title">KONTAKT</div>
+  <p class="sec-sub" style="margin-bottom:28px">WIR ANTWORTEN INNERHALB VON 24H</p>
+  <form id="contact-form" onsubmit="sendContact(event)">
+    <input type="text" placeholder="NAME" class="input-field" id="cf-name" required>
+    <input type="email" placeholder="E-MAIL" class="input-field" id="cf-email" required>
+    <input type="text" placeholder="BETREFF (Bestellung / Frage / Ru00fcckgabe)" class="input-field" id="cf-subject">
+    <textarea placeholder="NACHRICHT" class="input-field" id="cf-message" style="height:140px;resize:vertical" required></textarea>
+    <label style="display:flex;align-items:center;gap:8px;font-size:9px;color:#666;margin:10px 0;cursor:pointer">
+      <input type="checkbox" required style="accent-color:var(--neon)">
+      Ich akzeptiere die <a href="Datenschutz.html" target="_blank" style="color:var(--neon)">Datenschutzbestimmungen</a>.
+    </label>
+    <button type="submit" class="btn" id="send-btn">NACHRICHT SENDEN</button>
+  </form>
+  <div id="contact-success" style="display:none;font-family:'Orbitron';color:var(--neon);margin-top:20px;font-size:11px;letter-spacing:2px">u2713 NACHRICHT ERFOLGREICH u00dcBERMITTELT u2014 WIR MELDEN UNS INNERHALB 24H!</div>
+  <div style="margin-top:24px;padding:18px 20px;background:#070707;border:1px solid #0f0f0f;border-radius:10px;text-align:left">
+    <div style="font-family:'Orbitron';font-size:7.5px;color:#444;letter-spacing:2px;margin-bottom:11px">DIREKTKONTAKT</div>
+    <div style="font-size:10.5px;color:#777;line-height:2.1">
+      ud83dudce7 <a href="/cdn-cgi/l/email-protection#7c371312081d17083c301904130e18521819" style="color:var(--neon)"><span class="__cf_email__" data-cfemail="703b1f1e04111b04303c15081f02145e1415">[email&#160;protected]</span></a><br>
+      ud83dudcde 0152 047 18720<br>
+      ud83dudccd An Der Domsu00fchler Str. 2, 19374 Domsu00fchl
+    </div>
+  </div>
+</section>
+
+<!-- CONTROLLER TESTER -->
+
+<section id="tester-sec" class="reveal">
+  <div class="sec-title">CONTROLLER TESTER</div>
+  <p class="sec-sub">PROFESSIONAL CALIBRATION SUITE u00b7 KOSTENLOS</p>
+  <div class="tester-ui">
+    <div class="tester-tabs">
+      <div class="tester-tab active" onclick="switchTab('test')">ud83cudfae CONTROLLER TEST</div>
+      <div class="tester-tab" onclick="switchTab('cal')">ud83cudfaf STICK KALIBRIERUNG</div>
+      <div class="tester-tab" onclick="switchTab('drift')">ud83dudcca DRIFT ANALYSE</div>
+    </div>
+
+```
+<div id="tab-test" class="tester-panel active">
+  <div id="tester-status" class="tester-status">CONTROLLER ANSCHLIESSEN &amp; TASTE DRu00dcCKEN...</div>
+  <div class="c-visual">
+    <div>
+      <div class="stick-disp"><div id="stick-l" class="stick-dot"></div></div>
+      <div class="stick-lbl">LEFT STICK (L3)</div>
+      <div id="val-l" style="font-size:8.5px;margin-top:6px;color:var(--neon);font-family:'Orbitron'">X: 0.0000 | Y: 0.0000</div>
+    </div>
+    <div>
+      <div class="stick-disp"><div id="stick-r" class="stick-dot"></div></div>
+      <div class="stick-lbl">RIGHT STICK (R3)</div>
+      <div id="val-r" style="font-size:8.5px;margin-top:6px;color:var(--neon);font-family:'Orbitron'">X: 0.0000 | Y: 0.0000</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:18px;margin-bottom:22px">
+    <div style="flex:1"><div class="stick-lbl">L2 TRIGGER</div><div class="trig-bar"><div id="fill-l2" class="trig-fill"></div></div><div id="val-l2" style="font-size:7.5px;color:#444;font-family:'Orbitron';margin-top:4px">0%</div></div>
+    <div style="flex:1"><div class="stick-lbl">R2 TRIGGER</div><div class="trig-bar"><div id="fill-r2" class="trig-fill"></div></div><div id="val-r2" style="font-size:7.5px;color:#444;font-family:'Orbitron';margin-top:4px">0%</div></div>
+  </div>
+  <div class="btn-grid">
+    <div class="btn-ind" id="btn-0">u2715 / A</div><div class="btn-ind" id="btn-1">u25cb / B</div>
+    <div class="btn-ind" id="btn-2">u25a1 / X</div><div class="btn-ind" id="btn-3">u25b3 / Y</div>
+    <div class="btn-ind" id="btn-4">L1</div><div class="btn-ind" id="btn-5">R1</div>
+    <div class="btn-ind" id="btn-6">L2</div><div class="btn-ind" id="btn-7">R2</div>
+    <div class="btn-ind" id="btn-8">SELECT</div><div class="btn-ind" id="btn-9">START</div>
+    <div class="btn-ind" id="btn-10">L3</div><div class="btn-ind" id="btn-11">R3</div>
+    <div class="btn-ind" id="btn-12">u2191</div><div class="btn-ind" id="btn-13">u2193</div>
+    <div class="btn-ind" id="btn-14">u2190</div><div class="btn-ind" id="btn-15">u2192</div>
+    <div class="btn-ind" id="btn-16">PS</div><div class="btn-ind" id="btn-17">TOUCH</div>
+  </div>
+</div>
+
+<div id="tab-cal" class="tester-panel">
+  <div class="cal-wrap">
+    <div class="cal-stage">
+      <div class="cal-progress">
+        <div class="cal-step active" id="cs0"></div>
+        <div class="cal-step" id="cs1"></div>
+        <div class="cal-step" id="cs2"></div>
+        <div class="cal-step" id="cs3"></div>
+        <div class="cal-step" id="cs4"></div>
+      </div>
+      <div class="cal-stage-title" id="cal-title">SCHRITT 1: KALIBRIERUNG STARTEN</div>
+      <div class="cal-stage-sub" id="cal-sub">Controller anschlieu00dfen und Kalibrierung beginnen</div>
+      <div style="display:flex;gap:30px;justify-content:center;flex-wrap:wrap;margin:20px 0">
+        <div>
+          <div class="stick-lbl" style="text-align:center;margin-bottom:8px">LEFT STICK</div>
+          <div class="cal-canvas" id="cal-canvas-l">
+            <canvas id="cal-trail-l" width="200" height="200" style="position:absolute;inset:0;border-radius:50%"></canvas>
+            <div class="cal-dot" id="cal-dot-l"></div>
+            <div class="cal-zone" style="width:30px;height:30px;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:50%"></div>
+          </div>
+          <div id="cal-val-l" style="font-family:'Orbitron';font-size:7.5px;color:#444;text-align:center;margin-top:8px;letter-spacing:1px">X: 0.000 | Y: 0.000</div>
+        </div>
+        <div>
+          <div class="stick-lbl" style="text-align:center;margin-bottom:8px">RIGHT STICK</div>
+          <div class="cal-canvas" id="cal-canvas-r">
+            <canvas id="cal-trail-r" width="200" height="200" style="position:absolute;inset:0;border-radius:50%"></canvas>
+            <div class="cal-dot" id="cal-dot-r"></div>
+            <div class="cal-zone" style="width:30px;height:30px;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:50%"></div>
+          </div>
+          <div id="cal-val-r" style="font-family:'Orbitron';font-size:7.5px;color:#444;text-align:center;margin-top:8px;letter-spacing:1px">X: 0.000 | Y: 0.000</div>
+        </div>
+      </div>
+      <div class="cal-btn-row">
+        <button class="cal-btn secondary" onclick="resetCalibration()">u21ba ZURu00dcCKSETZEN</button>
+        <button class="cal-btn primary" id="cal-action-btn" onclick="calNextStep()">KALIBRIERUNG STARTEN</button>
+      </div>
+    </div>
+    <div class="cal-result-grid" id="cal-results" style="display:none">
+      <div class="cal-result-card"><div class="cal-result-label">L-STICK DEADZONE</div><div class="cal-result-val" id="res-l-dead">u2013</div><div class="cal-result-sub">Empfohlen: &lt; 0.05</div><div class="cal-drift-meter"><div class="cal-drift-fill" id="res-l-dead-bar" style="background:var(--green);width:0%"></div></div></div>
+      <div class="cal-result-card"><div class="cal-result-label">R-STICK DEADZONE</div><div class="cal-result-val" id="res-r-dead">u2013</div><div class="cal-result-sub">Empfohlen: &lt; 0.05</div><div class="cal-drift-meter"><div class="cal-drift-fill" id="res-r-dead-bar" style="background:var(--green);width:0%"></div></div></div>
+      <div class="cal-result-card"><div class="cal-result-label">L-STICK MAX RADIUS</div><div class="cal-result-val" id="res-l-max">u2013</div><div class="cal-result-sub">Ideal: 1.00</div></div>
+      <div class="cal-result-card"><div class="cal-result-label">R-STICK MAX RADIUS</div><div class="cal-result-val" id="res-r-max">u2013</div><div class="cal-result-sub">Ideal: 1.00</div></div>
+    </div>
+    <div id="cal-rawdata" class="cal-rawdata" style="display:none">KALIBRIERUNGSDATEN WERDEN GELADEN...</div>
+  </div>
+</div>
+
+<div id="tab-drift" class="tester-panel">
+  <div style="text-align:center;margin-bottom:24px">
+    <div style="font-family:'Orbitron';font-size:10px;color:#555;letter-spacing:2px;margin-bottom:5px">DRIFT-DIAGNOSE u00b7 ECHTZEIT</div>
+    <div style="font-size:8.5px;color:#333;font-family:'Orbitron';letter-spacing:1px">Controller anschlieu00dfen u2014 beide Sticks 5 Sek. nicht beru00fchren</div>
+  </div>
+  <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center">
+    <div style="flex:1;min-width:260px">
+      <div style="font-family:'Orbitron';font-size:8.5px;color:var(--neon);margin-bottom:12px;letter-spacing:2px">LEFT STICK DRIFT</div>
+      <div class="cal-heatmap" id="hm-l"><canvas id="hm-canvas-l" width="300" height="140" style="width:100%;height:100%"></canvas></div>
+      <div style="display:flex;justify-content:space-between;margin-top:10px">
+        <div><div style="font-family:'Orbitron';font-size:7px;color:#444;letter-spacing:1px">DRIFT STu00c4RKE</div><div style="font-family:'Orbitron';font-size:12px;color:var(--neon)" id="drift-l-val">0.0000</div></div>
+        <div><div style="font-family:'Orbitron';font-size:7px;color:#444;letter-spacing:1px">STATUS</div><div style="font-family:'Orbitron';font-size:10px" id="drift-l-status">u2013</div></div>
+      </div>
+      <div class="cal-drift-meter" style="margin-top:8px"><div class="cal-drift-fill" id="drift-l-bar" style="width:0%;background:var(--green)"></div></div>
+    </div>
+    <div style="flex:1;min-width:260px">
+      <div style="font-family:'Orbitron';font-size:8.5px;color:var(--neon);margin-bottom:12px;letter-spacing:2px">RIGHT STICK DRIFT</div>
+      <div class="cal-heatmap" id="hm-r"><canvas id="hm-canvas-r" width="300" height="140" style="width:100%;height:100%"></canvas></div>
+      <div style="display:flex;justify-content:space-between;margin-top:10px">
+        <div><div style="font-family:'Orbitron';font-size:7px;color:#444;letter-spacing:1px">DRIFT STu00c4RKE</div><div style="font-family:'Orbitron';font-size:12px;color:var(--neon)" id="drift-r-val">0.0000</div></div>
+        <div><div style="font-family:'Orbitron';font-size:7px;color:#444;letter-spacing:1px">STATUS</div><div style="font-family:'Orbitron';font-size:10px" id="drift-r-status">u2013</div></div>
+      </div>
+      <div class="cal-drift-meter" style="margin-top:8px"><div class="cal-drift-fill" id="drift-r-bar" style="width:0%;background:var(--green)"></div></div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:24px;padding:16px;background:#0a0a0a;border-radius:10px;border:1px solid #111">
+    <div style="font-family:'Orbitron';font-size:8px;color:#444;letter-spacing:1.5px;margin-bottom:8px">DRIFT ERKANNT? WIR REPARIEREN ES.</div>
+    <a href="#repair-sec" class="cal-btn primary" style="text-decoration:none;display:inline-block">u2192 JETZT REPARATUR ANFRAGEN</a>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- REPARATUR -->
+
+<section id="repair-sec" class="reveal">
+  <div class="sec-title">CONTROLLER REPARATUR</div>
+  <p class="sec-sub">PROFESSIONELL u00b7 Gu00dcNSTIG u00b7 SCHNELL u00b7 MADE IN GERMANY</p>
+  <div class="repair-ui">
+    <div class="repair-steps">
+      <div class="rep-step active" id="rs-0"><div class="rep-step-num">1</div><div class="rep-step-lbl">SCHADEN<br>AUSWu00c4HLEN</div></div>
+      <div class="rep-step" id="rs-1"><div class="rep-step-num">2</div><div class="rep-step-lbl">DEINE<br>DATEN</div></div>
+      <div class="rep-step" id="rs-2"><div class="rep-step-num">3</div><div class="rep-step-lbl">CONTROLLER<br>INFOS</div></div>
+      <div class="rep-step" id="rs-3"><div class="rep-step-num">4</div><div class="rep-step-lbl">ZUSAMMEN-<br>FASSUNG</div></div>
+    </div>
+    <div class="repair-form-wrap">
+      <div class="rep-panel active" id="rp-0">
+        <div class="rep-section-title">u26a0 WELCHER SCHADEN LIEGT VOR?</div>
+        <div class="rep-damage-grid">
+          <div class="rep-damage-opt" onclick="selectDamage(this,'stick-drift','Stick-Drift','ab 25 u20ac')"><div class="rep-damage-icon">ud83dudd79ufe0f</div><div class="rep-damage-lbl">STICK-DRIFT</div></div>
+          <div class="rep-damage-opt" onclick="selectDamage(this,'trigger','Trigger-Problem','ab 20 u20ac')"><div class="rep-damage-icon">ud83cudfae</div><div class="rep-damage-lbl">TRIGGER DEFEKT</div></div>
+          <div class="rep-damage-opt" onclick="selectDamage(this,'button','Taste defekt','ab 15 u20ac')"><div class="rep-damage-icon">ud83dudd18</div><div class="rep-damage-lbl">TASTE DEFEKT</div></div>
+          <div class="rep-damage-opt" onclick="selectDamage(this,'usb','USB-C Defekt','ab 30 u20ac')"><div class="rep-damage-icon">ud83dudd0c</div><div class="rep-damage-lbl">USB-C DEFEKT</div></div>
+          <div class="rep-damage-opt" onclick="selectDamage(this,'gehaeuse','Gehu00e4use / Optik','ab 35 u20ac')"><div class="rep-damage-icon">ud83dudee1ufe0f</div><div class="rep-damage-lbl">GEHu00c4USE / OPTIK</div></div>
+          <div class="rep-damage-opt" onclick="selectDamage(this,'vibration','Vibration / Akku','ab 20 u20ac')"><div class="rep-damage-icon">u26a1</div><div class="rep-damage-lbl">VIBRATION / AKKU</div></div>
+          <div class="rep-damage-opt" onclick="selectDamage(this,'upgrade','Upgrade / Umbau','ab 30 u20ac')"><div class="rep-damage-icon">u2699ufe0f</div><div class="rep-damage-lbl">UPGRADE / UMBAU</div></div>
+          <div class="rep-damage-opt" onclick="selectDamage(this,'sonstiges','Sonstiges','auf Anfrage')"><div class="rep-damage-icon">u2753</div><div class="rep-damage-lbl">SONSTIGES</div></div>
+        </div>
+        <div class="rep-price-est" id="rep-price-est" style="display:none">
+          <div><div class="rep-price-lbl">GESCHu00c4TZTE KOSTEN</div><div style="font-size:8px;color:#333;font-family:'Orbitron'">Inkl. Diagnose u00b7 Endpreis nach Pru00fcfung</div></div>
+          <div class="rep-price-val" id="rep-price-val">u2013</div>
+        </div>
+        <div class="rep-nav-row"><button class="rep-nav-btn next" onclick="repNext()">WEITER u2192</button></div>
+      </div>
+
+```
+  <div class="rep-panel" id="rp-1">
+    <div class="rep-section-title">ud83dudc64 DEINE KONTAKTDATEN</div>
+    <div class="rep-grid">
+      <div><label class="rep-label">VORNAME *</label><input type="text" class="rep-input" id="rep-fname" placeholder="Max"></div>
+      <div><label class="rep-label">NACHNAME *</label><input type="text" class="rep-input" id="rep-lname" placeholder="Mustermann"></div>
+    </div>
+    <div><label class="rep-label">E-MAIL ADRESSE *</label><input type="email" class="rep-input" id="rep-email" placeholder="deine@email.de" style="margin-bottom:12px"></div>
+    <div><label class="rep-label">TELEFON (optional)</label><input type="tel" class="rep-input" id="rep-phone" placeholder="+49 152 ..." style="margin-bottom:12px"></div>
+    <div><label class="rep-label">STRASSE &amp; HAUSNUMMER *</label><input type="text" class="rep-input" id="rep-addr" placeholder="Musterstrau00dfe 1" style="margin-bottom:12px"></div>
+    <div class="rep-grid">
+      <div><label class="rep-label">PLZ *</label><input type="text" class="rep-input" id="rep-zip" placeholder="12345"></div>
+      <div><label class="rep-label">STADT *</label><input type="text" class="rep-input" id="rep-city" placeholder="Berlin"></div>
+    </div>
+    <div class="rep-nav-row">
+      <button class="rep-nav-btn back" onclick="repBack()">u2190 ZURu00dcCK</button>
+      <button class="rep-nav-btn next" onclick="repNext()">WEITER u2192</button>
+    </div>
+  </div>
+
+  <div class="rep-panel" id="rp-2">
+    <div class="rep-section-title">ud83cudfae CONTROLLER INFORMATIONEN</div>
+    <div><label class="rep-label">CONTROLLER-MODELL *</label>
+      <select class="rep-input" id="rep-model" style="margin-bottom:12px;cursor:pointer">
+        <option value="">-- Bitte auswu00e4hlen --</option>
+        <option>PS5 DualSense (Standard)</option>
+        <option>PS5 DualSense Edge</option>
+        <option>PS4 DualShock 4</option>
+        <option>LEXORD Custom Controller</option>
+        <option>Sonstiger Controller</option>
+      </select>
+    </div>
+    <div><label class="rep-label">SERIENNUMMER (optional)</label><input type="text" class="rep-input" id="rep-serial" placeholder="z.B. CFI-ZCT1W..." style="margin-bottom:12px"></div>
+    <div><label class="rep-label">SCHADENBESCHREIBUNG *</label><textarea class="rep-input" id="rep-desc" placeholder="Beschreibe den Schaden so genau wie mu00f6glich..." style="height:120px;resize:vertical;margin-bottom:12px"></textarea></div>
+    <div><label class="rep-label">SEIT WANN BESTEHT DAS PROBLEM?</label>
+      <select class="rep-input" id="rep-since" style="margin-bottom:12px;cursor:pointer">
+        <option>Seit wenigen Tagen</option><option>Seit 1u20132 Wochen</option>
+        <option>Seit 1u20133 Monaten</option><option>Seit mehr als 3 Monaten</option><option>Unbekannt</option>
+      </select>
+    </div>
+    <div><label class="rep-label">GARANTIE GEWu00dcNSCHT?</label>
+      <select class="rep-input" id="rep-warranty" style="cursor:pointer">
+        <option value="6">6 Monate Garantie (inkl. im Preis)</option>
+        <option value="12">12 Monate Garantie (+15u20ac)</option>
+      </select>
+    </div>
+    <div class="rep-nav-row">
+      <button class="rep-nav-btn back" onclick="repBack()">u2190 ZURu00dcCK</button>
+      <button class="rep-nav-btn next" onclick="repNext()">WEITER u2192</button>
+    </div>
+  </div>
+
+  <div class="rep-panel" id="rp-3">
+    <div class="rep-section-title">u2713 ZUSAMMENFASSUNG</div>
+    <div id="rep-summary-content"></div>
+    <div style="background:#0a0a0a;border:1px solid #111;border-radius:10px;padding:16px;margin-top:16px">
+      <div style="font-family:'Orbitron';font-size:8px;color:#555;letter-spacing:1.5px;margin-bottom:10px">VERSANDANWEISUNG</div>
+      <div style="font-size:9.5px;color:#666;line-height:1.9">
+        ud83dudce6 Schicke deinen Controller <strong style="color:#aaa">sicher verpackt</strong> an:<br>
+        <strong style="color:var(--neon)">Leon Schulz u00b7 An Der Domsu00fchler Str. 2 u00b7 19374 Domsu00fchl</strong><br>
+        ud83dudce7 Anfragenummer bei Einsendung beilegen<br>
+        ud83dudca1 Reparaturzeit: <strong style="color:#aaa">3u20135 Werktage</strong> nach Eingang
+      </div>
+    </div>
+    <label style="display:flex;align-items:flex-start;gap:8px;font-size:9px;color:#666;margin:14px 0;cursor:pointer">
+      <input type="checkbox" id="rep-agb" style="accent-color:var(--neon);margin-top:1px;flex-shrink:0">
+      Ich akzeptiere die <a href="agb.html" target="_blank" style="color:var(--neon)">AGB</a> und <a href="Datenschutz.html" target="_blank" style="color:var(--neon)">Datenschutzbestimmungen</a>.
+    </label>
+    <div class="rep-nav-row">
+      <button class="rep-nav-btn back" onclick="repBack()">u2190 ZURu00dcCK</button>
+      <button class="rep-nav-btn next" onclick="submitRepair()">ud83dudd27 REPARATUR ANFRAGEN</button>
+    </div>
+  </div>
+
+  <div class="rep-success" id="rep-success">
+    <div class="rep-success-icon">u2705</div>
+    <div class="rep-success-title">ANFRAGE ERFOLGREICH!</div>
+    <div class="rep-success-sub">
+      Deine Reparaturanfrage wurde an <strong style="color:var(--neon)"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a0ebcfced4c1cbd4e0ecc5d8cfd2c48ec4c5">[email&#160;protected]</a></strong> u00fcbermittelt.<br>
+      Du erhu00e4ltst innerhalb von <strong>24 Stunden</strong> eine Bestu00e4tigung per E-Mail.<br><br>
+      <span style="font-family:'Orbitron';font-size:9px;color:#444">DEINE ANFRAGENUMMER: <span id="rep-nr" style="color:var(--neon)"></span></span>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- PAYMENT SECTION -->
+
+<section class="payment-section reveal">
+  <div class="sec-title" style="font-size:1rem;margin-bottom:8px">ZAHLUNGSMETHODEN</div>
+  <p style="font-size:8.5px;color:#333;font-family:'Orbitron';letter-spacing:2px">SICHER u00b7 SCHNELL u00b7 VERSCHLu00dcSSELT</p>
+  <div class="pay-grid">
+    <div class="pay-card"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/stripe.svg" class="pay-logo" alt="Stripe" style="height:20px"><span class="pay-name">STRIPE</span></div>
+    <div class="pay-card"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/paypal.svg" class="pay-logo" alt="PayPal" style="height:22px"><span class="pay-name">PAYPAL</span></div>
+    <div class="pay-card"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/visa.svg" class="pay-logo" alt="Visa" style="height:18px"><span class="pay-name">VISA</span></div>
+    <div class="pay-card"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/mastercard.svg" class="pay-logo" alt="Mastercard" style="height:22px"><span class="pay-name">MASTERCARD</span></div>
+    <div class="pay-card"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/applepay.svg" class="pay-logo" alt="Apple Pay" style="height:20px"><span class="pay-name">APPLE PAY</span></div>
+    <div class="pay-card"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googlepay.svg" class="pay-logo" alt="Google Pay" style="height:20px"><span class="pay-name">GOOGLE PAY</span></div>
+    <div class="pay-card"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/sepa.svg" class="pay-logo" alt="SEPA" style="height:18px"><span class="pay-name">SEPA</span></div>
+    <div class="pay-card"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/klarna.svg" class="pay-logo" alt="Klarna" style="height:20px"><span class="pay-name">KLARNA</span></div>
+  </div>
+  <div class="pay-secure-row">
+    <span class="pay-sec-chip"><span class="pay-sec-dot"></span>256-BIT SSL VERSCHLu00dcSSELUNG</span>
+    <span class="pay-sec-chip"><span class="pay-sec-dot"></span>PCI DSS KONFORM</span>
+    <span class="pay-sec-chip"><span class="pay-sec-dot"></span>Ku00c4UFERSCHUTZ AKTIV</span>
+    <span class="pay-sec-chip"><span class="pay-sec-dot"></span>DSGVO KONFORM</span>
+  </div>
+</section>
+
+<!-- FOOTER -->
+
+<footer class="footer reveal">
+  <div style="max-width:820px;margin:0 auto">
+    <div class="footer-social">
+      <a href="https://instagram.com/lexord.de" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" class="soc-icon" alt="Instagram"></a>
+      <a href="https://tiktok.com/@lexord.de" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" class="soc-icon" alt="TikTok"></a>
+    </div>
+    <div class="footer-links">
+      <a href="agb.html" target="_blank">AGB</a>
+      <a href="Datenschutz.html" target="_blank">DATENSCHUTZ</a>
+      <a href="Widerrufsbelehrung.html" target="_blank">WIDERRUF</a>
+      <a href="#contact">KONTAKT</a>
+      <a href="#configurator">KONFIGURATOR</a>
+      <a href="#repair-sec">REPARATUR</a>
+      <a href="#tester-sec">CONTROLLER TESTER</a>
+      <a onclick="document.getElementById('review-modal').style.display='flex'">BEWERTUNG</a>
+    </div>
+    <div class="legal-box">
+      <div class="legal-hd" onclick="this.parentElement.classList.toggle('open')">IMPRESSUM <span>+</span></div>
+      <div class="legal-body">
+        <strong>Angaben gemu00e4u00df u00a7 5 TMG</strong><br><br>
+        Leon Schulz | LEXORD Engineering<br>An Der Domsu00fchler Str. 2 u00b7 19374 Domsu00fchl<br><br>
+        <strong>Kontakt:</strong><br>
+        E-Mail: <a href="/cdn-cgi/l/email-protection#377c585943565c43777b524f584553195352"><span class="__cf_email__" data-cfemail="4e0521203a2f253a0e022b36213c2a602a2b">[email&#160;protected]</span></a><br>Telefon: 0152 047 18720<br><br>
+        <strong>Umsatzsteuer:</strong><br>Kleinunternehmer gem. u00a7 19 UStG u2014 keine Umsatzsteuerausweisung.<br><br>
+        <strong>Haftungshinweis:</strong><br>LEXORD ist ein spezialisierter Veredeler von PlayStation-Controllern und steht in keiner Verbindung zur Sony Interactive Entertainment Europe Ltd.
+      </div>
+    </div>
+    <div class="legal-box" id="datenschutz">
+      <div class="legal-hd" onclick="this.parentElement.classList.toggle('open')">DATENSCHUTZERKLu00c4RUNG <span>+</span></div>
+      <div class="legal-body">
+        <strong>1. Verantwortlicher (Art. 13 DSGVO)</strong><br>Leon Schulz u00b7 An Der Domsu00fchler Str. 2 u00b7 19374 Domsu00fchl u00b7 <a href="/cdn-cgi/l/email-protection#22694d4c56434956626e475a4d50460c4647"><span class="__cf_email__" data-cfemail="95defafbe1f4fee1d5d9f0edfae7f1bbf1f0">[email&#160;protected]</span></a><br><br>
+        <strong>2. Erhebung und Verarbeitung personenbezogener Daten</strong><br>Wir erheben Name, E-Mail-Adresse, Lieferadresse und Zahlungsdaten ausschlieu00dflich zur Vertragserfu00fcllung gem. Art. 6 Abs. 1 lit. b DSGVO.<br><br>
+        <strong>3. Weitergabe an Dritte</strong><br>u2014 Zahlungsabwicklung: PayPal und Stripe (PCI DSS konform)<br>u2014 Versand: DHL Paket GmbH<br>u2014 E-Mail-Dienst: Web3Forms (DSGVO-konform, EU-Server)<br>u2014 Hosting: GitHub Pages<br>u2014 Analytics: GoatCounter (datenschutzkonform, cookiefrei)<br><br>
+        <strong>4. Cookies</strong><br>Ausschlieu00dflich technisch notwendige Cookies. Keine Werbe-Cookies.<br><br>
+        <strong>5. Deine Rechte (DSGVO)</strong><br>Auskunft u00b7 Berichtigung u00b7 Lu00f6schung u00b7 Einschru00e4nkung u00b7 Datenu00fcbertragbarkeit u00b7 Widerspruch
+      </div>
+    </div>
+    <div class="legal-box">
+      <div class="legal-hd" onclick="this.parentElement.classList.toggle('open')">ALLGEMEINE GESCHu00c4FTSBEDINGUNGEN <span>+</span></div>
+      <div class="legal-body">
+        <strong>u00a7 1 Geltungsbereich</strong><br>Diese AGB gelten fu00fcr alle Bestellungen u00fcber lexord.de.<br><br>
+        <strong>u00a7 2 Preise und Steuern</strong><br>Alle Preise in Euro. Keine Mehrwertsteuer gem. u00a7 19 UStG.<br><br>
+        <strong>u00a7 3 Lieferbedingungen</strong><br>DE: ab 6,99u20ac (kostenlos ab 50u20ac) u00b7 EU: ab 14,49u20ac u00b7 CH: ab 20,99u20ac u00b7 GB: ab 19,99u20ac<br><br>
+        <strong>u00a7 4 Zahlung</strong><br>PayPal, Kreditkarte via Stripe, Apple Pay, Google Pay, SEPA, Klarna.<br><br>
+        <strong>u00a7 5 Widerrufsrecht</strong><br>14 Tage. Individuell konfigurierte Controller ausgeschlossen (u00a7 312g Abs. 2 Nr. 1 BGB).
+      </div>
+    </div>
+    <div class="legal-box">
+      <div class="legal-hd" onclick="this.parentElement.classList.toggle('open')">WIDERRUFSBELEHRUNG <span>+</span></div>
+      <div class="legal-body">
+        <strong>Widerrufsrecht</strong><br>14 Tage ab Erhalt der Ware.<br><br>
+        <strong>Ausu00fcbung</strong><br>Leon Schulz u00b7 An Der Domsu00fchler Str. 2 u00b7 19374 Domsu00fchl u00b7 <a href="/cdn-cgi/l/email-protection#6a2105041e0b011e2a260f1205180e440e0f"><span class="__cf_email__" data-cfemail="c58eaaabb1a4aeb18589a0bdaab7a1eba1a0">[email&#160;protected]</span></a><br><br>
+        <strong>Ausnahmen</strong><br>Individuell konfigurierte Controller und begonnene Reparaturen.
+      </div>
+    </div>
+    <div class="footer-bottom">LEXORDu00ae ALL RIGHTS RESERVED u00b7 2026 u00b7 MADE IN GERMANY u00b7 www.lexord.de</div>
+  </div>
+</footer>
+</main>
+
+<!-- u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550
+  JAVASCRIPT
+u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550 -->
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js" defer></script><script>
+
+if (typeof gsap !== “undefined”) { gsap.registerPlugin(ScrollTrigger); }
+
+/* u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550
+WEB3FORMS EMAIL SYSTEM
+u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500
+EINMALIGE EINRICHTUNG (2 Minuten):
+
+1. Gehe zu https://web3forms.com
+1. Gib deine E-Mail ein: Kontakt@Lexord.de
+1. Klick auf “Create Access Key”
+1. Kopiere den Key und trage ihn unten ein
+   u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500
+   Das war’s. Kein Template, kein Dashboard, nichts weiter.
+   Alle E-Mails kommen direkt in dein Postfach.
+   u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550 */
+   /* ══ RESEND E-MAIL via Netlify Function ══ */
+   async function sendEmail(to, name, subject, html) {
+   try {
+   await fetch(’/.netlify/functions/send-email’, {
+   method: ‘POST’,
+   headers: {‘Content-Type’: ‘application/json’},
+   body: JSON.stringify({to, toName: name, subject, html})
+   });
+   } catch(e) { console.warn(‘Mail:’, e.message); }
+   }
+
+/* ══ HTML E-MAIL TEMPLATES ══ */
+function tplOrder(name,nr,pay,land,items,sub,disc,ship,total,addr,discLabel,date){
+var rows=items.map(function(i){return ‘<tr><td style="padding:10px 14px;border-bottom:1px solid #f0f0f0">’+i.name+’</td><td style="text-align:center;padding:10px 14px">’+i.qty+’</td><td style="text-align:right;padding:10px 14px;font-weight:700">’+(i.price*i.qty).toFixed(2)+’ EUR</td></tr>’;}).join(’’);
+var shipTxt=ship===0?‘Kostenlos’:ship.toFixed(2)+’ EUR’;
+return ‘<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="font-family:Arial;background:#f4f4f5"><div style="max-width:600px;margin:30px auto;background:#fff;border-radius:8px;overflow:hidden"><div style="background:#000;padding:28px;text-align:center"><div style="font-size:22px;font-weight:900;color:#00f2ff;letter-spacing:6px">LEXORD</div></div><div style="background:#00f2ff;padding:14px;text-align:center;font-weight:700;color:#000">BESTELLBESTAETIGUNG & RECHNUNG Nr. ‘+nr+’</div><div style="padding:28px"><p>Hallo <strong>’+name+’</strong>,</p><p style="color:#666">Danke! Diese E-Mail ist Ihre Rechnung gem. SS 14 UStG.</p><p style="color:#888">Datum: ‘+date+’ | Zahlung: ‘+pay+’ | Land: ‘+land+’</p><table width="100%" style="border-collapse:collapse;margin:20px 0"><thead><tr style="background:#f0f0f0"><th style="padding:10px;text-align:left">PRODUKT</th><th style="padding:10px;text-align:center">MENGE</th><th style="padding:10px;text-align:right">GESAMT</th></tr></thead><tbody>’+rows+’</tbody><tfoot>’+(disc>0?’<tr><td colspan="2" style="padding:8px;color:#009900">’+(discLabel||‘Rabatt’)+’</td><td style="padding:8px;text-align:right;color:#009900">-’+disc.toFixed(2)+’ EUR</td></tr>’:’’)+’<tr><td colspan="2" style="padding:8px;color:#666">Versand</td><td style="padding:8px;text-align:right">’+shipTxt+’</td></tr><tr style="background:#000"><td colspan="2" style="padding:14px;font-weight:700;color:#fff">GESAMT</td><td style="padding:14px;text-align:right;font-size:17px;font-weight:900;color:#00f2ff">’+total.toFixed(2)+’ EUR</td></tr></tfoot></table><p style="font-size:11px;color:#555;background:#fff8e1;padding:12px;border-radius:6px">Kleinunternehmer gem. SS 19 UStG.</p><p style="font-size:12px;color:#666">Leon Schulz | LEXORD Engineering | An Der Domsuhler Str. 2 | 19374 Domsuehl | Kontakt@Lexord.de</p></div></div></body></html>’;
+}
+function tplNewsletter(email){
+return ‘<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="font-family:Arial;background:#0a0a0a"><div style="max-width:600px;margin:30px auto;background:#111;border-radius:8px;overflow:hidden"><div style="background:#000;padding:28px;text-align:center"><div style="font-size:22px;font-weight:900;color:#00f2ff;letter-spacing:8px">LEXORD</div></div><div style="padding:32px;text-align:center;color:#ccc"><p>Danke fuer deine Anmeldung! Dein Rabattcode:</p><div style="background:#000;border:1px solid #00f2ff;border-radius:10px;padding:28px;margin:20px 0"><div style="font-size:10px;color:#555;letter-spacing:4px">DEIN RABATTCODE</div><div style="font-size:28px;font-weight:900;color:#00f2ff;letter-spacing:8px;margin-top:10px">WILLKOMMEN10</div><div style="font-size:11px;color:#444;margin-top:10px">10% auf alle Produkte</div></div><a href="https://lexord.de" style="display:inline-block;background:#00f2ff;color:#000;font-weight:900;font-size:13px;padding:14px 32px;border-radius:8px;text-decoration:none">JETZT SHOPPEN</a></div></div></body></html>’;
+}
+function tplRepair(fn,ln,nr,damage,price,model,since,warranty,addr,desc){
+return ‘<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="font-family:Arial;background:#f4f4f5"><div style="max-width:600px;margin:30px auto;background:#fff;border-radius:8px;overflow:hidden"><div style="background:#000;padding:24px;text-align:center"><div style="font-size:20px;font-weight:900;color:#00f2ff">LEXORD REPARATUR</div></div><div style="background:#00f2ff;padding:12px;text-align:center;font-weight:700;color:#000">Anfrage ‘+nr+’ erhalten</div><div style="padding:28px"><p>Hallo <strong>’+fn+’ ‘+ln+’</strong>,</p><p style="color:#666">Wir melden uns innerhalb von 24 Stunden.</p><table style="width:100%;border-left:4px solid #00f2ff;padding:16px;background:#f8f9fa"><tr><td style="color:#888;width:160px">Schaden:</td><td>’+damage+’</td></tr><tr><td style="color:#888">Schaetzung:</td><td style="color:#009900;font-weight:600">’+price+’</td></tr><tr><td style="color:#888">Controller:</td><td>’+model+’</td></tr><tr><td style="color:#888">Garantie:</td><td>’+warranty+’ Monate</td></tr></table><div style="background:#000;border-radius:8px;padding:18px;margin-top:20px;color:#bbb">Einsenden an: Leon Schulz, An Der Domsuhler Str. 2, 19374 Domsuehl. Anfragenummer ‘+nr+’ beilegen.</div></div></div></body></html>’;
+}
+function tplContact(name,subject){
+return ‘<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="font-family:Arial;background:#f4f4f5"><div style="max-width:600px;margin:30px auto;background:#fff;border-radius:8px;overflow:hidden"><div style="background:#000;padding:24px;text-align:center"><div style="font-size:20px;font-weight:900;color:#00f2ff">LEXORD</div></div><div style="background:#00f2ff;padding:12px;text-align:center;font-weight:700;color:#000">Deine Nachricht wurde erhalten</div><div style="padding:28px"><p>Hallo <strong>’+name+’</strong>,</p><p style="color:#666">vielen Dank! Wir melden uns innerhalb von 24 Stunden.<br><strong>Betreff:</strong> ‘+subject+’</p></div></div></body></html>’;
+}
+
+/* u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550
+STRIPE CHECKOUT MODAL
+u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500
+EINMALIGE EINRICHTUNG:
+
+1. Gehe zu https://dashboard.stripe.com/payment-links
+1. Klick auf “+ Neu” u2192 Produkt: “Custom Order” anlegen
+1. Aktiviere: “Adjustable quantity” + “Collect shipping”
+1. Payment Link kopieren (z.B. https://buy.stripe.com/XXXXX)
+1. Unten bei STRIPE_PAYMENT_LINK eintragen
+   u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500u2500
+   Das Checkout-Modal zeigt alle Zahlungsarten animiert.
+   Klick auf “Bezahlen” u2192 u00f6ffnet Stripe Checkout (sicher).
+   Nach Zahlung u2192 zuru00fcck zur Website u2192 Erfolgsseite.
+   u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550 */
+   const STRIPE_PAYMENT_LINK = ‘https://buy.stripe.com/DEIN_LINK’; // u2190 Stripe Dashboard u2192 Payment Links
+
+/* u2550u2550u2550u2550 PRODUKTE u2550u2550u2550u2550 */
+const PRODUCTS = [
+{name:‘LXRD Performance Black’,  price:240, img:‘Photoroom_20260305_123705.png’,   cat:‘Controller’},
+{name:‘LXRD Plus Black’,         price:180, img:‘Photoroom_20260305_140346.png’,   cat:‘Controller’},
+{name:‘LXRD Basic Black’,        price:105, img:‘Photoroom_20260402_014813.png’,   cat:‘Controller’},
+{name:‘Stickzange Pro’,          price:5,   img:‘Stickzange.PNG’,                  cat:‘Werkzeug’},
+{name:‘Paddle System V2’,        price:40,  img:‘Photoroom_20260304_212902.png’,   cat:‘Zubehu00f6r’},
+{name:‘TMR Stick Upgrade Kit’,   price:55,  img:‘Photoroom_20260305_123705.png’,   cat:‘Zubehu00f6r’},
+{name:‘Hall Effect Upgrade Kit’, price:35,  img:‘Photoroom_20260305_140346.png’,   cat:‘Zubehu00f6r’},
+{name:‘GRIP Gehu00e4use Set’,        price:28,  img:‘Photoroom_20260402_014813.png’,   cat:‘Zubehu00f6r’},
+{name:‘Clicky Trigger Kit’,      price:22,  img:‘Photoroom_20260304_212902.png’,   cat:‘Zubehu00f6r’},
+];
+
+/* u2550u2550u2550u2550 VERSANDPREISE u2550u2550u2550u2550 */
+const EU_ZONE1 = [‘AT’,‘BE’,‘NL’,‘LU’,‘PL’,‘CZ’,‘SK’,‘HU’,‘SI’];
+const EU_ZONE2 = [‘FR’,‘IT’,‘ES’,‘SE’,‘DK’,‘FI’,‘GR’,‘PT’,‘RO’,‘BG’,‘HR’,‘EE’,‘LV’,‘LT’,‘CY’,‘MT’,‘IE’];
+function getShipping(land, sub) {
+if (land === ‘DE’)                               return sub >= 50 ? 0 : 6.99;
+if (EU_ZONE1.includes(land))                     return 14.49;
+if (EU_ZONE2.includes(land)||land===‘EU_OTHER’)  return 16.49;
+if (land === ‘CH’)                               return 20.99;
+if (land === ‘GB’)                               return 19.99;
+if (land === ‘US’)                               return 24.99;
+return 22.49;
+}
+
+/* u2550u2550u2550u2550 RABATTCODES u2550u2550u2550u2550 */
+const DISCOUNT_CODES = {
+‘WILLKOMMEN10’: {type:‘percent’,value:10,label:‘10% NEWSLETTER-RABATT’},
+‘LEXORD15’:     {type:‘percent’,value:15,label:‘15% TREUE-RABATT’},
+‘REPAIR5’:      {type:‘fixed’,  value:5, label:‘5u20ac REPARATUR-RABATT’},
+‘SOMMER2026’:   {type:‘percent’,value:20,label:‘20% SOMMER-DEAL’},
+};
+let activeDiscount=null, cart=[], recentlyViewed=[];
+
+function calcDiscount(sub) {
+if (!activeDiscount) return 0;
+if (activeDiscount.type===‘percent’) return sub*activeDiscount.value/100;
+return Math.min(activeDiscount.value,sub);
+}
+function applyDiscount() {
+const code=document.getElementById(‘discount-code’).value.trim().toUpperCase();
+const ok=document.getElementById(‘discount-ok’), err=document.getElementById(‘discount-err’);
+ok.style.display=‘none’; err.style.display=‘none’;
+if (!code) { err.innerText=‘BITTE CODE EINGEBEN’; err.style.display=‘block’; return; }
+const d=DISCOUNT_CODES[code];
+if (!d) { err.innerText=‘u2717 UNGu00dcLTIGER RABATTCODE’; err.style.display=‘block’; activeDiscount=null; }
+else { activeDiscount={…d,code}; ok.innerText=`u2713 ${d.label} AKTIVIERT`; ok.style.display=‘block’; toast(`u2713 Rabattcode ${code} aktiviert!`,‘ok’); }
+updateCart();
+}
+
+/* u2550u2550u2550u2550 SEARCH u2550u2550u2550u2550 */
+function deskSearch(v) {
+const d=document.getElementById(‘srch-drop’);
+if (v.length<2) { d.style.display=‘none’; return; }
+const f=PRODUCTS.filter(p=>p.name.toLowerCase().includes(v.toLowerCase())||p.cat.toLowerCase().includes(v.toLowerCase()));
+if (!f.length) { d.innerHTML=’<div class="srch-empty">KEINE ERGEBNISSE</div>’; d.style.display=‘block’; return; }
+d.innerHTML=f.map(p=>`<div class="srch-item" onclick="handleSrch('${p.name}',${p.price},'${p.img}')"><img src="${p.img}" alt="${p.name}"><span class="srch-item-name">${p.name}</span><span class="srch-item-price">${p.price.toFixed(2)} u20ac</span></div>`).join(’’);
+d.style.display=‘block’;
+}
+function handleSrch(n,p,i) { addToCart(n,p,i); document.getElementById(‘desk-srch’).value=’’; document.getElementById(‘srch-drop’).style.display=‘none’; }
+function mobSearch(v) {
+const r=document.getElementById(‘mob-srch-res’);
+if (v.length<2) { r.innerHTML=’’; return; }
+const f=PRODUCTS.filter(p=>p.name.toLowerCase().includes(v.toLowerCase()));
+r.innerHTML=f.map(p=>`<div class="srch-item" onclick="addToCart('${p.name}',${p.price},'${p.img}');document.getElementById('mob-srch-ov').classList.remove('on')" style="background:#0c0c0c;border-radius:8px;margin-bottom:8px;border:1px solid #111"><img src="${p.img}" alt="${p.name}"><span class="srch-item-name">${p.name}</span><span class="srch-item-price">${p.price.toFixed(2)} u20ac</span></div>`).join(’’)||’<div class="srch-empty">KEINE ERGEBNISSE</div>’;
+}
+document.addEventListener(‘click’, e=>{ if (!e.target.closest(’.srch-wrap’)) document.getElementById(‘srch-drop’).style.display=‘none’; });
+
+/* u2550u2550u2550u2550 CART u2550u2550u2550u2550 */
+function toggleCart() { document.getElementById(‘cart-drawer’).classList.toggle(‘open’); document.querySelector(’.c-overlay’).style.display=‘block’; }
+function closeCart()  { document.getElementById(‘cart-drawer’).classList.remove(‘open’); document.querySelector(’.c-overlay’).style.display=‘none’; }
+function toggleMenu() { document.getElementById(‘full-nav’).classList.toggle(‘active’); }
+
+function addToCart(name,price,img) {
+const ex=cart.find(i=>i.name===name);
+if (ex) ex.qty++; else cart.push({name,price,img,qty:1});
+updateCart();
+if (!document.getElementById(‘cart-drawer’).classList.contains(‘open’)) toggleCart();
+toast(`u2713 ${name} hinzugefu00fcgt`,‘ok’);
+trackRecent(name,price,img);
+_saveCart();
+}
+function remFromCart(i) { cart.splice(i,1); updateCart(); }
+function changeQty(i,d) { cart[i].qty+=d; if (cart[i].qty<=0) cart.splice(i,1); updateCart(); }
+
+function updateCart() {
+const body=document.getElementById(‘cart-body’);
+const land=document.getElementById(‘land-sel’)?.value||‘DE’;
+const sub=cart.reduce((a,i)=>a+i.price*i.qty,0);
+const disc=calcDiscount(sub);
+const discSub=sub-disc;
+const shipNum=getShipping(land,discSub);
+const total=discSub+shipNum;
+const totalItems=cart.reduce((a,i)=>a+i.qty,0);
+
+if (!cart.length) {
+body.innerHTML=’<div class="c-empty"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><p>WARENKORB LEER</p></div>’;
+} else {
+body.innerHTML=cart.map((it,i)=>`<div class="c-item"><img src="${it.img}" alt="${it.name}"><div class="c-item-info"><h4>${it.name}</h4><p style="color:var(--neon);font-size:10.5px;font-family:'Orbitron';margin:3px 0">${(it.price*it.qty).toFixed(2)} u20ac</p><div class="c-qty"><div class="qty-b" onclick="changeQty(${i},-1)">u2212</div><span class="qty-n">${it.qty}</span><div class="qty-b" onclick="changeQty(${i},1)">+</div><span onclick="remFromCart(${i})" style="font-size:7.5px;color:#333;cursor:pointer;font-family:'Orbitron';margin-left:5px">ENTF.</span></div></div></div>`).join(’’);
+}
+if (land===‘DE’) {
+const pct=Math.min((sub/50)*100,100);
+document.getElementById(‘ship-fill’).style.width=pct+’%’;
+document.getElementById(‘ship-lbl’).innerText=sub>=50?‘u2713 KOSTENLOSER VERSAND FREIGESCHALTET’:`NOCH ${(50-sub).toFixed(2)} u20ac BIS KOSTENLOSER VERSAND`;
+} else {
+document.getElementById(‘ship-fill’).style.width=‘0%’;
+document.getElementById(‘ship-lbl’).innerText=‘VERSANDKOSTEN NACH LIEFERLAND’;
+}
+document.getElementById(‘c-sub’).innerText=sub.toFixed(2).replace(’.’,’,’)+’ u20ac’;
+const discRow=document.getElementById(‘discount-row’);
+if (disc>0) { discRow.style.display=‘flex’; document.getElementById(‘discount-label’).innerText=activeDiscount?.label||‘Rabatt’; document.getElementById(‘c-discount’).innerText=’-’+disc.toFixed(2).replace(’.’,’,’)+’ u20ac’; }
+else discRow.style.display=‘none’;
+document.getElementById(‘c-ship’).innerText=shipNum===0?‘Kostenlos’:shipNum.toFixed(2).replace(’.’,’,’)+’ u20ac’;
+document.getElementById(‘c-total’).innerText=total.toFixed(2).replace(’.’,’,’)+’ u20ac’;
+document.getElementById(‘cart-count’).innerText=totalItems;
+document.getElementById(‘cart-hd-count’).innerText=’(’+totalItems+’)’;
+renderPP(discSub,shipNum,land);
+}
+
+/* u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550
+STRIPE CHECKOUT MODAL
+Zeigt professionelles Modal mit allen Zahlungsarten.
+Klick “Bezahlen” u2192 u00f6ffnet Stripe Payment Link.
+Nach Zahlung u2192 zuru00fcck zu ?order=XXXX u2192 Erfolgsmodal.
+u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550u2550 */
+function buildStripeModal() {
+if (document.getElementById(‘lx-stripe-modal’)) return;
+const m=document.createElement(‘div’);
+m.id=‘lx-stripe-modal’;
+m.innerHTML=`
+
+<style>
+#lx-stripe-modal{position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:999999;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:16px;backdrop-filter:blur(20px)}
+.lxs-box{background:#080808;border:1px solid rgba(0,242,255,.25);border-radius:20px;width:100%;max-width:500px;margin:auto;overflow:hidden;box-shadow:0 0 80px rgba(0,242,255,.12)}
+.lxs-hd{background:#000;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #111}
+.lxs-title{font-family:'Orbitron';font-size:10px;color:#00f2ff;letter-spacing:3px}
+.lxs-sub{font-family:'Orbitron';font-size:6px;color:#333;letter-spacing:2px;margin-top:3px}
+.lxs-close{width:32px;height:32px;border:1px solid #1a1a1a;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#555;font-size:20px;flex-shrink:0;transition:.2s}
+.lxs-close:hover{color:#fff;border-color:#444}
+.lxs-pm-wrap{padding:10px 22px;background:#040404;border-bottom:1px solid #0d0d0d;overflow:hidden}
+.lxs-pm-lbl{font-family:'Orbitron';font-size:6px;color:#222;letter-spacing:2px;margin-bottom:7px}
+.lxs-pm-inner{display:flex;gap:6px;animation:lxsPmScroll 22s linear infinite}
+@keyframes lxsPmScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.lxs-pm-inner:hover{animation-play-state:paused}
+.lxpmchip{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:4px;border:1px solid #141414;font-family:'Orbitron';font-size:6.5px;color:#444;background:#0c0c0c;flex-shrink:0;white-space:nowrap;transition:.2s;cursor:default}
+.lxpmchip:hover{border-color:#00f2ff;color:#00f2ff}
+.lxs-body{padding:18px 22px}
+.lxs-slab{font-family:'Orbitron';font-size:7.5px;color:#00f2ff;letter-spacing:2px;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid #111;margin-top:14px}
+.lxs-slab:first-child{margin-top:0}
+.lxs-item{display:flex;align-items:center;gap:10px;padding:9px;background:#0c0c0c;border:1px solid #111;border-radius:8px;margin-bottom:6px}
+.lxs-item img{width:42px;height:42px;object-fit:contain;background:#0f0f0f;border-radius:5px;flex-shrink:0}
+.lxs-item-n{font-family:'Orbitron';font-size:7.5px;color:#ccc;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lxs-item-q{font-size:8px;color:#444;font-family:'Orbitron';margin-top:2px}
+.lxs-item-p{font-family:'Orbitron';font-size:11px;color:#00f2ff;flex-shrink:0}
+.lxs-totals{background:#0a0a0a;border:1px solid #111;border-radius:8px;padding:12px;margin-bottom:14px}
+.lxs-row{display:flex;justify-content:space-between;font-size:10px;color:#555;margin-bottom:4px;font-family:'Inter'}
+.lxs-row.tot{font-family:'Orbitron';font-size:14px;font-weight:700;border-top:1px solid #1a1a1a;padding-top:9px;margin-bottom:0}
+.lxs-row.tot span:first-child{color:#fff}
+.lxs-row.tot span:last-child{color:#00f2ff}
+.lxs-inp{width:100%;padding:11px 13px;background:#0c0c0c;border:1px solid #1a1a1a;color:#fff;font-family:'Inter';font-size:13px;border-radius:7px;outline:none;transition:.2s;box-sizing:border-box;margin-bottom:9px}
+.lxs-inp:focus{border-color:#00f2ff;background:rgba(0,242,255,.03)}
+.lxs-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.lxs-sel{width:100%;padding:11px 13px;background:#0c0c0c;border:1px solid #1a1a1a;color:#fff;font-family:'Orbitron';font-size:8px;border-radius:7px;outline:none;cursor:pointer;transition:.2s;box-sizing:border-box;margin-bottom:9px}
+.lxs-sel:focus{border-color:#00f2ff}
+#lxs-paybtn{width:100%;padding:16px;background:#00f2ff;color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:12px;letter-spacing:2px;cursor:pointer;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:10px;transition:.3s;animation:glowPulse 3s infinite}
+#lxs-paybtn:hover{background:#fff;animation:none}
+.lxs-trust{font-family:'Orbitron';font-size:6px;color:#1a1a1a;text-align:center;margin-top:10px;letter-spacing:1.5px}
+.lxs-logos{display:flex;justify-content:center;gap:8px;margin-top:9px;opacity:.3;flex-wrap:wrap}
+.lxs-logos img{height:11px;filter:invert(1)}
+@media(max-width:500px){.lxs-grid{grid-template-columns:1fr}}
+</style>
+
+<div class="lxs-box">
+  <div class="lxs-hd">
+    <div><div class="lxs-title">ud83dudd12 SECURE CHECKOUT</div><div class="lxs-sub">256-BIT SSL u00b7 PCI DSS u00b7 POWERED BY STRIPE</div></div>
+    <div class="lxs-close" id="lxs-close-btn">u00d7</div>
+  </div>
+  <div class="lxs-pm-wrap">
+    <div class="lxs-pm-lbl">ALLE ZAHLUNGSMETHODEN AKZEPTIERT</div>
+    <div class="lxs-pm-inner" id="lxs-pm-inner"></div>
+  </div>
+  <div class="lxs-body">
+    <div class="lxs-slab">DEINE BESTELLUNG</div>
+    <div id="lxs-items"></div>
+    <div class="lxs-totals">
+      <div class="lxs-row"><span>Zwischensumme</span><span id="lxs-sub">u2013</span></div>
+      <div class="lxs-row" id="lxs-drow" style="display:none;color:#00b67a"><span id="lxs-dlbl">Rabatt</span><span id="lxs-dval">u2013</span></div>
+      <div class="lxs-row"><span>DHL Versand (<span id="lxs-llbl">DE</span>)</span><span id="lxs-ship">u2013</span></div>
+      <div class="lxs-row tot"><span>GESAMT</span><span id="lxs-total">u2013</span></div>
+    </div>
+    <div class="lxs-slab">LIEFERADRESSE</div>
+    <div class="lxs-grid">
+      <input class="lxs-inp" id="lxs-fn" placeholder="Vorname *" autocomplete="given-name">
+      <input class="lxs-inp" id="lxs-ln" placeholder="Nachname *" autocomplete="family-name">
+    </div>
+    <input class="lxs-inp" id="lxs-mail" type="email" placeholder="E-Mail Adresse *" autocomplete="email">
+    <input class="lxs-inp" id="lxs-str" placeholder="Strau00dfe & Hausnummer *" autocomplete="street-address">
+    <div class="lxs-grid">
+      <input class="lxs-inp" id="lxs-plz" placeholder="PLZ *" autocomplete="postal-code">
+      <input class="lxs-inp" id="lxs-ort" placeholder="Stadt *" autocomplete="address-level2">
+    </div>
+    <select class="lxs-sel" id="lxs-cntry" onchange="lxsShipUpdate()">
+      <option value="DE">ud83cudde9ud83cuddea Deutschland</option><option value="AT">ud83cudde6ud83cuddf9 u00d6sterreich</option>
+      <option value="CH">ud83cudde8ud83cudded Schweiz</option><option value="FR">ud83cuddebud83cuddf7 Frankreich</option>
+      <option value="NL">ud83cuddf3ud83cuddf1 Niederlande</option><option value="BE">ud83cudde7ud83cuddea Belgien</option>
+      <option value="LU">ud83cuddf1ud83cuddfa Luxemburg</option><option value="IT">ud83cuddeeud83cuddf9 Italien</option>
+      <option value="ES">ud83cuddeaud83cuddf8 Spanien</option><option value="PL">ud83cuddf5ud83cuddf1 Polen</option>
+      <option value="CZ">ud83cudde8ud83cuddff Tschechien</option><option value="SE">ud83cuddf8ud83cuddea Schweden</option>
+      <option value="DK">ud83cudde9ud83cuddf0 Du00e4nemark</option><option value="EU_OTHER">ud83cuddeaud83cuddfa Sonstiges EU</option>
+      <option value="GB">ud83cuddecud83cudde7 Grou00dfbritannien</option><option value="US">ud83cuddfaud83cuddf8 USA</option>
+      <option value="WORLD">ud83cudf10 Sonstiges Ausland</option>
+    </select>
+    <div class="lxs-slab">ZAHLUNGSART</div>
+    <div style="background:#0c0c0c;border:1px solid #1a1a1a;border-radius:10px;padding:16px;margin-bottom:14px;font-family:'Orbitron';font-size:8px;color:#555;text-align:center;letter-spacing:1.5px;line-height:2">
+      u2713 VISA u00b7 MASTERCARD u00b7 AMEX<br>
+      u2713 APPLE PAY u00b7 GOOGLE PAY<br>
+      u2713 SEPA-LASTSCHRIFT u00b7 KLARNA u00b7 SOFORT<br>
+      u2713 GIROPAY u00b7 EPS u00b7 IDEAL u00b7 BANCONTACT<br>
+      <span style="color:#00f2ff;margin-top:6px;display:block">ALLE ZAHLUNGSARTEN IM Nu00c4CHSTEN SCHRITT</span>
+    </div>
+    <button id="lxs-paybtn" onclick="doLxsPayment()">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      <span id="lxs-paylbl">JETZT SICHER ZU STRIPE u2192</span>
+    </button>
+    <div class="lxs-trust">ud83dudd12 WEITERLEITUNG ZU STRIPE u00b7 BANKENSICHERHEIT u00b7 SSL-VERSCHLu00dcSSELT</div>
+    <div class="lxs-logos">
+      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/visa.svg" alt="Visa">
+      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/mastercard.svg" alt="MC">
+      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/amex.svg" alt="Amex">
+      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/applepay.svg" alt="Apple Pay">
+      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googlepay.svg" alt="Google Pay">
+      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/klarna.svg" alt="Klarna">
+      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/sepa.svg" alt="SEPA">
+    </div>
+  </div>
+</div>`;
+  document.body.appendChild(m);
+  m.style.display='none';
+  document.getElementById('lxs-close-btn').addEventListener('click',closeLxs);
+  m.addEventListener('click', e=>{ if (e.target.id==='lx-stripe-modal') closeLxs(); });
+
+// Zahlungsmethoden-Ticker
+const pms=[
+{n:‘Visa’,i:‘ud83dudcb3’},{n:‘Mastercard’,i:‘ud83dudcb3’},{n:‘Amex’,i:‘ud83dudcb3’},
+{n:‘Apple Pay’,i:‘ud83cudf4e’},{n:‘Google Pay’,i:‘ud83dudd35’},{n:‘SEPA’,i:‘ud83cudfe6’},
+{n:‘Klarna’,i:‘ud83dudecdufe0f’},{n:‘iDEAL’,i:‘ud83cuddf3ud83cuddf1’},{n:‘Bancontact’,i:‘ud83cudde7ud83cuddea’},
+{n:‘Giropay’,i:‘ud83cudde9ud83cuddea’},{n:‘EPS’,i:‘ud83cudde6ud83cuddf9’},{n:‘Przelewy24’,i:‘ud83cuddf5ud83cuddf1’},
+{n:‘Sofort’,i:‘u26a1’},{n:‘PayPal’,i:‘ud83dudd37’},{n:‘Blik’,i:‘ud83dudcf1’},{n:‘Link’,i:‘ud83dudd17’},
+];
+const inner=document.getElementById(‘lxs-pm-inner’);
+inner.innerHTML=[…pms,…pms].map(p=>`<div class="lxpmchip">${p.i} ${p.n}</div>`).join(’’);
+}
+
+function lxsShipUpdate() {
+const land=document.getElementById(‘lxs-cntry’)?.value||‘DE’;
+const sub=cart.reduce((a,i)=>a+i.price*i.qty,0);
+const disc=calcDiscount(sub);
+const discSub=sub-disc;
+const ship=getShipping(land,discSub);
+const total=discSub+ship;
+const f=id=>document.getElementById(id);
+if(f(‘lxs-ship’)) f(‘lxs-ship’).innerText=ship===0?‘Kostenlos’:ship.toFixed(2).replace(’.’,’,’)+’ u20ac’;
+if(f(‘lxs-total’)) f(‘lxs-total’).innerText=total.toFixed(2).replace(’.’,’,’)+’ u20ac’;
+if(f(‘lxs-llbl’)) f(‘lxs-llbl’).innerText=land;
+const ms=document.getElementById(‘land-sel’);
+if(ms) { ms.value=land; updateCart(); }
+}
+
+function openLxs() {
+buildStripeModal();
+const m=document.getElementById(‘lx-stripe-modal’);
+m.style.display=‘flex’;
+m.scrollTop=0;
+
+const land=document.getElementById(‘land-sel’)?.value||‘DE’;
+const sel=document.getElementById(‘lxs-cntry’);
+if(sel) sel.value=land;
+
+const sub=cart.reduce((a,i)=>a+i.price*i.qty,0);
+const disc=calcDiscount(sub);
+const discSub=sub-disc;
+const ship=getShipping(land,discSub);
+const total=discSub+ship;
+
+const f=id=>document.getElementById(id);
+if(f(‘lxs-sub’))   f(‘lxs-sub’).innerText=sub.toFixed(2).replace(’.’,’,’)+’ u20ac’;
+if(f(‘lxs-ship’))  f(‘lxs-ship’).innerText=ship===0?‘Kostenlos’:ship.toFixed(2).replace(’.’,’,’)+’ u20ac’;
+if(f(‘lxs-total’)) f(‘lxs-total’).innerText=total.toFixed(2).replace(’.’,’,’)+’ u20ac’;
+if(f(‘lxs-llbl’))  f(‘lxs-llbl’).innerText=land;
+const dr=f(‘lxs-drow’);
+if(disc>0&&dr) { dr.style.display=‘flex’; f(‘lxs-dlbl’).innerText=activeDiscount?.label||‘Rabatt’; f(‘lxs-dval’).innerText=’-’+disc.toFixed(2).replace(’.’,’,’)+’ u20ac’; }
+else if(dr) dr.style.display=‘none’;
+
+f(‘lxs-items’).innerHTML=cart.map(it=>`<div class="lxs-item"><img src="${it.img}" alt="${it.name}"><div style="flex:1;min-width:0"><div class="lxs-item-n">${it.name}</div><div class="lxs-item-q">Menge: ${it.qty}</div></div><div class="lxs-item-p">${(it.price*it.qty).toFixed(2)} u20ac</div></div>`).join(’’);
+}
+
+function doLxsPayment() {
+const fn=document.getElementById(‘lxs-fn’)?.value?.trim();
+const ln=document.getElementById(‘lxs-ln’)?.value?.trim();
+const ml=document.getElementById(‘lxs-mail’)?.value?.trim();
+const str=document.getElementById(‘lxs-str’)?.value?.trim();
+const plz=document.getElementById(‘lxs-plz’)?.value?.trim();
+const ort=document.getElementById(‘lxs-ort’)?.value?.trim();
+const land=document.getElementById(‘lxs-cntry’)?.value||‘DE’;
+
+if (!fn||!ln||!ml||!str||!plz||!ort) { toast(‘Bitte alle Pflichtfelder (*) ausfu00fcllen’,‘err’); return; }
+if (!ml.includes(’@’)||!ml.includes(’.’)) { toast(‘Bitte gu00fcltige E-Mail eingeben’,‘err’); return; }
+
+const btn=document.getElementById(‘lxs-paybtn’);
+const lbl=document.getElementById(‘lxs-paylbl’);
+btn.disabled=true;
+lbl.innerHTML=’<div style="width:14px;height:14px;border:2px solid #000;border-top-color:transparent;border-radius:50%;animation:lxsSpin .8s linear infinite;display:inline-block;margin-right:6px"></div>WIRD VORBEREITET…’;
+
+const sub=cart.reduce((a,i)=>a+i.price*i.qty,0);
+const disc=calcDiscount(sub);
+const discSub=sub-disc;
+const ship=getShipping(land,discSub);
+const total=discSub+ship;
+const orderNr=‘LXRD-’+Date.now().toString().slice(-6);
+const addr=str+’, ‘+plz+’ ‘+ort+’, ’+land;
+const date=new Date().toLocaleDateString(‘de-DE’,{day:‘2-digit’,month:‘long’,year:‘numeric’});
+
+// Bestelldaten merken fu00fcr nach Ru00fcckkehr
+try {
+sessionStorage.setItem(‘lxrd_email’, ml);
+sessionStorage.setItem(‘lxrd_name’, fn+’ ’+ln);
+sessionStorage.setItem(‘lxrd_order’, orderNr);
+sessionStorage.setItem(‘lxrd_cart’, JSON.stringify(cart));
+sessionStorage.setItem(‘lxrd_total’, total.toFixed(2));
+sessionStorage.setItem(‘lxrd_land’, land);
+sessionStorage.setItem(‘lxrd_disc’, disc.toFixed(2));
+sessionStorage.setItem(‘lxrd_ship’, ship.toFixed(2));
+sessionStorage.setItem(‘lxrd_addr’, addr);
+} catch(e) {}
+
+// Rechnung vorab senden (vor Stripe-Redirect)
+const shipTxt=ship===0?‘Kostenlos’:ship.toFixed(2)+’ u20ac’;
+const itemRows=cart.map(i=>`${i.name} u00d7 ${i.qty} = ${(i.price*i.qty).toFixed(2)} u20ac`).join(’
+’);
+const emailBody=`
+BESTELLBESTu00c4TIGUNG & RECHNUNG u2014 LEXORDu00ae
+
+Hallo ${fn} ${ln},
+vielen Dank fu00fcr deine Bestellung!
+
+BESTELLNUMMER: ${orderNr}
+DATUM: ${date}
+LIEFERADRESSE: ${addr}
+ZAHLUNGSART: Stripe Checkout
+
+— ARTIKEL —
+${itemRows}
+
+Zwischensumme: ${sub.toFixed(2)} u20ac
+${disc>0?‘Rabatt (’+activeDiscount?.label+’): -’+disc.toFixed(2)+’ u20ac
+‘:’’}Versand DHL (${land}): ${shipTxt}
+GESAMT: ${total.toFixed(2)} u20ac
+
+-----
+
+Kleinunternehmer gem. u00a7 19 UStG u2014 keine Umsatzsteuer ausgewiesen.
+
+LEXORD Engineering | Leon Schulz | An Der Domsu00fchler Str. 2 | 19374 Domsu00fchl
+Kontakt@Lexord.de | 0152 047 18720
+`.trim();
+
+// E-Mail u00fcber Web3Forms
+sendEmail(ml, fn+’ ‘+ln,
+‘u2705 Bestellbestu00e4tigung & Rechnung ‘+orderNr+’ | LEXORDu00ae’,
+‘<pre style="font-family:Arial;font-size:13px;line-height:1.7;color:#333">’+emailBody+’</pre>’
+);
+
+// Zu Stripe Payment Link weiterleiten
+setTimeout(() => {
+if (STRIPE_PAYMENT_LINK === ‘https://buy.stripe.com/DEIN_LINK’) {
+// Kein Link eingetragen u2192 Demo-Modus
+btn.disabled=false; lbl.innerText=‘JETZT SICHER ZU STRIPE u2192’;
+toast(‘u2699 Stripe Payment Link noch nicht eingetragen (STRIPE_PAYMENT_LINK anpassen)’,‘err’);
+return;
+}
+const url=new URL(STRIPE_PAYMENT_LINK);
+url.searchParams.set(‘prefilled_email’, ml);
+url.searchParams.set(‘client_reference_id’, orderNr);
+window.location.href=url.toString();
+}, 800);
+}
+
+function closeLxs() {
+const m=document.getElementById(‘lx-stripe-modal’);
+if(m) m.style.display=‘none’;
+}
+
+// Nach Stripe-Ru00fcckkehr
+(function checkStripeReturn() {
+const p=new URLSearchParams(window.location.search);
+const orderNr=p.get(‘order’)||sessionStorage.getItem(‘lxrd_order’);
+const email=sessionStorage.getItem(‘lxrd_email’);
+if ((p.get(‘payment_intent_client_secret’)||p.get(‘order’)) && email && orderNr) {
+sessionStorage.removeItem(‘lxrd_email’);
+sessionStorage.removeItem(‘lxrd_order’);
+sessionStorage.removeItem(‘lxrd_cart’);
+setTimeout(()=>showOrderSuccess(email,orderNr),600);
+}
+})();
+
+function goStripeCheckout() {
+if (!document.getElementById(‘cart-agb’).checked) { toast(‘Bitte AGB akzeptieren’,‘err’); return; }
+if (!cart.length) { toast(‘Warenkorb ist leer’,‘err’); return; }
+openLxs();
+}
+
+/* u2550u2550u2550u2550 PAYPAL u2550u2550u2550u2550 */
+function renderPP(sub,ship) {
+const c=document.getElementById(‘pp-btn-cont’);
+c.innerHTML=’’;
+if (sub<=0) return;
+try {
+paypal.Buttons({
+style:{layout:‘vertical’,color:‘black’,shape:‘rect’,label:‘checkout’,height:38},
+onClick:(d,a)=>{ if (!document.getElementById(‘cart-agb’).checked){toast(‘Bitte AGB akzeptieren’,‘err’);return a.reject();} },
+createOrder:(d,a)=>a.order.create({
+purchase_units:[{amount:{currency_code:‘EUR’,value:(sub+ship).toFixed(2),breakdown:{item_total:{currency_code:‘EUR’,value:sub.toFixed(2)},shipping:{currency_code:‘EUR’,value:ship.toFixed(2)}}}}]
+}),
+onShippingChange:(d,a)=>{
+const ppLand=d.shipping_address?.country_code||‘DE’;
+const rawSub=cart.reduce((acc,i)=>acc+i.price*i.qty,0);
+const ppDisc=calcDiscount(rawSub), ppDiscSub=rawSub-ppDisc;
+const newShip=getShipping(ppLand,ppDiscSub);
+const sel=document.getElementById(‘land-sel’);
+if(sel) { const o=sel.querySelector(`option[value="${ppLand}"]`); sel.value=o?ppLand:‘WORLD’; updateCart(); }
+return a.order.patch([{op:‘replace’,path:”/purchase_units/@reference_id==‘default’/amount”,value:{currency_code:‘EUR’,value:(ppDiscSub+newShip).toFixed(2),breakdown:{item_total:{currency_code:‘EUR’,value:ppDiscSub.toFixed(2)},shipping:{currency_code:‘EUR’,value:newShip.toFixed(2)}}}}]);
+},
+onApprove:(d,a)=>a.order.capture().then(details=>{
+const email=details.payer?.email_address||’’;
+const fn=details.payer?.name?.given_name||‘Kunde’;
+const ln=details.payer?.name?.surname||’’;
+const orderNr=‘LXRD-PP-’+Date.now().toString().slice(-6);
+const land=document.getElementById(‘land-sel’)?.value||‘DE’;
+const rawSub=cart.reduce((a,i)=>a+i.price*i.qty,0);
+const disc=calcDiscount(rawSub), discSub=rawSub-disc;
+const ship=getShipping(land,discSub), total=discSub+ship;
+const date=new Date().toLocaleDateString(‘de-DE’,{day:‘2-digit’,month:‘long’,year:‘numeric’});
+const itemRows=cart.map(i=>`${i.name} u00d7 ${i.qty} = ${(i.price*i.qty).toFixed(2)} u20ac`).join(’
+’);
+const emailBody=`
+BESTELLBESTu00c4TIGUNG & RECHNUNG u2014 LEXORDu00ae
+
+Hallo ${fn} ${ln},
+vielen Dank fu00fcr deine Bestellung!
+
+BESTELLNUMMER: ${orderNr}
+DATUM: ${date}
+ZAHLUNGSART: PayPal
+
+— ARTIKEL —
+${itemRows}
+
+Zwischensumme: ${rawSub.toFixed(2)} u20ac
+${disc>0?‘Rabatt: -’+disc.toFixed(2)+’ u20ac
+‘:’’}Versand DHL (${land}): ${ship===0?‘Kostenlos’:ship.toFixed(2)+’ u20ac’}
+GESAMT: ${total.toFixed(2)} u20ac
+
+-----
+
+Kleinunternehmer gem. u00a7 19 UStG
+LEXORD Engineering | Kontakt@Lexord.de
+`.trim();
+sendEmail(email, fn+’ ‘+ln, ‘u2705 Bestellbestu00e4tigung ‘+orderNr+’ | LEXORDu00ae’, ‘<pre style="font-family:Arial;font-size:13px;line-height:1.7">’+emailBody+’</pre>’);
+showOrderSuccess(email,orderNr);
+}),
+onError:()=>toast(‘PayPal Fehler. Erneut versuchen.’,‘err’)
+}).render(’#pp-btn-cont’);
+} catch(e) { console.warn(‘PayPal:’,e); }
+}
+
+function showOrderSuccess(email,orderNr) {
+cart=[]; _saveCart(); updateCart(); closeCart(); closeLxs();
+document.getElementById(‘success-email’).innerText=email;
+document.getElementById(‘success-order-nr’).innerText=‘BESTELLNUMMER: ‘+orderNr;
+document.getElementById(‘order-success-modal’).style.display=‘flex’;
+spawnConfetti();
+}
+function closeOrderSuccess() { document.getElementById(‘order-success-modal’).style.display=‘none’; }
+function spawnConfetti() {
+const box=document.getElementById(‘success-box’);
+const colors=[’#00f2ff’,’#bc13fe’,’#fff’,’#ffae00’,’#ff4d7d’];
+for(let i=0;i<30;i++){const el=document.createElement(‘div’);el.className=‘confetti-piece’;el.style.cssText=`left:${Math.random()*100}%;top:0;background:${colors[Math.floor(Math.random()*colors.length)]};width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;animation-delay:${Math.random()}s;animation-duration:${2+Math.random()*2}s`;box.appendChild(el);setTimeout(()=>el.remove(),4000);}
+}
+
+/* u2550u2550u2550u2550 NEWSLETTER u2550u2550u2550u2550 */
+function subscribeEmail() {
+const email=document.getElementById(‘em-email’).value;
+if (!email||!email.includes(’@’)) { toast(‘Bitte gültige E-Mail eingeben’,‘err’); return; }
+sendEmail(email,‘Neues Mitglied’,‘🎁 Dein 10% Willkommensrabatt | LEXORD®’,tplNewsletter(email));
+sendEmail(‘Kontakt@Lexord.de’,‘LEXORD Admin’,’[NEWSLETTER] ‘+email,’<p>Neue Anmeldung: ‘+email+’</p>’);
+document.getElementById(‘em-success’).style.display=‘block’;
+document.getElementById(‘em-email’).value=’’;
+toast(‘✓ Newsletter angemeldet! Rabattcode kommt per E-Mail.’,‘ok’);
+}
+
+/* u2550u2550u2550u2550 KONFIGURATOR u2550u2550u2550u2550 */
+const cfgState={stick:{val:‘Standard’,price:0},trigger:{val:‘Standard’,price:0},paddle:{val:‘Keine’,price:0},shell:{val:‘Standard’,price:0}};
+const BASE=70;
+document.querySelectorAll(’.cfg-opt’).forEach(el=>{
+el.addEventListener(‘click’,function(){
+const cat=this.dataset.cat;
+document.querySelectorAll(`.cfg-opt[data-cat="${cat}"]`).forEach(o=>o.classList.remove(‘sel’));
+this.classList.add(‘sel’);
+cfgState[cat]={val:this.dataset.val,price:parseFloat(this.dataset.price)};
+updateCfgPrice();
+});
+});
+function updateCfgPrice(){
+const total=BASE+Object.values(cfgState).reduce((a,v)=>a+v.price,0);
+document.getElementById(‘cfg-price’).innerText=total.toFixed(2).replace(’.’,’,’)+’ u20ac’;
+document.getElementById(‘sum-stick’).innerHTML=`<span>Stick: ${cfgState.stick.val}</span><span>+${cfgState.stick.price.toFixed(2)} u20ac</span>`;
+document.getElementById(‘sum-trigger’).innerHTML=`<span>Trigger: ${cfgState.trigger.val}</span><span>+${cfgState.trigger.price.toFixed(2)} u20ac</span>`;
+document.getElementById(‘sum-paddle’).innerHTML=`<span>Paddles: ${cfgState.paddle.val}</span><span>+${cfgState.paddle.price.toFixed(2)} u20ac</span>`;
+document.getElementById(‘sum-shell’).innerHTML=`<span>Gehu00e4use: ${cfgState.shell.val}</span><span>+${cfgState.shell.price.toFixed(2)} u20ac</span>`;
+}
+function addConfigToCart(){
+const total=BASE+Object.values(cfgState).reduce((a,v)=>a+v.price,0);
+const name=`Custom Controller (${cfgState.stick.val}/${cfgState.trigger.val}/${cfgState.paddle.val}/${cfgState.shell.val})`;
+addToCart(name,total,‘Photoroom_20260305_123705.png’);
+}
+
+/* u2550u2550u2550u2550 TESTER TABS u2550u2550u2550u2550 */
+function switchTab(tab){
+document.querySelectorAll(’.tester-tab’).forEach((t,i)=>t.classList.toggle(‘active’,[‘test’,‘cal’,‘drift’][i]===tab));
+document.querySelectorAll(’.tester-panel’).forEach(p=>p.classList.remove(‘active’));
+document.getElementById(‘tab-’+tab).classList.add(‘active’);
+}
+
+/* u2550u2550u2550u2550 GAMEPAD TESTER u2550u2550u2550u2550 */
+let driftDataL=[],driftDataR=[];
+function tickGP(){
+if (!navigator.getGamepads){requestAnimationFrame(tickGP);return;}
+const gps=navigator.getGamepads();
+const st=document.getElementById(‘tester-status’);
+if (!gps[0]){if(st){st.innerText=‘CONTROLLER ANSCHLIESSEN & TASTE DRu00dcCKEN…’;st.classList.remove(‘on’);}requestAnimationFrame(tickGP);return;}
+const gp=gps[0];
+if(st){st.innerText=’u2713 VERBUNDEN: ’+gp.id.substring(0,45).toUpperCase();st.classList.add(‘on’);}
+const[lx,ly,rx,ry]=gp.axes;
+const sl=document.getElementById(‘stick-l’),sr=document.getElementById(‘stick-r’);
+if(sl) sl.style.cssText=`left:calc(50% + ${lx*50}%);top:calc(50% + ${ly*50}%)`;
+if(sr) sr.style.cssText=`left:calc(50% + ${rx*50}%);top:calc(50% + ${ry*50}%)`;
+const vl=document.getElementById(‘val-l’),vr=document.getElementById(‘val-r’);
+if(vl) vl.innerText=`X: ${lx.toFixed(4)} | Y: ${ly.toFixed(4)}`;
+if(vr) vr.innerText=`X: ${rx.toFixed(4)} | Y: ${ry.toFixed(4)}`;
+const l2=gp.buttons[6]?.value||0,r2=gp.buttons[7]?.value||0;
+const fl2=document.getElementById(‘fill-l2’),fr2=document.getElementById(‘fill-r2’);
+if(fl2) fl2.style.width=(l2*100)+’%’;
+if(fr2) fr2.style.width=(r2*100)+’%’;
+const vl2=document.getElementById(‘val-l2’),vr2=document.getElementById(‘val-r2’);
+if(vl2) vl2.innerText=Math.round(l2*100)+’%’;
+if(vr2) vr2.innerText=Math.round(r2*100)+’%’;
+gp.buttons.forEach((b,i)=>{const el=document.getElementById(‘btn-’+i);if(el) b.pressed?el.classList.add(‘pressed’):el.classList.remove(‘pressed’);});
+updateCalibrationDisplay(lx,ly,rx,ry);
+driftDataL.push({x:lx,y:ly});driftDataR.push({x:rx,y:ry});
+if(driftDataL.length>300) driftDataL.shift();
+if(driftDataR.length>300) driftDataR.shift();
+updateDriftDisplay(lx,ly,rx,ry);
+requestAnimationFrame(tickGP);
+}
+tickGP();
+
+/* u2550u2550u2550u2550 KALIBRIERUNG u2550u2550u2550u2550 */
+let calStep=0,calRunning=false;
+let calData={lMin:{x:0,y:0},lMax:{x:0,y:0},rMin:{x:0,y:0},rMax:{x:0,y:0},lCenter:{x:0,y:0},rCenter:{x:0,y:0}};
+const calSteps=[
+{title:‘SCHRITT 1: KALIBRIERUNG STARTEN’,sub:‘Controller anschlieu00dfen und Kalibrierung beginnen’,btn:‘KALIBRIERUNG STARTEN’},
+{title:‘SCHRITT 2: CENTER-POSITION’,sub:‘Beide Sticks in der Mitte lassen u2014 nicht beru00fchren (3 Sek.)’,btn:‘WEITER u2192’},
+{title:‘SCHRITT 3: VOLLKREIS L-STICK’,sub:‘Linken Stick langsam im Kreis bis zum Rand drehen’,btn:‘WEITER u2192’},
+{title:‘SCHRITT 4: VOLLKREIS R-STICK’,sub:‘Rechten Stick langsam im Kreis bis zum Rand drehen’,btn:‘WEITER u2192’},
+{title:‘u2713 KALIBRIERUNG ABGESCHLOSSEN’,sub:‘Ergebnisse werden angezeigt’,btn:‘u21ba NEU STARTEN’},
+];
+let calLTrailCtx,calRTrailCtx;
+window.addEventListener(‘load’,()=>{
+const cl=document.getElementById(‘cal-trail-l’),cr=document.getElementById(‘cal-trail-r’);
+if(cl) calLTrailCtx=cl.getContext(‘2d’);
+if(cr) calRTrailCtx=cr.getContext(‘2d’);
+});
+function updateCalibrationDisplay(lx,ly,rx,ry){
+const dl=document.getElementById(‘cal-dot-l’),dr=document.getElementById(‘cal-dot-r’);
+if(dl) dl.style.cssText=`left:calc(50% + ${lx*45}%);top:calc(50% + ${ly*45}%);position:absolute;width:12px;height:12px;background:var(--neon);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 12px var(--neon)`;
+if(dr) dr.style.cssText=`left:calc(50% + ${rx*45}%);top:calc(50% + ${ry*45}%);position:absolute;width:12px;height:12px;background:var(--neon);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 12px var(--neon)`;
+const vl=document.getElementById(‘cal-val-l’),vr=document.getElementById(‘cal-val-r’);
+if(vl) vl.innerText=`X: ${lx.toFixed(3)} | Y: ${ly.toFixed(3)}`;
+if(vr) vr.innerText=`X: ${rx.toFixed(3)} | Y: ${ry.toFixed(3)}`;
+if(calRunning&&(calStep===2||calStep===3)){
+const ctx=calStep===2?calLTrailCtx:calRTrailCtx,x=calStep===2?lx:rx,y=calStep===2?ly:ry;
+if(ctx){ctx.strokeStyle=‘rgba(0,242,255,0.4)’;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(100+x*90,100+y*90,2,0,Math.PI*2);ctx.fillStyle=‘rgba(0,242,255,0.3)’;ctx.fill();}
+if(calStep===2){calData.lMax.x=Math.max(calData.lMax.x,Math.abs(lx));calData.lMax.y=Math.max(calData.lMax.y,Math.abs(ly));}
+else{calData.rMax.x=Math.max(calData.rMax.x,Math.abs(rx));calData.rMax.y=Math.max(calData.rMax.y,Math.abs(ry));}
+}
+}
+function calNextStep(){
+const gps=navigator.getGamepads();
+if(!gps[0]&&calStep===0){toast(‘Controller anschlieu00dfen!’,‘err’);return;}
+if(calStep===0){calRunning=true;if(calLTrailCtx)calLTrailCtx.clearRect(0,0,200,200);if(calRTrailCtx)calRTrailCtx.clearRect(0,0,200,200);}
+if(calStep===1){const gp=navigator.getGamepads()[0];if(gp){calData.lCenter={x:gp.axes[0],y:gp.axes[1]};calData.rCenter={x:gp.axes[2],y:gp.axes[3]};}}
+calStep=Math.min(calStep+1,4);updateCalUI();
+if(calStep===4){calRunning=false;showCalResults();}
+}
+function resetCalibration(){
+calStep=0;calRunning=false;
+calData={lMin:{x:0,y:0},lMax:{x:0,y:0},rMin:{x:0,y:0},rMax:{x:0,y:0},lCenter:{x:0,y:0},rCenter:{x:0,y:0}};
+if(calLTrailCtx)calLTrailCtx.clearRect(0,0,200,200);
+if(calRTrailCtx)calRTrailCtx.clearRect(0,0,200,200);
+document.getElementById(‘cal-results’).style.display=‘none’;
+document.getElementById(‘cal-rawdata’).style.display=‘none’;
+updateCalUI();
+}
+function updateCalUI(){
+const s=calSteps[calStep];
+document.getElementById(‘cal-title’).innerText=s.title;
+document.getElementById(‘cal-sub’).innerText=s.sub;
+document.getElementById(‘cal-action-btn’).innerText=s.btn;
+document.querySelectorAll(’.cal-step’).forEach((el,i)=>{el.classList.toggle(‘done’,i<calStep);el.classList.toggle(‘active’,i===calStep);});
+}
+function showCalResults(){
+const lDead=Math.sqrt(calData.lCenter.x**2+calData.lCenter.y**2);
+const rDead=Math.sqrt(calData.rCenter.x**2+calData.rCenter.y**2);
+const lMax=Math.sqrt(calData.lMax.x**2+calData.lMax.y**2)||1;
+const rMax=Math.sqrt(calData.rMax.x**2+calData.rMax.y**2)||1;
+document.getElementById(‘res-l-dead’).innerText=lDead.toFixed(4);
+document.getElementById(‘res-r-dead’).innerText=rDead.toFixed(4);
+document.getElementById(‘res-l-max’).innerText=lMax.toFixed(4);
+document.getElementById(‘res-r-max’).innerText=rMax.toFixed(4);
+const lBar=document.getElementById(‘res-l-dead-bar’),rBar=document.getElementById(‘res-r-dead-bar’);
+if(lBar){lBar.style.width=Math.min(lDead*500,100)+’%’;lBar.style.background=lDead<0.05?‘var(–green)’:lDead<0.15?’#ffae00’:’#ff4d4f’;}
+if(rBar){rBar.style.width=Math.min(rDead*500,100)+’%’;rBar.style.background=rDead<0.05?‘var(–green)’:rDead<0.15?’#ffae00’:’#ff4d4f’;}
+document.getElementById(‘cal-results’).style.display=‘grid’;
+document.getElementById(‘cal-rawdata’).style.display=‘block’;
+document.getElementById(‘cal-rawdata’).innerText=`KALIBRIERUNGSDATEN: L-Center: X=${calData.lCenter.x.toFixed(4)} Y=${calData.lCenter.y.toFixed(4)} R-Center: X=${calData.rCenter.x.toFixed(4)} Y=${calData.rCenter.y.toFixed(4)} L-Deadzone: ${lDead.toFixed(4)} | R-Deadzone: ${rDead.toFixed(4)} L-MaxRadius: ${lMax.toFixed(4)} | R-MaxRadius: ${rMax.toFixed(4)} Empfehlung: ${lDead>0.1||rDead>0.1?'u26a0 DRIFT ERKANNT u2014 REPARATUR EMPFOHLEN':'u2713 STICK GESUND'}`;
+if(lDead>0.1||rDead>0.1) toast(‘u26a0 Drift erkannt! Reparatur empfohlen.’,‘err’);
+else toast(‘u2713 Stick in gutem Zustand’,‘ok’);
+}
+
+/* u2550u2550u2550u2550 DRIFT ANALYSE u2550u2550u2550u2550 */
+function updateDriftDisplay(lx,ly,rx,ry){
+const lD=Math.sqrt(lx**2+ly**2),rD=Math.sqrt(rx**2+ry**2);
+const dlv=document.getElementById(‘drift-l-val’),drv=document.getElementById(‘drift-r-val’);
+const dls=document.getElementById(‘drift-l-status’),drs=document.getElementById(‘drift-r-status’);
+const dlb=document.getElementById(‘drift-l-bar’),drb=document.getElementById(‘drift-r-bar’);
+if(dlv) dlv.innerText=lD.toFixed(4);if(drv) drv.innerText=rD.toFixed(4);
+const gs=d=>{if(d<0.02)return{txt:‘u2713 KEIN DRIFT’,col:‘var(–green)’};if(d<0.08)return{txt:‘u26a0 LEICHTER DRIFT’,col:’#ffae00’};return{txt:‘u2717 STARKER DRIFT’,col:’#ff4d4f’};};
+const ls=gs(lD),rs=gs(rD);
+if(dls){dls.innerText=ls.txt;dls.style.color=ls.col;}if(drs){drs.innerText=rs.txt;drs.style.color=rs.col;}
+if(dlb){dlb.style.width=Math.min(lD*500,100)+’%’;dlb.style.background=ls.col;}if(drb){drb.style.width=Math.min(rD*500,100)+’%’;drb.style.background=rs.col;}
+const hmL=document.getElementById(‘hm-canvas-l’),hmR=document.getElementById(‘hm-canvas-r’);
+if(hmL){const c=hmL.getContext(‘2d’),w=hmL.width,h=hmL.height;c.fillStyle=‘rgba(0,0,0,0.05)’;c.fillRect(0,0,w,h);const px=(lx+1)/2*w,py=(ly+1)/2*h,g=c.createRadialGradient(px,py,0,px,py,8);g.addColorStop(0,‘rgba(0,242,255,0.8)’);g.addColorStop(1,‘rgba(0,242,255,0)’);c.fillStyle=g;c.fillRect(0,0,w,h);}
+if(hmR){const c=hmR.getContext(‘2d’),w=hmR.width,h=hmR.height;c.fillStyle=‘rgba(0,0,0,0.05)’;c.fillRect(0,0,w,h);const px=(rx+1)/2*w,py=(ry+1)/2*h,g=c.createRadialGradient(px,py,0,px,py,8);g.addColorStop(0,‘rgba(188,19,254,0.8)’);g.addColorStop(1,‘rgba(188,19,254,0)’);c.fillStyle=g;c.fillRect(0,0,w,h);}
+}
+
+/* u2550u2550u2550u2550 REPARATUR u2550u2550u2550u2550 */
+let repStep=0,repDamage={key:’’,label:’’,price:’’};
+function selectDamage(el,key,label,price){document.querySelectorAll(’.rep-damage-opt’).forEach(e=>e.classList.remove(‘sel’));el.classList.add(‘sel’);repDamage={key,label,price};document.getElementById(‘rep-price-est’).style.display=‘flex’;document.getElementById(‘rep-price-val’).innerText=price;}
+function repNext(){
+if(repStep===0&&!repDamage.key){toast(‘Bitte Schadensart auswu00e4hlen’,‘err’);return;}
+if(repStep===1){const f=document.getElementById(‘rep-fname’).value,l=document.getElementById(‘rep-lname’).value,e=document.getElementById(‘rep-email’).value,a=document.getElementById(‘rep-addr’).value,z=document.getElementById(‘rep-zip’).value,c=document.getElementById(‘rep-city’).value;if(!f||!l||!e||!a||!z||!c){toast(‘Bitte alle Pflichtfelder ausfu00fcllen’,‘err’);return;}}
+if(repStep===2){if(!document.getElementById(‘rep-model’).value||!document.getElementById(‘rep-desc’).value){toast(‘Bitte Controller-Modell und Beschreibung ausfu00fcllen’,‘err’);return;}buildRepairSummary();}
+if(repStep===3){submitRepair();return;}
+document.getElementById(‘rp-’+repStep).classList.remove(‘active’);repStep++;document.getElementById(‘rp-’+repStep).classList.add(‘active’);updateRepairSteps();
+}
+function repBack(){if(repStep===0)return;document.getElementById(‘rp-’+repStep).classList.remove(‘active’);repStep–;document.getElementById(‘rp-’+repStep).classList.add(‘active’);updateRepairSteps();}
+function updateRepairSteps(){document.querySelectorAll(’.rep-step’).forEach((el,i)=>{el.classList.toggle(‘active’,i===repStep);el.classList.toggle(‘done’,i<repStep);});}
+function buildRepairSummary(){
+const fn=document.getElementById(‘rep-fname’).value,ln=document.getElementById(‘rep-lname’).value,email=document.getElementById(‘rep-email’).value,model=document.getElementById(‘rep-model’).value,desc=document.getElementById(‘rep-desc’).value,warranty=document.getElementById(‘rep-warranty’).value,since=document.getElementById(‘rep-since’).value;
+let tp=repDamage.price;if(warranty===‘12’)tp+=’ +15u20ac (12 Mon. Garantie)’;
+document.getElementById(‘rep-summary-content’).innerHTML=`<div class="rep-summary-item"><span>SCHADEN</span><span>${repDamage.label}</span></div><div class="rep-summary-item"><span>KOSTEN CA.</span><span style="color:var(--neon)">${tp}</span></div><div class="rep-summary-item"><span>KUNDE</span><span>${fn} ${ln}</span></div><div class="rep-summary-item"><span>E-MAIL</span><span>${email}</span></div><div class="rep-summary-item"><span>CONTROLLER</span><span>${model}</span></div><div class="rep-summary-item"><span>PROBLEM SEIT</span><span>${since}</span></div><div class="rep-summary-item"><span>GARANTIE</span><span>${warranty} Monate</span></div><div class="rep-summary-item" style="border:none"><span>BESCHREIBUNG</span><span style="max-width:200px;text-align:right;word-break:break-word">${desc.substring(0,80)}${desc.length>80?'u2026':''}</span></div>`;
+}
+function submitRepair(){
+if(!document.getElementById(‘rep-agb’).checked){toast(‘Bitte AGB akzeptieren’,‘err’);return;}
+const repNr=‘REP-’+Date.now().toString().slice(-6);
+const email=document.getElementById(‘rep-email’).value;
+const fn=document.getElementById(‘rep-fname’).value,ln=document.getElementById(‘rep-lname’).value;
+const model=document.getElementById(‘rep-model’).value,desc=document.getElementById(‘rep-desc’).value;
+const _since=document.getElementById(‘rep-since’).value;
+const _warranty=document.getElementById(‘rep-warranty’).value+’ Monate’;
+const _phone=document.getElementById(‘rep-phone’)?.value||’-’;
+const _addr=document.getElementById(‘rep-addr’).value+’, ‘+document.getElementById(‘rep-zip’).value+’ ’+document.getElementById(‘rep-city’).value;
+const date=new Date().toLocaleDateString(‘de-DE’,{day:‘2-digit’,month:‘long’,year:‘numeric’});
+
+const adminHtml=’<div style="font-family:Arial;background:#111;color:#fff;padding:24px;border:2px solid #00f2ff;border-radius:8px"><h3 style="color:#00f2ff">REPARATUR: ‘+repNr+’</h3><p>Kunde: ‘+fn+’ ‘+ln+’<br>E-Mail: ‘+email+’<br>Adresse: ‘+_addr+’<br>Schaden: ‘+repDamage.label+’<br>Schätzung: ‘+repDamage.price+’<br>Controller: ‘+model+’</p></div>’;
+sendEmail(email,fn+’ ‘+ln,‘🔧 Reparaturanfrage ‘+repNr+’ | LEXORD®’,tplRepair(fn,ln,repNr,repDamage.label,repDamage.price,model,_since,_warranty,_addr,desc));
+sendEmail(‘Kontakt@Lexord.de’,‘LEXORD Admin’,’[REPARATUR] ‘+repNr+’ – ‘+fn+’ ‘+ln+’ – ’+repDamage.label,adminHtml);
+
+document.querySelectorAll(’.rep-panel’).forEach(p=>p.classList.remove(‘active’));
+document.getElementById(‘rep-success’).style.display=‘block’;
+document.getElementById(‘rep-nr’).innerText=repNr;
+document.querySelectorAll(’.rep-step’).forEach(el=>el.classList.add(‘done’));
+toast(‘u2713 Reparaturanfrage gesendet!’,‘ok’);
+}
+
+/* u2550u2550u2550u2550 KONTAKT u2550u2550u2550u2550 */
+function sendContact(e){
+e.preventDefault();
+const btn=document.getElementById(‘send-btn’);
+btn.innerText=‘SENDE…’;btn.disabled=true;
+const cfName=document.getElementById(‘cf-name’).value;
+const cfEmail=document.getElementById(‘cf-email’).value;
+const cfSubject=document.getElementById(‘cf-subject’).value||‘Kontaktanfrage’;
+const cfMsg=document.getElementById(‘cf-message’).value;
+const date=new Date().toLocaleString(‘de-DE’);
+
+const adminBody=`
+KONTAKTANFRAGE u2014 LEXORDu00ae
+
+Name: ${cfName}
+E-Mail: ${cfEmail}
+Betreff: ${cfSubject}
+Datum: ${date}
+
+NACHRICHT:
+${cfMsg}
+`.trim();
+
+const kundeBody=`
+Deine Nachricht bei LEXORDu00ae
+
+Hallo ${cfName},
+vielen Dank fu00fcr deine Nachricht!
+Wir melden uns innerhalb von 24 Stunden.
+
+Dein Betreff: ${cfSubject}
+
+LEXORD Engineering | Kontakt@Lexord.de | 0152 047 18720
+`.trim();
+
+sendEmail(‘Kontakt@Lexord.de’,‘LEXORD Admin’,’[KONTAKT] ‘+cfName+’ | ‘+cfSubject,’<div style="font-family:Arial;padding:20px;background:#111;color:#fff"><h3 style="color:#00f2ff">KONTAKT: ‘+cfName+’</h3><p>E-Mail: ‘+cfEmail+’<br>Betreff: ‘+cfSubject+’</p><p>’+cfMsg+’</p></div>’);
+sendEmail(cfEmail,cfName,’✅ Deine Nachricht bei LEXORD® | ’+cfSubject,tplContact(cfName,cfSubject));
+
+setTimeout(()=>{
+document.getElementById(‘contact-form’).style.display=‘none’;
+document.getElementById(‘contact-success’).style.display=‘block’;
+btn.innerText=‘NACHRICHT SENDEN’;btn.disabled=false;
+},900);
+}
+
+/* u2550u2550u2550u2550 LIGHTNING u2550u2550u2550u2550 */
+function createLightning(){const bg=document.getElementById(‘lightning-bg’);for(let i=0;i<12;i++){const el=document.createElement(‘div’);el.className=‘lightning-line’;el.style.cssText=`left:${5+Math.random()*90}%;top:${Math.random()*50}%;height:${100+Math.random()*300}px;--dur:${2+Math.random()*4}s;--delay:${Math.random()*5}s`;bg.appendChild(el);}}
+createLightning();
+
+/* u2550u2550u2550u2550 RECENTLY VIEWED u2550u2550u2550u2550 */
+function trackRecent(n,p,i){recentlyViewed=recentlyViewed.filter(r=>r.name!==n);recentlyViewed.unshift({name:n,price:p,img:i});if(recentlyViewed.length>5)recentlyViewed.pop();const sec=document.getElementById(‘recently’),grid=document.getElementById(‘rec-grid’);sec.style.display=recentlyViewed.length?‘block’:‘none’;grid.innerHTML=recentlyViewed.map(r=>`<div class="rec-card" onclick="addToCart('${r.name}',${r.price},'${r.img}')"><img src="${r.img}" alt="${r.name}"><div class="rec-name">${r.name}</div><div class="rec-price">${r.price.toFixed(2)} u20ac</div></div>`).join(’’);}
+
+/* u2550u2550u2550u2550 WISHLIST u2550u2550u2550u2550 */
+function toggleWish(btn,name){btn.classList.toggle(‘on’);toast(btn.classList.contains(‘on’)?`u2665 ${name} zur Wunschliste`:`${name} entfernt`,‘ok’);}
+
+/* u2550u2550u2550u2550 COOKIES u2550u2550u2550u2550 */
+function showCookieBanner(){if(localStorage.getItem(‘ck’))return;const banner=document.getElementById(‘cookie-banner’);banner.style.display=‘flex’;setTimeout(()=>banner.classList.add(‘show’),50);}
+function ckAccept(){localStorage.setItem(‘ck’,‘1’);document.getElementById(‘cookie-banner’).style.display=‘none’;}
+function ckReject(){localStorage.setItem(‘ck’,‘0’);document.getElementById(‘cookie-banner’).style.display=‘none’;}
+function openLegal(id){document.getElementById(id)?.classList.add(‘open’);}
+
+/* u2550u2550u2550u2550 TOAST u2550u2550u2550u2550 */
+function toast(msg,type=‘ok’){const t=document.createElement(‘div’);t.className=’toast ’+type;t.innerText=msg;document.getElementById(‘toasts’).appendChild(t);setTimeout(()=>{t.style.cssText=‘opacity:0;transform:translateX(60px);transition:.4s’;setTimeout(()=>t.remove(),400);},3000);}
+
+/* u2550u2550u2550u2550 LIEFERDATUM u2550u2550u2550u2550 */
+function setDelivery(){let d=new Date();d.setDate(d.getDate()+3);while(d.getDay()===0||d.getDay()===6)d.setDate(d.getDate()+1);const s=d.toLocaleDateString(‘de-DE’,{day:‘2-digit’,month:‘long’});document.querySelectorAll(’.delivery-date’).forEach(el=>el.innerText=s);}
+setDelivery();
+
+/* u2550u2550u2550u2550 SWIPER u2550u2550u2550u2550 */
+new Swiper(’.mySwiper’,{effect:‘coverflow’,grabCursor:true,centeredSlides:true,slidesPerView:‘auto’,coverflowEffect:{rotate:14,stretch:0,depth:110,modifier:1,slideShadows:false},pagination:{el:’.swiper-pagination’,clickable:true},keyboard:{enabled:true}});
+
+/* u2550u2550u2550u2550 SCROLL TOP u2550u2550u2550u2550 */
+
+/* ══ CART PERSISTENZ ══ */
+(function(){
+try {
+var saved=localStorage.getItem(‘lxrd_cart_v2’);
+if(saved){cart=JSON.parse(saved);updateCart();}
+} catch(e){}
+})();
+function _saveCart(){try{localStorage.setItem(‘lxrd_cart_v2’,JSON.stringify(cart));}catch(e){}}
+
+/* ══ SOCIAL PROOF ══ */
+(function(){
+var el=document.getElementById(‘social-proof’);
+var txt=document.getElementById(‘sp-text’);
+if(!el||!txt)return;
+var msgs=[‘3 Personen schauen gerade’,‘5 Personen schauen gerade’,‘2 Personen im Warenkorb’,‘4 Personen online’,‘1 Bestellung in letzter Stunde’];
+var i=0;
+setTimeout(function(){
+el.style.display=‘flex’;txt.innerText=msgs[0];
+setInterval(function(){
+el.style.opacity=‘0’;el.style.transition=‘opacity .4s’;
+setTimeout(function(){i=(i+1)%msgs.length;txt.innerText=msgs[i];el.style.opacity=‘1’;},400);
+},7000);
+},5000);
+})();
+
+/* ══ STICKY BUY BAR ══ */
+var _lastScrollY=0;
+
+/* ══ ABANDONED CART ══ */
+document.addEventListener(‘visibilitychange’,function(){
+document.title=document.hidden&&cart.length>0?‘🛒 Nicht vergessen! – LEXORD®’:‘LEXORD® | Custom PS5 Controller | Made in Germany’;
+});
+
+window.addEventListener(‘scroll’,function(){
+var sy=window.scrollY;
+document.getElementById(‘scroll-top’).classList.toggle(‘vis’,sy>400);
+var bar=document.getElementById(‘sticky-buy-bar’);
+if(bar){if(sy>600&&sy<_lastScrollY)bar.classList.add(‘vis’);else if(sy<200||sy>_lastScrollY+10)bar.classList.remove(‘vis’);}
+_lastScrollY=sy;
+},{passive:true});
+
+/* u2550u2550u2550u2550 STERNE u2550u2550u2550u2550 */
+const sc=document.getElementById(‘star-canvas’),sx=sc.getContext(‘2d’);
+function rsz(){sc.width=window.innerWidth;sc.height=window.innerHeight;}
+window.addEventListener(‘resize’,rsz);rsz();
+let stars=[];for(let i=0;i<110;i++)stars.push({x:Math.random()*sc.width,y:Math.random()*sc.height,v:.05+Math.random()*.25,o:Math.random()*.8});
+function drawStars(){sx.clearRect(0,0,sc.width,sc.height);stars.forEach(s=>{s.y-=s.v;if(s.y<0)s.y=sc.height;sx.fillStyle=`rgba(255,255,255,${s.o})`;sx.fillRect(s.x,s.y,1,1);});requestAnimationFrame(drawStars);}
+drawStars();
+
+/* u2550u2550u2550u2550 WARP INTRO u2550u2550u2550u2550 */
+const wc=document.getElementById(‘warp-canvas’),wx=wc.getContext(‘2d’);
+function rw(){wc.width=window.innerWidth;wc.height=window.innerHeight;}
+window.addEventListener(‘resize’,rw);rw();
+let pts=[];for(let i=0;i<700;i++)pts.push({x:Math.random()*wc.width-wc.width/2,y:Math.random()*wc.height-wc.height/2,z:Math.random()*wc.width});
+function aw(){wx.fillStyle=‘rgba(0,0,0,.2)’;wx.fillRect(0,0,wc.width,wc.height);wx.fillStyle=’#fff’;pts.forEach(s=>{s.z-=16;if(s.z<=0)s.z=wc.width;const ox=s.x/s.z*wc.width+wc.width/2,oy=s.y/s.z*wc.width+wc.height/2;const sz=Math.max(.5,(1-s.z/wc.width)*2.5);wx.fillRect(ox,oy,sz,sz);});requestAnimationFrame(aw);}
+aw();
+
+window.addEventListener(‘load’,()=>{
+setTimeout(()=>{
+if(typeof gsap===‘undefined’){document.getElementById(‘intro-overlay’).style.display=‘none’;showCookieBanner();document.querySelectorAll(’.reveal’).forEach(el=>{el.style.opacity=‘1’;el.style.transform=‘none’;});return;}
+gsap.to(’#intro-overlay’,{opacity:0,duration:1.15,onComplete:()=>{
+document.getElementById(‘intro-overlay’).style.display=‘none’;
+showCookieBanner();
+gsap.utils.toArray(’.reveal’).forEach(el=>{gsap.to(el,{scrollTrigger:{trigger:el,start:‘top 88%’},opacity:1,y:0,duration:1.1,ease:‘power4.out’});});
+}});
+},1700);
+});
+
+/* ══ ESC KEY ══ */
+document.addEventListener(‘keydown’,function(e){
+if(e.key!==‘Escape’)return;
+closeCart();closeLxs();
+document.getElementById(‘full-nav’).classList.remove(‘active’);
+document.getElementById(‘mob-srch-ov’).classList.remove(‘on’);
+});
+
+// Spin-Animation für Stripe-Button
+const lxsSpinStyle=document.createElement(‘style’);
+lxsSpinStyle.textContent=’@keyframes lxsSpin{to{transform:rotate(360deg)}}’;
+document.head.appendChild(lxsSpinStyle);
+</script>
+
+<script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js" defer></script>
+
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"3c6ec1bd38fd4f4ab26d11d5caad2642"}'></script>
+
+</body>
+</html>

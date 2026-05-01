@@ -1,0 +1,59 @@
+<!-- 1. Füge dies in deinen <style> Bereich ein -->
+<style>
+  .ctrl-stage { position: relative; }
+  .ctrl-img-backlayer {
+    position: absolute;
+    width: 100%;
+    height: auto;
+    z-index: 1; /* Hinter dem SVG */
+    pointer-events: none;
+  }
+  .ctrl-svg { position: relative; z-index: 2; } /* SVG über das Bild */
+  .hidden { display: none !important; }
+</style>
+
+<!-- 2. Ersetze deinen <div class="ctrl-stage"> Bereich hiermit -->
+<div class="ctrl-stage">
+  <!-- Die neuen Bilder -->
+  <img id="img-real-front" src="VorderseiteIMG_0611.jpeg" class="ctrl-img-backlayer" alt="Front">
+  <img id="img-real-back" src="Photoroom_20260501_090821.png" class="ctrl-img-backlayer hidden" alt="Back">
+
+  <!-- Deine originalen SVGs (Lass deine Pfade hier drin!) -->
+  <svg id="svg-front" class="ctrl-svg" viewBox="0 0 600 480" ...> 
+    <!-- Dein Inhalt -->
+  </svg>
+  
+  <svg id="svg-back" class="ctrl-svg hidden" viewBox="0 0 600 480" ...>
+    <!-- Dein Inhalt -->
+  </svg>
+</div>
+
+<!-- 3. Ersetze deine setView Funktion im <script> hiermit -->
+<script>
+function setView(view) {
+  haptic(20);
+  
+  // Buttons umschalten
+  document.querySelectorAll('.ctrl-toggle button').forEach(b => b.classList.remove('active'));
+  
+  // Elemente definieren
+  const fSvg = document.getElementById('svg-front');
+  const bSvg = document.getElementById('svg-back');
+  const fImg = document.getElementById('img-real-front');
+  const bImg = document.getElementById('img-real-back');
+
+  if (view === 'front') {
+    document.getElementById('view-front-btn').classList.add('active');
+    fSvg.classList.remove('hidden');
+    fImg.classList.remove('hidden');
+    bSvg.classList.add('hidden');
+    bImg.classList.add('hidden');
+  } else {
+    document.getElementById('view-back-btn').classList.add('active');
+    fSvg.classList.add('hidden');
+    fImg.classList.add('hidden');
+    bSvg.classList.remove('hidden');
+    bImg.classList.remove('hidden');
+  }
+}
+</script>

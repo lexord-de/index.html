@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5">
+<title>PS5 Controller Konfigurator | LEXORD®</title>
+<meta name="description" content="Konfiguriere deinen perfekten PS5 Controller — Hall Effect, TMR Sticks, Paddles, Gravur. Made in Germany.">
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --neon:#00f2ff;--neon-dim:rgba(0,242,255,.12);
+  --purple:#bc13fe;--green:#00b67a;--err:#ff4d4f;
+  --bg:#020207;--card:rgba(12,12,16,.7);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{overflow-x:hidden}
+body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-height:100vh;padding-bottom:100px}
+
+/* ═══ AURORA BG ═══ */
+.aurora{position:fixed;inset:0;z-index:-3;background:linear-gradient(180deg,#020207,#04040a);overflow:hidden}
+.aurora-blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;animation:auroraFloat 25s ease-in-out infinite}
+.aurora-blob:nth-child(1){width:55%;height:55%;background:radial-gradient(circle,rgba(0,242,255,.45),transparent 70%);top:-10%;left:-10%}
+.aurora-blob:nth-child(2){width:50%;height:50%;background:radial-gradient(circle,rgba(188,19,254,.4),transparent 70%);bottom:-10%;right:-10%;animation-delay:-8s;animation-duration:30s}
+.aurora-blob:nth-child(3){width:40%;height:40%;background:radial-gradient(circle,rgba(255,46,110,.25),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:-15s}
+@keyframes auroraFloat{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(15%,-10%) scale(1.1)}}
+.grid-overlay{position:fixed;inset:0;z-index:-2;background-image:linear-gradient(rgba(0,242,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,242,255,.025) 1px,transparent 1px);background-size:50px 50px;pointer-events:none}
+#particles-canvas{position:fixed;inset:0;z-index:-1;pointer-events:none}
+
+/* ═══ HEADER ═══ */
+.cfg-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 5%;background:rgba(2,2,4,.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,242,255,.12)}
+.cfg-back{display:inline-flex;align-items:center;gap:7px;font-family:‘Orbitron’;font-size:9px;letter-spacing:2px;font-weight:700;color:#aaa;text-decoration:none;padding:9px 14px;border:1px solid #1a1a1e;border-radius:10px;background:rgba(10,10,12,.6);transition:.25s}
+.cfg-back:hover{color:var(–neon);border-color:var(–neon)}
+.cfg-title{font-family:‘Orbitron’;font-weight:900;font-size:11px;letter-spacing:3px;color:#ddd;text-align:center;flex:1}
+.cfg-title-dot{color:var(–neon)}
+.cfg-live-badge{font-family:‘Orbitron’;font-size:8px;letter-spacing:1.5px;color:var(–neon);background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.25);padding:6px 10px;border-radius:7px}
+.cfg-live-badge::before{content:’’;display:inline-block;width:5px;height:5px;background:var(–neon);border-radius:50%;margin-right:5px;animation:liveDot 1.5s infinite;box-shadow:0 0 8px var(–neon)}
+@keyframes liveDot{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ═══ HERO ═══ */
+.cfg-hero{text-align:center;padding:40px 5% 25px}
+.cfg-hero-eyebrow{font-family:‘Orbitron’;font-size:8.5px;letter-spacing:5px;color:var(–neon);margin-bottom:12px;opacity:.85}
+.cfg-hero-title{font-family:‘Orbitron’;font-weight:900;font-size:clamp(1.4rem,5vw,2.4rem);letter-spacing:-1px;line-height:1.1;margin-bottom:8px;background:linear-gradient(180deg,#fff,rgba(255,255,255,.5));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.cfg-hero-sub{font-family:‘Orbitron’;font-size:9px;letter-spacing:3px;color:#666}
+
+/* ═══ CONTROLLER STAGE ═══ */
+.ctrl-wrap{display:flex;flex-direction:column;align-items:center;padding:10px 5% 30px;position:relative}
+.ctrl-toggle{display:flex;gap:6px;margin-bottom:18px;background:rgba(12,12,14,.7);padding:4px;border-radius:11px;border:1px solid rgba(255,255,255,.06);backdrop-filter:blur(8px)}
+.ctrl-toggle button{font-family:‘Orbitron’;font-size:9px;letter-spacing:1.5px;font-weight:700;background:transparent;border:none;color:#888;padding:9px 16px;border-radius:8px;cursor:pointer;transition:.25s}
+.ctrl-toggle button.active{background:linear-gradient(135deg,rgba(0,242,255,.18),rgba(0,242,255,.08));color:var(–neon);box-shadow:0 0 12px rgba(0,242,255,.2)}
+.ctrl-stage{position:relative;width:100%;max-width:560px;aspect-ratio:1.15/1;display:flex;align-items:center;justify-content:center}
+.ctrl-stage::before{content:’’;position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(0,242,255,.18) 0%,transparent 60%);filter:blur(30px);pointer-events:none;z-index:0}
+
+/* SVG controller */
+.ctrl-svg{width:100%;height:100%;position:relative;z-index:2;filter:drop-shadow(0 30px 50px rgba(0,242,255,.18)) drop-shadow(0 12px 24px rgba(0,0,0,.8))}
+.ctrl-svg-wrap{position:relative;z-index:2;animation:ctrlFloat 5s ease-in-out infinite}
+@keyframes ctrlFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+/* Tech badges */
+.tech-badge{position:absolute;background:rgba(255,255,255,.97);color:#111;font-family:‘Inter’;font-size:9.5px;font-weight:600;line-height:1.4;padding:7px 11px;border-radius:8px;pointer-events:none;z-index:5;box-shadow:0 8px 20px rgba(0,0,0,.5),0 0 0 1px rgba(0,242,255,.3);max-width:160px;animation:badgeIn .5s cubic-bezier(.2,.8,.2,1)}
+.tech-badge::after{content:’’;position:absolute;width:11px;height:11px;background:rgba(255,255,255,.97);transform:rotate(45deg)}
+.tech-badge.bottom::after{top:-5px;left:18px}
+.tech-badge.top::after{bottom:-5px;left:18px}
+.tech-badge small{display:block;font-size:7.5px;color:#777;font-weight:400;margin-top:2px;letter-spacing:.3px}
+.tech-badge.neon-style{background:linear-gradient(135deg,#0a0a0c,#06060a);color:var(–neon);box-shadow:0 8px 20px rgba(0,0,0,.7),0 0 0 1px rgba(0,242,255,.5)}
+.tech-badge.neon-style::after{background:linear-gradient(135deg,#0a0a0c,#06060a)}
+.tech-badge.neon-style small{color:#888}
+@keyframes badgeIn{from{opacity:0;transform:translateY(8px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* engraving */
+.engrave-on-touchpad{position:absolute;top:34%;left:50%;transform:translate(-50%,-50%);font-family:‘Orbitron’;font-weight:900;font-size:clamp(11px,2vw,15px);letter-spacing:2px;pointer-events:none;z-index:6;opacity:0;transition:.3s;text-shadow:0 1px 2px rgba(0,0,0,.3);white-space:nowrap}
+.engrave-on-touchpad.show{opacity:.95}
+
+/* ═══ PRESETS ═══ */
+.preset-wrap{padding:5px 5% 25px}
+.preset-row{max-width:780px;margin:0 auto;display:flex;gap:8px;overflow-x:auto;padding:4px 0;scrollbar-width:none}
+.preset-row::-webkit-scrollbar{display:none}
+.preset-btn{flex-shrink:0;padding:11px 16px;border-radius:11px;border:1.5px solid rgba(255,255,255,.06);background:rgba(255,255,255,.025);font-family:‘Orbitron’;font-size:9px;letter-spacing:1.5px;font-weight:700;color:#bbb;cursor:pointer;white-space:nowrap;transition:.25s;display:inline-flex;align-items:center;gap:7px;backdrop-filter:blur(8px)}
+.preset-btn:hover{border-color:var(–neon);color:var(–neon);transform:translateY(-2px)}
+.preset-btn.active{border-color:var(–neon);background:rgba(0,242,255,.08);color:var(–neon)}
+.preset-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+/* ═══ DIVIDER ═══ */
+.cfg-divider{padding:10px 5% 0;text-align:center}
+.cfg-divider-line{height:1px;background:linear-gradient(90deg,transparent,rgba(0,242,255,.4),transparent);margin:0 auto 14px;max-width:300px}
+.cfg-divider-text{font-family:‘Orbitron’;font-size:10px;letter-spacing:4px;color:var(–neon);margin-bottom:5px;font-weight:700}
+.cfg-divider-sub{font-size:11px;color:#888}
+
+/* ═══ ACCORDIONS ═══ */
+.cfg-sections{padding:18px 5% 30px;max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.cfg-acc{background:var(–card);border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden;backdrop-filter:blur(10px);transition:border-color .3s}
+.cfg-acc:hover{border-color:rgba(0,242,255,.18)}
+.cfg-acc.open{border-color:rgba(0,242,255,.3);box-shadow:0 8px 30px rgba(0,242,255,.08)}
+.cfg-acc-hd{display:flex;align-items:center;gap:14px;padding:18px;cursor:pointer;font-family:‘Orbitron’;font-size:11px;font-weight:700;color:#ddd;letter-spacing:1.5px;user-select:none}
+.cfg-acc-icon{width:40px;height:40px;background:linear-gradient(135deg,rgba(0,242,255,.1),rgba(0,242,255,.04));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;border:1px solid rgba(0,242,255,.15)}
+.cfg-acc-name{flex:1}
+.cfg-acc-cur{font-family:‘Inter’;font-size:9.5px;font-weight:400;color:#777;margin-top:3px;letter-spacing:0;text-transform:none}
+.cfg-acc-cur strong{color:var(–neon);font-weight:600}
+.cfg-acc-arr{font-size:14px;color:#555;transition:.3s}
+.cfg-acc.open .cfg-acc-arr{transform:rotate(90deg);color:var(–neon)}
+.cfg-acc-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.cfg-acc.open .cfg-acc-body{max-height:1500px}
+.cfg-acc-content{padding:0 18px 20px}
+
+/* color grid */
+.cfg-color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:10px;margin-top:6px}
+.cfg-color-item{aspect-ratio:1/1;border-radius:11px;cursor:pointer;border:2px solid rgba(255,255,255,.05);transition:.25s;position:relative;overflow:visible}
+.cfg-color-item:hover{transform:scale(1.06);border-color:rgba(0,242,255,.4);z-index:5}
+.cfg-color-item.sel{border-color:var(–neon);box-shadow:0 0 0 2px rgba(0,242,255,.3),0 4px 16px rgba(0,242,255,.4);transform:scale(1.05)}
+.cfg-color-item.sel::after{content:‘✓’;position:absolute;top:3px;right:3px;width:18px;height:18px;background:var(–neon);color:#000;font-size:11px;font-weight:900;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.cfg-color-tip{position:absolute;bottom:-32px;left:50%;transform:translateX(-50%);background:#1a1a1e;color:#fff;font-family:‘Orbitron’;font-size:8px;letter-spacing:1px;padding:5px 9px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:.2s;z-index:20;border:1px solid rgba(255,255,255,.08)}
+.cfg-color-item:hover .cfg-color-tip{opacity:1;bottom:-28px}
+.cfg-color-tip strong{color:var(–neon)}
+
+/* opt list */
+.cfg-opt-list{display:flex;flex-direction:column;gap:8px}
+.cfg-opt{display:flex;align-items:center;gap:14px;padding:14px 16px;background:rgba(255,255,255,.02);border:1.5px solid rgba(255,255,255,.05);border-radius:11px;cursor:pointer;transition:.25s;text-align:left}
+.cfg-opt:hover{border-color:rgba(0,242,255,.3);background:rgba(0,242,255,.03)}
+.cfg-opt.sel{border-color:var(–neon);background:rgba(0,242,255,.06);box-shadow:0 0 12px rgba(0,242,255,.1)}
+.cfg-opt-radio{width:18px;height:18px;border:2px solid rgba(255,255,255,.2);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.25s}
+.cfg-opt.sel .cfg-opt-radio{border-color:var(–neon);background:var(–neon)}
+.cfg-opt.sel .cfg-opt-radio::after{content:’’;width:6px;height:6px;background:#000;border-radius:50%}
+.cfg-opt-info{flex:1}
+.cfg-opt-name{font-family:‘Orbitron’;font-size:10.5px;font-weight:700;color:#fff;letter-spacing:.5px;line-height:1.3}
+.cfg-opt-desc{font-size:10.5px;color:#777;margin-top:3px;line-height:1.4}
+.cfg-opt-price{font-family:‘Orbitron’;font-size:10.5px;font-weight:900;color:var(–neon);flex-shrink:0;text-align:right}
+.cfg-opt-price.free{color:#666}
+.cfg-opt-badge{display:inline-block;background:linear-gradient(135deg,var(–neon),#00bdd6);color:#000;font-family:‘Orbitron’;font-size:7px;font-weight:900;padding:3px 6px;border-radius:4px;margin-left:7px;letter-spacing:.5px}
+
+/* engrave */
+.cfg-engrave-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.05);border-radius:11px;padding:13px 15px;transition:.25s}
+.cfg-engrave-row:focus-within{border-color:var(–neon);background:rgba(0,242,255,.03)}
+.cfg-engrave-row input{flex:1;background:transparent;border:none;color:#fff;font-family:‘Orbitron’;font-size:13px;letter-spacing:1.5px;outline:none;text-transform:uppercase}
+.cfg-engrave-row input::placeholder{color:#444;text-transform:none}
+.cfg-engrave-cnt{font-family:‘Orbitron’;font-size:9px;color:#555}
+.cfg-engrave-color-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.cfg-engrave-color{width:30px;height:30px;border-radius:6px;cursor:pointer;border:2px solid rgba(255,255,255,.1);transition:.2s}
+.cfg-engrave-color:hover{transform:scale(1.1)}
+.cfg-engrave-color.sel{border-color:var(–neon);box-shadow:0 0 0 2px rgba(0,242,255,.3)}
+
+/* ═══ BOTTOM BAR ═══ */
+.cfg-bottom{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(4,4,8,.96);backdrop-filter:blur(28px);border-top:1px solid rgba(0,242,255,.18);padding:12px 5%;display:flex;align-items:center;gap:12px;box-shadow:0 -10px 40px rgba(0,0,0,.7)}
+.cfg-bottom-price{flex:1;min-width:0}
+.cfg-bottom-price-lbl{font-family:‘Orbitron’;font-size:7.5px;color:#666;letter-spacing:1.5px}
+.cfg-bottom-price-val{font-family:‘Orbitron’;font-size:22px;font-weight:900;color:#fff;line-height:1;margin-top:3px}
+.cfg-bottom-price-val span{color:var(–neon)}
+.cfg-qty{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:9px;padding:4px}
+.cfg-qty button{width:30px;height:30px;background:transparent;border:none;color:#fff;font-size:18px;cursor:pointer;border-radius:6px;transition:.2s}
+.cfg-qty button:hover{background:rgba(0,242,255,.1);color:var(–neon)}
+.cfg-qty span{font-family:‘Orbitron’;font-size:13px;font-weight:700;min-width:22px;text-align:center}
+.cfg-add-cart{font-family:‘Orbitron’;font-size:10px;letter-spacing:1.5px;font-weight:900;color:#000;background:linear-gradient(135deg,var(–neon),#00bdd6);border:none;padding:14px 22px;border-radius:11px;cursor:pointer;box-shadow:0 6px 20px rgba(0,242,255,.45);white-space:nowrap;transition:.25s}
+.cfg-add-cart:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,242,255,.6)}
+
+/* toast */
+#toast{position:fixed;top:80px;right:20px;z-index:1000;background:linear-gradient(135deg,#0a0a0c,#06060a);border:1px solid var(–neon);border-radius:12px;padding:14px 18px;font-family:‘Orbitron’;font-size:10px;color:var(–neon);letter-spacing:1.5px;box-shadow:0 8px 24px rgba(0,242,255,.3);transform:translateX(120%);transition:.4s;max-width:280px}
+#toast.show{transform:translateX(0)}
+
+/* loading */
+#cfg-loading{position:fixed;inset:0;background:#020207;z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;transition:opacity .6s}
+#cfg-loading.hidden{opacity:0;pointer-events:none}
+.cfg-loader-spinner{width:50px;height:50px;border:3px solid rgba(0,242,255,.15);border-top-color:var(–neon);border-radius:50%;animation:spinL 1s linear infinite}
+@keyframes spinL{to{transform:rotate(360deg)}}
+.cfg-loader-text{font-family:‘Orbitron’;font-size:9px;color:var(–neon);letter-spacing:3px;font-weight:700}
+
+/* benefits row */
+.benefits-row{padding:30px 5%;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.benefit-item{padding:16px;background:rgba(12,12,16,.5);border:1px solid rgba(255,255,255,.05);border-radius:12px;text-align:center}
+.benefit-icon{font-size:22px;margin-bottom:8px}
+.benefit-title{font-family:‘Orbitron’;font-size:9px;color:var(–neon);letter-spacing:1.5px;margin-bottom:5px;font-weight:700}
+.benefit-desc{font-size:10.5px;color:#666;line-height:1.5}
+
+@media(max-width:520px){
+.ctrl-stage{max-width:380px}
+.cfg-bottom-price-val{font-size:18px}
+.cfg-add-cart{padding:12px 16px;font-size:9px}
+.cfg-acc-hd{padding:14px}
+.cfg-acc-content{padding:0 14px 16px}
+.tech-badge{font-size:8.5px;max-width:130px;padding:6px 9px}
+}
+</style>
+
+</head>
+<body>
+
+<div class="aurora"><div class="aurora-blob"></div><div class="aurora-blob"></div><div class="aurora-blob"></div></div>
+<div class="grid-overlay"></div>
+<canvas id="particles-canvas"></canvas>
+
+<div id="cfg-loading">
+  <div class="cfg-loader-spinner"></div>
+  <div class="cfg-loader-text">⟫ KONFIGURATOR LÄDT ⟪</div>
+</div>
+
+<header class="cfg-header">
+  <a href="index.html" class="cfg-back">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    ZURÜCK
+  </a>
+  <div class="cfg-title">PS5<span class="cfg-title-dot"> · </span>KONFIGURATOR</div>
+  <div class="cfg-live-badge">LIVE</div>
+</header>
+
+<div class="cfg-hero">
+  <div class="cfg-hero-eyebrow">⟫ PROFESSIONAL CUSTOM CONTROLLER ⟪</div>
+  <h1 class="cfg-hero-title">BAUE DEINEN PERFEKTEN CONTROLLER</h1>
+  <p class="cfg-hero-sub">100+ FARBEN · TMR · HALL EFFECT · PADDLES · GRAVUR</p>
+</div>
+
+<div class="ctrl-wrap">
+  <div class="ctrl-toggle">
+    <button class="active" id="view-front-btn" onclick="setView('front')">⟫ VORDERSEITE</button>
+    <button id="view-back-btn" onclick="setView('back')">RÜCKSEITE ⟪</button>
+  </div>
+
+  <div class="ctrl-stage">
+    <div class="ctrl-svg-wrap">
+      <!-- ═══ SVG CONTROLLER (FRONT) ═══ -->
+      <svg id="svg-front" class="ctrl-svg" viewBox="0 0 600 480" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="frontShellGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffffff" id="grad-frontshell-1"/>
+            <stop offset="100%" stop-color="#e0e0e3" id="grad-frontshell-2"/>
+          </linearGradient>
+          <linearGradient id="bottomShellGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffffff" id="grad-backshell-1"/>
+            <stop offset="100%" stop-color="#d8d8db" id="grad-backshell-2"/>
+          </linearGradient>
+          <radialGradient id="lightbarGrad" cx="50%" cy="50%">
+            <stop offset="0%" stop-color="#80c8ff" stop-opacity=".95" id="grad-lightbar-1"/>
+            <stop offset="100%" stop-color="#4a90e2" stop-opacity=".7" id="grad-lightbar-2"/>
+          </radialGradient>
+          <radialGradient id="touchpadGrad" cx="50%" cy="50%">
+            <stop offset="0%" stop-color="#1a1a1c"/>
+            <stop offset="100%" stop-color="#0a0a0c"/>
+          </radialGradient>
+          <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="3"/>
+          </filter>
+        </defs>
+
+```
+    <!-- main body shape (DualSense-like) -->
+    <path id="shape-frontshell" d="M 90 130 
+      Q 90 90 130 80
+      L 230 70
+      Q 280 65 300 80
+      Q 320 65 370 70
+      L 470 80
+      Q 510 90 510 130
+      L 510 220
+      Q 510 280 460 330
+      L 420 365
+      Q 380 395 340 380
+      L 320 370
+      Q 300 360 280 370
+      L 260 380
+      Q 220 395 180 365
+      L 140 330
+      Q 90 280 90 220 Z" 
+      fill="url(#frontShellGrad)" stroke="#1a1a1c" stroke-width="1.5"/>
+
+    <!-- grip handles bottom -->
+    <ellipse id="grip-l" cx="155" cy="345" rx="48" ry="40" fill="url(#bottomShellGrad)" stroke="#1a1a1c" stroke-width="1"/>
+    <ellipse id="grip-r" cx="445" cy="345" rx="48" ry="40" fill="url(#bottomShellGrad)" stroke="#1a1a1c" stroke-width="1"/>
+
+    <!-- D-PAD (left top area) -->
+    <g id="dpad-group">
+      <rect id="dpad-cross-v" x="148" y="148" width="22" height="56" rx="3" fill="#f0f0f2" stroke="#888" stroke-width=".5"/>
+      <rect id="dpad-cross-h" x="131" y="165" width="56" height="22" rx="3" fill="#f0f0f2" stroke="#888" stroke-width=".5"/>
+      <circle cx="159" cy="176" r="3" fill="#bbb"/>
+    </g>
+
+    <!-- ACTION BUTTONS (right top: △ ○ ✕ □) -->
+    <g id="buttons-group">
+      <circle id="btn-triangle" cx="445" cy="148" r="14" fill="#f0f0f2" stroke="#888" stroke-width=".5"/>
+      <text x="445" y="153" text-anchor="middle" fill="#5a8b3e" font-family="Arial" font-size="14" font-weight="bold" pointer-events="none">△</text>
+      <circle id="btn-circle" cx="478" cy="178" r="14" fill="#f0f0f2" stroke="#888" stroke-width=".5"/>
+      <text x="478" y="183" text-anchor="middle" fill="#c5364d" font-family="Arial" font-size="14" font-weight="bold" pointer-events="none">○</text>
+      <circle id="btn-cross" cx="445" cy="208" r="14" fill="#f0f0f2" stroke="#888" stroke-width=".5"/>
+      <text x="445" y="213" text-anchor="middle" fill="#5b8ad9" font-family="Arial" font-size="14" font-weight="bold" pointer-events="none">✕</text>
+      <circle id="btn-square" cx="412" cy="178" r="14" fill="#f0f0f2" stroke="#888" stroke-width=".5"/>
+      <text x="412" y="183" text-anchor="middle" fill="#d973c4" font-family="Arial" font-size="14" font-weight="bold" pointer-events="none">□</text>
+    </g>
+
+    <!-- ANALOG STICKS -->
+    <g id="sticks-group">
+      <!-- left stick base + cap -->
+      <circle cx="225" cy="265" r="32" fill="#0d0d0f" stroke="#1a1a1e" stroke-width="1"/>
+      <circle id="stickcap-l" cx="225" cy="265" r="22" fill="#0a0a0c" stroke="#222" stroke-width="1"/>
+      <circle cx="225" cy="265" r="14" fill="none" stroke="#444" stroke-width=".5"/>
+      <!-- right stick -->
+      <circle cx="375" cy="265" r="32" fill="#0d0d0f" stroke="#1a1a1e" stroke-width="1"/>
+      <circle id="stickcap-r" cx="375" cy="265" r="22" fill="#0a0a0c" stroke="#222" stroke-width="1"/>
+      <circle cx="375" cy="265" r="14" fill="none" stroke="#444" stroke-width=".5"/>
+    </g>
+
+    <!-- TOUCHPAD (center top) -->
+    <rect id="touchpad" x="220" y="115" width="160" height="55" rx="6" fill="url(#touchpadGrad)" stroke="#222" stroke-width="1"/>
+    <text id="engrave-svg" x="300" y="148" text-anchor="middle" fill="#444" font-family="Orbitron" font-size="13" font-weight="900" letter-spacing="1.5" pointer-events="none"></text>
+
+    <!-- LIGHTBAR (around touchpad) -->
+    <rect id="lightbar" x="218" y="113" width="164" height="59" rx="7" fill="none" stroke="url(#lightbarGrad)" stroke-width="2.5" opacity=".75"/>
+
+    <!-- PS button + logo + share/options -->
+    <circle id="btn-ps" cx="300" cy="220" r="9" fill="#0a0a0c" stroke="#333" stroke-width=".5"/>
+    <text x="300" y="224" text-anchor="middle" fill="#666" font-family="Arial" font-size="9" font-weight="bold" pointer-events="none">PS</text>
+    <rect id="btn-share" x="195" y="135" width="14" height="9" rx="1.5" fill="#dadadd"/>
+    <rect id="btn-options" x="391" y="135" width="14" height="9" rx="1.5" fill="#dadadd"/>
+
+    <!-- SPEAKER GRILLE (bottom center) -->
+    <rect x="278" y="280" width="44" height="6" rx="2" fill="#0a0a0c" opacity=".4"/>
+
+    <!-- TRIGGERS (top edge, partial visible) -->
+    <path id="trigger-l" d="M 105 95 Q 105 70 145 65 L 175 60 Q 195 60 195 75 L 195 90 Q 165 95 135 95 Z" fill="#f0f0f2" stroke="#888" stroke-width=".5"/>
+    <path id="trigger-r" d="M 495 95 Q 495 70 455 65 L 425 60 Q 405 60 405 75 L 405 90 Q 435 95 465 95 Z" fill="#f0f0f2" stroke="#888" stroke-width=".5"/>
+  </svg>
+
+  <!-- ═══ SVG CONTROLLER (BACK) ═══ -->
+  <svg id="IMG_0611.jpeg" class="ctrl-svg" viewBox="0 0 600 480" xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <defs>
+      <linearGradient id="backShellGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#ffffff" id="grad-back-1"/>
+        <stop offset="100%" stop-color="#d0d0d3" id="grad-back-2"/>
+      </linearGradient>
+    </defs>
+    <path id="shape-back-main" d="M 90 130 
+      Q 90 90 130 80
+      L 230 70
+      Q 280 65 300 80
+      Q 320 65 370 70
+      L 470 80
+      Q 510 90 510 130
+      L 510 220
+      Q 510 280 460 330
+      L 420 365
+      Q 380 395 340 380
+      L 320 370
+      Q 300 360 280 370
+      L 260 380
+      Q 220 395 180 365
+      L 140 330
+      Q 90 280 90 220 Z" 
+      fill="url(#backShellGrad)" stroke="#1a1a1c" stroke-width="1.5"/>
+    <ellipse cx="155" cy="345" rx="48" ry="40" fill="url(#backShellGrad)" stroke="#1a1a1c" stroke-width="1"/>
+    <ellipse cx="445" cy="345" rx="48" ry="40" fill="url(#backShellGrad)" stroke="#1a1a1c" stroke-width="1"/>
+    <!-- Battery indicator -->
+    <rect x="240" y="180" width="120" height="40" rx="6" fill="#0a0a0c" opacity=".15" stroke="#888" stroke-width=".5"/>
+    <text x="300" y="205" text-anchor="middle" fill="#666" font-family="Orbitron" font-size="11" font-weight="700">BATTERY</text>
+    <!-- Paddle areas -->
+    <g id="paddle-group" style="display:none">
+      <ellipse id="paddle-1" cx="170" cy="280" rx="22" ry="9" fill="#1a1a1c" stroke="#0a0a0c" stroke-width="1"/>
+      <ellipse id="paddle-2" cx="430" cy="280" rx="22" ry="9" fill="#1a1a1c" stroke="#0a0a0c" stroke-width="1"/>
+      <ellipse id="paddle-3" cx="170" cy="310" rx="22" ry="9" fill="#1a1a1c" stroke="#0a0a0c" stroke-width="1" style="display:none"/>
+      <ellipse id="paddle-4" cx="430" cy="310" rx="22" ry="9" fill="#1a1a1c" stroke="#0a0a0c" stroke-width="1" style="display:none"/>
+    </g>
+    <!-- Screws -->
+    <circle cx="125" cy="255" r="3" fill="#444"/>
+    <circle cx="475" cy="255" r="3" fill="#444"/>
+    <circle cx="125" cy="155" r="3" fill="#444"/>
+    <circle cx="475" cy="155" r="3" fill="#444"/>
+    <!-- back engraving -->
+    <text id="engrave-svg-back" x="300" y="290" text-anchor="middle" fill="#444" font-family="Orbitron" font-size="13" font-weight="900" letter-spacing="1.5" pointer-events="none"></text>
+  </svg>
+</div>
+
+<!-- Tech badges -->
+<div class="tech-badge bottom" id="badge-stick" style="display:none;top:62%;left:38%"></div>
+<div class="tech-badge top" id="badge-trigger" style="display:none;top:6%;left:50%"></div>
+<div class="tech-badge bottom" id="badge-paddle" style="display:none;top:78%;left:54%"></div>
+```
+
+  </div>
+</div>
+
+<!-- presets -->
+
+<div class="preset-wrap">
+  <div class="preset-row">
+    <button class="preset-btn active" data-preset="default" onclick="loadPreset('default',this)"><span class="preset-dot" style="background:#fff"></span>STANDARD</button>
+    <button class="preset-btn" data-preset="stealth" onclick="loadPreset('stealth',this)"><span class="preset-dot" style="background:#1a1a1c"></span>STEALTH</button>
+    <button class="preset-btn" data-preset="neon" onclick="loadPreset('neon',this)"><span class="preset-dot" style="background:#00f2ff"></span>NEON</button>
+    <button class="preset-btn" data-preset="fire" onclick="loadPreset('fire',this)"><span class="preset-dot" style="background:#dc143c"></span>FIRE</button>
+    <button class="preset-btn" data-preset="ice" onclick="loadPreset('ice',this)"><span class="preset-dot" style="background:#80d8ff"></span>ICE</button>
+    <button class="preset-btn" data-preset="gold" onclick="loadPreset('gold',this)"><span class="preset-dot" style="background:#d4af37"></span>GOLD</button>
+    <button class="preset-btn" data-preset="cyber" onclick="loadPreset('cyber',this)"><span class="preset-dot" style="background:#bc13fe"></span>CYBER</button>
+    <button class="preset-btn" data-preset="emerald" onclick="loadPreset('emerald',this)"><span class="preset-dot" style="background:#00b67a"></span>EMERALD</button>
+  </div>
+</div>
+
+<div class="cfg-divider">
+  <div class="cfg-divider-line"></div>
+  <div class="cfg-divider-text">⟫ DEINE KONFIGURATION ⟪</div>
+  <div class="cfg-divider-sub">Wähle Farben, Tech & Personalisierung</div>
+</div>
+
+<div class="cfg-sections">
+  <div class="cfg-acc"><div class="cfg-acc-hd" onclick="toggleAcc(this)"><div class="cfg-acc-icon">🎨</div><div class="cfg-acc-name">FRONTGEHÄUSE<div class="cfg-acc-cur" id="cur-frontshell"><strong>Weiß</strong></div></div><div class="cfg-acc-arr">›</div></div><div class="cfg-acc-body"><div class="cfg-acc-content"><div class="cfg-color-grid" id="grid-frontshell"></div></div></div></div>
+  <div class="cfg-acc"><div class="cfg-acc-hd" onclick="toggleAcc(this)"><div class="cfg-acc-icon">🛡</div><div class="cfg-acc-name">RÜCKSCHALE<div class="cfg-acc-cur" id="cur-backshell"><strong>Weiß</strong></div></div><div class="cfg-acc-arr">›</div></div><div class="cfg-acc-body"><div class="cfg-acc-content"><div class="cfg-color-grid" id="grid-backshell"></div></div></div></div>
+  <div class="cfg-acc"><div class="cfg-acc-hd" onclick="toggleAcc(this)"><div class="cfg-acc-icon">🔘</div><div class="cfg-acc-name">ACTION BUTTONS<div class="cfg-acc-cur" id="cur-buttons"><strong>Standard</strong></div></div><div class="cfg-acc-arr">›</div></div><div class="cfg-acc-body"><div class="cfg-acc-content"><div class="cfg-color-grid" id="grid-buttons"></div></div></div></div>
+  <div class="cfg-acc"><div class="cfg-acc-hd" onclick="toggleAcc(this)"><div class="cfg-acc-icon">✚</div><div class="cfg-acc-name">D-PAD<div class="cfg-acc-cur" id="cur-dpad"><strong>Standard</strong></div></div><div class="cfg-acc-arr">›</div></div><div class="cfg-acc-body"><div class="cfg-acc-content"><div class="cfg-color-grid" id="grid-dpad"></div></div></div></div>
+  <div class="cfg-acc"><div class="cfg-acc-hd" onclick="toggleAcc(this)"><div class="cfg-acc-icon">🕹</div><div class="cfg-acc-name">STICK CAPS<div class="cfg-acc-cur" id="cur-stickcap"><strong>Schwarz</strong></div></div><div class="cfg-acc-arr">›</div></div><div class="cfg-acc-body"><div class="cfg-acc-content"><div class="cfg-color-grid" id="grid-stickcap"></div></div></div></div>
+  <div class="cfg-acc"><div class="cfg-acc-hd" onclick="toggleAcc(this)"><div class="cfg-acc-icon">🎯</div><div class="cfg-acc-name">TRIGGER FARBE<div class="cfg-acc-cur" id="cur-triggercolor"><strong>Standard</strong></div></div><div class="cfg-acc-arr">›</div></div><div class="cfg-acc-body"><div class="cfg-acc-content"><div class="cfg-color-grid" id="grid-triggercolor"></div></div></div></div>
+  <div class="cfg-acc"><div class="cfg-acc-hd" onclick="toggleAcc(this)"><div class="cfg-acc-icon">💡</div><div class="cfg-acc-name">LIGHT BAR<div class="cfg-acc-cur" id="cur-lightbar"><strong>Blau</strong></div></div><div class="cfg-acc-arr">›</div></div><div class="cfg-acc-body"><div class="cfg-acc-content"><div class="cfg-color-grid" id="grid-lightbar"></div></div></div></div>
+  <div class="cfg-acc"><div class="cfg-acc-hd" onclick="toggleAcc(this)"><div class="cfg-acc-icon">⚡</div><div class="cfg-acc-name">STICK TECHNOLOGIE<div class="cfg-acc-cur" id="cur-stick"><strong>Standard</strong></div></div><div class="cfg-acc-arr">›</div></div><div class="cfg-acc-body"><div class="cfg-acc-content"><div class="cfg-opt-list" id="opt-stick"></div></div></div></div>
+  <div class="cfg-acc"><div class="cfg-acc-hd" onclick="toggleAcc(this)"><div class="cfg-acc-icon">🎮</div><div class="cfg-acc-name">TRIGGER TYP<div class="cfg-acc-cur" id="cur-trigger"><strong>Adaptive</strong></div></div><div class="cfg-acc-arr">›</div></div><div class="cfg-acc-body"><div class="cfg-acc-content"><div class="cfg-opt-list" id="opt-trigger"></div></div></div></div>
+  <div class="cfg-acc"><div class="cfg-acc-hd" onclick="toggleAcc(this)"><div class="cfg-acc-icon">⚙</div><div class="cfg-acc-name">BACK PADDLES<div class="cfg-acc-cur" id="cur-paddle"><strong>Keine</strong></div></div><div class="cfg-acc-arr">›</div></div><div class="cfg-acc-body"><div class="cfg-acc-content"><div class="cfg-opt-list" id="opt-paddle"></div></div></div></div>
+  <div class="cfg-acc"><div class="cfg-acc-hd" onclick="toggleAcc(this)"><div class="cfg-acc-icon">✨</div><div class="cfg-acc-name">GRAVUR<div class="cfg-acc-cur" id="cur-engraving"><strong>Keine</strong></div></div><div class="cfg-acc-arr">›</div></div><div class="cfg-acc-body"><div class="cfg-acc-content"><div style="font-size:10.5px;color:#888;margin-bottom:10px;line-height:1.5">Personalisiere mit Namen, Gamertag oder Team. Max. 12 Zeichen — direkt auf Touchpad eingraviert.</div><div class="cfg-engrave-row"><input type="text" id="engrave-input" maxlength="12" placeholder="DEIN TEXT" oninput="updateEngrave(this)"><span class="cfg-engrave-cnt" id="engrave-cnt">0/12</span></div><div style="font-family:'Orbitron';font-size:8px;color:#666;letter-spacing:1.5px;margin-top:14px;margin-bottom:6px">GRAVUR-FARBE</div><div class="cfg-engrave-color-row" id="engrave-color-row"></div><div style="display:flex;justify-content:space-between;margin-top:12px;font-family:'Orbitron';font-size:9.5px"><span style="color:#666">PERSONALISIERUNG</span><span id="price-engraving" style="color:var(--neon)">+0 €</span></div></div></div></div>
+  <div class="cfg-acc"><div class="cfg-acc-hd" onclick="toggleAcc(this)"><div class="cfg-acc-icon">🚀</div><div class="cfg-acc-name">FERTIGUNGSZEIT<div class="cfg-acc-cur" id="cur-express"><strong>Standard 8-12 Tage</strong></div></div><div class="cfg-acc-arr">›</div></div><div class="cfg-acc-body"><div class="cfg-acc-content"><div class="cfg-opt-list" id="opt-express"></div></div></div></div>
+</div>
+
+<!-- benefits -->
+
+<div class="benefits-row">
+  <div class="benefit-item"><div class="benefit-icon">🇩🇪</div><div class="benefit-title">MADE IN GERMANY</div><div class="benefit-desc">Handmontiert in Domsühl</div></div>
+  <div class="benefit-item"><div class="benefit-icon">⚡</div><div class="benefit-title">8-12 TAGE</div><div class="benefit-desc">Premium-Fertigung</div></div>
+  <div class="benefit-item"><div class="benefit-icon">🛡</div><div class="benefit-title">24 MONATE</div><div class="benefit-desc">Gewährleistung</div></div>
+  <div class="benefit-item"><div class="benefit-icon">🔄</div><div class="benefit-title">14 TAGE</div><div class="benefit-desc">Rückgaberecht</div></div>
+</div>
+
+<div class="cfg-bottom">
+  <div class="cfg-bottom-price">
+    <div class="cfg-bottom-price-lbl">⟫ DEIN CONTROLLER</div>
+    <div class="cfg-bottom-price-val">ab <span id="total-price">79,00 €</span></div>
+  </div>
+  <div class="cfg-qty">
+    <button onclick="changeQty(-1)">−</button>
+    <span id="qty-val">1</span>
+    <button onclick="changeQty(1)">+</button>
+  </div>
+  <button class="cfg-add-cart" onclick="addCustomToCart()">IN DEN WARENKORB</button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+'use strict';
+
+function haptic(p){try{if('vibrate' in navigator)navigator.vibrate(p||25);}catch(e){}}
+
+const COLORS={
+  shell:[
+    {name:'Weiß',color:'#ffffff',premium:0,isDefault:true},
+    {name:'Schwarz',color:'#1a1a1c',premium:0},
+    {name:'Mitternacht',color:'#0a1633',premium:8},
+    {name:'Galactic Purple',color:'#3d1a52',premium:8},
+    {name:'Cosmic Red',color:'#5c0d10',premium:8},
+    {name:'Forest Green',color:'#0d2f17',premium:8},
+    {name:'Sunset Orange',color:'#cc4a1a',premium:10},
+    {name:'Pink Punch',color:'#e63174',premium:10},
+    {name:'Cyan Neon',color:'#00b4d8',premium:10},
+    {name:'Lila Neon',color:'#9933ff',premium:10},
+    {name:'Eis Blau',color:'#80d8ff',premium:8},
+    {name:'Mint',color:'#80e6c8',premium:8},
+    {name:'Gold',color:'#d4af37',premium:18},
+    {name:'Chrome',color:'#c0c0c0',premium:18},
+    {name:'Carbon',color:'#1c1c1f',premium:22},
+    {name:'Hologramm',color:'linear-gradient(135deg,#ff6ec4,#7873f5)',realColor:'#b873e5',premium:25}
+  ],
+  buttons:[
+    {name:'Standard',color:'#f0f0f2',premium:0,isDefault:true},
+    {name:'Schwarz',color:'#222222',premium:5},
+    {name:'Cyan',color:'#00f2ff',premium:7},
+    {name:'Pink',color:'#ff2e6e',premium:7},
+    {name:'Gold',color:'#d4af37',premium:12},
+    {name:'Lila',color:'#bc13fe',premium:7},
+    {name:'Rot',color:'#dc143c',premium:7},
+    {name:'Grün',color:'#00b67a',premium:7},
+    {name:'Orange',color:'#ff7a1a',premium:7},
+    {name:'Weiß Klar',color:'#ffffff',premium:5}
+  ],
+  stickcap:[
+    {name:'Schwarz',color:'#0a0a0c',premium:0,isDefault:true},
+    {name:'Weiß',color:'#ffffff',premium:5},
+    {name:'Cyan',color:'#00f2ff',premium:8},
+    {name:'Pink',color:'#ff2e6e',premium:8},
+    {name:'Gold',color:'#d4af37',premium:12},
+    {name:'Rot',color:'#dc143c',premium:8},
+    {name:'Lila',color:'#bc13fe',premium:8},
+    {name:'Grün',color:'#00b67a',premium:8}
+  ],
+  triggercolor:[
+    {name:'Standard',color:'#f0f0f2',premium:0,isDefault:true},
+    {name:'Schwarz',color:'#1a1a1c',premium:5},
+    {name:'Cyan',color:'#00f2ff',premium:9},
+    {name:'Pink',color:'#ff2e6e',premium:9},
+    {name:'Gold',color:'#d4af37',premium:14},
+    {name:'Rot',color:'#dc143c',premium:9}
+  ],
+  lightbar:[
+    {name:'Blau',color:'#4a90e2',premium:0,isDefault:true},
+    {name:'Cyan Glow',color:'#00f2ff',premium:5},
+    {name:'Pink Neon',color:'#ff2e6e',premium:5},
+    {name:'Lila',color:'#bc13fe',premium:5},
+    {name:'Rot',color:'#ff3030',premium:5},
+    {name:'Grün',color:'#00ff80',premium:5},
+    {name:'Weiß',color:'#ffffff',premium:5},
+    {name:'Gold',color:'#ffd700',premium:8}
+  ],
+  engrave:[
+    {name:'Schwarz',color:'#222222',isDefault:true},
+    {name:'Weiß',color:'#ffffff'},
+    {name:'Cyan',color:'#00f2ff'},
+    {name:'Gold',color:'#d4af37'},
+    {name:'Pink',color:'#ff2e6e'},
+    {name:'Rot',color:'#dc143c'}
+  ]
+};
+
+const OPTIONS={
+  stick:[
+    {val:'Standard',price:0,desc:'Original PS5 Sticks',isDefault:true},
+    {val:'Hall Effect',price:35,desc:'Magnetische Sensoren - keine Drift'},
+    {val:'TMR',price:55,desc:'Höchste Genauigkeit für Profi-Gaming',badge:'TOP'},
+  ],
+  trigger:[
+    {val:'Adaptive',price:0,desc:'Original Sony Adaptive Trigger',isDefault:true},
+    {val:'Smart Clicky',price:25,desc:'Klick-Feedback wie Maus'},
+    {val:'Digital 1mm',price:35,desc:'Ultra-kurzer Travel',badge:'PRO'},
+  ],
+  paddle:[
+    {val:'Keine',price:0,desc:'Original DualSense ohne Paddles',isDefault:true},
+    {val:'2× Paddles',price:39,desc:'2 zusätzliche Tasten - frei programmierbar'},
+    {val:'4× Paddles',price:59,desc:'4 Paddles für maximale Kontrolle'},
+  ],
+  express:[
+    {val:'Standard 8-12 Tage',price:0,desc:'Premium-Fertigung in 8-12 Werktagen',isDefault:true},
+    {val:'Express 4-6 Tage',price:25,desc:'Beschleunigte Fertigung'},
+    {val:'Priority 2-3 Tage',price:45,desc:'Höchste Priorität',badge:'FAST'},
+  ],
+};
+
+const PRESETS={
+  default:{frontshell:'#ffffff',backshell:'#ffffff',buttons:'#f0f0f2',dpad:'#f0f0f2',stickcap:'#0a0a0c',triggercolor:'#f0f0f2',lightbar:'#4a90e2'},
+  stealth:{frontshell:'#1a1a1c',backshell:'#1a1a1c',buttons:'#222222',dpad:'#222222',stickcap:'#0a0a0c',triggercolor:'#1a1a1c',lightbar:'#4a90e2'},
+  neon:{frontshell:'#0a1633',backshell:'#0a1633',buttons:'#00f2ff',dpad:'#00f2ff',stickcap:'#00f2ff',triggercolor:'#00f2ff',lightbar:'#00f2ff'},
+  fire:{frontshell:'#5c0d10',backshell:'#5c0d10',buttons:'#dc143c',dpad:'#dc143c',stickcap:'#dc143c',triggercolor:'#dc143c',lightbar:'#ff3030'},
+  ice:{frontshell:'#80d8ff',backshell:'#80d8ff',buttons:'#00f2ff',dpad:'#00f2ff',stickcap:'#00f2ff',triggercolor:'#ffffff',lightbar:'#00f2ff'},
+  gold:{frontshell:'#1a1a1c',backshell:'#1a1a1c',buttons:'#d4af37',dpad:'#d4af37',stickcap:'#d4af37',triggercolor:'#d4af37',lightbar:'#ffd700'},
+  cyber:{frontshell:'#3d1a52',backshell:'#3d1a52',buttons:'#bc13fe',dpad:'#bc13fe',stickcap:'#ff2e6e',triggercolor:'#bc13fe',lightbar:'#bc13fe'},
+  emerald:{frontshell:'#0d2f17',backshell:'#0d2f17',buttons:'#00b67a',dpad:'#00b67a',stickcap:'#00b67a',triggercolor:'#00b67a',lightbar:'#00ff80'}
+};
+
+const BASE_PRICE=79;
+let qty=1;
+let cfgState={
+  colors:{frontshell:null,backshell:null,buttons:null,dpad:null,stickcap:null,triggercolor:null,lightbar:null},
+  options:{stick:null,trigger:null,paddle:null,express:null},
+  engraving:'',
+  engraveColor:'#222222',
+  engraveColorName:'Schwarz'
+};
+
+function darken(hex,amt){
+  if(!hex||!hex.startsWith('#'))return hex;
+  let c=parseInt(hex.slice(1),16);
+  let r=Math.max(0,((c>>16)&0xff)-amt);
+  let g=Math.max(0,((c>>8)&0xff)-amt);
+  let b=Math.max(0,(c&0xff)-amt);
+  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+function lighten(hex,amt){
+  if(!hex||!hex.startsWith('#'))return hex;
+  let c=parseInt(hex.slice(1),16);
+  let r=Math.min(255,((c>>16)&0xff)+amt);
+  let g=Math.min(255,((c>>8)&0xff)+amt);
+  let b=Math.min(255,(c&0xff)+amt);
+  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+
+function toggleAcc(hd){
+  const acc=hd.parentElement;
+  const wasOpen=acc.classList.contains('open');
+  document.querySelectorAll('.cfg-acc').forEach(a=>a.classList.remove('open'));
+  if(!wasOpen){acc.classList.add('open');haptic(15);
+    setTimeout(()=>{acc.scrollIntoView({behavior:'smooth',block:'nearest'});},250);
+  }
+}
+
+function buildColorGrid(part,gridId){
+  const grid=document.getElementById(gridId);if(!grid)return;
+  const arr=COLORS[(part==='frontshell'||part==='backshell')?'shell':part];
+  if(!arr)return;
+  grid.innerHTML=arr.map(c=>{
+    const sel=c.isDefault?'sel':'';
+    const bg=c.color.startsWith('linear')?c.color:c.color;
+    return `<div class="cfg-color-item ${sel}" style="background:${bg}" data-part="${part}" data-color="${c.realColor||c.color}" data-name="${c.name}" data-premium="${c.premium}" onclick="selColor(this)"><div class="cfg-color-tip"><strong>${c.name}</strong>${c.premium>0?' · +'+c.premium+' €':''}</div></div>`;
+  }).join('');
+}
+
+function buildOptList(cat,listId){
+  const list=document.getElementById(listId);if(!list)return;
+  list.innerHTML=OPTIONS[cat].map(o=>{
+    const sel=o.isDefault?'sel':'';
+    const priceTxt=o.price===0?'inkl.':'+'+o.price+' €';
+    const priceClass=o.price===0?'free':'';
+    const badge=o.badge?`<span class="cfg-opt-badge">${o.badge}</span>`:'';
+    return `<div class="cfg-opt ${sel}" data-cat="${cat}" data-val="${o.val}" data-price="${o.price}" onclick="selOpt(this)"><div class="cfg-opt-radio"></div><div class="cfg-opt-info"><div class="cfg-opt-name">${o.val}${badge}</div><div class="cfg-opt-desc">${o.desc}</div></div><div class="cfg-opt-price ${priceClass}">${priceTxt}</div></div>`;
+  }).join('');
+}
+
+function buildEngraveColors(){
+  const row=document.getElementById('engrave-color-row');if(!row)return;
+  row.innerHTML=COLORS.engrave.map(c=>{
+    return `<div class="cfg-engrave-color ${c.isDefault?'sel':''}" style="background:${c.color}" data-color="${c.color}" data-name="${c.name}" onclick="selEngraveColor(this)" title="${c.name}"></div>`;
+  }).join('');
+}
+
+function selColor(el){
+  try{
+    if(!el||!el.dataset)return;
+    const part=el.dataset.part;if(!part)return;
+    haptic([10,30,15]);
+    document.querySelectorAll('.cfg-color-item[data-part="'+part+'"]').forEach(o=>o.classList.remove('sel'));
+    el.classList.add('sel');
+    const premium=parseFloat(el.dataset.premium)||0;
+    const name=el.dataset.name||'';
+    const color=el.dataset.color||'#fff';
+    cfgState.colors[part]={color,name,premium};
+    const cur=document.getElementById('cur-'+part);
+    if(cur)cur.innerHTML='<strong>'+name+'</strong>'+(premium>0?' (+'+premium+' €)':'');
+    applySvgColors();updatePrice();
+    document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+  }catch(err){console.warn('[selColor]',err);}
+}
+
+function selOpt(el){
+  try{
+    if(!el||!el.dataset)return;
+    const cat=el.dataset.cat;if(!cat)return;
+    haptic([10,30,15]);
+    document.querySelectorAll('.cfg-opt[data-cat="'+cat+'"]').forEach(o=>o.classList.remove('sel'));
+    el.classList.add('sel');
+    const price=parseFloat(el.dataset.price)||0;
+    const val=el.dataset.val||'';
+    cfgState.options[cat]={val,price};
+    const cur=document.getElementById('cur-'+cat);
+    if(cur)cur.innerHTML='<strong>'+val+'</strong>'+(price>0?' (+'+price+' €)':'');
+    updateTechBadges();updatePaddleVisual();updatePrice();
+  }catch(err){console.warn('[selOpt]',err);}
+}
+
+function selEngraveColor(el){
+  haptic(15);
+  document.querySelectorAll('.cfg-engrave-color').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  cfgState.engraveColor=el.dataset.color;
+  cfgState.engraveColorName=el.dataset.name;
+  updateEngraveOverlay();
+}
+
+function applySvgColors(){
+  try{
+    const fs=cfgState.colors.frontshell?cfgState.colors.frontshell.color:'#ffffff';
+    const bs=cfgState.colors.backshell?cfgState.colors.backshell.color:'#ffffff';
+    const btn=cfgState.colors.buttons?cfgState.colors.buttons.color:'#f0f0f2';
+    const dp=cfgState.colors.dpad?cfgState.colors.dpad.color:'#f0f0f2';
+    const sc=cfgState.colors.stickcap?cfgState.colors.stickcap.color:'#0a0a0c';
+    const tc=cfgState.colors.triggercolor?cfgState.colors.triggercolor.color:'#f0f0f2';
+    const lb=cfgState.colors.lightbar?cfgState.colors.lightbar.color:'#4a90e2';
+
+    // FRONT shell gradient
+    document.getElementById('grad-frontshell-1').setAttribute('stop-color',lighten(fs,15));
+    document.getElementById('grad-frontshell-2').setAttribute('stop-color',darken(fs,30));
+    
+    // BACK shell (visible bottom grips on front view)
+    document.getElementById('grad-backshell-1').setAttribute('stop-color',lighten(bs,15));
+    document.getElementById('grad-backshell-2').setAttribute('stop-color',darken(bs,30));
+
+    // BACK view shell
+    const gb1=document.getElementById('grad-back-1');const gb2=document.getElementById('grad-back-2');
+    if(gb1)gb1.setAttribute('stop-color',lighten(bs,15));
+    if(gb2)gb2.setAttribute('stop-color',darken(bs,30));
+
+    // Action Buttons
+    ['btn-triangle','btn-circle','btn-cross','btn-square'].forEach(id=>{
+      const e=document.getElementById(id);if(e){e.setAttribute('fill',btn);e.setAttribute('stroke',darken(btn,40));}
+    });
+
+    // D-Pad
+    ['dpad-cross-v','dpad-cross-h'].forEach(id=>{
+      const e=document.getElementById(id);if(e){e.setAttribute('fill',dp);e.setAttribute('stroke',darken(dp,40));}
+    });
+
+    // Stick caps
+    ['stickcap-l','stickcap-r'].forEach(id=>{
+      const e=document.getElementById(id);if(e){e.setAttribute('fill',sc);e.setAttribute('stroke',darken(sc,40));}
+    });
+
+    // Triggers
+    ['trigger-l','trigger-r'].forEach(id=>{
+      const e=document.getElementById(id);if(e){e.setAttribute('fill',tc);e.setAttribute('stroke',darken(tc,40));}
+    });
+
+    // Lightbar
+    document.getElementById('grad-lightbar-1').setAttribute('stop-color',lighten(lb,40));
+    document.getElementById('grad-lightbar-2').setAttribute('stop-color',lb);
+    document.getElementById('lightbar').setAttribute('opacity','.85');
+
+    updateEngraveOverlay();
+  }catch(err){console.warn('[svgColors]',err);}
+}
+
+function updateTechBadges(){
+  try{
+    const sV=cfgState.options.stick?cfgState.options.stick.val:'Standard';
+    const tV=cfgState.options.trigger?cfgState.options.trigger.val:'Adaptive';
+    const pV=cfgState.options.paddle?cfgState.options.paddle.val:'Keine';
+    const sb=document.getElementById('badge-stick');
+    if(sb){
+      if(sV==='Hall Effect'){sb.style.display='block';sb.innerHTML='⚡ Hall Effect Sticks<small>Anti-Drift Magnetik</small>';}
+      else if(sV==='TMR'){sb.style.display='block';sb.innerHTML='🧲 TMR Magnetic Sticks<small>Anti-Drift / High Precision</small>';}
+      else sb.style.display='none';
+    }
+    const tb=document.getElementById('badge-trigger');
+    if(tb){
+      if(tV==='Smart Clicky'){tb.style.display='block';tb.innerHTML='⚡ Smart Clicky Trigger<small>Mouse-Click Feel</small>';}
+      else if(tV==='Digital 1mm'){tb.style.display='block';tb.innerHTML='💎 Digital 1mm<small>Ultra-fast Response</small>';}
+      else tb.style.display='none';
+    }
+    const pb=document.getElementById('badge-paddle');
+    if(pb){
+      if(pV!=='Keine'){pb.style.display='block';pb.innerHTML='⚙ '+pV+'<small>Frei programmierbar</small>';}
+      else pb.style.display='none';
+    }
+  }catch(e){}
+}
+
+function updatePaddleVisual(){
+  const pV=cfgState.options.paddle?cfgState.options.paddle.val:'Keine';
+  const grp=document.getElementById('paddle-group');
+  const p3=document.getElementById('paddle-3');
+  const p4=document.getElementById('paddle-4');
+  if(!grp)return;
+  if(pV==='Keine'){grp.style.display='none';}
+  else if(pV==='2× Paddles'){grp.style.display='block';if(p3)p3.style.display='none';if(p4)p4.style.display='none';}
+  else if(pV==='4× Paddles'){grp.style.display='block';if(p3)p3.style.display='block';if(p4)p4.style.display='block';}
+}
+
+function updateEngrave(input){
+  try{
+    cfgState.engraving=input.value.toUpperCase();
+    input.value=cfgState.engraving;
+    const cnt=document.getElementById('engrave-cnt');if(cnt)cnt.innerText=input.value.length+'/12';
+    const cur=document.getElementById('cur-engraving');if(cur)cur.innerHTML='<strong>'+(input.value||'Keine')+'</strong>';
+    const pe=document.getElementById('price-engraving');if(pe)pe.innerText=input.value?'+8 €':'+0 €';
+    updateEngraveOverlay();updatePrice();
+  }catch(e){}
+}
+
+function updateEngraveOverlay(){
+  const sv=document.getElementById('engrave-svg');
+  const sv2=document.getElementById('engrave-svg-back');
+  if(sv){sv.textContent=cfgState.engraving||'';sv.setAttribute('fill',cfgState.engraveColor);}
+  if(sv2){sv2.textContent=cfgState.engraving||'';sv2.setAttribute('fill',cfgState.engraveColor);}
+}
+
+function loadPreset(name,btn){
+  try{
+    haptic([20,40,30,40,20]);
+    document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+    if(btn)btn.classList.add('active');
+    const p=PRESETS[name];if(!p)return;
+    Object.keys(p).forEach(part=>{
+      const el=document.querySelector('.cfg-color-item[data-part="'+part+'"][data-color="'+p[part]+'"]');
+      if(el)selColor(el);
+    });
+    document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+    if(btn)btn.classList.add('active');
+    toast('✓ '+name.toUpperCase()+' geladen');
+  }catch(e){console.warn('[preset]',e);}
+}
+
+function updatePrice(){
+  try{
+    let price=BASE_PRICE;
+    Object.values(cfgState.colors).forEach(c=>{if(c)price+=c.premium||0;});
+    Object.values(cfgState.options).forEach(o=>{if(o)price+=o.price||0;});
+    if(cfgState.engraving)price+=8;
+    const total=price*qty;
+    const tp=document.getElementById('total-price');
+    if(tp)tp.innerHTML='<span>'+total.toFixed(2).replace('.',',')+' €</span>';
+  }catch(e){}
+}
+
+function changeQty(d){
+  haptic(15);
+  qty=Math.max(1,Math.min(99,qty+d));
+  const v=document.getElementById('qty-val');if(v)v.innerText=qty;
+  updatePrice();
+}
+
+function setView(view){
+  haptic(20);
+  document.querySelectorAll('.ctrl-toggle button').forEach(b=>b.classList.remove('active'));
+  const fb=document.getElementById('view-front-btn');
+  const bb=document.getElementById('view-back-btn');
+  const fSvg=document.getElementById('svg-front');
+  const bSvg=document.getElementById('svg-back');
+  if(view==='front'){if(fb)fb.classList.add('active');if(fSvg)fSvg.style.display='block';if(bSvg)bSvg.style.display='none';}
+  else{if(bb)bb.classList.add('active');if(fSvg)fSvg.style.display='none';if(bSvg)bSvg.style.display='block';}
+}
+
+function addCustomToCart(){
+  try{
+    haptic([30,40,30,40,50]);
+    const desc=[];
+    Object.entries(cfgState.colors).forEach(([k,v])=>{if(v&&v.premium>0)desc.push(k+': '+v.name);});
+    Object.entries(cfgState.options).forEach(([k,v])=>{if(v&&v.price>0)desc.push(k+': '+v.val);});
+    if(cfgState.engraving)desc.push('Gravur: '+cfgState.engraving);
+    let price=BASE_PRICE;
+    Object.values(cfgState.colors).forEach(c=>{if(c)price+=c.premium||0;});
+    Object.values(cfgState.options).forEach(o=>{if(o)price+=o.price||0;});
+    if(cfgState.engraving)price+=8;
+    const item={
+      name:'Custom PS5 Controller'+(desc.length?' ('+desc.length+' Upgrades)':''),
+      price,img:'IMG_0562.jpeg',qty,custom:true,
+      config:JSON.stringify(cfgState)
+    };
+    let cart=[];
+    try{const s=localStorage.getItem('lxrd_cart');if(s)cart=JSON.parse(s);}catch(e){}
+    cart.push(item);
+    try{localStorage.setItem('lxrd_cart',JSON.stringify(cart));}catch(e){}
+    toast('✓ '+qty+'× Custom Controller hinzugefügt');
+    setTimeout(()=>{window.location.href='index.html#cart-open';},900);
+  }catch(err){toast('Fehler — bitte erneut versuchen');console.error(err);}
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');if(!t)return;
+  t.innerText=msg;t.classList.add('show');
+  clearTimeout(window.tT);window.tT=setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+function initParticles(){
+  try{
+    const c=document.getElementById('particles-canvas');if(!c)return;
+    const ctx=c.getContext('2d');
+    const rsz=()=>{c.width=window.innerWidth;c.height=window.innerHeight;};
+    window.addEventListener('resize',rsz);rsz();
+    const pts=[];
+    for(let i=0;i<70;i++)pts.push({
+      x:Math.random()*c.width,y:Math.random()*c.height,
+      r:Math.random()*1.5+.3,
+      vx:(Math.random()-.5)*.15,vy:(Math.random()-.5)*.15,
+      o:Math.random()*.6+.2,
+      col:Math.random()>.7?'#00f2ff':Math.random()>.5?'#bc13fe':'#fff'
+    });
+    function draw(){
+      ctx.clearRect(0,0,c.width,c.height);
+      pts.forEach(p=>{
+        p.x+=p.vx;p.y+=p.vy;
+        if(p.x<0)p.x=c.width;if(p.x>c.width)p.x=0;
+        if(p.y<0)p.y=c.height;if(p.y>c.height)p.y=0;
+        ctx.fillStyle=p.col;ctx.globalAlpha=p.o;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+      });
+      ctx.globalAlpha=1;requestAnimationFrame(draw);
+    }
+    draw();
+  }catch(e){}
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  try{
+    ['frontshell','backshell','buttons','dpad','stickcap','triggercolor','lightbar'].forEach(p=>buildColorGrid(p,'grid-'+p));
+    ['stick','trigger','paddle','express'].forEach(c=>buildOptList(c,'opt-'+c));
+    buildEngraveColors();
+
+    Object.keys(cfgState.colors).forEach(part=>{
+      const arr=COLORS[(part==='frontshell'||part==='backshell')?'shell':part];
+      if(!arr)return;
+      const def=arr.find(c=>c.isDefault);
+      if(def)cfgState.colors[part]={color:def.color,name:def.name,premium:0};
+    });
+    Object.keys(cfgState.options).forEach(cat=>{
+      const def=OPTIONS[cat].find(o=>o.isDefault);
+      if(def)cfgState.options[cat]={val:def.val,price:0};
+    });
+    initParticles();
+    applySvgColors();
+    updateTechBadges();
+    updatePaddleVisual();
+    updatePrice();
+  }catch(e){console.warn('[init]',e);}
+  setTimeout(()=>{const l=document.getElementById('cfg-loading');if(l){l.classList.add('hidden');setTimeout(()=>l.style.display='none',700);}},700);
+});
+setTimeout(()=>{const l=document.getElementById('cfg-loading');if(l){l.style.display='none';l.style.opacity='0';l.style.pointerEvents='none';}},2800);
+</script>
+
+</body>
+</html>

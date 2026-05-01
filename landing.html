@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>LEXORD® · Übersicht aller Bereiche</title>
+<meta name="description" content="LEXORD® — Custom PS5 Controller, Reparaturen, Konfigurator. Made in Germany.">
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--neon:#00f2ff;--purple:#bc13fe;--pink:#ff2e6e;--green:#00b67a;--gold:#d4af37}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{overflow-x:hidden}
+body{background:#020207;color:#e8e8ec;font-family:'Inter',sans-serif;min-height:100vh}
+
+.aurora{position:fixed;inset:0;z-index:-3;overflow:hidden}
+.aurora-blob{position:absolute;border-radius:50%;filter:blur(100px);opacity:.55;animation:auroraFloat 30s ease-in-out infinite}
+.aurora-blob:nth-child(1){width:60%;height:60%;background:radial-gradient(circle,rgba(0,242,255,.5),transparent 70%);top:-15%;left:-10%}
+.aurora-blob:nth-child(2){width:55%;height:55%;background:radial-gradient(circle,rgba(188,19,254,.45),transparent 70%);bottom:-15%;right:-10%;animation-delay:-10s}
+.aurora-blob:nth-child(3){width:45%;height:45%;background:radial-gradient(circle,rgba(255,46,110,.3),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:-18s}
+@keyframes auroraFloat{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(15%,-10%) scale(1.15)}}
+.grid-overlay{position:fixed;inset:0;z-index:-2;background-image:linear-gradient(rgba(0,242,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,242,255,.02) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+#particles{position:fixed;inset:0;z-index:-1;pointer-events:none}
+
+/* HEADER */
+.header{padding:40px 5% 20px;text-align:center;position:relative;z-index:1}
+.header-logo{font-family:‘Orbitron’;font-weight:900;font-size:clamp(1.6rem,5vw,2.4rem);letter-spacing:8px;color:#fff;margin-bottom:8px}
+.header-logo span{color:var(–neon)}
+.header-sub{font-family:‘Orbitron’;font-size:9px;letter-spacing:5px;color:var(–neon);opacity:.85}
+
+/* HERO */
+.hero{padding:30px 5% 60px;text-align:center;max-width:900px;margin:0 auto}
+.hero-eyebrow{display:inline-block;padding:7px 14px;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.25);border-radius:20px;font-family:‘Orbitron’;font-size:8.5px;color:var(–neon);letter-spacing:3px;margin-bottom:18px;font-weight:700}
+.hero-title{font-family:‘Orbitron’;font-weight:900;font-size:clamp(2rem,7vw,4rem);letter-spacing:-2px;line-height:1.05;margin-bottom:14px}
+.hero-title-1{background:linear-gradient(180deg,#fff 30%,rgba(255,255,255,.4));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;display:block}
+.hero-title-2{background:linear-gradient(90deg,var(–neon),var(–purple),var(–pink),var(–neon));background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;display:block;animation:gradMove 5s ease infinite}
+@keyframes gradMove{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero-desc{font-size:14px;color:#888;line-height:1.7;max-width:600px;margin:0 auto 20px}
+
+/* STATS BAR */
+.stats-bar{display:flex;justify-content:center;gap:30px;flex-wrap:wrap;margin-top:30px;padding:24px;background:rgba(12,12,16,.5);border:1px solid rgba(255,255,255,.05);border-radius:14px;backdrop-filter:blur(10px);max-width:700px;margin-left:auto;margin-right:auto}
+.stat{text-align:center}
+.stat-num{font-family:‘Orbitron’;font-size:24px;font-weight:900;color:var(–neon);line-height:1}
+.stat-lbl{font-family:‘Orbitron’;font-size:7.5px;color:#666;letter-spacing:1.5px;margin-top:4px}
+
+/* SECTIONS */
+.sec-title-wrap{text-align:center;padding:60px 5% 28px}
+.sec-title{font-family:‘Orbitron’;font-size:clamp(1.1rem,3.5vw,1.6rem);font-weight:900;letter-spacing:5px;color:#fff;margin-bottom:8px}
+.sec-sub{font-family:‘Orbitron’;font-size:9.5px;color:#666;letter-spacing:3px}
+
+/* MAIN CARDS */
+.main-grid{padding:0 5% 50px;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.main-card{position:relative;padding:32px 24px;background:rgba(12,12,16,.7);border:1px solid rgba(255,255,255,.06);border-radius:18px;text-decoration:none;color:#fff;transition:.3s;overflow:hidden;backdrop-filter:blur(12px);min-height:240px;display:flex;flex-direction:column;justify-content:space-between}
+.main-card::before{content:’’;position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(–neon),transparent);opacity:0;transition:.4s}
+.main-card::after{content:’’;position:absolute;width:200px;height:200px;background:radial-gradient(circle,var(–accent,rgba(0,242,255,.15)),transparent 70%);bottom:-100px;right:-50px;filter:blur(30px);opacity:.6;transition:.4s;pointer-events:none}
+.main-card:hover{transform:translateY(-6px);border-color:var(–neon);box-shadow:0 25px 60px rgba(0,242,255,.18)}
+.main-card:hover::before{opacity:1}
+.main-card:hover::after{opacity:1;transform:scale(1.2)}
+.main-card.purple{–accent:rgba(188,19,254,.2)}
+.main-card.purple:hover{border-color:var(–purple);box-shadow:0 25px 60px rgba(188,19,254,.18)}
+.main-card.pink{–accent:rgba(255,46,110,.2)}
+.main-card.pink:hover{border-color:var(–pink);box-shadow:0 25px 60px rgba(255,46,110,.18)}
+.main-card.gold{–accent:rgba(212,175,55,.2)}
+.main-card.gold:hover{border-color:var(–gold);box-shadow:0 25px 60px rgba(212,175,55,.18)}
+.main-card-icon{width:54px;height:54px;border-radius:13px;background:linear-gradient(135deg,rgba(0,242,255,.18),rgba(0,242,255,.05));border:1px solid rgba(0,242,255,.2);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:18px;position:relative;z-index:1}
+.main-card.purple .main-card-icon{background:linear-gradient(135deg,rgba(188,19,254,.18),rgba(188,19,254,.05));border-color:rgba(188,19,254,.2)}
+.main-card.pink .main-card-icon{background:linear-gradient(135deg,rgba(255,46,110,.18),rgba(255,46,110,.05));border-color:rgba(255,46,110,.2)}
+.main-card.gold .main-card-icon{background:linear-gradient(135deg,rgba(212,175,55,.18),rgba(212,175,55,.05));border-color:rgba(212,175,55,.2)}
+.main-card-title{font-family:‘Orbitron’;font-weight:900;font-size:14px;letter-spacing:2.5px;color:#fff;margin-bottom:10px;position:relative;z-index:1}
+.main-card-desc{font-size:12.5px;color:#999;line-height:1.6;margin-bottom:18px;position:relative;z-index:1}
+.main-card-cta{font-family:‘Orbitron’;font-size:9px;letter-spacing:2px;font-weight:700;color:var(–neon);display:inline-flex;align-items:center;gap:7px;position:relative;z-index:1}
+.main-card.purple .main-card-cta{color:var(–purple)}
+.main-card.pink .main-card-cta{color:var(–pink)}
+.main-card.gold .main-card-cta{color:var(–gold)}
+.main-card-cta svg{transition:.3s}
+.main-card:hover .main-card-cta svg{transform:translateX(4px)}
+.main-card-badge{position:absolute;top:18px;right:18px;font-family:‘Orbitron’;font-size:7px;letter-spacing:1px;font-weight:900;padding:4px 9px;border-radius:5px;background:linear-gradient(135deg,var(–neon),#00bdd6);color:#000}
+
+/* QUICK LINKS */
+.quick-grid{padding:0 5% 50px;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.quick-card{padding:18px 16px;background:rgba(12,12,16,.5);border:1px solid rgba(255,255,255,.05);border-radius:13px;text-decoration:none;color:#fff;transition:.25s;backdrop-filter:blur(8px);text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.quick-card:hover{border-color:rgba(0,242,255,.3);background:rgba(0,242,255,.03);transform:translateY(-3px)}
+.quick-icon{font-size:22px}
+.quick-title{font-family:‘Orbitron’;font-size:9.5px;letter-spacing:1.5px;font-weight:700;color:#ddd}
+.quick-desc{font-size:10.5px;color:#666;line-height:1.4}
+
+/* CONTACT CARD */
+.contact-card{max-width:600px;margin:0 auto 40px;padding:30px 26px;background:linear-gradient(135deg,rgba(12,12,16,.85),rgba(8,8,12,.85));border:1px solid rgba(0,242,255,.2);border-radius:18px;backdrop-filter:blur(15px);text-align:center}
+.contact-title{font-family:‘Orbitron’;font-size:13px;letter-spacing:3px;font-weight:900;color:var(–neon);margin-bottom:14px}
+.contact-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;text-align:left}
+.contact-item{font-size:13px;color:#bbb;line-height:1.7}
+.contact-item strong{display:block;font-family:‘Orbitron’;font-size:8.5px;color:#666;letter-spacing:1.5px;margin-bottom:4px;font-weight:700}
+.contact-item a{color:var(–neon);text-decoration:none}
+
+/* FOOTER */
+.footer{text-align:center;padding:30px 5% 50px;font-family:‘Orbitron’;font-size:8px;color:#444;letter-spacing:3px}
+.footer-links{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:18px}
+.footer-links a{font-family:‘Orbitron’;font-size:9px;color:#777;letter-spacing:1.5px;text-decoration:none}
+.footer-links a:hover{color:var(–neon)}
+
+@media(max-width:520px){.stats-bar{gap:20px;padding:18px}}
+</style>
+
+</head>
+<body>
+
+<div class="aurora"><div class="aurora-blob"></div><div class="aurora-blob"></div><div class="aurora-blob"></div></div>
+<div class="grid-overlay"></div>
+<canvas id="particles"></canvas>
+
+<header class="header">
+  <div class="header-logo">LEXORD<span>®</span></div>
+  <div class="header-sub">⟫ ENGINEERING EXCELLENCE ⟪</div>
+</header>
+
+<section class="hero">
+  <div class="hero-eyebrow">🇩🇪 MADE IN GERMANY · 91+ BEWERTUNGEN · 4.9★</div>
+  <h1 class="hero-title">
+    <span class="hero-title-1">DEINE ZENTRALE</span>
+    <span class="hero-title-2">FÜR ALLES PS5</span>
+  </h1>
+  <p class="hero-desc">Custom Controller · Reparaturen · Konfigurator · Tester · Shop. Alles unter einem Dach — präzise Handarbeit Made In Germany</p>
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-num">91+</div><div class="stat-lbl">⟫ BEWERTUNGEN</div></div>
+    <div class="stat"><div class="stat-num">4.9★</div><div class="stat-lbl">⟫ STERNE</div></div>
+    <div class="stat"><div class="stat-num">24H</div><div class="stat-lbl">⟫ VERSAND</div></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-lbl">⟫ HANDARBEIT</div></div>
+  </div>
+</section>
+
+<div class="sec-title-wrap">
+  <h2 class="sec-title">⟫ HAUPT-BEREICHE ⟪</h2>
+  <div class="sec-sub">DIE WICHTIGSTEN FUNKTIONEN AUF EINEN BLICK</div>
+</div>
+
+<section class="main-grid">
+
+  <a href="konfigurator.html" class="main-card">
+    <span class="main-card-badge">NEU</span>
+    <div>
+      <div class="main-card-icon">🎮</div>
+      <div class="main-card-title">KONFIGURATOR</div>
+      <div class="main-card-desc">Baue deinen perfekten Custom Controller. Über 100 Farben, TMR · Hall Effect Sticks, Paddles, Gravur — Live-Vorschau wie bei MakeMyCon.</div>
+    </div>
+    <div class="main-card-cta">JETZT KONFIGURIEREN <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+  </a>
+
+  <a href="index.html#shop" class="main-card purple">
+    <div>
+      <div class="main-card-icon">🛒</div>
+      <div class="main-card-title">SHOP</div>
+      <div class="main-card-desc">Premium Custom Controller, TMR Stick Kits, Hall Effect Upgrades, Paddle-Systeme, GRIP Gehäuse, Werkzeug — alles direkt vom Hersteller.</div>
+    </div>
+    <div class="main-card-cta">SHOP ANSEHEN <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+  </a>
+
+  <a href="index.html#repair-sec" class="main-card pink">
+    <div>
+      <div class="main-card-icon">🔧</div>
+      <div class="main-card-title">REPARATUR</div>
+      <div class="main-card-desc">Stick-Drift, Trigger-Defekt, USB-C kaputt? Professionelle Reparatur ab 15€, 3-5 Werktage, 6 Monate Garantie inklusive.</div>
+    </div>
+    <div class="main-card-cta">REPARATUR ANFRAGEN <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+  </a>
+
+  <a href="index.html#tester-sec" class="main-card gold">
+    <div>
+      <div class="main-card-icon">🎯</div>
+      <div class="main-card-title">CONTROLLER TESTER</div>
+      <div class="main-card-desc">Kostenlose Profi-Diagnose: Stick-Drift Analyse, Tasten-Test, Kalibrierung, Heatmap. Erkenne Probleme bevor sie nervig werden.</div>
+    </div>
+    <div class="main-card-cta">TESTER ÖFFNEN <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+  </a>
+
+  <a href="login.html" class="main-card">
+    <div>
+      <div class="main-card-icon">👤</div>
+      <div class="main-card-title">MEIN KONTO</div>
+      <div class="main-card-desc">Einloggen oder registrieren · deine Bestellhistorie einsehen · Reparaturen verfolgen · personalisierte Angebote erhalten.</div>
+    </div>
+    <div class="main-card-cta">EINLOGGEN <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+  </a>
+
+  <a href="index.html" class="main-card purple">
+    <div>
+      <div class="main-card-icon">🏠</div>
+      <div class="main-card-title">HAUPTSEITE</div>
+      <div class="main-card-desc">Vollständige Website mit allen Features: Hero, Bewertungen, Premium Controller, Shop, Tester, Reparatur, Über Uns, Kontakt.</div>
+    </div>
+    <div class="main-card-cta">ZUR HAUPTSEITE <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+  </a>
+
+</section>
+
+<div class="sec-title-wrap">
+  <h2 class="sec-title">⟫ SCHNELL-ZUGRIFF ⟪</h2>
+  <div class="sec-sub">WEITERE SEITEN UND BEREICHE</div>
+</div>
+
+<section class="quick-grid">
+  <a href="index.html#contact" class="quick-card"><div class="quick-icon">📩</div><div class="quick-title">KONTAKT</div><div class="quick-desc">Antwort innerhalb 24h</div></a>
+  <a href="index.html#about-sec" class="quick-card"><div class="quick-icon">👤</div><div class="quick-title">ÜBER UNS</div><div class="quick-desc">Story · Werkstatt</div></a>
+  <a href="index.html#faq-sec" class="quick-card"><div class="quick-icon">❓</div><div class="quick-title">FAQ</div><div class="quick-desc">Häufige Fragen</div></a>
+  <a href="index.html#email-marketing" class="quick-card"><div class="quick-icon">📧</div><div class="quick-title">NEWSLETTER</div><div class="quick-desc">10% Rabatt sichern</div></a>
+  <a href="index.html#impressum" class="quick-card"><div class="quick-icon">⚖</div><div class="quick-title">IMPRESSUM</div><div class="quick-desc">Rechtliches</div></a>
+  <a href="index.html#agb" class="quick-card"><div class="quick-icon">📋</div><div class="quick-title">AGB</div><div class="quick-desc">Geschäftsbedingungen</div></a>
+  <a href="index.html#datenschutz" class="quick-card"><div class="quick-icon">🔒</div><div class="quick-title">DATENSCHUTZ</div><div class="quick-desc">DSGVO-konform</div></a>
+  <a href="index.html#widerruf" class="quick-card"><div class="quick-icon">🔄</div><div class="quick-title">WIDERRUF</div><div class="quick-desc">14 Tage Rückgabe</div></a>
+  <a href="https://wa.me/4915204718720" target="_blank" rel="noopener" class="quick-card"><div class="quick-icon">💬</div><div class="quick-title">WHATSAPP</div><div class="quick-desc">Schnellster Kontakt</div></a>
+  <a href="https://instagram.com/lexord.de" target="_blank" rel="noopener" class="quick-card"><div class="quick-icon">📸</div><div class="quick-title">INSTAGRAM</div><div class="quick-desc">@lexord.de</div></a>
+  <a href="https://tiktok.com/@lexord.de" target="_blank" rel="noopener" class="quick-card"><div class="quick-icon">🎵</div><div class="quick-title">TIKTOK</div><div class="quick-desc">@lexord.de</div></a>
+  <a href="admin.html" class="quick-card"><div class="quick-icon">🔐</div><div class="quick-title">ADMIN</div><div class="quick-desc">Nur für Inhaber</div></a>
+</section>
+
+<div class="sec-title-wrap">
+  <h2 class="sec-title">⟫ DIREKTKONTAKT ⟪</h2>
+  <div class="sec-sub">WIR SIND PERSÖNLICH ERREICHBAR</div>
+</div>
+
+<div class="contact-card">
+  <div class="contact-title">📍 LEXORD ENGINEERING</div>
+  <div class="contact-row">
+    <div class="contact-item"><strong>📧 E-MAIL</strong><a href="mailto:Kontakt@Lexord.de">Kontakt@Lexord.de</a></div>
+    <div class="contact-item"><strong>📞 TELEFON</strong><a href="tel:+4915204718720">0152 047 18720</a></div>
+    <div class="contact-item"><strong>🏠 ADRESSE</strong>An Der Domsühler Str. 2<br>19374 Domsühl, DE</div>
+    <div class="contact-item"><strong>🌐 WEBSITE</strong><a href="https://lexord.de">lexord.de</a></div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-links">
+    <a href="index.html">HAUPTSEITE</a>
+    <a href="konfigurator.html">KONFIGURATOR</a>
+    <a href="login.html">MEIN KONTO</a>
+    <a href="index.html#shop">SHOP</a>
+    <a href="index.html#contact">KONTAKT</a>
+  </div>
+  LEXORD® · 2026 · MADE IN GERMANY
+</footer>
+
+<script>
+(function(){
+  const c=document.getElementById('particles');if(!c)return;
+  const ctx=c.getContext('2d');
+  const rsz=()=>{c.width=window.innerWidth;c.height=window.innerHeight;};
+  window.addEventListener('resize',rsz);rsz();
+  const pts=[];
+  for(let i=0;i<80;i++)pts.push({
+    x:Math.random()*c.width,y:Math.random()*c.height,
+    r:Math.random()*1.5+.3,
+    vx:(Math.random()-.5)*.2,vy:(Math.random()-.5)*.2,
+    o:Math.random()*.5+.2,
+    col:Math.random()>.6?'#00f2ff':Math.random()>.5?'#bc13fe':'#fff'
+  });
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    pts.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=c.width;if(p.x>c.width)p.x=0;
+      if(p.y<0)p.y=c.height;if(p.y>c.height)p.y=0;
+      ctx.fillStyle=p.col;ctx.globalAlpha=p.o;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+    });
+    ctx.globalAlpha=1;requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+
+</body>
+</html>

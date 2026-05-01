@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5">
+<title>PS5 Controller Konfigurator | LEXORD®</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --neon:#00f2ff;--neon-dim:rgba(0,242,255,.12);
+  --purple:#bc13fe;--green:#00b67a;--err:#ff4d4f;
+  --bg:#020207;--card:rgba(12,12,16,.7);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-height:100vh;padding-bottom:100px;overflow-x:hidden}
+
+/* Hintergründe */
+.aurora{position:fixed;inset:0;z-index:-3;background:linear-gradient(180deg,#020207,#04040a);overflow:hidden}
+.grid-overlay{position:fixed;inset:0;z-index:-2;background-image:linear-gradient(rgba(0,242,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,242,255,.025) 1px,transparent 1px);background-size:50px 50px;pointer-events:none}
+
+/* Header */
+.cfg-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 5%;background:rgba(2,2,4,.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,242,255,.12)}
+.cfg-title{font-family:'Orbitron';font-weight:900;font-size:11px;letter-spacing:3px;color:#ddd;text-align:center;flex:1}
+
+/* Controller Bereich */
+.ctrl-wrap{display:flex;flex-direction:column;align-items:center;padding:20px 5%;position:relative}
+.ctrl-toggle{display:flex;gap:6px;margin-bottom:18px;background:rgba(12,12,14,.7);padding:4px;border-radius:11px;z-index:10}
+.ctrl-toggle button{font-family:'Orbitron';font-size:9px;background:transparent;border:none;color:#888;padding:9px 16px;border-radius:8px;cursor:pointer;transition:.25s}
+.ctrl-toggle button.active{background:rgba(0,242,255,.18);color:var(--neon)}
+
+.ctrl-stage{position:relative;width:100%;max-width:560px;aspect-ratio:1.15/1;display:flex;align-items:center;justify-content:center}
+
+/* BILDER SYNCED MIT SVG */
+.ctrl-img-layer {
+    position: absolute;
+    width: 100%;
+    height: auto;
+    z-index: 1; /* Hinter dem SVG */
+    pointer-events: none;
+}
+
+.ctrl-svg{width:100%;height:100%;position:relative;z-index:2;filter:drop-shadow(0 15px 30px rgba(0,0,0,0.5))}
+
+.hidden { display: none !important; }
+
+/* Menü */
+.cfg-sections{padding:18px 5%;max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.cfg-acc{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden}
+.cfg-acc-hd{padding:18px;cursor:pointer;font-family:'Orbitron';font-size:11px}
+.cfg-acc-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.cfg-acc.open .cfg-acc-body{max-height:1000px}
+.cfg-color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(50px,1fr));gap:10px;padding:20px}
+.cfg-color-item{aspect-ratio:1/1;border-radius:50%;cursor:pointer;border:2px solid rgba(255,255,255,.1)}
+
+/* Bottom Bar */
+.cfg-bottom{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(4,4,8,.96);padding:15px 5%;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--neon-dim)}
+.price-val{font-family:'Orbitron';font-weight:900;font-size:20px}
+</style>
+</head>
+<body>
+
+<div class="aurora"></div>
+<div class="grid-overlay"></div>
+
+<header class="cfg-header">
+  <div class="cfg-title">LEXORD<span> · </span>KONFIGURATOR</div>
+</header>
+
+<div class="ctrl-wrap">
+  <div class="ctrl-toggle">
+    <button id="view-front-btn" class="active" onclick="setView('front')">VORDERSEITE</button>
+    <button id="view-back-btn" onclick="setView('back')">RÜCKSEITE</button>
+  </div>
+
+  <div class="ctrl-stage">
+    <!-- ECHTE FOTOS -->
+    <img id="real-front" src="VorderseiteIMG_0611.jpeg" class="ctrl-img-layer" alt="Front">
+    <img id="real-back" src="Photoroom_20260501_090821.png" class="ctrl-img-layer hidden" alt="Back">
+
+    <!-- FRONT SVG (Deine Pfade hier einfügen) -->
+    <svg id="svg-front" class="ctrl-svg" viewBox="0 0 600 480">
+      <path id="front-shell" d="M 90 130 Q 90 90 130 80 L 230 70 Q 280 65 300 80 Q 320 65 370 70 L 470 80 Q 510 90 510 130 L 510 220 Q 510 280 460 330 L 420 365 Q 380 395 340 380 L 320 370 Q 300 360 280 370 L 260 380 Q 220 395 180 365 L 140 330 Q 90 280 90 220 Z" 
+      fill="#ffffff" fill-opacity="0.5" />
+    </svg>
+
+    <!-- BACK SVG (Deine Pfade hier einfügen) -->
+    <svg id="svg-back" class="ctrl-svg hidden" viewBox="0 0 600 480">
+      <path id="back-shell" d="M 90 130 Q 90 90 130 80 L 230 70 Q 280 65 300 80 Q 320 65 370 70 L 470 80 Q 510 90 510 130 L 510 220 Q 510 280 460 330 L 420 365 Q 380 395 340 380 L 320 370 Q 300 360 280 370 L 260 380 Q 220 395 180 365 L 140 330 Q 90 280 90 220 Z" 
+      fill="#ffffff" fill-opacity="0.5" />
+    </svg>
+  </div>
+</div>
+
+<div class="cfg-sections">
+  <div class="cfg-acc open">
+    <div class="cfg-acc-hd" onclick="this.parentElement.classList.toggle('open')">🎨 FARBAUSWAHL</div>
+    <div class="cfg-acc-body">
+      <div class="cfg-color-grid">
+        <div class="cfg-color-item" style="background:#ffffff" onclick="changeColor('#ffffff')"></div>
+        <div class="cfg-color-item" style="background:#1a1a1c" onclick="changeColor('#1a1a1c')"></div>
+        <div class="cfg-color-item" style="background:#00f2ff" onclick="changeColor('#00f2ff')"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cfg-bottom">
+  <div class="price-val">79,00 €</div>
+  <button style="background:var(--neon); border:none; padding:10px 20px; border-radius:8px; font-family:'Orbitron'; font-weight:bold;">WARENKORB</button>
+</div>
+
+<script>
+function setView(view) {
+  const fSvg = document.getElementById('svg-front');
+  const bSvg = document.getElementById('svg-back');
+  const fImg = document.getElementById('real-front');
+  const bImg = document.getElementById('real-back');
+  const fBtn = document.getElementById('view-front-btn');
+  const bBtn = document.getElementById('view-back-btn');
+
+  if (view === 'front') {
+    fSvg.classList.remove('hidden');
+    fImg.classList.remove('hidden');
+    bSvg.classList.add('hidden');
+    bImg.classList.add('hidden');
+    fBtn.classList.add('active');
+    bBtn.classList.remove('active');
+  } else {
+    fSvg.classList.add('hidden');
+    fImg.classList.add('hidden');
+    bSvg.classList.remove('hidden');
+    bImg.classList.remove('hidden');
+    fBtn.classList.remove('active');
+    bBtn.classList.add('active');
+  }
+}
+
+function changeColor(hex) {
+  document.getElementById('front-shell').setAttribute('fill', hex);
+  document.getElementById('back-shell').setAttribute('fill', hex);
+}
+</script>
+
+</body>
+</html>

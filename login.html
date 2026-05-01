@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Mein Konto | LEXORD®</title>
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--neon:#00f2ff;--green:#00b67a;--err:#ff4d4f;--bg:#020207}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-height:100vh}
+.aurora{position:fixed;inset:0;z-index:-2;background:linear-gradient(180deg,#020207,#04040a)}
+.aurora::before,.aurora::after{content:'';position:absolute;width:60%;height:60%;border-radius:50%;filter:blur(80px);opacity:.4}
+.aurora::before{background:radial-gradient(circle,rgba(0,242,255,.4),transparent 70%);top:-20%;left:-10%}
+.aurora::after{background:radial-gradient(circle,rgba(188,19,254,.35),transparent 70%);bottom:-20%;right:-10%}
+.cnt{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:30px 20px}
+.card{background:rgba(8,8,12,.92);border:1px solid rgba(0,242,255,.25);border-radius:20px;padding:40px 30px;max-width:420px;width:100%;backdrop-filter:blur(20px);box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.logo{text-align:center;font-family:'Orbitron';font-weight:900;font-size:22px;letter-spacing:5px;color:#fff;margin-bottom:6px}
+.logo span{color:var(--neon)}
+.sub{font-family:'Orbitron';font-size:9px;color:#888;letter-spacing:3px;text-align:center;margin-bottom:30px}
+.tabs{display:flex;gap:6px;margin-bottom:24px;background:rgba(255,255,255,.03);padding:4px;border-radius:11px;border:1px solid rgba(255,255,255,.05)}
+.tab{flex:1;font-family:'Orbitron';font-size:10px;letter-spacing:1.5px;font-weight:700;background:transparent;border:none;color:#888;padding:11px 12px;border-radius:8px;cursor:pointer;transition:.25s}
+.tab.active{background:rgba(0,242,255,.12);color:var(--neon)}
+.panel{display:none}
+.panel.active{display:block}
+.field{margin-bottom:14px}
+.lbl{font-family:'Orbitron';font-size:8.5px;color:#666;letter-spacing:1.5px;margin-bottom:6px;display:block}
+.inp{width:100%;padding:13px 16px;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);color:#fff;font-family:'Inter';font-size:13px;border-radius:11px;outline:none;transition:.25s}
+.inp:focus{border-color:var(--neon);background:rgba(0,242,255,.04)}
+.btn-main{width:100%;padding:14px;background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:11px;letter-spacing:2px;border-radius:11px;cursor:pointer;box-shadow:0 6px 18px rgba(0,242,255,.3);margin-top:6px}
+.btn-main:hover{transform:translateY(-2px)}
+.msg{font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;margin-top:14px;text-align:center;display:none}
+.msg.show{display:block}
+.msg.err{color:var(--err)}
+.msg.ok{color:var(--green)}
+.back{text-align:center;margin-top:18px}
+.back a{font-family:'Orbitron';font-size:9px;color:#666;letter-spacing:1.5px;text-decoration:none}
+.back a:hover{color:var(--neon)}
+
+/* Account dashboard */
+.account{display:none}
+.account.active{display:block}
+.acc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.06);gap:10px;flex-wrap:wrap}
+.acc-welcome{font-family:‘Orbitron’;font-size:14px;font-weight:900;color:#fff}
+.acc-welcome span{color:var(–neon)}
+.acc-email{font-size:10px;color:#666}
+.acc-logout{font-family:‘Orbitron’;font-size:9px;letter-spacing:1.5px;color:#888;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:8px 12px;border-radius:8px;cursor:pointer}
+.acc-logout:hover{color:var(–err);border-color:var(–err)}
+.order-box{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;margin-bottom:10px}
+.order-nr{font-family:‘Orbitron’;font-size:10px;color:var(–neon);letter-spacing:1.5px;margin-bottom:4px}
+.order-date{font-size:11px;color:#666;margin-bottom:8px}
+.order-total{font-family:‘Orbitron’;font-size:13px;color:#fff;font-weight:700}
+.no-orders{text-align:center;padding:30px;color:#444;font-family:‘Orbitron’;font-size:10px;letter-spacing:2px}
+</style>
+
+</head>
+<body>
+
+<div class="aurora"></div>
+
+<div class="cnt">
+  <div class="card">
+    <div class="logo">LEXORD<span>®</span></div>
+    <div class="sub">⟫ MEIN KONTO ⟪</div>
+
+```
+<div id="auth-area">
+  <div class="tabs">
+    <button class="tab active" onclick="setTab('login',this)">EINLOGGEN</button>
+    <button class="tab" onclick="setTab('register',this)">REGISTRIEREN</button>
+  </div>
+
+  <div class="panel active" id="panel-login">
+    <div class="field"><label class="lbl">E-MAIL</label><input type="email" class="inp" id="li-email" autocomplete="email"></div>
+    <div class="field"><label class="lbl">PASSWORT</label><input type="password" class="inp" id="li-pw" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="btn-main" onclick="doLogin()">EINLOGGEN</button>
+    <div class="msg" id="li-msg"></div>
+  </div>
+
+  <div class="panel" id="panel-register">
+    <div class="field"><label class="lbl">NAME</label><input type="text" class="inp" id="rg-name" autocomplete="name"></div>
+    <div class="field"><label class="lbl">E-MAIL</label><input type="email" class="inp" id="rg-email" autocomplete="email"></div>
+    <div class="field"><label class="lbl">PASSWORT (min. 6 Zeichen)</label><input type="password" class="inp" id="rg-pw" autocomplete="new-password" onkeydown="if(event.key==='Enter')doRegister()"></div>
+    <button class="btn-main" onclick="doRegister()">REGISTRIEREN</button>
+    <div class="msg" id="rg-msg"></div>
+  </div>
+
+  <div class="back"><a href="index.html">← ZURÜCK ZUR WEBSITE</a></div>
+</div>
+
+<div class="account" id="account-area">
+  <div class="acc-header">
+    <div>
+      <div class="acc-welcome">Hallo, <span id="acc-name">–</span>!</div>
+      <div class="acc-email" id="acc-email">–</div>
+    </div>
+    <button class="acc-logout" onclick="doLogout()">↩ LOGOUT</button>
+  </div>
+  <div style="font-family:'Orbitron';font-size:10px;color:#666;letter-spacing:2px;margin-bottom:14px">⟫ MEINE BESTELLUNGEN</div>
+  <div id="orders-list"><div class="no-orders">LADE…</div></div>
+  <div class="back"><a href="index.html">← ZURÜCK ZUR WEBSITE</a></div>
+</div>
+```
+
+  </div>
+</div>
+
+<script>
+'use strict';
+const WORKER_URL = 'https://lexord-mail.leonschulz1420.workers.dev';
+const TOKEN_KEY = 'lxrd_user_token';
+
+function setTab(tab, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+}
+
+function showMsg(id, text, type) {
+  const m = document.getElementById(id);
+  m.innerText = text;
+  m.className = 'msg show ' + type;
+  setTimeout(() => m.classList.remove('show'), 3500);
+}
+
+async function doLogin() {
+  const email = document.getElementById('li-email').value;
+  const pw = document.getElementById('li-pw').value;
+  if (!email || !pw) return showMsg('li-msg', '⚠ ALLE FELDER AUSFÜLLEN', 'err');
+  try {
+    const r = await fetch(WORKER_URL + '/user/login', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({email, pw})
+    });
+    const d = await r.json();
+    if (!d.success) return showMsg('li-msg', '⚠ ' + (d.error || 'Login fehlgeschlagen').toUpperCase(), 'err');
+    localStorage.setItem(TOKEN_KEY, d.token);
+    localStorage.setItem('lxrd_user_name', d.name);
+    localStorage.setItem('lxrd_user_email', d.email);
+    showAccount(d.name, d.email);
+  } catch (e) { showMsg('li-msg', '⚠ SERVER-FEHLER', 'err'); }
+}
+
+async function doRegister() {
+  const name = document.getElementById('rg-name').value;
+  const email = document.getElementById('rg-email').value;
+  const pw = document.getElementById('rg-pw').value;
+  if (!name || !email || !pw) return showMsg('rg-msg', '⚠ ALLE FELDER AUSFÜLLEN', 'err');
+  try {
+    const r = await fetch(WORKER_URL + '/user/register', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({name, email, pw})
+    });
+    const d = await r.json();
+    if (!d.success) return showMsg('rg-msg', '⚠ ' + (d.error || 'Fehler').toUpperCase(), 'err');
+    showMsg('rg-msg', '✓ ERFOLGREICH! BITTE EINLOGGEN', 'ok');
+    setTimeout(() => {
+      document.getElementById('li-email').value = email;
+      document.getElementById('li-pw').value = pw;
+      setTab('login', document.querySelectorAll('.tab')[0]);
+    }, 1200);
+  } catch (e) { showMsg('rg-msg', '⚠ SERVER-FEHLER', 'err'); }
+}
+
+async function doLogout() {
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem('lxrd_user_name');
+  localStorage.removeItem('lxrd_user_email');
+  document.getElementById('account-area').classList.remove('active');
+  document.getElementById('auth-area').style.display = 'block';
+}
+
+async function showAccount(name, email) {
+  document.getElementById('auth-area').style.display = 'none';
+  document.getElementById('account-area').classList.add('active');
+  document.getElementById('acc-name').innerText = name;
+  document.getElementById('acc-email').innerText = email;
+
+  const t = localStorage.getItem(TOKEN_KEY);
+  if (!t) return;
+  try {
+    const r = await fetch(WORKER_URL + '/user/orders', {headers: {'Authorization': 'Bearer ' + t}});
+    const d = await r.json();
+    const list = document.getElementById('orders-list');
+    if (!d.success || !d.orders.length) {
+      list.innerHTML = '<div class="no-orders">📦 NOCH KEINE BESTELLUNGEN</div>';
+      return;
+    }
+    list.innerHTML = d.orders.map(o => `<div class="order-box">
+      <div class="order-nr">${esc(o.orderNr)}</div>
+      <div class="order-date">${new Date(o.date).toLocaleDateString('de-DE')} · ${esc(o.status || 'NEU')}</div>
+      <div class="order-total">${parseFloat(o.total || 0).toFixed(2)} €</div>
+    </div>`).join('');
+  } catch (e) {}
+}
+
+function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+window.addEventListener('DOMContentLoaded', () => {
+  const t = localStorage.getItem(TOKEN_KEY);
+  const n = localStorage.getItem('lxrd_user_name');
+  const e = localStorage.getItem('lxrd_user_email');
+  if (t && n && e) showAccount(n, e);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>LEXORD® Admin Panel</title>
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--neon:#00f2ff;--green:#00b67a;--err:#ff4d4f;--bg:#020207}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-height:100vh}
+.aurora{position:fixed;inset:0;z-index:-2;background:linear-gradient(180deg,#020207,#04040a)}
+.aurora::before,.aurora::after{content:'';position:absolute;width:60%;height:60%;border-radius:50%;filter:blur(80px);opacity:.4}
+.aurora::before{background:radial-gradient(circle,rgba(0,242,255,.4),transparent 70%);top:-20%;left:-10%}
+.aurora::after{background:radial-gradient(circle,rgba(188,19,254,.35),transparent 70%);bottom:-20%;right:-10%}
+.login-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;z-index:10}
+.login-box{background:rgba(8,8,12,.92);border:1px solid rgba(0,242,255,.25);border-radius:20px;padding:40px 30px;max-width:380px;width:100%;backdrop-filter:blur(20px);text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.login-logo{font-family:'Orbitron';font-weight:900;font-size:22px;letter-spacing:5px;color:#fff;margin-bottom:6px}
+.login-logo span{color:var(--neon)}
+.login-sub{font-family:'Orbitron';font-size:9px;color:#888;letter-spacing:3px;margin-bottom:30px}
+.login-icon{width:64px;height:64px;border-radius:50%;background:rgba(0,242,255,.08);border:2px solid rgba(0,242,255,.3);display:inline-flex;align-items:center;justify-content:center;font-size:30px;margin-bottom:20px}
+.login-input{width:100%;padding:14px 16px;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);color:#fff;font-family:'Orbitron';font-size:14px;letter-spacing:3px;border-radius:11px;outline:none;text-align:center;margin-bottom:14px;transition:.25s}
+.login-input:focus{border-color:var(--neon);background:rgba(0,242,255,.04)}
+.login-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:11px;letter-spacing:2px;border-radius:11px;cursor:pointer;box-shadow:0 6px 18px rgba(0,242,255,.3)}
+.login-btn:hover{transform:translateY(-2px)}
+.login-err{font-family:'Orbitron';font-size:9px;color:var(--err);letter-spacing:1.5px;margin-top:10px;display:none}
+.login-back{margin-top:18px;font-family:'Orbitron';font-size:9px;color:#666;letter-spacing:1.5px;text-decoration:none;display:inline-block}
+.dashboard{display:none;min-height:100vh;padding:20px 5% 40px}
+.dashboard.active{display:block}
+.dash-header{display:flex;justify-content:space-between;align-items:center;padding:14px 0 22px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:24px;gap:10px;flex-wrap:wrap}
+.dash-title{font-family:'Orbitron';font-weight:900;font-size:18px;letter-spacing:4px;color:#fff}
+.dash-title span{color:var(--neon)}
+.dash-logout{font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;font-weight:700;color:#888;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:9px 14px;border-radius:9px;cursor:pointer}
+.dash-logout:hover{color:var(--err);border-color:var(--err)}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:30px}
+.stat-card{background:rgba(12,12,16,.7);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:18px}
+.stat-lbl{font-family:'Orbitron';font-size:8px;color:#666;letter-spacing:2px;margin-bottom:6px}
+.stat-val{font-family:'Orbitron';font-size:24px;font-weight:900;color:#fff}
+.stat-val.neon{color:var(--neon)}
+.stat-val.green{color:var(--green)}
+.dash-tabs{display:flex;gap:6px;margin-bottom:20px;background:rgba(12,12,16,.5);padding:4px;border-radius:11px;border:1px solid rgba(255,255,255,.05);overflow-x:auto}
+.dash-tab{flex:1;font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;font-weight:700;background:transparent;border:none;color:#888;padding:10px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.dash-tab.active{background:rgba(0,242,255,.12);color:var(--neon)}
+.dash-panel{display:none}
+.dash-panel.active{display:block}
+.order-card{background:rgba(12,12,16,.7);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:18px;margin-bottom:10px;transition:.25s}
+.order-card:hover{border-color:rgba(0,242,255,.25)}
+.order-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.order-nr{font-family:'Orbitron';font-size:11px;font-weight:900;color:var(--neon);letter-spacing:1.5px}
+.order-date{font-family:'Inter';font-size:11px;color:#666}
+.order-status{font-family:'Orbitron';font-size:8px;letter-spacing:1.5px;font-weight:700;padding:4px 9px;border-radius:5px;background:rgba(0,182,122,.12);color:var(--green);border:1px solid rgba(0,182,122,.3)}
+.order-info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:12px;font-size:11px}
+.order-info-grid div{color:#888}
+.order-info-grid strong{color:#fff;display:block;margin-top:2px;font-family:'Orbitron';font-size:10px}
+.order-items{padding:12px;background:rgba(255,255,255,.02);border-radius:8px;font-size:11px;color:#aaa;line-height:1.7}
+.order-total{display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)}
+.order-total-lbl{font-family:'Orbitron';font-size:9px;color:#666;letter-spacing:1.5px}
+.order-total-val{font-family:'Orbitron';font-size:14px;font-weight:900;color:var(--neon)}
+.no-orders{text-align:center;padding:60px 20px;color:#444}
+.no-orders-icon{font-size:50px;opacity:.3;margin-bottom:14px}
+.no-orders-text{font-family:'Orbitron';font-size:10px;letter-spacing:2px}
+.dash-actions{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.dash-action{font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;font-weight:700;padding:9px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:#bbb;cursor:pointer}
+.dash-action:hover{border-color:var(--neon);color:var(--neon)}
+.dash-loading{text-align:center;padding:40px;color:#666;font-family:'Orbitron';font-size:10px;letter-spacing:2px}
+.spinner{display:inline-block;width:30px;height:30px;border:2px solid rgba(0,242,255,.15);border-top-color:var(--neon);border-radius:50%;animation:spinL 1s linear infinite;margin-bottom:14px}
+@keyframes spinL{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div class="aurora"></div>
+
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="login-icon">🔐</div>
+    <div class="login-logo">LEXORD<span>®</span></div>
+    <div class="login-sub">⟫ ADMIN PANEL ⟪</div>
+    <input type="password" class="login-input" id="login-code" placeholder="ZUGANGSCODE" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">EINLOGGEN</button>
+    <div class="login-err" id="login-err">⚠ FALSCHER CODE</div>
+    <a href="index.html" class="login-back">← ZURÜCK ZUR WEBSITE</a>
+  </div>
+</div>
+
+<div class="dashboard" id="dashboard">
+  <div class="dash-header">
+    <div class="dash-title">LEXORD<span>®</span> ADMIN</div>
+    <button class="dash-logout" onclick="doLogout()">↩ LOGOUT</button>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-lbl">⟫ BESTELLUNGEN</div><div class="stat-val neon" id="stat-orders">–</div></div>
+    <div class="stat-card"><div class="stat-lbl">⟫ UMSATZ</div><div class="stat-val green" id="stat-revenue">–</div></div>
+    <div class="stat-card"><div class="stat-lbl">⟫ KUNDEN</div><div class="stat-val neon" id="stat-customers">–</div></div>
+    <div class="stat-card"><div class="stat-lbl">⟫ DIESEN MONAT</div><div class="stat-val" id="stat-month">–</div></div>
+  </div>
+  <div class="dash-tabs">
+    <button class="dash-tab active" onclick="switchTab('orders',this)">📦 BESTELLUNGEN</button>
+    <button class="dash-tab" onclick="switchTab('repairs',this)">🔧 REPARATUREN</button>
+    <button class="dash-tab" onclick="switchTab('users',this)">👥 KUNDEN</button>
+  </div>
+  <div class="dash-panel active" id="panel-orders">
+    <div class="dash-actions">
+      <button class="dash-action" onclick="loadOrders()">↻ AKTUALISIEREN</button>
+      <button class="dash-action" onclick="exportData('orders')">⤓ EXPORT JSON</button>
+    </div>
+    <div id="orders-container"><div class="dash-loading"><div class="spinner"></div><div>LADE BESTELLUNGEN…</div></div></div>
+  </div>
+  <div class="dash-panel" id="panel-repairs">
+    <div class="dash-actions"><button class="dash-action" onclick="loadRepairs()">↻ AKTUALISIEREN</button></div>
+    <div id="repairs-container"></div>
+  </div>
+  <div class="dash-panel" id="panel-users">
+    <div class="dash-actions"><button class="dash-action" onclick="loadUsers()">↻ AKTUALISIEREN</button></div>
+    <div id="users-container"></div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ⚠ DEINE WORKER-URL ⚠
+const WORKER_URL = 'https://lexord-mail.leonschulz1420.workers.dev';
+
+const TOKEN_KEY = 'lxrd_admin_token';
+
+async function doLogin() {
+  const code = document.getElementById('login-code').value;
+  if (!code) return showErr();
+  try {
+    const r = await fetch(WORKER_URL + '/admin/login', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({code})
+    });
+    const d = await r.json();
+    if (!d.success) return showErr();
+    localStorage.setItem(TOKEN_KEY, d.token);
+    showDashboard();
+  } catch (e) { showErr('Server-Fehler'); }
+}
+
+function showErr(msg) {
+  const e = document.getElementById('login-err');
+  e.innerText = '⚠ ' + (msg || 'FALSCHER CODE');
+  e.style.display = 'block';
+  document.getElementById('login-code').value = '';
+  if ('vibrate' in navigator) navigator.vibrate([100,50,100]);
+  setTimeout(() => e.style.display = 'none', 2500);
+}
+
+async function doLogout() {
+  const t = localStorage.getItem(TOKEN_KEY);
+  if (t) {
+    try { await fetch(WORKER_URL + '/admin/logout', {method: 'POST', headers: {'Authorization': 'Bearer ' + t}}); } catch (e) {}
+  }
+  localStorage.removeItem(TOKEN_KEY);
+  document.getElementById('dashboard').classList.remove('active');
+  document.getElementById('login-screen').style.display = 'flex';
+}
+
+function showDashboard() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('dashboard').classList.add('active');
+  loadStats(); loadOrders();
+}
+
+async function api(path) {
+  const t = localStorage.getItem(TOKEN_KEY);
+  if (!t) { doLogout(); return null; }
+  try {
+    const r = await fetch(WORKER_URL + path, {headers: {'Authorization': 'Bearer ' + t}});
+    if (r.status === 401) { doLogout(); return null; }
+    return await r.json();
+  } catch (e) { return null; }
+}
+
+async function loadStats() {
+  const d = await api('/admin/stats');
+  if (!d || !d.stats) return;
+  document.getElementById('stat-orders').innerText = d.stats.orders;
+  document.getElementById('stat-revenue').innerText = (d.stats.revenue || 0).toFixed(0) + ' €';
+  document.getElementById('stat-customers').innerText = d.stats.customers;
+  document.getElementById('stat-month').innerText = d.stats.thisMonth;
+}
+
+async function loadOrders() {
+  const c = document.getElementById('orders-container');
+  c.innerHTML = '<div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div>';
+  const d = await api('/admin/orders');
+  if (!d || !d.orders) { c.innerHTML = '<div class="no-orders"><div class="no-orders-icon">⚠</div><div class="no-orders-text">VERBINDUNGSFEHLER</div></div>'; return; }
+  if (!d.orders.length) {
+    c.innerHTML = '<div class="no-orders"><div class="no-orders-icon">📦</div><div class="no-orders-text">NOCH KEINE BESTELLUNGEN</div></div>';
+    return;
+  }
+  c.innerHTML = d.orders.map(o => {
+    const items = (o.items || []).map(i => esc(i.name) + ' × ' + i.qty + ' = ' + (i.price * i.qty).toFixed(2) + ' €').join('<br>');
+    return `<div class="order-card">
+      <div class="order-hd">
+        <div><div class="order-nr">${esc(o.orderNr)}</div><div class="order-date">${new Date(o.date).toLocaleString('de-DE')}</div></div>
+        <div class="order-status">${esc(o.status || 'NEU')}</div>
+      </div>
+      <div class="order-info-grid">
+        <div>KUNDE<strong>${esc(o.name || '?')}</strong></div>
+        <div>E-MAIL<strong>${esc(o.email || '?')}</strong></div>
+        <div>LAND<strong>${esc(o.land || 'DE')}</strong></div>
+        <div>ZAHLUNG<strong>${esc(o.payment || 'PayPal')}</strong></div>
+      </div>
+      <div class="order-items">${items || 'Keine Items'}</div>
+      <div class="order-total"><span class="order-total-lbl">GESAMT</span><span class="order-total-val">${parseFloat(o.total || 0).toFixed(2)} €</span></div>
+    </div>`;
+  }).join('');
+}
+
+async function loadRepairs() {
+  const c = document.getElementById('repairs-container');
+  c.innerHTML = '<div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div>';
+  const d = await api('/admin/repairs');
+  if (!d || !d.repairs) { c.innerHTML = '<div class="no-orders"><div class="no-orders-icon">⚠</div><div class="no-orders-text">VERBINDUNGSFEHLER</div></div>'; return; }
+  if (!d.repairs.length) { c.innerHTML = '<div class="no-orders"><div class="no-orders-icon">🔧</div><div class="no-orders-text">NOCH KEINE REPARATUREN</div></div>'; return; }
+  c.innerHTML = d.repairs.map(r => `<div class="order-card">
+    <div class="order-hd">
+      <div><div class="order-nr">${esc(r.repNr)}</div><div class="order-date">${new Date(r.date).toLocaleString('de-DE')}</div></div>
+      <div class="order-status" style="background:rgba(255,165,0,.12);color:#ffa500;border-color:rgba(255,165,0,.3)">REPARATUR</div>
+    </div>
+    <div class="order-info-grid">
+      <div>KUNDE<strong>${esc(r.name)}</strong></div>
+      <div>E-MAIL<strong>${esc(r.email)}</strong></div>
+      <div>SCHADEN<strong>${esc(r.damage)}</strong></div>
+      <div>CONTROLLER<strong>${esc(r.model)}</strong></div>
+    </div>
+    <div class="order-items">${esc(r.desc)}</div>
+  </div>`).join('');
+}
+
+async function loadUsers() {
+  const c = document.getElementById('users-container');
+  c.innerHTML = '<div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div>';
+  const d = await api('/admin/users');
+  if (!d || !d.users) { c.innerHTML = '<div class="no-orders"><div class="no-orders-icon">⚠</div><div class="no-orders-text">VERBINDUNGSFEHLER</div></div>'; return; }
+  if (!d.users.length) { c.innerHTML = '<div class="no-orders"><div class="no-orders-icon">👥</div><div class="no-orders-text">NOCH KEINE KUNDEN</div></div>'; return; }
+  c.innerHTML = d.users.map(u => `<div class="order-card">
+    <div class="order-hd"><div><div class="order-nr">${esc(u.name)}</div><div class="order-date">${esc(u.email)}</div></div></div>
+    <div style="font-size:10px;color:#666">Registriert: ${new Date(u.created).toLocaleDateString('de-DE')}</div>
+  </div>`).join('');
+}
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  if (tab === 'orders') loadOrders();
+  if (tab === 'repairs') loadRepairs();
+  if (tab === 'users') loadUsers();
+}
+
+async function exportData(type) {
+  const d = await api('/admin/' + type);
+  if (!d) return;
+  const data = d[type] || [];
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'lexord-' + type + '-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+window.addEventListener('DOMContentLoaded', () => {
+  if (localStorage.getItem(TOKEN_KEY)) showDashboard();
+  else document.getElementById('login-code').focus();
+});
+</script>
+
+</body>
+</html>

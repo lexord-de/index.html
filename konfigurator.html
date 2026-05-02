@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5">
+<title>PS5 Controller Konfigurator | LEXORD®</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --neon: #00f2ff;
+  --neon2: #bc13fe;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body { overflow-x:hidden; }
+body { background:#000; color:#fff; font-family:'Inter',sans-serif; min-height:100vh; padding-bottom:140px; }
+
+/* AURORA BG */
+.aurora { position:fixed; inset:0; z-index:-3; overflow:hidden; }
+.ab { position:absolute; border-radius:50%; filter:blur(90px); opacity:.4; animation:af 25s ease-in-out infinite; }
+.ab:nth-child(1){width:55%;height:55%;background:radial-gradient(circle,rgba(0,242,255,.5),transparent 70%);top:-10%;left:-10%}
+.ab:nth-child(2){width:50%;height:50%;background:radial-gradient(circle,rgba(188,19,254,.4),transparent 70%);bottom:-10%;right:-10%;animation-delay:-8s}
+.ab:nth-child(3){width:40%;height:40%;background:radial-gradient(circle,rgba(255,46,110,.2),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:-15s}
+@keyframes af{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(10%,-8%) scale(1.08)}}
+.grid-overlay{position:fixed;inset:0;z-index:-2;background-image:linear-gradient(rgba(0,242,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,242,255,.02) 1px,transparent 1px);background-size:50px 50px;pointer-events:none}
+#pc{position:fixed;inset:0;z-index:-1;pointer-events:none}
+
+/* HEADER */
+.cfg-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 5%;background:rgba(0,0,0,.92);backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,242,255,.12)}
+.cfg-back{display:inline-flex;align-items:center;gap:7px;font-family:'Orbitron';font-size:9px;letter-spacing:2px;font-weight:700;color:#999;text-decoration:none;padding:9px 14px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(255,255,255,.03)}
+.cfg-title{font-family:'Orbitron';font-weight:900;font-size:11px;letter-spacing:3px;color:#ddd;text-align:center;flex:1}
+.cfg-live{font-family:'Orbitron';font-size:8px;letter-spacing:1.5px;color:var(--neon);background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.2);padding:6px 10px;border-radius:7px;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.cfg-live::before{content:'';width:5px;height:5px;background:var(--neon);border-radius:50%;animation:ldot 1.5s infinite}
+@keyframes ldot{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* HERO */
+.cfg-hero{text-align:center;padding:26px 5% 16px}
+.cfg-hero-eyebrow{display:inline-block;padding:5px 14px;background:rgba(0,242,255,.07);border:1px solid rgba(0,242,255,.2);border-radius:20px;font-family:'Orbitron';font-size:8px;color:var(--neon);letter-spacing:3px;margin-bottom:12px}
+.cfg-hero-title{font-family:'Orbitron';font-weight:900;font-size:clamp(1.3rem,5vw,2.2rem);line-height:1.1;margin-bottom:8px;background:linear-gradient(180deg,#fff,rgba(255,255,255,.45));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.cfg-hero-sub{font-family:'Orbitron';font-size:9px;letter-spacing:3px;color:#555}
+
+/* =============================================
+   CONTROLLER STAGE — wie MakeMyCon
+   Mehrere Bild-Layer übereinander gestapelt
+   Jeder Layer = ein Controller-Teil mit eigener Farbe
+============================================= */
+.ctrl-wrap{display:flex;flex-direction:column;align-items:center;padding:10px 5% 20px}
+.ctrl-toggle{display:flex;gap:6px;margin-bottom:16px;background:rgba(12,12,14,.8);padding:4px;border-radius:11px;border:1px solid rgba(255,255,255,.06)}
+.ctrl-toggle button{font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;font-weight:700;background:transparent;border:none;color:#777;padding:9px 18px;border-radius:8px;cursor:pointer;transition:.25s}
+.ctrl-toggle button.active{background:rgba(0,242,255,.14);color:var(--neon)}
+
+/* STAGE: fixe Größe, alle Layer absolut übereinander */
+.ctrl-stage{
+  position:relative;
+  width:100%;
+  max-width:520px;
+  aspect-ratio:4/3;
+  animation:ctrlFloat 5s ease-in-out infinite;
+}
+@keyframes ctrlFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+.ctrl-stage::after{
+  content:'';
+  position:absolute;
+  bottom:-20px;
+  left:50%;
+  transform:translateX(-50%);
+  width:60%;
+  height:30px;
+  background:radial-gradient(ellipse,rgba(0,242,255,.2),transparent 70%);
+  filter:blur(10px);
+  pointer-events:none;
+}
+
+/* JEDER LAYER: absolut, volle Größe, object-fit:contain */
+.ctrl-layer{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  transition:opacity .35s ease;
+  /* CSS-Filter für Farb-Tinting des Layers */
+}
+
+/* BASIS-LAYER immer sichtbar */
+.layer-base { opacity:1; z-index:1; }
+
+/* FARB-LAYER: versteckt bis aktiv */
+.layer-color { opacity:0; z-index:2; }
+.layer-color.visible { opacity:1; }
+
+/* OVERLAY-Layer (Glanzeffekte, Schatten) immer oben */
+.layer-overlay { opacity:1; z-index:10; pointer-events:none; }
+
+/* LIGHTBAR */
+.layer-lightbar{
+  position:absolute;
+  /* Position genau über dem Touchpad/Lightbar-Bereich */
+  top:43%; left:50%;
+  transform:translateX(-50%);
+  width:22%; height:5px;
+  border-radius:4px;
+  z-index:11;
+  transition:background .4s, box-shadow .4s;
+  pointer-events:none;
+}
+
+/* GRAVUR TEXT */
+.engrave-txt{
+  position:absolute;
+  top:38%; left:50%;
+  transform:translate(-50%,-50%);
+  font-family:'Orbitron';font-weight:900;
+  font-size:clamp(9px,2.5vw,14px);
+  letter-spacing:3px;
+  z-index:12;pointer-events:none;
+  opacity:0;transition:opacity .3s;
+  white-space:nowrap;
+  text-shadow:0 1px 3px rgba(0,0,0,.7);
+}
+.engrave-txt.show{opacity:1}
+
+/* TECH BADGES */
+.tech-badge{
+  position:absolute;z-index:13;
+  background:rgba(255,255,255,.95);color:#111;
+  font-family:'Inter';font-size:9px;font-weight:600;
+  padding:7px 11px;border-radius:8px;
+  box-shadow:0 6px 20px rgba(0,0,0,.5),0 0 0 1px rgba(0,242,255,.3);
+  line-height:1.4;white-space:nowrap;
+  animation:badgeIn .4s ease;
+}
+.tech-badge small{display:block;font-size:7.5px;color:#777;margin-top:1px}
+@keyframes badgeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* =============================================
+   FARB-VORSCHAU PANEL
+============================================= */
+.color-summary{
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
+  margin-top:12px;padding:10px 16px;
+  background:rgba(10,10,14,.75);border:1px solid rgba(255,255,255,.06);
+  border-radius:12px;max-width:520px;width:100%;
+}
+.cs-item{display:flex;align-items:center;gap:5px;font-family:'Orbitron';font-size:7px;letter-spacing:.8px;color:#555}
+.cs-swatch{width:14px;height:14px;border-radius:3px;border:1px solid rgba(255,255,255,.15);transition:background .3s,box-shadow .3s;flex-shrink:0}
+
+/* PRESETS */
+.preset-wrap{padding:4px 5% 18px;max-width:760px;margin:0 auto}
+.preset-label{font-family:'Orbitron';font-size:8px;color:#555;letter-spacing:2px;margin-bottom:8px;display:block}
+.preset-row{display:flex;gap:8px;overflow-x:auto;padding:4px 0;scrollbar-width:none}
+.preset-row::-webkit-scrollbar{display:none}
+.preset-btn{flex-shrink:0;padding:10px 16px;border-radius:11px;border:1.5px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;font-weight:700;color:#bbb;cursor:pointer;white-space:nowrap;transition:.25s;display:inline-flex;align-items:center;gap:7px}
+.preset-btn:hover,.preset-btn.active{border-color:var(--neon);color:var(--neon);background:rgba(0,242,255,.07)}
+.preset-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+
+/* DIVIDER */
+.cfg-divider{padding:8px 5% 0;text-align:center;max-width:760px;margin:0 auto}
+.cfg-divider-line{height:1px;background:linear-gradient(90deg,transparent,rgba(0,242,255,.4),transparent);margin-bottom:14px}
+.cfg-divider-text{font-family:'Orbitron';font-size:10px;letter-spacing:4px;color:var(--neon);margin-bottom:5px;font-weight:700}
+.cfg-divider-sub{font-size:11px;color:#777;margin-bottom:4px}
+
+/* ACCORDION */
+.cfg-sections{padding:16px 5% 30px;max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.cfg-acc{background:rgba(10,10,14,.8);border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden;backdrop-filter:blur(10px);transition:border-color .3s}
+.cfg-acc:hover{border-color:rgba(0,242,255,.18)}
+.cfg-acc.open{border-color:rgba(0,242,255,.35);box-shadow:0 6px 28px rgba(0,242,255,.07)}
+.cfg-acc-hd{display:flex;align-items:center;gap:14px;padding:18px;cursor:pointer;user-select:none}
+.cfg-acc-icon{width:40px;height:40px;background:linear-gradient(135deg,rgba(0,242,255,.1),rgba(0,242,255,.03));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;border:1px solid rgba(0,242,255,.12)}
+.cfg-acc-name{flex:1;font-family:'Orbitron';font-size:11px;font-weight:700;color:#ddd;letter-spacing:1.5px}
+.cfg-acc-cur{font-family:'Inter';font-size:10px;font-weight:400;color:#555;margin-top:3px}
+.cfg-acc-cur strong{color:var(--neon);font-weight:600}
+.cfg-acc-arr{font-size:16px;color:#444;transition:transform .3s}
+.cfg-acc.open .cfg-acc-arr{transform:rotate(90deg);color:var(--neon)}
+.cfg-acc-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.cfg-acc.open .cfg-acc-body{max-height:3000px}
+.cfg-acc-content{padding:4px 18px 22px}
+
+/* COLOR GRID */
+.cfg-color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:10px;margin-top:8px}
+.color-btn{
+  aspect-ratio:1/1;border-radius:11px;cursor:pointer;
+  border:2.5px solid rgba(255,255,255,.07);
+  transition:transform .2s,border-color .2s,box-shadow .2s;
+  position:relative;overflow:visible;
+}
+.color-btn:hover{transform:scale(1.08);border-color:rgba(0,242,255,.5);z-index:5}
+.color-btn.sel{border-color:var(--neon);box-shadow:0 0 0 2px rgba(0,242,255,.35),0 4px 18px rgba(0,242,255,.35);transform:scale(1.06)}
+.color-btn.sel::after{content:'✓';position:absolute;top:3px;right:3px;width:17px;height:17px;background:var(--neon);color:#000;font-size:10px;font-weight:900;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.color-name{position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);background:#111;color:#fff;font-family:'Orbitron';font-size:7.5px;padding:4px 8px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20;border:1px solid rgba(255,255,255,.08)}
+.color-btn:hover .color-name{opacity:1}
+
+/* OPTION LIST */
+.cfg-opt-list{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.opt-btn{display:flex;align-items:center;gap:14px;padding:14px 16px;background:rgba(255,255,255,.02);border:1.5px solid rgba(255,255,255,.05);border-radius:11px;cursor:pointer;transition:.25s;text-align:left;width:100%}
+.opt-btn:hover{border-color:rgba(0,242,255,.3);background:rgba(0,242,255,.03)}
+.opt-btn.sel{border-color:var(--neon);background:rgba(0,242,255,.06);box-shadow:0 0 12px rgba(0,242,255,.1)}
+.opt-radio{width:18px;height:18px;border:2px solid rgba(255,255,255,.2);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.25s}
+.opt-btn.sel .opt-radio{border-color:var(--neon);background:var(--neon)}
+.opt-btn.sel .opt-radio::after{content:'';width:6px;height:6px;background:#000;border-radius:50%}
+.opt-info{flex:1}
+.opt-name{font-family:'Orbitron';font-size:10.5px;font-weight:700;color:#fff;letter-spacing:.5px}
+.opt-desc{font-size:10px;color:#666;margin-top:3px;line-height:1.4}
+.opt-price{font-family:'Orbitron';font-size:10.5px;font-weight:900;color:var(--neon);flex-shrink:0}
+.opt-price.free{color:#555}
+.opt-badge{display:inline-block;background:var(--neon);color:#000;font-family:'Orbitron';font-size:7px;font-weight:900;padding:3px 6px;border-radius:4px;margin-left:7px}
+
+/* ENGRAVE */
+.engrave-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:11px;padding:13px 15px;transition:.25s}
+.engrave-row:focus-within{border-color:var(--neon)}
+.engrave-row input{flex:1;background:transparent;border:none;color:#fff;font-family:'Orbitron';font-size:13px;letter-spacing:2px;outline:none}
+.engrave-row input::placeholder{color:#333;font-size:11px;letter-spacing:1px}
+.engrave-cnt{font-family:'Orbitron';font-size:9px;color:#444}
+.engrave-colors{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.eng-color{width:30px;height:30px;border-radius:6px;cursor:pointer;border:2px solid rgba(255,255,255,.1);transition:.2s}
+.eng-color:hover{transform:scale(1.1)}
+.eng-color.sel{border-color:var(--neon);box-shadow:0 0 0 2px rgba(0,242,255,.3)}
+
+/* BENEFITS */
+.benefits-row{padding:28px 5%;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.benefit-item{padding:16px;background:rgba(10,10,14,.5);border:1px solid rgba(255,255,255,.05);border-radius:12px;text-align:center}
+.benefit-icon{font-size:22px;margin-bottom:8px}
+.benefit-title{font-family:'Orbitron';font-size:9px;color:var(--neon);letter-spacing:1.5px;margin-bottom:5px;font-weight:700}
+.benefit-desc{font-size:10.5px;color:#666;line-height:1.5}
+
+/* BOTTOM BAR */
+.cfg-bottom{position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(4,4,8,.97);backdrop-filter:blur(28px);border-top:1px solid rgba(0,242,255,.18);padding:12px 5%;display:flex;align-items:center;gap:12px;box-shadow:0 -8px 32px rgba(0,0,0,.6)}
+.price-wrap{flex:1}
+.price-lbl{font-family:'Orbitron';font-size:7.5px;color:#555;letter-spacing:1.5px}
+.price-val{font-family:'Orbitron';font-size:22px;font-weight:900;color:#fff;line-height:1;margin-top:3px}
+.price-val span{color:var(--neon)}
+.qty-wrap{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:9px;padding:4px}
+.qty-btn{width:30px;height:30px;background:transparent;border:none;color:#fff;font-size:18px;cursor:pointer;border-radius:6px;transition:.2s}
+.qty-btn:hover{background:rgba(0,242,255,.12);color:var(--neon)}
+.qty-num{font-family:'Orbitron';font-size:13px;font-weight:700;min-width:22px;text-align:center}
+.cart-btn{font-family:'Orbitron';font-size:10px;letter-spacing:1.5px;font-weight:900;color:#000;background:linear-gradient(135deg,var(--neon),#00bdd6);border:none;padding:14px 22px;border-radius:11px;cursor:pointer;box-shadow:0 6px 20px rgba(0,242,255,.4);white-space:nowrap;transition:.25s}
+.cart-btn:active{transform:scale(.97)}
+
+/* TOAST */
+#toast{position:fixed;top:80px;right:20px;z-index:9999;background:#08080e;border:1px solid var(--neon);border-radius:12px;padding:13px 17px;font-family:'Orbitron';font-size:9.5px;color:var(--neon);letter-spacing:1px;box-shadow:0 6px 24px rgba(0,242,255,.2);transform:translateX(130%);transition:.35s;max-width:260px}
+#toast.show{transform:translateX(0)}
+
+/* LOADING */
+#cfg-loading{position:fixed;inset:0;background:#000;z-index:9000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;transition:opacity .4s;pointer-events:all}
+#cfg-loading.hidden{opacity:0;pointer-events:none}
+#cfg-loading.gone{display:none !important;pointer-events:none !important}
+.loader-spin{width:48px;height:48px;border:3px solid rgba(0,242,255,.15);border-top-color:var(--neon);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-txt{font-family:'Orbitron';font-size:9px;color:var(--neon);letter-spacing:3px}
+
+@media(max-width:520px){
+  .ctrl-stage{max-width:360px}
+  .price-val{font-size:18px}
+  .cart-btn{padding:12px 14px;font-size:9px}
+  .cfg-acc-hd{padding:14px}
+  .cfg-acc-content{padding:4px 14px 18px}
+}
+</style>
+</head>
+<body>
+
+<div class="aurora"><div class="ab"></div><div class="ab"></div><div class="ab"></div></div>
+<div class="grid-overlay"></div>
+<canvas id="pc"></canvas>
+
+<div id="cfg-loading">
+  <div class="loader-spin"></div>
+  <div class="loader-txt">KONFIGURATOR LÄDT</div>
+</div>
+
+<header class="cfg-header">
+  <a href="index.html" class="cfg-back">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    ZURÜCK
+  </a>
+  <div class="cfg-title">PS5 · KONFIGURATOR</div>
+  <div class="cfg-live">LIVE</div>
+</header>
+
+<div class="cfg-hero">
+  <div class="cfg-hero-eyebrow">⟫ LEXORD® CUSTOM STUDIO ⟪</div>
+  <h1 class="cfg-hero-title">BAUE DEINEN PERFEKTEN CONTROLLER</h1>
+  <p class="cfg-hero-sub">FARBEN · TMR · HALL EFFECT · PADDLES · GRAVUR</p>
+</div>
+
+<!-- CONTROLLER STAGE -->
+<div class="ctrl-wrap">
+  <div class="ctrl-toggle">
+    <button class="active" onclick="setView('front',this)">⟫ VORDERSEITE</button>
+    <button onclick="setView('back',this)">RÜCKSEITE ⟪</button>
+  </div>
+
+  <!-- VORDERSEITE -->
+  <div class="ctrl-stage" id="stage-front">
+    <!--
+      KONZEPT (wie MakeMyCon):
+      - layer-base: weißer Basis-Controller immer sichtbar
+      - Jede Farboption hat ein eigenes PNG das per CSS-Filter eingefärbt wird
+      - Da wir keine separaten PNGs pro Teil haben, nutzen wir CSS hue-rotate + brightness
+        auf spezifische SVG-Overlay-Bereiche
+      - layer-overlay: Glanzlichter/Schatten immer oben
+    -->
+
+    <!-- BASIS: dein Controller-Foto -->
+    <img class="ctrl-layer layer-base" src="IMG_0611.jpeg" id="img-front"
+         alt="PS5 Controller"
+         onerror="this.style.opacity='.15';this.style.filter='none'"
+         style="filter:drop-shadow(0 20px 40px rgba(0,242,255,.12)) drop-shadow(0 8px 20px rgba(0,0,0,.9))">
+
+    <!--
+      FARB-LAYER: Canvas das wir per JS mit der gewählten Farbe bemalen.
+      Nutzt mix-blend-mode:hue damit NUR die Farbe wechselt, nicht Textur/Glanz.
+      Das ist der MakeMyCon-Ansatz ohne separate PNGs.
+    -->
+    <canvas id="color-canvas-front"
+      style="position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;opacity:0;transition:opacity .4s;mix-blend-mode:multiply"></canvas>
+
+    <!-- LIGHTBAR -->
+    <div class="layer-lightbar" id="lightbar"
+      style="background:#4a90e2;box-shadow:0 0 14px 4px #4a90e2,0 0 4px 1px #4a90e2;opacity:.9"></div>
+
+    <!-- GRAVUR -->
+    <div class="engrave-txt" id="engrave-front"></div>
+
+    <!-- TECH BADGES -->
+    <div class="tech-badge" id="badge-stick" style="display:none;top:62%;left:3%"></div>
+    <div class="tech-badge" id="badge-trigger" style="display:none;top:4%;left:36%"></div>
+    <div class="tech-badge" id="badge-paddle" style="display:none;top:77%;left:50%"></div>
+  </div>
+
+  <!-- RÜCKSEITE -->
+  <div class="ctrl-stage" id="stage-back" style="display:none">
+    <img class="ctrl-layer layer-base" src="Photoroom_20260501_090821.png" id="img-back"
+         alt="PS5 Controller Rückseite"
+         onerror="this.style.opacity='.15'"
+         style="filter:drop-shadow(0 20px 40px rgba(0,242,255,.12)) drop-shadow(0 8px 20px rgba(0,0,0,.9))">
+    <canvas id="color-canvas-back"
+      style="position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;opacity:0;transition:opacity .4s;mix-blend-mode:multiply"></canvas>
+    <div class="engrave-txt" id="engrave-back"></div>
+  </div>
+
+  <!-- FARB-ÜBERSICHT -->
+  <div class="color-summary" id="color-summary"></div>
+</div>
+
+<!-- PRESETS -->
+<div class="preset-wrap">
+  <span class="preset-label">⟫ SCHNELL-PRESETS</span>
+  <div class="preset-row" id="preset-row"></div>
+</div>
+
+<div class="cfg-divider">
+  <div class="cfg-divider-line"></div>
+  <div class="cfg-divider-text">⟫ DEINE KONFIGURATION ⟪</div>
+  <div class="cfg-divider-sub">Wähle Farben, Tech &amp; Personalisierung</div>
+</div>
+
+<div class="cfg-sections" id="cfg-sections"></div>
+
+<div class="benefits-row">
+  <div class="benefit-item"><div class="benefit-icon">🇩🇪</div><div class="benefit-title">MADE IN GERMANY</div><div class="benefit-desc">Handmontiert in Domsühl</div></div>
+  <div class="benefit-item"><div class="benefit-icon">⚡</div><div class="benefit-title">8-12 TAGE</div><div class="benefit-desc">Premium-Fertigung</div></div>
+  <div class="benefit-item"><div class="benefit-icon">🛡</div><div class="benefit-title">24 MONATE</div><div class="benefit-desc">Gewährleistung</div></div>
+  <div class="benefit-item"><div class="benefit-icon">🔄</div><div class="benefit-title">14 TAGE</div><div class="benefit-desc">Rückgaberecht</div></div>
+</div>
+
+<div class="cfg-bottom">
+  <div class="price-wrap">
+    <div class="price-lbl">⟫ DEIN CONTROLLER</div>
+    <div class="price-val">ab <span id="total-price">79,00 €</span></div>
+  </div>
+  <div class="qty-wrap">
+    <button class="qty-btn" id="qty-minus">−</button>
+    <span class="qty-num" id="qty-val">1</span>
+    <button class="qty-btn" id="qty-plus">+</button>
+  </div>
+  <button class="cart-btn" id="cart-btn">IN DEN WARENKORB</button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+var BASE_PRICE = 79;
+var qty = 1;
+
+// ============================================================
+// FARB-DATEN
+// Jede Farbe hat: name, hex, premium
+// Für den Controller-Preview wird die HEX-Farbe als
+// CSS-Filter (hue-rotate + saturate) auf die weißen Teile gemappt
+// ============================================================
+var COLORS = {
+  shell: [
+    {name:'Weiß',         hex:'#ffffff', premium:0, def:true},
+    {name:'Schwarz',      hex:'#1a1a1c', premium:0},
+    {name:'Mitternacht',  hex:'#0d1b3e', premium:8},
+    {name:'Galaxy Purple',hex:'#3d1a52', premium:8},
+    {name:'Cosmic Red',   hex:'#6b0f13', premium:8},
+    {name:'Forest Green', hex:'#0d2f17', premium:8},
+    {name:'Sunset Orange',hex:'#c94316', premium:10},
+    {name:'Pink Punch',   hex:'#d91f67', premium:10},
+    {name:'Cyan Neon',    hex:'#00b4d8', premium:10},
+    {name:'Lila Neon',    hex:'#8822ee', premium:10},
+    {name:'Eis Blau',     hex:'#70c9f5', premium:8},
+    {name:'Mint',         hex:'#6edcb8', premium:8},
+    {name:'Gold',         hex:'#c9a227', premium:18},
+    {name:'Silber',       hex:'#b0b0b8', premium:18},
+    {name:'Carbon',       hex:'#1c1c21', premium:22},
+    {name:'Bordeaux',     hex:'#6b1225', premium:12},
+    {name:'Arktis',       hex:'#d0eaf8', premium:10},
+    {name:'Olive',        hex:'#4a5230', premium:10}
+  ],
+  buttons: [
+    {name:'Standard',     hex:'#e8e8ea', premium:0, def:true},
+    {name:'Schwarz',      hex:'#1e1e20', premium:5},
+    {name:'Cyan',         hex:'#00e5f5', premium:7},
+    {name:'Pink',         hex:'#e82060', premium:7},
+    {name:'Gold',         hex:'#c9a227', premium:12},
+    {name:'Lila',         hex:'#aa10ee', premium:7},
+    {name:'Rot',          hex:'#cc1030', premium:7},
+    {name:'Grün',         hex:'#00a060', premium:7},
+    {name:'Orange',       hex:'#e06010', premium:7},
+    {name:'Kobalt',       hex:'#0050cc', premium:9}
+  ],
+  stickcap: [
+    {name:'Schwarz',      hex:'#0a0a0c', premium:0, def:true},
+    {name:'Weiß',         hex:'#eeeeee', premium:5},
+    {name:'Cyan',         hex:'#00e5f5', premium:8},
+    {name:'Pink',         hex:'#e82060', premium:8},
+    {name:'Gold',         hex:'#c9a227', premium:12},
+    {name:'Rot',          hex:'#cc1030', premium:8},
+    {name:'Lila',         hex:'#aa10ee', premium:8},
+    {name:'Grün',         hex:'#00a060', premium:8}
+  ],
+  triggercolor: [
+    {name:'Standard',     hex:'#e8e8ea', premium:0, def:true},
+    {name:'Schwarz',      hex:'#1e1e20', premium:5},
+    {name:'Cyan',         hex:'#00e5f5', premium:9},
+    {name:'Pink',         hex:'#e82060', premium:9},
+    {name:'Gold',         hex:'#c9a227', premium:14},
+    {name:'Rot',          hex:'#cc1030', premium:9},
+    {name:'Lila',         hex:'#aa10ee', premium:9}
+  ],
+  lightbar: [
+    {name:'Blau',         hex:'#4a90e2', premium:0, def:true},
+    {name:'Cyan Glow',    hex:'#00f2ff', premium:5},
+    {name:'Pink Neon',    hex:'#ff2e6e', premium:5},
+    {name:'Lila',         hex:'#bc13fe', premium:5},
+    {name:'Rot',          hex:'#ff3030', premium:5},
+    {name:'Grün',         hex:'#00ff80', premium:5},
+    {name:'Weiß',         hex:'#ffffff', premium:5},
+    {name:'Gold',         hex:'#ffd700', premium:8},
+    {name:'Violett',      hex:'#8800ff', premium:5}
+  ],
+  engrave: [
+    {name:'Schwarz',      hex:'#111111', def:true},
+    {name:'Weiß',         hex:'#ffffff'},
+    {name:'Cyan',         hex:'#00f2ff'},
+    {name:'Gold',         hex:'#d4af37'},
+    {name:'Pink',         hex:'#ff2e6e'},
+    {name:'Rot',          hex:'#cc1030'}
+  ]
+};
+
+var COLOR_KEY = {
+  frontshell:'shell', backshell:'shell',
+  buttons:'buttons', dpad:'buttons',
+  stickcap:'stickcap', triggercolor:'triggercolor', lightbar:'lightbar'
+};
+
+var OPTIONS = {
+  stick:[
+    {val:'Standard',     price:0,  desc:'Original PS5 Sticks – zuverlässig', def:true},
+    {val:'Hall Effect',  price:35, desc:'Magnetische Sensoren – kein Drift mehr'},
+    {val:'TMR',          price:55, desc:'Höchste Präzision für Profi-Gaming', badge:'TOP'}
+  ],
+  trigger:[
+    {val:'Adaptive',     price:0,  desc:'Original Sony Adaptive Trigger', def:true},
+    {val:'Smart Clicky', price:25, desc:'Maus-ähnliches Klick-Feedback'},
+    {val:'Digital 1mm',  price:35, desc:'Kürzester Tastweg – blitzschnell', badge:'PRO'}
+  ],
+  paddle:[
+    {val:'Keine',        price:0,  desc:'Standard DualSense ohne Paddles', def:true},
+    {val:'2× Paddles',   price:39, desc:'2 Rückseiten-Tasten frei programmierbar'},
+    {val:'4× Paddles',   price:59, desc:'4 Paddles für maximale Kontrolle'}
+  ],
+  express:[
+    {val:'Standard 8-12 Tage', price:0,  desc:'Premium-Fertigung in 8-12 Werktagen', def:true},
+    {val:'Express 4-6 Tage',   price:25, desc:'Beschleunigte Fertigung'},
+    {val:'Priority 2-3 Tage',  price:45, desc:'Höchste Priorität – schnellstmöglich', badge:'FAST'}
+  ]
+};
+
+var PRESETS = [
+  {id:'default', label:'STANDARD', dot:'#e8e8ea', dotBorder:true,
+   c:{frontshell:'#ffffff',backshell:'#ffffff',buttons:'#e8e8ea',dpad:'#e8e8ea',stickcap:'#0a0a0c',triggercolor:'#e8e8ea',lightbar:'#4a90e2'}},
+  {id:'stealth', label:'STEALTH',  dot:'#1a1a1c',
+   c:{frontshell:'#1a1a1c',backshell:'#1a1a1c',buttons:'#1e1e20',dpad:'#1e1e20',stickcap:'#0a0a0c',triggercolor:'#1e1e20',lightbar:'#4a90e2'}},
+  {id:'neon',    label:'NEON',     dot:'#00f2ff',
+   c:{frontshell:'#0d1b3e',backshell:'#0d1b3e',buttons:'#00e5f5',dpad:'#00e5f5',stickcap:'#00e5f5',triggercolor:'#00e5f5',lightbar:'#00f2ff'}},
+  {id:'fire',    label:'FIRE',     dot:'#cc1030',
+   c:{frontshell:'#6b0f13',backshell:'#6b0f13',buttons:'#cc1030',dpad:'#cc1030',stickcap:'#cc1030',triggercolor:'#cc1030',lightbar:'#ff3030'}},
+  {id:'ice',     label:'ICE',      dot:'#70c9f5',
+   c:{frontshell:'#70c9f5',backshell:'#70c9f5',buttons:'#00e5f5',dpad:'#00e5f5',stickcap:'#eeeeee',triggercolor:'#e8e8ea',lightbar:'#00f2ff'}},
+  {id:'gold',    label:'GOLD',     dot:'#c9a227',
+   c:{frontshell:'#1a1a1c',backshell:'#1a1a1c',buttons:'#c9a227',dpad:'#c9a227',stickcap:'#c9a227',triggercolor:'#c9a227',lightbar:'#ffd700'}},
+  {id:'cyber',   label:'CYBER',    dot:'#aa10ee',
+   c:{frontshell:'#3d1a52',backshell:'#3d1a52',buttons:'#aa10ee',dpad:'#aa10ee',stickcap:'#e82060',triggercolor:'#aa10ee',lightbar:'#bc13fe'}},
+  {id:'emerald', label:'EMERALD',  dot:'#00a060',
+   c:{frontshell:'#0d2f17',backshell:'#0d2f17',buttons:'#00a060',dpad:'#00a060',stickcap:'#00a060',triggercolor:'#00a060',lightbar:'#00ff80'}}
+];
+
+var SUMMARY_PARTS = [
+  {key:'frontshell',  label:'FRONT',   def:'#ffffff'},
+  {key:'backshell',   label:'BACK',    def:'#ffffff'},
+  {key:'buttons',     label:'BUTTONS', def:'#e8e8ea'},
+  {key:'dpad',        label:'D-PAD',   def:'#e8e8ea'},
+  {key:'stickcap',    label:'STICKS',  def:'#0a0a0c'},
+  {key:'triggercolor',label:'TRIGGER', def:'#e8e8ea'},
+  {key:'lightbar',    label:'LIGHT',   def:'#4a90e2'}
+];
+
+var SECTIONS = [
+  {icon:'🎨', title:'FRONTGEHÄUSE',   id:'frontshell',   type:'color'},
+  {icon:'🛡', title:'RÜCKSCHALE',     id:'backshell',    type:'color'},
+  {icon:'🔘', title:'ACTION BUTTONS', id:'buttons',      type:'color'},
+  {icon:'✚', title:'D-PAD',          id:'dpad',         type:'color'},
+  {icon:'🕹', title:'STICK CAPS',     id:'stickcap',     type:'color'},
+  {icon:'🎯', title:'TRIGGER FARBE',  id:'triggercolor', type:'color'},
+  {icon:'💡', title:'LIGHT BAR',      id:'lightbar',     type:'color'},
+  {icon:'⚡', title:'STICK TECHNOLOGIE', id:'stick',     type:'option'},
+  {icon:'🎮', title:'TRIGGER TYP',    id:'trigger',      type:'option'},
+  {icon:'⚙', title:'BACK PADDLES',   id:'paddle',       type:'option'},
+  {icon:'✨', title:'GRAVUR',         id:'engraving',    type:'engrave'},
+  {icon:'🚀', title:'FERTIGUNGSZEIT', id:'express',      type:'option'}
+];
+
+// STATE
+var state = {
+  colors:{frontshell:null,backshell:null,buttons:null,dpad:null,stickcap:null,triggercolor:null,lightbar:null},
+  options:{stick:null,trigger:null,paddle:null,express:null},
+  engraving:'', engraveColor:'#111111'
+};
+
+function $(id){ return document.getElementById(id); }
+function haptic(p){ try{ if(navigator.vibrate) navigator.vibrate(p||20); }catch(e){} }
+function toast(msg){
+  var t=$('toast'); if(!t) return;
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(window._t); window._t=setTimeout(function(){ t.classList.remove('show'); },2000);
+}
+
+// ============================================================
+// HEX → RGB
+// ============================================================
+function hexToRgb(hex){
+  var r=parseInt(hex.slice(1,3),16);
+  var g=parseInt(hex.slice(3,5),16);
+  var b=parseInt(hex.slice(5,7),16);
+  return {r:r,g:g,b:b};
+}
+
+// ============================================================
+// CONTROLLER FARB-PREVIEW
+//
+// Wie MakeMyCon: Die Farbe wird NUR auf den Controller übertragen.
+// Wir zeichnen einen halbtransparenten Farb-Layer auf Canvas,
+// mix-blend-mode:multiply → nur dunkle/farbige Bereiche des
+// Controllers werden eingefärbt, weiße Bereiche nehmen die Farbe an.
+// ============================================================
+function paintController(){
+  var frontCanvas = $('color-canvas-front');
+  var backCanvas  = $('color-canvas-back');
+
+  // Haupt-Farbe = frontshell
+  var fs = state.colors.frontshell;
+  var bs = state.colors.backshell;
+
+  paintCanvas(frontCanvas, fs);
+  paintCanvas(backCanvas,  bs);
+
+  // LIGHTBAR
+  var lb = state.colors.lightbar;
+  var lg = $('lightbar');
+  if(lg){
+    var lc = lb ? lb.hex : '#4a90e2';
+    lg.style.background = lc;
+    lg.style.boxShadow = '0 0 14px 4px '+lc+', 0 0 4px 1px '+lc;
+  }
+
+  // Summary + Engrave
+  updateSummary();
+  applyEngrave();
+}
+
+function paintCanvas(canvas, colorObj){
+  if(!canvas) return;
+  var stage = canvas.parentElement;
+  if(!stage) return;
+
+  // Weiß = transparent, keine Farb-Überlagerung
+  if(!colorObj || colorObj.hex === '#ffffff'){
+    canvas.style.opacity = '0';
+    return;
+  }
+
+  // Canvas-Größe an Stage anpassen
+  var w = stage.offsetWidth || 400;
+  var h = stage.offsetHeight || 300;
+  canvas.width = w;
+  canvas.height = h;
+
+  var ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,w,h);
+
+  var rgb = hexToRgb(colorObj.hex);
+
+  // Radialer Gradient: Mitte etwas heller (Lichtsimulation), Ränder satter
+  var cx = w * 0.5;
+  var cy = h * 0.48;
+  var grad = ctx.createRadialGradient(cx, cy*0.8, h*0.05, cx, cy, h*0.8);
+
+  // mix-blend-mode:multiply → weiße Fläche nimmt Farbe an
+  // Dunklere Basis = gesättigtere Farbe
+  grad.addColorStop(0,   'rgba('+rgb.r+','+rgb.g+','+rgb.b+',0.55)');
+  grad.addColorStop(0.45,'rgba('+rgb.r+','+rgb.g+','+rgb.b+',0.75)');
+  grad.addColorStop(1,   'rgba('+rgb.r+','+rgb.g+','+rgb.b+',0.88)');
+
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,w,h);
+  canvas.style.opacity = '1';
+}
+
+// ============================================================
+// FARB-SUMMARY
+// ============================================================
+function buildSummary(){
+  var wrap = $('color-summary');
+  if(!wrap) return;
+  wrap.innerHTML = '';
+  SUMMARY_PARTS.forEach(function(p){
+    var div = document.createElement('div');
+    div.className = 'cs-item';
+    var sw = document.createElement('div');
+    sw.className = 'cs-swatch';
+    sw.id = 'sw-'+p.key;
+    sw.style.background = p.def;
+    if(p.key==='lightbar') sw.style.boxShadow='0 0 6px '+p.def;
+    var lbl = document.createElement('span');
+    lbl.textContent = p.label;
+    div.appendChild(sw); div.appendChild(lbl);
+    wrap.appendChild(div);
+  });
+}
+
+function updateSummary(){
+  SUMMARY_PARTS.forEach(function(p){
+    var sw = $('sw-'+p.key); if(!sw) return;
+    var c = state.colors[p.key];
+    var col = c ? c.hex : p.def;
+    sw.style.background = col;
+    if(p.key==='lightbar') sw.style.boxShadow='0 0 8px '+col;
+  });
+}
+
+// ============================================================
+// AKKORDEONS + GRIDS BAUEN
+// ============================================================
+function buildSections(){
+  var wrap = $('cfg-sections');
+  if(!wrap) return;
+  wrap.innerHTML = '';
+
+  SECTIONS.forEach(function(sec){
+    var acc = document.createElement('div');
+    acc.className = 'cfg-acc';
+    acc.id = 'acc-'+sec.id;
+
+    // Header
+    var hd = document.createElement('div');
+    hd.className = 'cfg-acc-hd';
+    hd.onclick = (function(a){ return function(){ toggleAcc(a); }; })(acc);
+
+    var icon = document.createElement('div');
+    icon.className = 'cfg-acc-icon';
+    icon.textContent = sec.icon;
+
+    var nameWrap = document.createElement('div');
+    nameWrap.style.flex = '1';
+    var nm = document.createElement('div');
+    nm.className = 'cfg-acc-name';
+    nm.textContent = sec.title;
+    var cur = document.createElement('div');
+    cur.className = 'cfg-acc-cur';
+    cur.id = 'cur-'+sec.id;
+    var cs = document.createElement('strong');
+    cs.textContent = getDefLabel(sec);
+    cur.appendChild(cs);
+    nameWrap.appendChild(nm);
+    nameWrap.appendChild(cur);
+
+    var arr = document.createElement('div');
+    arr.className = 'cfg-acc-arr';
+    arr.textContent = '›';
+
+    hd.appendChild(icon);
+    hd.appendChild(nameWrap);
+    hd.appendChild(arr);
+
+    // Body
+    var body = document.createElement('div');
+    body.className = 'cfg-acc-body';
+    var content = document.createElement('div');
+    content.className = 'cfg-acc-content';
+
+    if(sec.type==='color')   content.appendChild(buildColorGrid(sec.id));
+    else if(sec.type==='option')  content.appendChild(buildOptList(sec.id));
+    else if(sec.type==='engrave') content.appendChild(buildEngravePanel());
+
+    body.appendChild(content);
+    acc.appendChild(hd);
+    acc.appendChild(body);
+    wrap.appendChild(acc);
+  });
+}
+
+function getDefLabel(sec){
+  if(sec.type==='color'){
+    var arr=COLORS[COLOR_KEY[sec.id]||sec.id];
+    if(arr){ var d=arr.filter(function(c){return c.def;})[0]; return d?d.name:''; }
+  }
+  if(sec.type==='option'){
+    var opts=OPTIONS[sec.id];
+    if(opts){ var dd=opts.filter(function(o){return o.def;})[0]; return dd?dd.val:''; }
+  }
+  return 'Keine';
+}
+
+// COLOR GRID
+function buildColorGrid(part){
+  var key = COLOR_KEY[part]||part;
+  var arr = COLORS[key];
+  var grid = document.createElement('div');
+  grid.className = 'cfg-color-grid';
+  grid.id = 'grid-'+part;
+  if(!arr||!arr.length) return grid;
+
+  arr.forEach(function(c){
+    var btn = document.createElement('div');
+    btn.className = 'color-btn'+(c.def?' sel':'');
+    btn.style.background = c.hex;
+
+    // Weißer Rand für helle Farben damit man sie sieht
+    if(c.hex==='#ffffff'||c.hex==='#eeeeee'||c.hex==='#e8e8ea'||c.hex==='#d0eaf8'){
+      btn.style.borderColor = 'rgba(255,255,255,.35)';
+    }
+
+    btn.setAttribute('data-part', part);
+    btn.setAttribute('data-hex',  c.hex);
+    btn.setAttribute('data-name', c.name);
+    btn.setAttribute('data-premium', c.premium||0);
+
+    var tip = document.createElement('div');
+    tip.className = 'color-name';
+    tip.textContent = c.name+(c.premium>0?' +'+c.premium+'€':'');
+    btn.appendChild(tip);
+
+    btn.onclick = function(){ onColorClick(this); };
+    grid.appendChild(btn);
+  });
+  return grid;
+}
+
+function onColorClick(btn){
+  haptic(25);
+  var part    = btn.getAttribute('data-part');
+  var hex     = btn.getAttribute('data-hex');
+  var name    = btn.getAttribute('data-name');
+  var premium = parseFloat(btn.getAttribute('data-premium'))||0;
+
+  var grid = $('grid-'+part);
+  if(grid){
+    var all = grid.querySelectorAll('.color-btn');
+    for(var i=0;i<all.length;i++) all[i].classList.remove('sel');
+  }
+  btn.classList.add('sel');
+
+  state.colors[part] = {hex:hex, name:name, premium:premium};
+
+  var cur = $('cur-'+part);
+  if(cur) cur.innerHTML = '<strong>'+name+'</strong>'+(premium>0?' (+'+premium+' €)':'');
+
+  paintController();
+  updatePrice();
+  toast('✓ '+name+' ausgewählt');
+
+  // Preset-Markierung entfernen
+  var pBtns=document.querySelectorAll('.preset-btn');
+  for(var j=0;j<pBtns.length;j++) pBtns[j].classList.remove('active');
+}
+
+// OPTION LIST
+function buildOptList(cat){
+  var wrap=document.createElement('div');
+  wrap.className='cfg-opt-list';
+  wrap.id='opt-'+cat;
+  var arr=OPTIONS[cat]; if(!arr) return wrap;
+  arr.forEach(function(o){
+    var btn=document.createElement('button');
+    btn.className='opt-btn'+(o.def?' sel':'');
+    btn.setAttribute('data-cat',cat);
+    btn.setAttribute('data-val',o.val);
+    btn.setAttribute('data-price',o.price);
+
+    var radio=document.createElement('div'); radio.className='opt-radio';
+    var info=document.createElement('div'); info.className='opt-info';
+    var nm=document.createElement('div'); nm.className='opt-name'; nm.textContent=o.val;
+    if(o.badge){ var bdg=document.createElement('span'); bdg.className='opt-badge'; bdg.textContent=o.badge; nm.appendChild(bdg); }
+    var desc=document.createElement('div'); desc.className='opt-desc'; desc.textContent=o.desc;
+    info.appendChild(nm); info.appendChild(desc);
+    var price=document.createElement('div');
+    price.className='opt-price'+(o.price===0?' free':'');
+    price.textContent=o.price===0?'inkl.':'+'+o.price+' €';
+
+    btn.appendChild(radio); btn.appendChild(info); btn.appendChild(price);
+    btn.onclick=function(){ onOptClick(this); };
+    wrap.appendChild(btn);
+  });
+  return wrap;
+}
+
+function onOptClick(btn){
+  haptic(25);
+  var cat=btn.getAttribute('data-cat');
+  var val=btn.getAttribute('data-val');
+  var price=parseFloat(btn.getAttribute('data-price'))||0;
+  var list=$('opt-'+cat);
+  if(list){ var all=list.querySelectorAll('.opt-btn'); for(var i=0;i<all.length;i++) all[i].classList.remove('sel'); }
+  btn.classList.add('sel');
+  state.options[cat]={val:val,price:price};
+  var cur=$('cur-'+cat);
+  if(cur) cur.innerHTML='<strong>'+val+'</strong>'+(price>0?' (+'+price+' €)':'');
+  updateTechBadges();
+  updatePrice();
+  toast('✓ '+val+' ausgewählt');
+}
+
+// GRAVUR
+function buildEngravePanel(){
+  var wrap=document.createElement('div');
+  var hint=document.createElement('div');
+  hint.style.cssText='font-size:10.5px;color:#888;margin-bottom:10px;line-height:1.5';
+  hint.textContent='Personalisiere mit Namen, Gamertag oder Team. Max. 12 Zeichen — direkt auf Touchpad eingraviert.';
+  wrap.appendChild(hint);
+
+  var row=document.createElement('div'); row.className='engrave-row';
+  var inp=document.createElement('input');
+  inp.type='text'; inp.maxLength=12; inp.id='engrave-input'; inp.placeholder='DEIN TEXT';
+  inp.oninput=function(){ onEngraveInput(this); };
+  var cnt=document.createElement('span'); cnt.className='engrave-cnt'; cnt.id='engrave-cnt'; cnt.textContent='0/12';
+  row.appendChild(inp); row.appendChild(cnt); wrap.appendChild(row);
+
+  var clbl=document.createElement('div');
+  clbl.style.cssText='font-family:Orbitron;font-size:8px;color:#555;letter-spacing:1.5px;margin-top:14px;margin-bottom:6px';
+  clbl.textContent='GRAVUR-FARBE';
+  wrap.appendChild(clbl);
+
+  var cr=document.createElement('div'); cr.className='engrave-colors';
+  COLORS.engrave.forEach(function(c){
+    var b=document.createElement('div');
+    b.className='eng-color'+(c.def?' sel':'');
+    b.style.background=c.hex; b.title=c.name;
+    if(c.hex==='#ffffff') b.style.borderColor='rgba(255,255,255,.4)';
+    b.onclick=function(){
+      document.querySelectorAll('.eng-color').forEach(function(x){x.classList.remove('sel');});
+      b.classList.add('sel'); state.engraveColor=c.hex; applyEngrave(); haptic(15);
+    };
+    cr.appendChild(b);
+  });
+  wrap.appendChild(cr);
+
+  var pr=document.createElement('div');
+  pr.style.cssText='display:flex;justify-content:space-between;margin-top:12px;font-family:Orbitron;font-size:9.5px';
+  var pl=document.createElement('span'); pl.style.color='#555'; pl.textContent='PERSONALISIERUNG';
+  var pv=document.createElement('span'); pv.id='price-engraving'; pv.style.color='#00f2ff'; pv.textContent='+0 €';
+  pr.appendChild(pl); pr.appendChild(pv); wrap.appendChild(pr);
+  return wrap;
+}
+
+function onEngraveInput(inp){
+  var val=inp.value.toUpperCase().slice(0,12);
+  inp.value=val; state.engraving=val;
+  var cnt=$('engrave-cnt'); if(cnt) cnt.textContent=val.length+'/12';
+  var cur=$('cur-engraving'); if(cur) cur.innerHTML='<strong>'+(val||'Keine')+'</strong>';
+  var pe=$('price-engraving'); if(pe) pe.textContent=val?'+8 €':'+0 €';
+  applyEngrave(); updatePrice();
+}
+
+function applyEngrave(){
+  ['engrave-front','engrave-back'].forEach(function(id){
+    var el=$(id); if(!el) return;
+    el.textContent=state.engraving;
+    el.style.color=state.engraveColor;
+    if(state.engraving) el.classList.add('show');
+    else el.classList.remove('show');
+  });
+}
+
+// TECH BADGES
+function updateTechBadges(){
+  var sV=state.options.stick?state.options.stick.val:'Standard';
+  var tV=state.options.trigger?state.options.trigger.val:'Adaptive';
+  var pV=state.options.paddle?state.options.paddle.val:'Keine';
+  var sb=$('badge-stick');
+  if(sb){
+    if(sV==='Hall Effect'){sb.style.display='block';sb.innerHTML='⚡ Hall Effect Sticks<small>Anti-Drift Magnetik</small>';}
+    else if(sV==='TMR'){sb.style.display='block';sb.innerHTML='🧲 TMR Sticks<small>Höchste Präzision</small>';}
+    else sb.style.display='none';
+  }
+  var tb=$('badge-trigger');
+  if(tb){
+    if(tV==='Smart Clicky'){tb.style.display='block';tb.innerHTML='⚡ Smart Clicky<small>Mouse-Click Feel</small>';}
+    else if(tV==='Digital 1mm'){tb.style.display='block';tb.innerHTML='💎 Digital 1mm<small>Ultra-fast Response</small>';}
+    else tb.style.display='none';
+  }
+  var pb=$('badge-paddle');
+  if(pb){
+    if(pV!=='Keine'){pb.style.display='block';pb.innerHTML='⚙ '+pV+'<small>Frei programmierbar</small>';}
+    else pb.style.display='none';
+  }
+}
+
+// AKKORDEON
+function toggleAcc(acc){
+  haptic(15);
+  var isOpen=acc.classList.contains('open');
+  document.querySelectorAll('.cfg-acc').forEach(function(a){a.classList.remove('open');});
+  if(!isOpen){
+    acc.classList.add('open');
+    setTimeout(function(){ acc.scrollIntoView({behavior:'smooth',block:'nearest'}); },280);
+  }
+}
+
+// VIEW WECHSEL
+function setView(view,btn){
+  haptic(20);
+  document.querySelectorAll('.ctrl-toggle button').forEach(function(b){b.classList.remove('active');});
+  if(btn) btn.classList.add('active');
+  var sf=$('stage-front'), sb=$('stage-back');
+  if(view==='front'){sf.style.display='';sb.style.display='none';}
+  else{sf.style.display='none';sb.style.display='';}
+}
+
+// PRESETS
+function buildPresets(){
+  var row=$('preset-row'); if(!row) return;
+  PRESETS.forEach(function(p){
+    var btn=document.createElement('button');
+    btn.className='preset-btn'+(p.id==='default'?' active':'');
+    btn.id='preset-'+p.id;
+    var dot=document.createElement('span'); dot.className='preset-dot';
+    dot.style.background=p.dot;
+    if(p.dotBorder) dot.style.border='1px solid #999';
+    btn.appendChild(dot);
+    btn.appendChild(document.createTextNode(p.label));
+    btn.onclick=(function(preset,b){return function(){loadPreset(preset,b);};})(p,btn);
+    row.appendChild(btn);
+  });
+}
+
+function loadPreset(p,btn){
+  haptic([20,40,30]);
+  document.querySelectorAll('.preset-btn').forEach(function(b){b.classList.remove('active');});
+  if(btn) btn.classList.add('active');
+
+  Object.keys(p.c).forEach(function(part){
+    var targetHex=p.c[part];
+    var key=COLOR_KEY[part]||part;
+    var arr=COLORS[key]; if(!arr) return;
+    var found=arr[0];
+    for(var i=0;i<arr.length;i++){ if(arr[i].hex===targetHex){found=arr[i];break;} }
+    state.colors[part]={hex:found.hex,name:found.name,premium:found.premium||0};
+
+    var grid=$('grid-'+part);
+    if(grid){
+      var all=grid.querySelectorAll('.color-btn');
+      for(var j=0;j<all.length;j++){
+        all[j].classList.remove('sel');
+        if(all[j].getAttribute('data-hex')===found.hex) all[j].classList.add('sel');
+      }
+    }
+    var cur=$('cur-'+part);
+    if(cur) cur.innerHTML='<strong>'+found.name+'</strong>';
+  });
+
+  paintController();
+  updatePrice();
+  toast('✓ Preset '+p.label+' geladen');
+}
+
+// PREIS
+function updatePrice(){
+  var price=BASE_PRICE;
+  Object.keys(state.colors).forEach(function(k){var c=state.colors[k];if(c)price+=c.premium||0;});
+  Object.keys(state.options).forEach(function(k){var o=state.options[k];if(o)price+=o.price||0;});
+  if(state.engraving) price+=8;
+  var total=price*qty;
+  var fmt=total.toFixed(2).replace('.',',');
+  $('total-price').innerHTML='<span>'+fmt+' €</span>';
+}
+
+// WARENKORB
+function addToCart(){
+  haptic([30,40,50]);
+  var price=BASE_PRICE;
+  Object.keys(state.colors).forEach(function(k){var c=state.colors[k];if(c)price+=c.premium||0;});
+  Object.keys(state.options).forEach(function(k){var o=state.options[k];if(o)price+=o.price||0;});
+  if(state.engraving) price+=8;
+  var upgrades=[];
+  Object.keys(state.colors).forEach(function(k){var c=state.colors[k];if(c&&c.premium>0)upgrades.push(c.name);});
+  Object.keys(state.options).forEach(function(k){var o=state.options[k];if(o&&o.price>0)upgrades.push(o.val);});
+  if(state.engraving) upgrades.push('Gravur:'+state.engraving);
+  var item={
+    name:'Custom PS5 Controller'+(upgrades.length?' ('+upgrades.length+' Upgrades)':''),
+    price:price,img:'IMG_0611.jpeg',qty:qty,custom:true,config:JSON.stringify(state)
+  };
+  var cart=[];
+  try{var s=localStorage.getItem('lxrd_cart');if(s)cart=JSON.parse(s);}catch(e){}
+  cart.push(item);
+  try{localStorage.setItem('lxrd_cart',JSON.stringify(cart));}catch(e){}
+  toast('✓ '+qty+'× Controller hinzugefügt');
+  setTimeout(function(){window.location.href='index.html#cart-open';},900);
+}
+
+// PARTIKEL
+function initParticles(){
+  var c=$('pc');if(!c)return;
+  var ctx=c.getContext('2d');
+  var rsz=function(){c.width=window.innerWidth;c.height=window.innerHeight;};
+  window.addEventListener('resize',rsz);rsz();
+  var pts=[];
+  for(var i=0;i<60;i++) pts.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.4+.3,vx:(Math.random()-.5)*.12,vy:(Math.random()-.5)*.12,o:Math.random()*.5+.15,col:Math.random()>.7?'#00f2ff':Math.random()>.5?'#bc13fe':'#ffffff'});
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    pts.forEach(function(p){
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=c.width;if(p.x>c.width)p.x=0;
+      if(p.y<0)p.y=c.height;if(p.y>c.height)p.y=0;
+      ctx.fillStyle=p.col;ctx.globalAlpha=p.o;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+    });
+    ctx.globalAlpha=1;requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// INIT
+window.addEventListener('DOMContentLoaded',function(){
+  try {
+  // Defaults in State
+  Object.keys(state.colors).forEach(function(part){
+    var key=COLOR_KEY[part]||part;
+    var arr=COLORS[key]; if(!arr) return;
+    for(var i=0;i<arr.length;i++){
+      if(arr[i].def){state.colors[part]={hex:arr[i].hex,name:arr[i].name,premium:0};break;}
+    }
+  });
+  Object.keys(state.options).forEach(function(cat){
+    var arr=OPTIONS[cat]; if(!arr) return;
+    for(var i=0;i<arr.length;i++){
+      if(arr[i].def){state.options[cat]={val:arr[i].val,price:0};break;}
+    }
+  });
+
+  buildSummary();
+  buildPresets();
+  buildSections();
+  initParticles();
+  paintController();
+  updatePrice();
+  updateTechBadges();
+
+  $('qty-minus').onclick=function(){haptic(15);qty=Math.max(1,qty-1);$('qty-val').textContent=qty;updatePrice();};
+  $('qty-plus').onclick=function(){haptic(15);qty=Math.min(99,qty+1);$('qty-val').textContent=qty;updatePrice();};
+  $('cart-btn').onclick=addToCart;
+
+  // Canvas bei Größenänderung neu zeichnen
+  window.addEventListener('resize',function(){ setTimeout(paintController,100); });
+
+  } catch(initErr) {
+    console.error('Init error:', initErr);
+  }
+
+  // LOADING WEGMACHEN - mit Fallback
+  function hideLoading(){
+    var l=$('cfg-loading');
+    if(!l) return;
+    l.classList.add('hidden');
+    setTimeout(function(){ l.classList.add('gone'); }, 500);
+  }
+  // Sofort nach Init verstecken
+  setTimeout(hideLoading, 400);
+  // Harter Fallback: nach 2s egal was passiert ist
+  setTimeout(function(){
+    var l=$('cfg-loading');
+    if(l){ l.style.display='none'; l.style.pointerEvents='none'; l.style.opacity='0'; }
+  }, 2000);
+});
+</script>
+
+<!-- HARTER FALLBACK: Loading-Screen wird nach 1.5s IMMER entfernt -->
+<script>
+setTimeout(function(){
+  var l=document.getElementById('cfg-loading');
+  if(l){ l.style.cssText='display:none!important;opacity:0!important;pointer-events:none!important'; }
+},1500);
+</script>
+</body>
+</html>

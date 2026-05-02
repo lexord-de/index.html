@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5">
+<title>PS5 Controller Konfigurator | LEXORD®</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --neon: #00f2ff;
+  --neon2: #bc13fe;
+  --green: #00b67a;
+  --bg: #000;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { overflow-x:hidden; scroll-behavior:smooth; }
+body { background:#000; color:#fff; font-family:'Inter',sans-serif; min-height:100vh; padding-bottom:140px; }
+
+/* AURORA */
+.aurora { position:fixed; inset:0; z-index:-3; background:#000; overflow:hidden; }
+.ab { position:absolute; border-radius:50%; filter:blur(90px); opacity:.45; animation:af 25s ease-in-out infinite; }
+.ab:nth-child(1) { width:55%; height:55%; background:radial-gradient(circle,rgba(0,242,255,.5),transparent 70%); top:-10%; left:-10%; }
+.ab:nth-child(2) { width:50%; height:50%; background:radial-gradient(circle,rgba(188,19,254,.4),transparent 70%); bottom:-10%; right:-10%; animation-delay:-8s; animation-duration:30s; }
+.ab:nth-child(3) { width:40%; height:40%; background:radial-gradient(circle,rgba(255,46,110,.25),transparent 70%); top:50%; left:50%; transform:translate(-50%,-50%); animation-delay:-15s; }
+@keyframes af { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(15%,-10%) scale(1.1)} }
+.grid-overlay { position:fixed; inset:0; z-index:-2; background-image:linear-gradient(rgba(0,242,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,242,255,.025) 1px,transparent 1px); background-size:50px 50px; pointer-events:none; }
+#pc { position:fixed; inset:0; z-index:-1; pointer-events:none; }
+
+/* HEADER */
+.cfg-header { position:sticky; top:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:12px 5%; background:rgba(0,0,0,.9); backdrop-filter:blur(22px); border-bottom:1px solid rgba(0,242,255,.15); }
+.cfg-back { display:inline-flex; align-items:center; gap:7px; font-family:'Orbitron'; font-size:9px; letter-spacing:2px; font-weight:700; color:#aaa; text-decoration:none; padding:9px 14px; border:1px solid #1a1a1e; border-radius:10px; background:rgba(10,10,12,.6); }
+.cfg-title { font-family:'Orbitron'; font-weight:900; font-size:11px; letter-spacing:3px; color:#ddd; text-align:center; flex:1; }
+.cfg-live { font-family:'Orbitron'; font-size:8px; letter-spacing:1.5px; color:var(--neon); background:rgba(0,242,255,.08); border:1px solid rgba(0,242,255,.25); padding:6px 10px; border-radius:7px; display:flex; align-items:center; gap:5px; white-space:nowrap; }
+.cfg-live::before { content:''; width:5px; height:5px; background:var(--neon); border-radius:50%; animation:ldot 1.5s infinite; box-shadow:0 0 8px var(--neon); }
+@keyframes ldot { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+/* HERO */
+.cfg-hero { text-align:center; padding:28px 5% 18px; }
+.cfg-hero-eyebrow { display:inline-block; padding:5px 14px; background:rgba(0,242,255,.08); border:1px solid rgba(0,242,255,.25); border-radius:20px; font-family:'Orbitron'; font-size:8px; color:var(--neon); letter-spacing:3px; margin-bottom:12px; }
+.cfg-hero-title { font-family:'Orbitron'; font-weight:900; font-size:clamp(1.3rem,5vw,2.2rem); line-height:1.1; margin-bottom:8px; background:linear-gradient(180deg,#fff,rgba(255,255,255,.5)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+.cfg-hero-sub { font-family:'Orbitron'; font-size:9px; letter-spacing:3px; color:#666; }
+
+/* CONTROLLER STAGE */
+.ctrl-wrap { display:flex; flex-direction:column; align-items:center; padding:10px 5% 20px; }
+.ctrl-toggle { display:flex; gap:6px; margin-bottom:16px; background:rgba(12,12,14,.7); padding:4px; border-radius:11px; border:1px solid rgba(255,255,255,.07); }
+.ctrl-toggle button { font-family:'Orbitron'; font-size:9px; letter-spacing:1.5px; font-weight:700; background:transparent; border:none; color:#888; padding:9px 18px; border-radius:8px; cursor:pointer; transition:.25s; }
+.ctrl-toggle button.active { background:rgba(0,242,255,.15); color:var(--neon); box-shadow:0 0 12px rgba(0,242,255,.2); }
+
+.ctrl-stage { position:relative; width:100%; max-width:520px; aspect-ratio:1.15/1; }
+.ctrl-stage::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 60%,rgba(0,242,255,.15) 0%,transparent 60%); filter:blur(30px); pointer-events:none; z-index:0; }
+
+.photo-stack { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:2; animation:ctrlFloat 5s ease-in-out infinite; }
+@keyframes ctrlFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.photo-stack img { width:100%; height:100%; object-fit:contain; position:absolute; inset:0; filter:drop-shadow(0 20px 40px rgba(0,242,255,.15)) drop-shadow(0 10px 20px rgba(0,0,0,.8)); }
+
+/* FARB-OVERLAY auf Controller */
+.color-overlay {
+  position:absolute; inset:0; z-index:3; pointer-events:none;
+  border-radius:50%; opacity:0;
+  transition:background .4s, opacity .4s;
+  mix-blend-mode:color;
+}
+.color-overlay.active { opacity:0.7; }
+
+/* LIGHTBAR */
+#lightbar-glow { position:absolute; top:43%; left:50%; transform:translateX(-50%); width:22%; height:5px; border-radius:4px; background:#4a90e2; filter:blur(5px) brightness(1.5); opacity:.9; z-index:4; pointer-events:none; transition:all .4s; box-shadow:0 0 16px 5px #4a90e2; }
+
+/* ENGRAVE */
+.engrave-txt { position:absolute; top:35%; left:50%; transform:translate(-50%,-50%); font-family:'Orbitron'; font-weight:900; font-size:clamp(10px,2vw,14px); letter-spacing:2px; pointer-events:none; z-index:6; opacity:0; transition:.3s; white-space:nowrap; }
+.engrave-txt.show { opacity:1; }
+
+/* FARB-SUMMARY */
+.color-summary { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:14px; padding:10px 16px; background:rgba(12,12,16,.7); border:1px solid rgba(255,255,255,.07); border-radius:12px; max-width:520px; width:100%; }
+.cs-item { display:flex; align-items:center; gap:5px; font-family:'Orbitron'; font-size:7px; letter-spacing:.8px; color:#555; }
+.cs-swatch { width:14px; height:14px; border-radius:3px; border:1px solid rgba(255,255,255,.15); transition:background .3s, box-shadow .3s; flex-shrink:0; }
+
+/* PRESETS */
+.preset-wrap { padding:4px 5% 18px; max-width:760px; margin:0 auto; }
+.preset-label { font-family:'Orbitron'; font-size:8px; color:#555; letter-spacing:2px; margin-bottom:8px; display:block; }
+.preset-row { display:flex; gap:8px; overflow-x:auto; padding:4px 0; scrollbar-width:none; }
+.preset-row::-webkit-scrollbar { display:none; }
+.preset-btn { flex-shrink:0; padding:10px 16px; border-radius:11px; border:1.5px solid rgba(255,255,255,.07); background:rgba(255,255,255,.03); font-family:'Orbitron'; font-size:9px; letter-spacing:1.5px; font-weight:700; color:#bbb; cursor:pointer; white-space:nowrap; transition:.25s; display:inline-flex; align-items:center; gap:7px; }
+.preset-btn:hover, .preset-btn.active { border-color:var(--neon); color:var(--neon); background:rgba(0,242,255,.07); }
+.preset-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+
+/* DIVIDER */
+.cfg-divider { padding:8px 5% 0; text-align:center; max-width:760px; margin:0 auto; }
+.cfg-divider-line { height:1px; background:linear-gradient(90deg,transparent,rgba(0,242,255,.4),transparent); margin-bottom:14px; }
+.cfg-divider-text { font-family:'Orbitron'; font-size:10px; letter-spacing:4px; color:var(--neon); margin-bottom:5px; font-weight:700; }
+.cfg-divider-sub { font-size:11px; color:#777; margin-bottom:4px; }
+
+/* ACCORDION */
+.cfg-sections { padding:16px 5% 30px; max-width:760px; margin:0 auto; display:flex; flex-direction:column; gap:10px; }
+.cfg-acc { background:rgba(10,10,14,.75); border:1px solid rgba(255,255,255,.07); border-radius:14px; overflow:hidden; backdrop-filter:blur(10px); transition:border-color .3s; }
+.cfg-acc:hover { border-color:rgba(0,242,255,.2); }
+.cfg-acc.open { border-color:rgba(0,242,255,.35); box-shadow:0 6px 28px rgba(0,242,255,.07); }
+.cfg-acc-hd { display:flex; align-items:center; gap:14px; padding:18px; cursor:pointer; user-select:none; }
+.cfg-acc-icon { width:40px; height:40px; background:linear-gradient(135deg,rgba(0,242,255,.1),rgba(0,242,255,.04)); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0; border:1px solid rgba(0,242,255,.15); }
+.cfg-acc-name { flex:1; font-family:'Orbitron'; font-size:11px; font-weight:700; color:#ddd; letter-spacing:1.5px; }
+.cfg-acc-cur { font-family:'Inter'; font-size:10px; font-weight:400; color:#666; margin-top:3px; }
+.cfg-acc-cur strong { color:var(--neon); font-weight:600; }
+.cfg-acc-arr { font-size:16px; color:#444; transition:transform .3s; }
+.cfg-acc.open .cfg-acc-arr { transform:rotate(90deg); color:var(--neon); }
+.cfg-acc-body { max-height:0; overflow:hidden; transition:max-height .4s ease; }
+.cfg-acc.open .cfg-acc-body { max-height:3000px; }
+.cfg-acc-content { padding:4px 18px 20px; }
+
+/* COLOR GRID */
+.cfg-color-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(58px,1fr)); gap:10px; margin-top:8px; }
+.color-btn {
+  aspect-ratio:1/1; border-radius:11px; cursor:pointer;
+  border:2.5px solid rgba(255,255,255,.08);
+  transition:transform .2s, border-color .2s, box-shadow .2s;
+  position:relative;
+}
+.color-btn:hover { transform:scale(1.08); border-color:rgba(0,242,255,.5); z-index:5; }
+.color-btn.sel {
+  border-color:var(--neon);
+  box-shadow:0 0 0 2px rgba(0,242,255,.35), 0 4px 18px rgba(0,242,255,.4);
+  transform:scale(1.06);
+}
+.color-btn.sel::after {
+  content:'✓'; position:absolute; top:3px; right:3px;
+  width:17px; height:17px; background:var(--neon); color:#000;
+  font-size:10px; font-weight:900; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+}
+.color-name {
+  position:absolute; bottom:-30px; left:50%; transform:translateX(-50%);
+  background:#111; color:#fff; font-family:'Orbitron'; font-size:7.5px;
+  padding:4px 8px; border-radius:6px; white-space:nowrap;
+  opacity:0; pointer-events:none; transition:opacity .2s; z-index:20;
+  border:1px solid rgba(255,255,255,.1);
+}
+.color-btn:hover .color-name { opacity:1; }
+
+/* OPTION LIST */
+.cfg-opt-list { display:flex; flex-direction:column; gap:8px; margin-top:4px; }
+.opt-btn {
+  display:flex; align-items:center; gap:14px;
+  padding:14px 16px; background:rgba(255,255,255,.02);
+  border:1.5px solid rgba(255,255,255,.06);
+  border-radius:11px; cursor:pointer; transition:.25s; text-align:left;
+  width:100%;
+}
+.opt-btn:hover { border-color:rgba(0,242,255,.35); background:rgba(0,242,255,.03); }
+.opt-btn.sel { border-color:var(--neon); background:rgba(0,242,255,.07); box-shadow:0 0 12px rgba(0,242,255,.1); }
+.opt-radio { width:18px; height:18px; border:2px solid rgba(255,255,255,.25); border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:.25s; }
+.opt-btn.sel .opt-radio { border-color:var(--neon); background:var(--neon); }
+.opt-btn.sel .opt-radio::after { content:''; width:6px; height:6px; background:#000; border-radius:50%; }
+.opt-info { flex:1; }
+.opt-name { font-family:'Orbitron'; font-size:10.5px; font-weight:700; color:#fff; letter-spacing:.5px; }
+.opt-desc { font-size:10px; color:#666; margin-top:3px; line-height:1.4; }
+.opt-price { font-family:'Orbitron'; font-size:10.5px; font-weight:900; color:var(--neon); flex-shrink:0; }
+.opt-price.free { color:#555; }
+.opt-badge { display:inline-block; background:var(--neon); color:#000; font-family:'Orbitron'; font-size:7px; font-weight:900; padding:3px 6px; border-radius:4px; margin-left:7px; }
+
+/* ENGRAVE */
+.engrave-row { display:flex; align-items:center; gap:10px; background:rgba(255,255,255,.03); border:1.5px solid rgba(255,255,255,.06); border-radius:11px; padding:13px 15px; transition:.25s; }
+.engrave-row:focus-within { border-color:var(--neon); }
+.engrave-row input { flex:1; background:transparent; border:none; color:#fff; font-family:'Orbitron'; font-size:13px; letter-spacing:1.5px; outline:none; }
+.engrave-row input::placeholder { color:#444; }
+.engrave-cnt { font-family:'Orbitron'; font-size:9px; color:#555; }
+.engrave-colors { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+.eng-color { width:30px; height:30px; border-radius:6px; cursor:pointer; border:2px solid rgba(255,255,255,.1); transition:.2s; }
+.eng-color:hover { transform:scale(1.1); }
+.eng-color.sel { border-color:var(--neon); box-shadow:0 0 0 2px rgba(0,242,255,.3); }
+
+/* BENEFITS */
+.benefits-row { padding:28px 5%; max-width:1100px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; }
+.benefit-item { padding:16px; background:rgba(10,10,14,.5); border:1px solid rgba(255,255,255,.05); border-radius:12px; text-align:center; }
+.benefit-icon { font-size:22px; margin-bottom:8px; }
+.benefit-title { font-family:'Orbitron'; font-size:9px; color:var(--neon); letter-spacing:1.5px; margin-bottom:5px; font-weight:700; }
+.benefit-desc { font-size:10.5px; color:#666; line-height:1.5; }
+
+/* BOTTOM BAR */
+.cfg-bottom { position:fixed; bottom:0; left:0; right:0; z-index:200; background:rgba(4,4,8,.97); backdrop-filter:blur(28px); border-top:1px solid rgba(0,242,255,.2); padding:12px 5%; display:flex; align-items:center; gap:12px; box-shadow:0 -8px 32px rgba(0,0,0,.6); }
+.price-wrap { flex:1; }
+.price-lbl { font-family:'Orbitron'; font-size:7.5px; color:#555; letter-spacing:1.5px; }
+.price-val { font-family:'Orbitron'; font-size:22px; font-weight:900; color:#fff; line-height:1; margin-top:3px; }
+.price-val span { color:var(--neon); }
+.qty-wrap { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.09); border-radius:9px; padding:4px; }
+.qty-btn { width:30px; height:30px; background:transparent; border:none; color:#fff; font-size:18px; cursor:pointer; border-radius:6px; transition:.2s; }
+.qty-btn:hover { background:rgba(0,242,255,.12); color:var(--neon); }
+.qty-num { font-family:'Orbitron'; font-size:13px; font-weight:700; min-width:22px; text-align:center; }
+.cart-btn { font-family:'Orbitron'; font-size:10px; letter-spacing:1.5px; font-weight:900; color:#000; background:linear-gradient(135deg,var(--neon),#00bdd6); border:none; padding:14px 22px; border-radius:11px; cursor:pointer; box-shadow:0 6px 20px rgba(0,242,255,.45); white-space:nowrap; transition:.25s; }
+.cart-btn:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(0,242,255,.6); }
+.cart-btn:active { transform:scale(.97); }
+
+/* TOAST */
+#toast { position:fixed; top:80px; right:20px; z-index:9999; background:#0a0a10; border:1px solid var(--neon); border-radius:12px; padding:13px 17px; font-family:'Orbitron'; font-size:9.5px; color:var(--neon); letter-spacing:1px; box-shadow:0 6px 24px rgba(0,242,255,.25); transform:translateX(130%); transition:.35s; max-width:260px; }
+#toast.show { transform:translateX(0); }
+
+/* LOADING */
+#cfg-loading { position:fixed; inset:0; background:#000; z-index:9000; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:18px; }
+#cfg-loading.gone { display:none; }
+.loader-spin { width:48px; height:48px; border:3px solid rgba(0,242,255,.15); border-top-color:var(--neon); border-radius:50%; animation:spin 1s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+.loader-txt { font-family:'Orbitron'; font-size:9px; color:var(--neon); letter-spacing:3px; }
+
+@media(max-width:520px) {
+  .ctrl-stage { max-width:360px; }
+  .price-val { font-size:18px; }
+  .cart-btn { padding:12px 14px; font-size:9px; }
+  .cfg-acc-hd { padding:14px; }
+  .cfg-acc-content { padding:4px 14px 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="aurora"><div class="ab"></div><div class="ab"></div><div class="ab"></div></div>
+<div class="grid-overlay"></div>
+<canvas id="pc"></canvas>
+
+<div id="cfg-loading">
+  <div class="loader-spin"></div>
+  <div class="loader-txt">KONFIGURATOR LÄDT</div>
+</div>
+
+<header class="cfg-header">
+  <a href="index.html" class="cfg-back">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    ZURÜCK
+  </a>
+  <div class="cfg-title">PS5 · KONFIGURATOR</div>
+  <div class="cfg-live">LIVE</div>
+</header>
+
+<div class="cfg-hero">
+  <div class="cfg-hero-eyebrow">⟫ LEXORD® CUSTOM STUDIO ⟪</div>
+  <h1 class="cfg-hero-title">BAUE DEINEN PERFEKTEN CONTROLLER</h1>
+  <p class="cfg-hero-sub">FARBEN · TMR · HALL EFFECT · PADDLES · GRAVUR</p>
+</div>
+
+<!-- CONTROLLER STAGE -->
+<div class="ctrl-wrap">
+  <div class="ctrl-toggle">
+    <button class="active" id="btn-front" onclick="setView('front',this)">⟫ VORDERSEITE</button>
+    <button id="btn-back" onclick="setView('back',this)">RÜCKSEITE ⟪</button>
+  </div>
+
+  <div class="ctrl-stage">
+    <!-- VORDERSEITE -->
+    <div class="photo-stack" id="stack-front">
+      <img src="IMG_0611.jpeg" alt="PS5 Controller" id="img-front" onerror="this.style.opacity='.3'">
+      <div class="color-overlay" id="overlay-front"></div>
+      <div id="lightbar-glow"></div>
+      <div class="engrave-txt" id="engrave-front"></div>
+    </div>
+    <!-- RÜCKSEITE -->
+    <div class="photo-stack" id="stack-back" style="display:none">
+      <img src="Photoroom_20260501_090821.png" alt="PS5 Controller Rückseite" id="img-back" onerror="this.style.opacity='.3'">
+      <div class="color-overlay" id="overlay-back"></div>
+      <div class="engrave-txt" id="engrave-back"></div>
+    </div>
+    <!-- TECH BADGES -->
+    <div id="badge-stick" style="display:none;position:absolute;top:60%;left:4%;z-index:5;background:rgba(255,255,255,.96);color:#111;font-size:9px;font-weight:600;padding:7px 11px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.5)"></div>
+    <div id="badge-trigger" style="display:none;position:absolute;top:5%;left:38%;z-index:5;background:rgba(255,255,255,.96);color:#111;font-size:9px;font-weight:600;padding:7px 11px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.5)"></div>
+    <div id="badge-paddle" style="display:none;position:absolute;top:76%;left:50%;z-index:5;background:rgba(255,255,255,.96);color:#111;font-size:9px;font-weight:600;padding:7px 11px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.5)"></div>
+  </div>
+
+  <!-- FARB-SUMMARY -->
+  <div class="color-summary" id="color-summary"></div>
+</div>
+
+<!-- PRESETS -->
+<div class="preset-wrap">
+  <span class="preset-label">⟫ SCHNELL-PRESETS</span>
+  <div class="preset-row" id="preset-row"></div>
+</div>
+
+<div class="cfg-divider">
+  <div class="cfg-divider-line"></div>
+  <div class="cfg-divider-text">⟫ DEINE KONFIGURATION ⟪</div>
+  <div class="cfg-divider-sub">Wähle Farben, Tech &amp; Personalisierung</div>
+</div>
+
+<div class="cfg-sections" id="cfg-sections"></div>
+
+<div class="benefits-row">
+  <div class="benefit-item"><div class="benefit-icon">🇩🇪</div><div class="benefit-title">MADE IN GERMANY</div><div class="benefit-desc">Handmontiert in Domsühl</div></div>
+  <div class="benefit-item"><div class="benefit-icon">⚡</div><div class="benefit-title">8-12 TAGE</div><div class="benefit-desc">Premium-Fertigung</div></div>
+  <div class="benefit-item"><div class="benefit-icon">🛡</div><div class="benefit-title">24 MONATE</div><div class="benefit-desc">Gewährleistung</div></div>
+  <div class="benefit-item"><div class="benefit-icon">🔄</div><div class="benefit-title">14 TAGE</div><div class="benefit-desc">Rückgaberecht</div></div>
+</div>
+
+<div class="cfg-bottom">
+  <div class="price-wrap">
+    <div class="price-lbl">⟫ DEIN CONTROLLER</div>
+    <div class="price-val">ab <span id="total-price">79,00 €</span></div>
+  </div>
+  <div class="qty-wrap">
+    <button class="qty-btn" id="qty-minus">−</button>
+    <span class="qty-num" id="qty-val">1</span>
+    <button class="qty-btn" id="qty-plus">+</button>
+  </div>
+  <button class="cart-btn" id="cart-btn">IN DEN WARENKORB</button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ============================================================
+// DATEN
+// ============================================================
+var BASE_PRICE = 79;
+var qty = 1;
+
+var COLORS = {
+  shell: [
+    {name:'Weiß',         color:'#ffffff', premium:0,  def:true},
+    {name:'Schwarz',      color:'#1a1a1c', premium:0},
+    {name:'Mitternacht',  color:'#0a1633', premium:8},
+    {name:'Galactic Pur.',color:'#3d1a52', premium:8},
+    {name:'Cosmic Red',   color:'#5c0d10', premium:8},
+    {name:'Forest Green', color:'#0d2f17', premium:8},
+    {name:'Sunset Orange',color:'#cc4a1a', premium:10},
+    {name:'Pink Punch',   color:'#e63174', premium:10},
+    {name:'Cyan Neon',    color:'#00b4d8', premium:10},
+    {name:'Lila Neon',    color:'#9933ff', premium:10},
+    {name:'Eis Blau',     color:'#80d8ff', premium:8},
+    {name:'Mint',         color:'#80e6c8', premium:8},
+    {name:'Gold',         color:'#d4af37', premium:18},
+    {name:'Chrome',       color:'#c0c0c0', premium:18},
+    {name:'Carbon',       color:'#1c1c1f', premium:22}
+  ],
+  buttons: [
+    {name:'Standard',  color:'#e8e8ea', premium:0,  def:true},
+    {name:'Schwarz',   color:'#222222', premium:5},
+    {name:'Cyan',      color:'#00f2ff', premium:7},
+    {name:'Pink',      color:'#ff2e6e', premium:7},
+    {name:'Gold',      color:'#d4af37', premium:12},
+    {name:'Lila',      color:'#bc13fe', premium:7},
+    {name:'Rot',       color:'#dc143c', premium:7},
+    {name:'Grün',      color:'#00b67a', premium:7},
+    {name:'Orange',    color:'#ff7a1a', premium:7}
+  ],
+  stickcap: [
+    {name:'Schwarz', color:'#0a0a0c', premium:0, def:true},
+    {name:'Weiß',    color:'#f0f0f0', premium:5},
+    {name:'Cyan',    color:'#00f2ff', premium:8},
+    {name:'Pink',    color:'#ff2e6e', premium:8},
+    {name:'Gold',    color:'#d4af37', premium:12},
+    {name:'Rot',     color:'#dc143c', premium:8},
+    {name:'Lila',    color:'#bc13fe', premium:8},
+    {name:'Grün',    color:'#00b67a', premium:8}
+  ],
+  triggercolor: [
+    {name:'Standard', color:'#e8e8ea', premium:0, def:true},
+    {name:'Schwarz',  color:'#1a1a1c', premium:5},
+    {name:'Cyan',     color:'#00f2ff', premium:9},
+    {name:'Pink',     color:'#ff2e6e', premium:9},
+    {name:'Gold',     color:'#d4af37', premium:14},
+    {name:'Rot',      color:'#dc143c', premium:9}
+  ],
+  lightbar: [
+    {name:'Blau',      color:'#4a90e2', premium:0, def:true},
+    {name:'Cyan Glow', color:'#00f2ff', premium:5},
+    {name:'Pink Neon', color:'#ff2e6e', premium:5},
+    {name:'Lila',      color:'#bc13fe', premium:5},
+    {name:'Rot',       color:'#ff3030', premium:5},
+    {name:'Grün',      color:'#00ff80', premium:5},
+    {name:'Weiß',      color:'#ffffff', premium:5},
+    {name:'Gold',      color:'#ffd700', premium:8}
+  ],
+  engrave: [
+    {name:'Schwarz', color:'#111111', def:true},
+    {name:'Weiß',    color:'#ffffff'},
+    {name:'Cyan',    color:'#00f2ff'},
+    {name:'Gold',    color:'#d4af37'},
+    {name:'Pink',    color:'#ff2e6e'},
+    {name:'Rot',     color:'#dc143c'}
+  ]
+};
+
+// Welche COLORS-Liste nutzt welcher Part?
+var COLOR_KEY = {
+  frontshell:   'shell',
+  backshell:    'shell',
+  buttons:      'buttons',
+  dpad:         'buttons',
+  stickcap:     'stickcap',
+  triggercolor: 'triggercolor',
+  lightbar:     'lightbar'
+};
+
+var OPTIONS = {
+  stick: [
+    {val:'Standard',     price:0,  desc:'Original PS5 Sticks', def:true},
+    {val:'Hall Effect',  price:35, desc:'Magnetische Sensoren – keine Drift'},
+    {val:'TMR',          price:55, desc:'Höchste Genauigkeit für Profi-Gaming', badge:'TOP'}
+  ],
+  trigger: [
+    {val:'Adaptive',     price:0,  desc:'Original Sony Adaptive Trigger', def:true},
+    {val:'Smart Clicky', price:25, desc:'Klick-Feedback wie Maus'},
+    {val:'Digital 1mm',  price:35, desc:'Ultra-kurzer Travel', badge:'PRO'}
+  ],
+  paddle: [
+    {val:'Keine',        price:0,  desc:'Original DualSense ohne Paddles', def:true},
+    {val:'2× Paddles',   price:39, desc:'2 zusätzliche Tasten – frei programmierbar'},
+    {val:'4× Paddles',   price:59, desc:'4 Paddles für maximale Kontrolle'}
+  ],
+  express: [
+    {val:'Standard 8-12 Tage', price:0,  desc:'Premium-Fertigung in 8-12 Werktagen', def:true},
+    {val:'Express 4-6 Tage',   price:25, desc:'Beschleunigte Fertigung'},
+    {val:'Priority 2-3 Tage',  price:45, desc:'Höchste Priorität', badge:'FAST'}
+  ]
+};
+
+var PRESETS = [
+  {id:'default',  label:'STANDARD', dot:'#ffffff', dotBorder:true,
+    colors:{frontshell:'#ffffff',backshell:'#ffffff',buttons:'#e8e8ea',dpad:'#e8e8ea',stickcap:'#0a0a0c',triggercolor:'#e8e8ea',lightbar:'#4a90e2'}},
+  {id:'stealth',  label:'STEALTH',  dot:'#1a1a1c',
+    colors:{frontshell:'#1a1a1c',backshell:'#1a1a1c',buttons:'#222222',dpad:'#222222',stickcap:'#0a0a0c',triggercolor:'#1a1a1c',lightbar:'#4a90e2'}},
+  {id:'neon',     label:'NEON',     dot:'#00f2ff',
+    colors:{frontshell:'#0a1633',backshell:'#0a1633',buttons:'#00f2ff',dpad:'#00f2ff',stickcap:'#00f2ff',triggercolor:'#00f2ff',lightbar:'#00f2ff'}},
+  {id:'fire',     label:'FIRE',     dot:'#dc143c',
+    colors:{frontshell:'#5c0d10',backshell:'#5c0d10',buttons:'#dc143c',dpad:'#dc143c',stickcap:'#dc143c',triggercolor:'#dc143c',lightbar:'#ff3030'}},
+  {id:'ice',      label:'ICE',      dot:'#80d8ff',
+    colors:{frontshell:'#80d8ff',backshell:'#80d8ff',buttons:'#00f2ff',dpad:'#00f2ff',stickcap:'#00f2ff',triggercolor:'#e8e8ea',lightbar:'#00f2ff'}},
+  {id:'gold',     label:'GOLD',     dot:'#d4af37',
+    colors:{frontshell:'#1a1a1c',backshell:'#1a1a1c',buttons:'#d4af37',dpad:'#d4af37',stickcap:'#d4af37',triggercolor:'#d4af37',lightbar:'#ffd700'}},
+  {id:'cyber',    label:'CYBER',    dot:'#bc13fe',
+    colors:{frontshell:'#3d1a52',backshell:'#3d1a52',buttons:'#bc13fe',dpad:'#bc13fe',stickcap:'#ff2e6e',triggercolor:'#bc13fe',lightbar:'#bc13fe'}},
+  {id:'emerald',  label:'EMERALD',  dot:'#00b67a',
+    colors:{frontshell:'#0d2f17',backshell:'#0d2f17',buttons:'#00b67a',dpad:'#00b67a',stickcap:'#00b67a',triggercolor:'#00b67a',lightbar:'#00ff80'}}
+];
+
+// ============================================================
+// STATE
+// ============================================================
+var state = {
+  colors: {frontshell:null,backshell:null,buttons:null,dpad:null,stickcap:null,triggercolor:null,lightbar:null},
+  options: {stick:null,trigger:null,paddle:null,express:null},
+  engraving: '',
+  engraveColor: '#111111'
+};
+
+// ============================================================
+// HILFSFUNKTIONEN
+// ============================================================
+function $(id){ return document.getElementById(id); }
+
+function haptic(ms){
+  try { if(navigator.vibrate) navigator.vibrate(ms||20); } catch(e){}
+}
+
+function toast(msg){
+  var t = $('toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window._toast);
+  window._toast = setTimeout(function(){ t.classList.remove('show'); }, 2200);
+}
+
+// ============================================================
+// PREIS
+// ============================================================
+function updatePrice(){
+  var p = BASE_PRICE;
+  var parts = Object.keys(state.colors);
+  for(var i=0;i<parts.length;i++){
+    var c = state.colors[parts[i]];
+    if(c) p += (c.premium||0);
+  }
+  var cats = Object.keys(state.options);
+  for(var j=0;j<cats.length;j++){
+    var o = state.options[cats[j]];
+    if(o) p += (o.price||0);
+  }
+  if(state.engraving) p += 8;
+  var total = p * qty;
+  var formatted = total.toFixed(2).replace('.',',') + ' €';
+  $('total-price').innerHTML = '<span>' + formatted + '</span>';
+}
+
+// ============================================================
+// FARB-OVERLAY AUF CONTROLLER
+// ============================================================
+function applyOverlay(){
+  // Front shell
+  var fs = state.colors.frontshell;
+  var overlayF = $('overlay-front');
+  if(overlayF){
+    if(fs && fs.color !== '#ffffff'){
+      overlayF.style.background = fs.color;
+      overlayF.classList.add('active');
+    } else {
+      overlayF.classList.remove('active');
+      overlayF.style.background = 'transparent';
+    }
+  }
+  // Back shell
+  var bs = state.colors.backshell;
+  var overlayB = $('overlay-back');
+  if(overlayB){
+    if(bs && bs.color !== '#ffffff'){
+      overlayB.style.background = bs.color;
+      overlayB.classList.add('active');
+    } else {
+      overlayB.classList.remove('active');
+      overlayB.style.background = 'transparent';
+    }
+  }
+  // Lightbar
+  var lb = state.colors.lightbar;
+  var lg = $('lightbar-glow');
+  if(lg){
+    var lbColor = (lb && lb.color) ? lb.color : '#4a90e2';
+    lg.style.background = lbColor;
+    lg.style.boxShadow = '0 0 16px 5px ' + lbColor;
+  }
+  // Summary swatches
+  updateSummary();
+  // Engrave
+  applyEngrave();
+}
+
+// ============================================================
+// FARB-SUMMARY DOTS
+// ============================================================
+var SUMMARY_PARTS = [
+  {key:'frontshell',  label:'FRONT',   def:'#ffffff'},
+  {key:'backshell',   label:'BACK',    def:'#ffffff'},
+  {key:'buttons',     label:'BUTTONS', def:'#e8e8ea'},
+  {key:'dpad',        label:'D-PAD',   def:'#e8e8ea'},
+  {key:'stickcap',    label:'STICKS',  def:'#0a0a0c'},
+  {key:'triggercolor',label:'TRIGGER', def:'#e8e8ea'},
+  {key:'lightbar',    label:'LIGHT',   def:'#4a90e2'}
+];
+
+function buildSummary(){
+  var wrap = $('color-summary');
+  if(!wrap) return;
+  wrap.innerHTML = '';
+  SUMMARY_PARTS.forEach(function(p){
+    var div = document.createElement('div');
+    div.className = 'cs-item';
+    var sw = document.createElement('div');
+    sw.className = 'cs-swatch';
+    sw.id = 'sw-' + p.key;
+    sw.style.background = p.def;
+    if(p.key === 'lightbar') sw.style.boxShadow = '0 0 6px ' + p.def;
+    var lbl = document.createElement('span');
+    lbl.textContent = p.label;
+    div.appendChild(sw);
+    div.appendChild(lbl);
+    wrap.appendChild(div);
+  });
+}
+
+function updateSummary(){
+  SUMMARY_PARTS.forEach(function(p){
+    var sw = $('sw-' + p.key);
+    if(!sw) return;
+    var c = state.colors[p.key];
+    var col = (c && c.color) ? c.color : p.def;
+    sw.style.background = col;
+    if(p.key === 'lightbar'){
+      sw.style.boxShadow = '0 0 8px ' + col;
+    }
+  });
+}
+
+// ============================================================
+// AKKORDEONS BAUEN
+// ============================================================
+var SECTIONS = [
+  {icon:'🎨', title:'FRONTGEHÄUSE',   id:'frontshell',   type:'color'},
+  {icon:'🛡', title:'RÜCKSCHALE',     id:'backshell',    type:'color'},
+  {icon:'🔘', title:'ACTION BUTTONS', id:'buttons',      type:'color'},
+  {icon:'✚', title:'D-PAD',          id:'dpad',         type:'color'},
+  {icon:'🕹', title:'STICK CAPS',     id:'stickcap',     type:'color'},
+  {icon:'🎯', title:'TRIGGER FARBE',  id:'triggercolor', type:'color'},
+  {icon:'💡', title:'LIGHT BAR',      id:'lightbar',     type:'color'},
+  {icon:'⚡', title:'STICK TECH',     id:'stick',        type:'option'},
+  {icon:'🎮', title:'TRIGGER TYP',    id:'trigger',      type:'option'},
+  {icon:'⚙', title:'BACK PADDLES',   id:'paddle',       type:'option'},
+  {icon:'✨', title:'GRAVUR',         id:'engraving',    type:'engrave'},
+  {icon:'🚀', title:'FERTIGUNGSZEIT', id:'express',      type:'option'}
+];
+
+function buildSections(){
+  var wrap = $('cfg-sections');
+  if(!wrap) return;
+  wrap.innerHTML = '';
+
+  SECTIONS.forEach(function(sec){
+    var acc = document.createElement('div');
+    acc.className = 'cfg-acc';
+    acc.id = 'acc-' + sec.id;
+
+    // HEADER
+    var hd = document.createElement('div');
+    hd.className = 'cfg-acc-hd';
+    hd.onclick = function(){ toggleAcc(acc); };
+
+    var icon = document.createElement('div');
+    icon.className = 'cfg-acc-icon';
+    icon.textContent = sec.icon;
+
+    var nameWrap = document.createElement('div');
+    nameWrap.className = 'cfg-acc-name';
+    nameWrap.textContent = sec.title;
+
+    var cur = document.createElement('div');
+    cur.className = 'cfg-acc-cur';
+    cur.id = 'cur-' + sec.id;
+    var curStr = document.createElement('strong');
+    curStr.textContent = getDefaultLabel(sec);
+    cur.appendChild(curStr);
+    nameWrap.appendChild(cur);
+
+    var arr = document.createElement('div');
+    arr.className = 'cfg-acc-arr';
+    arr.textContent = '›';
+
+    hd.appendChild(icon);
+    hd.appendChild(nameWrap);
+    hd.appendChild(arr);
+
+    // BODY
+    var body = document.createElement('div');
+    body.className = 'cfg-acc-body';
+    var content = document.createElement('div');
+    content.className = 'cfg-acc-content';
+
+    if(sec.type === 'color'){
+      content.appendChild(buildColorGrid(sec.id));
+    } else if(sec.type === 'option'){
+      content.appendChild(buildOptList(sec.id));
+    } else if(sec.type === 'engrave'){
+      content.appendChild(buildEngravePanel());
+    }
+
+    body.appendChild(content);
+    acc.appendChild(hd);
+    acc.appendChild(body);
+    wrap.appendChild(acc);
+  });
+}
+
+function getDefaultLabel(sec){
+  if(sec.type === 'color'){
+    var key = COLOR_KEY[sec.id] || sec.id;
+    var arr = COLORS[key];
+    if(arr){
+      var d = arr.filter(function(c){ return c.def; })[0];
+      return d ? d.name : '';
+    }
+  }
+  if(sec.type === 'option'){
+    var opts = OPTIONS[sec.id];
+    if(opts){
+      var dd = opts.filter(function(o){ return o.def; })[0];
+      return dd ? dd.val : '';
+    }
+  }
+  return 'Keine';
+}
+
+// ============================================================
+// FARB-GRID BAUEN
+// ============================================================
+function buildColorGrid(part){
+  var key = COLOR_KEY[part] || part;
+  var arr = COLORS[key];
+  var grid = document.createElement('div');
+  grid.className = 'cfg-color-grid';
+  grid.id = 'grid-' + part;
+
+  if(!arr || arr.length === 0){
+    var err = document.createElement('div');
+    err.style.color = '#f00';
+    err.style.fontFamily = 'Orbitron';
+    err.style.fontSize = '10px';
+    err.textContent = 'Fehler: Keine Farben für ' + part;
+    grid.appendChild(err);
+    return grid;
+  }
+
+  arr.forEach(function(c){
+    var btn = document.createElement('div');
+    btn.className = 'color-btn' + (c.def ? ' sel' : '');
+    btn.style.background = c.color;
+    btn.setAttribute('data-part', part);
+    btn.setAttribute('data-color', c.color);
+    btn.setAttribute('data-name', c.name);
+    btn.setAttribute('data-premium', c.premium || 0);
+
+    // Tooltip
+    var tip = document.createElement('div');
+    tip.className = 'color-name';
+    tip.textContent = c.name + (c.premium > 0 ? ' +' + c.premium + '€' : '');
+    btn.appendChild(tip);
+
+    // KLICK
+    btn.onclick = function(){ onColorClick(this); };
+
+    grid.appendChild(btn);
+  });
+
+  return grid;
+}
+
+// ============================================================
+// FARB-KLICK
+// ============================================================
+function onColorClick(btn){
+  haptic(25);
+  var part = btn.getAttribute('data-part');
+  var color = btn.getAttribute('data-color');
+  var name = btn.getAttribute('data-name');
+  var premium = parseFloat(btn.getAttribute('data-premium')) || 0;
+
+  // Alle deselektieren für diesen Part
+  var grid = $('grid-' + part);
+  if(grid){
+    var btns = grid.querySelectorAll('.color-btn');
+    for(var i=0;i<btns.length;i++){
+      btns[i].classList.remove('sel');
+    }
+  }
+  btn.classList.add('sel');
+
+  // State speichern
+  state.colors[part] = {color:color, name:name, premium:premium};
+
+  // Anzeige aktualisieren
+  var cur = $('cur-' + part);
+  if(cur){
+    cur.innerHTML = '<strong>' + name + '</strong>' + (premium > 0 ? ' (+' + premium + ' €)' : '');
+  }
+
+  applyOverlay();
+  updatePrice();
+  toast('✓ ' + name + ' ausgewählt');
+
+  // Preset-Markierung entfernen
+  var pBtns = document.querySelectorAll('.preset-btn');
+  for(var j=0;j<pBtns.length;j++) pBtns[j].classList.remove('active');
+}
+
+// ============================================================
+// OPTION-LIST
+// ============================================================
+function buildOptList(cat){
+  var wrap = document.createElement('div');
+  wrap.className = 'cfg-opt-list';
+  wrap.id = 'opt-' + cat;
+  var arr = OPTIONS[cat];
+  if(!arr) return wrap;
+
+  arr.forEach(function(o){
+    var btn = document.createElement('button');
+    btn.className = 'opt-btn' + (o.def ? ' sel' : '');
+    btn.setAttribute('data-cat', cat);
+    btn.setAttribute('data-val', o.val);
+    btn.setAttribute('data-price', o.price);
+
+    var radio = document.createElement('div');
+    radio.className = 'opt-radio';
+
+    var info = document.createElement('div');
+    info.className = 'opt-info';
+    var nm = document.createElement('div');
+    nm.className = 'opt-name';
+    nm.textContent = o.val;
+    if(o.badge){
+      var bdg = document.createElement('span');
+      bdg.className = 'opt-badge';
+      bdg.textContent = o.badge;
+      nm.appendChild(bdg);
+    }
+    var desc = document.createElement('div');
+    desc.className = 'opt-desc';
+    desc.textContent = o.desc;
+    info.appendChild(nm);
+    info.appendChild(desc);
+
+    var price = document.createElement('div');
+    price.className = 'opt-price' + (o.price === 0 ? ' free' : '');
+    price.textContent = o.price === 0 ? 'inkl.' : '+' + o.price + ' €';
+
+    btn.appendChild(radio);
+    btn.appendChild(info);
+    btn.appendChild(price);
+
+    btn.onclick = function(){ onOptClick(this); };
+    wrap.appendChild(btn);
+  });
+
+  return wrap;
+}
+
+function onOptClick(btn){
+  haptic(25);
+  var cat = btn.getAttribute('data-cat');
+  var val = btn.getAttribute('data-val');
+  var price = parseFloat(btn.getAttribute('data-price')) || 0;
+
+  var list = $('opt-' + cat);
+  if(list){
+    var btns = list.querySelectorAll('.opt-btn');
+    for(var i=0;i<btns.length;i++) btns[i].classList.remove('sel');
+  }
+  btn.classList.add('sel');
+
+  state.options[cat] = {val:val, price:price};
+
+  var cur = $('cur-' + cat);
+  if(cur) cur.innerHTML = '<strong>' + val + '</strong>' + (price > 0 ? ' (+' + price + ' €)' : '');
+
+  updateTechBadges();
+  updatePrice();
+  toast('✓ ' + val + ' ausgewählt');
+}
+
+// ============================================================
+// GRAVUR
+// ============================================================
+function buildEngravePanel(){
+  var wrap = document.createElement('div');
+
+  var hint = document.createElement('div');
+  hint.style.cssText = 'font-size:10.5px;color:#888;margin-bottom:10px;line-height:1.5';
+  hint.textContent = 'Personalisiere mit Namen, Gamertag oder Team. Max. 12 Zeichen.';
+  wrap.appendChild(hint);
+
+  var row = document.createElement('div');
+  row.className = 'engrave-row';
+  var inp = document.createElement('input');
+  inp.type = 'text';
+  inp.maxLength = 12;
+  inp.placeholder = 'DEIN TEXT';
+  inp.id = 'engrave-input';
+  inp.oninput = function(){ onEngraveInput(this); };
+  var cnt = document.createElement('span');
+  cnt.className = 'engrave-cnt';
+  cnt.id = 'engrave-cnt';
+  cnt.textContent = '0/12';
+  row.appendChild(inp);
+  row.appendChild(cnt);
+  wrap.appendChild(row);
+
+  var clbl = document.createElement('div');
+  clbl.style.cssText = 'font-family:Orbitron;font-size:8px;color:#555;letter-spacing:1.5px;margin-top:14px;margin-bottom:6px';
+  clbl.textContent = 'GRAVUR-FARBE';
+  wrap.appendChild(clbl);
+
+  var colorRow = document.createElement('div');
+  colorRow.className = 'engrave-colors';
+  COLORS.engrave.forEach(function(c){
+    var btn = document.createElement('div');
+    btn.className = 'eng-color' + (c.def ? ' sel' : '');
+    btn.style.background = c.color;
+    btn.title = c.name;
+    btn.onclick = function(){
+      document.querySelectorAll('.eng-color').forEach(function(b){ b.classList.remove('sel'); });
+      btn.classList.add('sel');
+      state.engraveColor = c.color;
+      applyEngrave();
+      haptic(15);
+    };
+    colorRow.appendChild(btn);
+  });
+  wrap.appendChild(colorRow);
+
+  var priceRow = document.createElement('div');
+  priceRow.style.cssText = 'display:flex;justify-content:space-between;margin-top:12px;font-family:Orbitron;font-size:9.5px';
+  var pl = document.createElement('span');
+  pl.style.color = '#555';
+  pl.textContent = 'PERSONALISIERUNG';
+  var pv = document.createElement('span');
+  pv.id = 'price-engraving';
+  pv.style.color = '#00f2ff';
+  pv.textContent = '+0 €';
+  priceRow.appendChild(pl);
+  priceRow.appendChild(pv);
+  wrap.appendChild(priceRow);
+
+  return wrap;
+}
+
+function onEngraveInput(inp){
+  var val = inp.value.toUpperCase().replace(/[^A-Z0-9 \-_.!]/g,'').slice(0,12);
+  inp.value = val;
+  state.engraving = val;
+  var cnt = $('engrave-cnt'); if(cnt) cnt.textContent = val.length + '/12';
+  var cur = $('cur-engraving'); if(cur) cur.innerHTML = '<strong>' + (val||'Keine') + '</strong>';
+  var pe = $('price-engraving'); if(pe) pe.textContent = val ? '+8 €' : '+0 €';
+  applyEngrave();
+  updatePrice();
+}
+
+function applyEngrave(){
+  var els = ['engrave-front','engrave-back'];
+  els.forEach(function(id){
+    var el = $(id);
+    if(!el) return;
+    el.textContent = state.engraving;
+    el.style.color = state.engraveColor;
+    if(state.engraving) el.classList.add('show');
+    else el.classList.remove('show');
+  });
+}
+
+// ============================================================
+// TECH BADGES
+// ============================================================
+function updateTechBadges(){
+  var sV = state.options.stick ? state.options.stick.val : 'Standard';
+  var tV = state.options.trigger ? state.options.trigger.val : 'Adaptive';
+  var pV = state.options.paddle ? state.options.paddle.val : 'Keine';
+
+  var sb = $('badge-stick');
+  if(sb){
+    if(sV === 'Hall Effect')  { sb.style.display='block'; sb.innerHTML='⚡ Hall Effect<br><small style="font-size:8px;color:#555">Anti-Drift Magnetik</small>'; }
+    else if(sV === 'TMR')     { sb.style.display='block'; sb.innerHTML='🧲 TMR Sticks<br><small style="font-size:8px;color:#555">High Precision</small>'; }
+    else sb.style.display='none';
+  }
+  var tb = $('badge-trigger');
+  if(tb){
+    if(tV === 'Smart Clicky') { tb.style.display='block'; tb.innerHTML='⚡ Smart Clicky<br><small style="font-size:8px;color:#555">Mouse-Click Feel</small>'; }
+    else if(tV === 'Digital 1mm') { tb.style.display='block'; tb.innerHTML='💎 Digital 1mm<br><small style="font-size:8px;color:#555">Ultra-fast</small>'; }
+    else tb.style.display='none';
+  }
+  var pb = $('badge-paddle');
+  if(pb){
+    if(pV !== 'Keine') { pb.style.display='block'; pb.innerHTML='⚙ '+pV+'<br><small style="font-size:8px;color:#555">Frei programmierbar</small>'; }
+    else pb.style.display='none';
+  }
+}
+
+// ============================================================
+// AKKORDEON
+// ============================================================
+function toggleAcc(acc){
+  haptic(15);
+  var isOpen = acc.classList.contains('open');
+  document.querySelectorAll('.cfg-acc').forEach(function(a){ a.classList.remove('open'); });
+  if(!isOpen){
+    acc.classList.add('open');
+    setTimeout(function(){
+      acc.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }, 280);
+  }
+}
+
+// ============================================================
+// VIEW WECHSEL
+// ============================================================
+function setView(view, btn){
+  haptic(20);
+  document.querySelectorAll('.ctrl-toggle button').forEach(function(b){ b.classList.remove('active'); });
+  if(btn) btn.classList.add('active');
+  var sf = $('stack-front'), sb = $('stack-back');
+  if(view === 'front'){ sf.style.display='flex'; sb.style.display='none'; }
+  else { sf.style.display='none'; sb.style.display='flex'; }
+}
+
+// ============================================================
+// PRESETS
+// ============================================================
+function buildPresets(){
+  var row = $('preset-row');
+  if(!row) return;
+  PRESETS.forEach(function(p){
+    var btn = document.createElement('button');
+    btn.className = 'preset-btn' + (p.id === 'default' ? ' active' : '');
+    btn.id = 'preset-' + p.id;
+
+    var dot = document.createElement('span');
+    dot.className = 'preset-dot';
+    dot.style.background = p.dot;
+    if(p.dotBorder) dot.style.border = '1px solid #aaa';
+
+    var lbl = document.createTextNode(p.label);
+    btn.appendChild(dot);
+    btn.appendChild(lbl);
+
+    btn.onclick = function(){ loadPreset(p.id, btn); };
+    row.appendChild(btn);
+  });
+}
+
+function loadPreset(id, btn){
+  haptic([20,40,30]);
+  var preset = null;
+  for(var i=0;i<PRESETS.length;i++){ if(PRESETS[i].id===id){ preset=PRESETS[i]; break; } }
+  if(!preset) return;
+
+  document.querySelectorAll('.preset-btn').forEach(function(b){ b.classList.remove('active'); });
+  if(btn) btn.classList.add('active');
+
+  // Farben anwenden
+  var parts = Object.keys(preset.colors);
+  parts.forEach(function(part){
+    var targetColor = preset.colors[part];
+    var key = COLOR_KEY[part] || part;
+    var arr = COLORS[key];
+    if(!arr) return;
+
+    // Passende Farbe finden
+    var found = null;
+    for(var i=0;i<arr.length;i++){
+      if(arr[i].color === targetColor){ found=arr[i]; break; }
+    }
+    if(!found) found = arr[0];
+
+    state.colors[part] = {color:found.color, name:found.name, premium:found.premium||0};
+
+    // Grid aktualisieren
+    var grid = $('grid-' + part);
+    if(grid){
+      var btns = grid.querySelectorAll('.color-btn');
+      btns.forEach(function(b){ b.classList.remove('sel'); });
+      btns.forEach(function(b){
+        if(b.getAttribute('data-color') === found.color) b.classList.add('sel');
+      });
+    }
+
+    // Cur-Label
+    var cur = $('cur-' + part);
+    if(cur) cur.innerHTML = '<strong>' + found.name + '</strong>';
+  });
+
+  applyOverlay();
+  updatePrice();
+  toast('✓ ' + id.toUpperCase() + ' geladen');
+}
+
+// ============================================================
+// WARENKORB
+// ============================================================
+function addToCart(){
+  haptic([30,40,50]);
+  var desc = [];
+  var parts = Object.keys(state.colors);
+  parts.forEach(function(k){
+    var v = state.colors[k];
+    if(v && v.premium > 0) desc.push(v.name);
+  });
+  var cats = Object.keys(state.options);
+  cats.forEach(function(k){
+    var v = state.options[k];
+    if(v && v.price > 0) desc.push(v.val);
+  });
+  if(state.engraving) desc.push('Gravur: ' + state.engraving);
+
+  var price = BASE_PRICE;
+  parts.forEach(function(k){ var v=state.colors[k]; if(v) price+=v.premium||0; });
+  cats.forEach(function(k){ var v=state.options[k]; if(v) price+=v.price||0; });
+  if(state.engraving) price+=8;
+
+  var item = {
+    name: 'Custom PS5 Controller' + (desc.length ? ' (' + desc.length + ' Upgrades)' : ''),
+    price: price, img:'IMG_0611.jpeg', qty:qty, custom:true,
+    config: JSON.stringify(state)
+  };
+  var cart = [];
+  try{ var s=localStorage.getItem('lxrd_cart'); if(s) cart=JSON.parse(s); } catch(e){}
+  cart.push(item);
+  try{ localStorage.setItem('lxrd_cart', JSON.stringify(cart)); } catch(e){}
+  toast('✓ ' + qty + '× Controller hinzugefügt');
+  setTimeout(function(){ window.location.href='index.html#cart-open'; }, 900);
+}
+
+// ============================================================
+// PARTIKEL
+// ============================================================
+function initParticles(){
+  var c = $('pc'); if(!c) return;
+  var ctx = c.getContext('2d');
+  var resize = function(){ c.width=window.innerWidth; c.height=window.innerHeight; };
+  window.addEventListener('resize', resize); resize();
+  var pts = [];
+  for(var i=0;i<60;i++){
+    pts.push({
+      x:Math.random()*c.width, y:Math.random()*c.height,
+      r:Math.random()*1.4+.3,
+      vx:(Math.random()-.5)*.12, vy:(Math.random()-.5)*.12,
+      o:Math.random()*.5+.2,
+      col: Math.random()>.7 ? '#00f2ff' : Math.random()>.5 ? '#bc13fe' : '#ffffff'
+    });
+  }
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    pts.forEach(function(p){
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0) p.x=c.width; if(p.x>c.width) p.x=0;
+      if(p.y<0) p.y=c.height; if(p.y>c.height) p.y=0;
+      ctx.fillStyle=p.col; ctx.globalAlpha=p.o;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+    });
+    ctx.globalAlpha=1;
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', function(){
+  // Defaults in State laden
+  var colorParts = Object.keys(state.colors);
+  colorParts.forEach(function(part){
+    var key = COLOR_KEY[part] || part;
+    var arr = COLORS[key];
+    if(!arr) return;
+    for(var i=0;i<arr.length;i++){
+      if(arr[i].def){ state.colors[part]={color:arr[i].color, name:arr[i].name, premium:0}; break; }
+    }
+  });
+  var optCats = Object.keys(state.options);
+  optCats.forEach(function(cat){
+    var arr = OPTIONS[cat];
+    if(!arr) return;
+    for(var i=0;i<arr.length;i++){
+      if(arr[i].def){ state.options[cat]={val:arr[i].val, price:0}; break; }
+    }
+  });
+
+  buildSummary();
+  buildPresets();
+  buildSections();   // ← Akkordeons + Farb-Grids werden hier gebaut
+  initParticles();
+  applyOverlay();
+  updatePrice();
+  updateTechBadges();
+
+  // Qty Buttons
+  $('qty-minus').onclick = function(){
+    haptic(15); qty=Math.max(1,qty-1); $('qty-val').textContent=qty; updatePrice();
+  };
+  $('qty-plus').onclick = function(){
+    haptic(15); qty=Math.min(99,qty+1); $('qty-val').textContent=qty; updatePrice();
+  };
+  $('cart-btn').onclick = addToCart;
+
+  // Loading ausblenden
+  setTimeout(function(){
+    var l = $('cfg-loading');
+    if(l){ l.style.opacity='0'; l.style.transition='opacity .5s';
+      setTimeout(function(){ l.classList.add('gone'); }, 500); }
+  }, 500);
+});
+</script>
+</body>
+</html>

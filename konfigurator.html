@@ -543,7 +543,7 @@ function addToCartAndCheckout(){
         // Weiterleitung zur Warenkorb-Seite
         // Falls deine Datei anders heißt, hier ändern (z.B. 'checkout.html')
         const cartItemEncoded = encodeURIComponent(JSON.stringify(cartItem));
-        window.location.href = 'warenkorb.html?item=' + cartItemEncoded;
+        window.location.href = 'index.html?item=' + cartItemEncoded;
     }, 1100);
 }
 

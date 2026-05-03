@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5">
+    <title>PS5 Konfigurator | LEXORD®</title>
+    <link rel="icon" type="image/png" href="IMG_7023.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root{--neon:#00f2ff;--neon2:#bc13fe;--green:#00b67a;--err:#ff4d4f}
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+        html,body{overflow-x:hidden}
+        body{background:#000;color:#fff;font-family:'Inter',sans-serif;min-height:100vh;padding-bottom:120px}
+
+        /* AURORA BACKGROUND */
+        .aurora{position:fixed;inset:0;z-index:-3;background:#000;overflow:hidden}
+        .ab{position:absolute;border-radius:50%;filter:blur(90px);opacity:.4;animation:af 25s ease-in-out infinite}
+        .ab:nth-child(1){width:55%;height:55%;background:radial-gradient(circle,rgba(0,242,255,.5),transparent 70%);top:-10%;left:-10%}
+        .ab:nth-child(2){width:50%;height:50%;background:radial-gradient(circle,rgba(188,19,254,.4),transparent 70%);bottom:-10%;right:-10%;animation-delay:-8s}
+        .ab:nth-child(3){width:40%;height:40%;background:radial-gradient(circle,rgba(255,46,110,.25),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:-15s}
+        @keyframes af{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(15%,-10%) scale(1.1)}}
+        .grid-overlay{position:fixed;inset:0;z-index:-2;background-image:linear-gradient(rgba(0,242,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,242,255,.025) 1px,transparent 1px);background-size:50px 50px;pointer-events:none}
+
+        /* HEADER */
+        .cfg-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:10px;padding:10px 4%;background:rgba(0,0,0,.92);backdrop-filter:blur(22px);border-bottom:1px solid rgba(0,242,255,.15)}
+        .cfg-back{display:inline-flex;align-items:center;gap:6px;font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;font-weight:700;color:#aaa;text-decoration:none;padding:9px 12px;border:1px solid #1a1a1e;border-radius:8px;background:rgba(10,10,12,.7)}
+        .cfg-back:active{color:var(--neon);border-color:var(--neon)}
+        .cfg-title{font-family:'Orbitron';font-weight:900;font-size:10px;letter-spacing:2px;color:#ddd;text-align:center;flex:1}
+        .cfg-live{font-family:'Orbitron';font-size:8px;letter-spacing:1.5px;color:var(--neon);background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.25);padding:6px 10px;border-radius:7px;display:flex;align-items:center;gap:5px;white-space:nowrap}
+        .cfg-live::before{content:'';width:5px;height:5px;background:var(--neon);border-radius:50%;animation:ldot 1.5s infinite;box-shadow:0 0 8px var(--neon)}
+        @keyframes ldot{0%,100%{opacity:1}50%{opacity:.3}}
+
+        /* HERO */
+        .cfg-hero{text-align:center;padding:25px 5% 15px}
+        .cfg-hero-eyebrow{display:inline-block;padding:5px 12px;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.25);border-radius:20px;font-family:'Orbitron';font-size:8px;color:var(--neon);letter-spacing:2px;margin-bottom:12px}
+        .cfg-hero-title{font-family:'Orbitron';font-weight:900;font-size:clamp(1.3rem,5vw,2.2rem);letter-spacing:-1px;line-height:1.1;margin-bottom:8px;background:linear-gradient(180deg,#fff,rgba(255,255,255,.5));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+        .cfg-hero-sub{font-family:'Orbitron';font-size:9px;letter-spacing:2px;color:#666}
+
+        /* TOGGLE & STAGE */
+        .ctrl-wrap{display:flex;flex-direction:column;align-items:center;padding:5px 4% 20px}
+        .ctrl-toggle{display:flex;gap:6px;margin-bottom:14px;background:rgba(12,12,14,.7);padding:4px;border-radius:11px;border:1px solid rgba(255,255,255,.06)}
+        .ctrl-toggle button{font-family:'Orbitron';font-size:9.5px;letter-spacing:1.5px;font-weight:700;background:transparent;border:none;color:#888;padding:10px 18px;border-radius:8px;cursor:pointer;transition:.25s}
+        .ctrl-toggle button.active{background:linear-gradient(135deg,rgba(0,242,255,.2),rgba(0,242,255,.08));color:var(--neon);box-shadow:0 0 12px rgba(0,242,255,.2)}
+
+        .ctrl-stage{position:relative;width:100%;max-width:540px;aspect-ratio:1.05/1}
+        .ctrl-stage::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(0,242,255,.18) 0%,transparent 60%);filter:blur(30px);pointer-events:none;z-index:0}
+
+        .photo-stack{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;animation:floatY 5s ease-in-out infinite}
+        @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+        .photo-stack .photo-img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 25px 45px rgba(0,242,255,.18)) drop-shadow(0 12px 20px rgba(0,0,0,.8));position:absolute;inset:0;z-index:1}
+        
+        .paddle-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:3;pointer-events:none;opacity:0;transition:opacity 0.3s ease; filter:drop-shadow(0 5px 15px rgba(0,0,0,0.5))}
+        .paddle-img.active{opacity:1}
+
+        /* TINT LAYERS (Mask-basiert, falls Mask-PNGs vorhanden) */
+        .tint-layer{position:absolute;inset:0;z-index:2;opacity:0;transition:background-color .4s ease, opacity .4s ease;pointer-events:none;mix-blend-mode:multiply;-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
+        .tint-layer.active{opacity:.85}
+
+        /* MASKEN */
+        #tint-frontshell{-webkit-mask-image:url('Photoroom_20260501_094506.png');mask-image:url('Photoroom_20260501_094506.png')}
+        #tint-backshell{-webkit-mask-image:url('Photoroom_20260501_090821.png');mask-image:url('Photoroom_20260501_090821.png')}
+        #tint-buttons{-webkit-mask-image:url('mask_buttons.png');mask-image:url('mask_buttons.png')}
+        #tint-dpad{-webkit-mask-image:url('mask_dpad.png');mask-image:url('mask_dpad.png')}
+        #tint-stickcap{-webkit-mask-image:url('mask_sticks.png');mask-image:url('mask_sticks.png')}
+        #tint-triggercolor{-webkit-mask-image:url('mask_trigger.png');mask-image:url('mask_trigger.png')}
+        #tint-touchpad{-webkit-mask-image:url('mask_touchpad.png');mask-image:url('mask_touchpad.png')}
+
+        /* COLOR SPOTS (Fallback ohne Mask-Dateien — IMMER sichtbar) */
+        .color-spot{position:absolute;z-index:4;opacity:0;transition:opacity .4s ease, background-color .4s ease;pointer-events:none;mix-blend-mode:multiply;filter:blur(4px)}
+        .color-spot.active{opacity:.75}
+
+        /* Spot-Positionen — auf typischen PS5-Controller abgestimmt */
+        #spot-buttons{top:33%;right:13%;width:23%;height:23%;border-radius:50%}
+        #spot-dpad{top:33%;left:13%;width:23%;height:23%;border-radius:50%}
+        #spot-stickcap-l{top:52%;left:27%;width:13%;height:15%;border-radius:50%}
+        #spot-stickcap-r{top:52%;right:27%;width:13%;height:15%;border-radius:50%}
+        #spot-trigger-l{top:3%;left:7%;width:20%;height:11%;border-radius:30%/50%}
+        #spot-trigger-r{top:3%;right:7%;width:20%;height:11%;border-radius:30%/50%}
+        #spot-touchpad{top:18%;left:31%;width:38%;height:17%;border-radius:14%}
+
+        /* ENGRAVE */
+        .engrave-txt{position:absolute;top:36%;left:50%;transform:translate(-50%,-50%);font-family:'Orbitron';font-weight:900;font-size:clamp(11px,2.2vw,15px);letter-spacing:2px;pointer-events:none;z-index:6;opacity:0;transition:.3s;text-shadow:0 1px 2px rgba(0,0,0,.5);white-space:nowrap}
+        .engrave-txt.show{opacity:.95}
+
+        /* PART LABELS */
+        .part-label{position:absolute;background:linear-gradient(135deg,rgba(8,8,12,.97),rgba(4,4,8,.97));border:1px solid rgba(0,242,255,.5);color:#fff;padding:7px 11px;border-radius:9px;font-family:'Orbitron';font-size:8px;font-weight:800;letter-spacing:.5px;white-space:nowrap;opacity:0;transform:scale(.85);transition:opacity .35s,transform .35s;box-shadow:0 4px 14px rgba(0,0,0,.7),0 0 12px rgba(0,242,255,.25);pointer-events:none;z-index:7;text-transform:uppercase;max-width:140px}
+        .part-label.show{opacity:1;transform:scale(1)}
+        .part-label small{display:block;color:var(--neon);font-size:9.5px;font-weight:700;margin-top:3px;letter-spacing:.3px;text-transform:none;text-shadow:0 0 6px rgba(0,242,255,.5)}
+        .part-label::before{content:'';position:absolute;height:1.5px;width:40px;background:linear-gradient(90deg,var(--neon),rgba(0,242,255,.3));box-shadow:0 0 6px var(--neon),0 0 10px rgba(0,242,255,.4);top:50%}
+        .part-label.left::before{right:-40px}
+        .part-label.right::before{left:-40px}
+        .part-label::after{content:'';position:absolute;width:9px;height:9px;background:var(--neon);border-radius:50%;box-shadow:0 0 10px var(--neon);top:50%;transform:translateY(-50%);animation:dotPulse 2s infinite}
+        .part-label.left::after{right:-46px}
+        .part-label.right::after{left:-46px}
+        @keyframes dotPulse{0%,100%{transform:translateY(-50%) scale(1)}50%{transform:translateY(-50%) scale(1.3)}}
+
+        /* LABEL POSITIONS */
+        #label-frontshell{top:8%;left:0%} #label-touchpad{top:8%;right:0%}
+        #label-dpad{top:32%;left:-2%} #label-buttons{top:32%;right:-2%}
+        #label-stickcap{top:52%;left:-2%} #label-stick{top:52%;right:-2%}
+        #label-triggercolor{top:74%;left:-2%} #label-trigger{top:74%;right:-2%}
+        #label-engraving{top:88%;left:50%;transform:translateX(-50%) scale(.85)}
+        #label-engraving.show{transform:translateX(-50%) scale(1)}
+        #label-engraving::before, #label-engraving::after{display:none}
+        #label-backshell{top:12%;left:0%} #label-paddle{top:50%;right:0%}
+
+        /* UI ELEMENTS */
+        .preset-wrap{padding:5px 4% 18px;max-width:780px;margin:0 auto}
+        .preset-label{font-family:'Orbitron';font-size:8.5px;color:#666;letter-spacing:2px;margin-bottom:8px;display:block}
+        .preset-row{display:flex;gap:8px;overflow-x:auto;padding:4px 0;scrollbar-width:none}
+        .preset-btn{flex-shrink:0;padding:11px 16px;border-radius:11px;border:1.5px solid rgba(255,255,255,.06);background:rgba(255,255,255,.025);font-family:'Orbitron';font-size:9px;color:#bbb;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:7px}
+        .preset-btn.active{border-color:var(--neon);background:rgba(0,242,255,.08);color:var(--neon)}
+
+        .cfg-sections{padding:18px 4% 30px;max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+        .cfg-acc{background:rgba(12,12,16,.7);border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden}
+        .cfg-acc.open{border-color:rgba(0,242,255,.3)}
+        .cfg-acc-hd{display:flex;align-items:center;gap:14px;padding:18px;cursor:pointer;font-family:'Orbitron';font-size:11px;font-weight:700;color:#ddd;letter-spacing:1.5px}
+        .cfg-acc-icon{width:42px;height:42px;background:rgba(0,242,255,.1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;border:1px solid rgba(0,242,255,.18)}
+        .cfg-acc-cur{font-family:'Inter';font-size:10px;color:#777;margin-top:3px}
+        .cfg-acc-cur strong{color:var(--neon)}
+        .cfg-acc-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+        .cfg-acc.open .cfg-acc-body{max-height:2000px}
+        .cfg-acc-content{padding:0 16px 18px}
+
+        /* GRID & OPTIONS */
+        .cfg-color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:10px}
+        .cfg-color-item{aspect-ratio:1/1;border-radius:11px;cursor:pointer;border:2px solid rgba(255,255,255,.05);position:relative}
+        .cfg-color-item.sel{border-color:var(--neon);transform:scale(1.05)}
+        .cfg-color-item.sel::after{content:'✓';position:absolute;top:3px;right:3px;width:18px;height:18px;background:var(--neon);color:#000;font-size:10px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+        
+        .cfg-opt{display:flex;align-items:center;gap:14px;padding:15px;background:rgba(255,255,255,.025);border:1.5px solid rgba(255,255,255,.05);border-radius:11px;margin-bottom:8px;cursor:pointer}
+        .cfg-opt.sel{border-color:var(--neon);background:rgba(0,242,255,.06)}
+        .cfg-opt-radio{width:20px;height:20px;border:2px solid rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center}
+        .cfg-opt.sel .cfg-opt-radio{border-color:var(--neon);background:var(--neon)}
+        .cfg-opt.sel .cfg-opt-radio::after{content:'';width:6px;height:6px;background:#000;border-radius:50%}
+        .cfg-opt-name{font-family:'Orbitron';font-size:10.5px;font-weight:700}
+        .cfg-opt-price{font-family:'Orbitron';font-size:10.5px;color:var(--neon);margin-left:auto}
+
+        /* BOTTOM BAR */
+        .cfg-bottom{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(4,4,8,.97);backdrop-filter:blur(28px);border-top:1px solid rgba(0,242,255,.18);padding:11px 4%;display:flex;align-items:center;gap:10px}
+        .cfg-bottom-price-val{font-family:'Orbitron';font-size:20px;font-weight:900}
+        .cfg-bottom-price-val span{color:var(--neon)}
+        .cfg-add-cart{font-family:'Orbitron';font-size:10px;font-weight:900;background:linear-gradient(135deg,var(--neon),#00bdd6);border:none;padding:14px 20px;border-radius:11px;cursor:pointer;box-shadow:0 6px 20px rgba(0,242,255,.45);color:#000;}
+
+        /* TOAST & LOADING */
+        #toast{position:fixed;top:75px;left:50%;transform:translateX(-50%) translateY(-100px);z-index:1000;background:#0a0a0c;border:1px solid var(--neon);border-radius:12px;padding:13px 18px;font-family:'Orbitron';font-size:10px;color:var(--neon);transition:.4s}
+        #toast.show{transform:translateX(-50%) translateY(0)}
+        #cfg-loading{position:fixed;inset:0;background:#000;z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px}
+        #cfg-loading.hidden{opacity:0;pointer-events:none;transition:opacity .6s}
+        .cfg-loader-spinner{width:50px;height:50px;border:3px solid rgba(0,242,255,.15);border-top-color:var(--neon);border-radius:50%;animation:spinL 1s linear infinite}
+        @keyframes spinL{to{transform:rotate(360deg)}}
+    </style>
+</head>
+<body>
+
+<div class="aurora"><div class="ab"></div><div class="ab"></div><div class="ab"></div></div>
+<div class="grid-overlay"></div>
+
+<div id="cfg-loading">
+  <div class="cfg-loader-spinner"></div>
+  <div class="cfg-loader-text" style="font-family:'Orbitron';color:var(--neon);font-size:9px;letter-spacing:3px">⟫ KONFIGURATOR LÄDT ⟪</div>
+</div>
+
+<header class="cfg-header">
+  <a href="index.html" class="cfg-back">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    ZURÜCK
+  </a>
+  <div class="cfg-title">PS5 KONFIGURATOR</div>
+  <div class="cfg-live">LIVE</div>
+</header>
+
+<div class="cfg-hero">
+  <div class="cfg-hero-eyebrow">⟫ MADE IN GERMANY ⟪</div>
+  <h1 class="cfg-hero-title">BAUE DEINEN PERFEKTEN CONTROLLER</h1>
+  <p class="cfg-hero-sub">FARBEN · TMR · HALL EFFECT · PADDLES · GRAVUR</p>
+</div>
+
+<div class="ctrl-wrap">
+  <div class="ctrl-toggle">
+    <button id="view-front-btn" class="active" data-view="front">⟫ VORDERSEITE</button>
+    <button id="view-back-btn" data-view="back">RÜCKSEITE ⟪</button>
+  </div>
+
+  <div class="ctrl-stage">
+    <!-- FRONT VIEW -->
+    <div class="photo-stack" id="stack-front">
+      <img src="Photoroom_20260501_094506.png" alt="PS5 Vorderseite" class="photo-img" id="img-front">
+
+      <!-- Mask-Tints (falls Mask-PNGs vorhanden) -->
+      <div class="tint-layer" id="tint-frontshell"></div>
+      <div class="tint-layer" id="tint-buttons"></div>
+      <div class="tint-layer" id="tint-dpad"></div>
+      <div class="tint-layer" id="tint-stickcap"></div>
+      <div class="tint-layer" id="tint-triggercolor"></div>
+      <div class="tint-layer" id="tint-touchpad"></div>
+
+      <!-- Color-Spots (Fallback - immer sichtbar) -->
+      <div class="color-spot" id="spot-buttons"></div>
+      <div class="color-spot" id="spot-dpad"></div>
+      <div class="color-spot" id="spot-stickcap-l"></div>
+      <div class="color-spot" id="spot-stickcap-r"></div>
+      <div class="color-spot" id="spot-trigger-l"></div>
+      <div class="color-spot" id="spot-trigger-r"></div>
+      <div class="color-spot" id="spot-touchpad"></div>
+
+      <div class="engrave-txt" id="engrave-front"></div>
+    </div>
+
+    <!-- BACK VIEW -->
+    <div class="photo-stack" id="stack-back" style="display:none">
+      <img src="Photoroom_20260501_090821.png" alt="PS5 Rückseite" class="photo-img" id="img-back">
+      <div class="tint-layer" id="tint-backshell"></div>
+      <img id="paddle-img" class="paddle-img" src="" alt="Paddles">
+      <div class="engrave-txt" id="engrave-back"></div>
+    </div>
+
+    <!-- LABELS -->
+    <div class="part-label left" id="label-frontshell" data-side="front">FRONT<small>–</small></div>
+    <div class="part-label right" id="label-touchpad" data-side="front">TOUCHPAD<small>–</small></div>
+    <div class="part-label left" id="label-dpad" data-side="front">D-PAD<small>–</small></div>
+    <div class="part-label right" id="label-buttons" data-side="front">BUTTONS<small>–</small></div>
+    <div class="part-label left" id="label-stickcap" data-side="front">STICK CAPS<small>–</small></div>
+    <div class="part-label right" id="label-stick" data-side="front">⚡ STICKS<small>–</small></div>
+    <div class="part-label left" id="label-triggercolor" data-side="front">TRIGGER FARBE<small>–</small></div>
+    <div class="part-label right" id="label-trigger" data-side="front">⚡ TRIGGER MOD<small>–</small></div>
+    <div class="part-label left" id="label-backshell" data-side="back">RÜCKSCHALE<small>–</small></div>
+    <div class="part-label right" id="label-paddle" data-side="back">⚙ PADDLES<small>–</small></div>
+
+  </div>
+</div>
+
+<div class="preset-wrap">
+  <span class="preset-label">⟫ SCHNELL-PRESETS (1 TAP)</span>
+  <div class="preset-row" id="preset-row"></div>
+</div>
+
+<div class="cfg-sections" id="cfg-sections"></div>
+
+<div class="cfg-bottom">
+  <div class="cfg-bottom-price">
+    <div class="cfg-bottom-price-val">ab <span id="total-price">79,00 €</span></div>
+  </div>
+  <button class="cfg-add-cart" id="add-cart-btn">IN DEN WARENKORB</button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+'use strict';
+
+const SHELL_COLORS=[{name:'Weiß',color:'#ffffff',premium:0,def:true},{name:'Schwarz',color:'#1a1a1c',premium:0},{name:'Mitternacht',color:'#0a1633',premium:8},{name:'Galactic Purple',color:'#3d1a52',premium:8},{name:'Cosmic Red',color:'#5c0d10',premium:8},{name:'Forest Green',color:'#0d2f17',premium:8},{name:'Gold',color:'#d4af37',premium:18},{name:'Carbon',color:'#1c1c1f',premium:22}];
+const BTN_COLORS=[{name:'Standard',color:'#ffffff',premium:0,def:true},{name:'Schwarz',color:'#222',premium:5},{name:'Cyan',color:'#00f2ff',premium:7},{name:'Gold',color:'#d4af37',premium:12}];
+const STICK_COLORS=[{name:'Standard',color:'#ffffff',premium:0,def:true},{name:'Schwarz',color:'#0a0a0c',premium:5},{name:'Weiß',color:'#fff',premium:5},{name:'Cyan',color:'#00f2ff',premium:8}];
+const TRIG_COLORS=[{name:'Standard',color:'#ffffff',premium:0,def:true},{name:'Schwarz',color:'#1a1a1c',premium:5},{name:'Cyan',color:'#00f2ff',premium:9}];
+const TP_COLORS=[{name:'Standard',color:'#ffffff',premium:0,def:true},{name:'Schwarz',color:'#1a1a1c',premium:5},{name:'Cyan',color:'#00f2ff',premium:7},{name:'Pink',color:'#ff2e6e',premium:7}];
+
+const CATS=[
+  {id:'frontshell',icon:'🎨',name:'FRONTGEHÄUSE',colors:SHELL_COLORS,view:'front'},
+  {id:'backshell',icon:'🛡',name:'RÜCKSCHALE',colors:SHELL_COLORS,view:'back'},
+  {id:'buttons',icon:'🔘',name:'ACTION BUTTONS',colors:BTN_COLORS,view:'front'},
+  {id:'dpad',icon:'✚',name:'D-PAD',colors:BTN_COLORS,view:'front'},
+  {id:'stickcap',icon:'🕹',name:'STICK CAPS',colors:STICK_COLORS,view:'front'},
+  {id:'triggercolor',icon:'🎯',name:'TRIGGER FARBE',colors:TRIG_COLORS,view:'front'},
+  {id:'touchpad',icon:'⬛',name:'TOUCHPAD',colors:TP_COLORS,view:'front'}
+];
+
+const OPTS={
+  stick:[{val:'Standard',price:0,desc:'Original PS5 Sticks',def:true},{val:'Hall Effect',price:35,desc:'Magnetisch — kein Drift'},{val:'TMR',price:55,desc:'Pro-Genauigkeit'}],
+  trigger:[{val:'Adaptive',price:0,desc:'Original Sony Adaptive',def:true},{val:'Smart Clicky',price:25,desc:'Klick-Feedback wie Maus'}],
+  paddle:[{val:'Keine',price:0,desc:'Original DualSense',def:true},{val:'2× Paddles',price:39,desc:'2 frei programmierbar'},{val:'4× Paddles',price:59,desc:'Maximale Kontrolle'}]
+};
+
+const PRESETS={
+  default:{frontshell:'#ffffff',backshell:'#ffffff',buttons:'#ffffff',dpad:'#ffffff',stickcap:'#ffffff',triggercolor:'#ffffff',touchpad:'#ffffff'},
+  stealth:{frontshell:'#1a1a1c',backshell:'#1a1a1c',buttons:'#222',dpad:'#222',stickcap:'#0a0a0c',triggercolor:'#1a1a1c',touchpad:'#1a1a1c'}
+};
+
+const BASE_PRICE=79;
+let currentView='front';
+let state={
+  colors:{frontshell:null,backshell:null,buttons:null,dpad:null,stickcap:null,triggercolor:null,touchpad:null},
+  options:{stick:null,trigger:null,paddle:null}
+};
+
+function haptic(p){try{if('vibrate' in navigator)navigator.vibrate(p||20);}catch(e){}}
+function $(id){return document.getElementById(id);}
+function toast(msg){const t=$('toast');t.innerText=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+function buildPresets(){
+  const row=$('preset-row');
+  Object.keys(PRESETS).forEach(id=>{
+    const btn=document.createElement('button');
+    btn.className='preset-btn';
+    btn.innerHTML=id.toUpperCase();
+    btn.onclick=()=>loadPreset(id);
+    row.appendChild(btn);
+  });
+}
+
+function loadPreset(id){
+    const p = PRESETS[id];
+    Object.keys(p).forEach(k => {
+        const cat = CATS.find(c => c.id === k);
+        if(cat){
+            const col = cat.colors.find(c => c.color === p[k]);
+            if(col){
+                const gridItems = $('grid-'+k).querySelectorAll('.cfg-color-item');
+                gridItems.forEach(item => {
+                    if(item.style.backgroundColor === col.color || item.style.backgroundColor === hexToRgb(col.color)){
+                        item.click();
+                    }
+                });
+            }
+        }
+    });
+}
+
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? `rgb(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)})` : null;
+}
+
+function buildSections(){
+  const root=$('cfg-sections');
+  CATS.forEach(cat=>{
+    const acc=document.createElement('div');
+    acc.className='cfg-acc';
+    acc.innerHTML=`
+      <div class="cfg-acc-hd" onclick="this.parentElement.classList.toggle('open')">
+        <div class="cfg-acc-icon">${cat.icon}</div>
+        <div class="cfg-acc-name">${cat.name}<div class="cfg-acc-cur" id="cur-${cat.id}"><strong>-</strong></div></div>
+      </div>
+      <div class="cfg-acc-body"><div class="cfg-acc-content"><div class="cfg-color-grid" id="grid-${cat.id}"></div></div></div>`;
+    root.appendChild(acc);
+    const grid=acc.querySelector('#grid-'+cat.id);
+    cat.colors.forEach(c=>{
+      const item=document.createElement('div');
+      item.className='cfg-color-item'+(c.def?' sel':'');
+      item.style.backgroundColor=c.color;
+      item.onclick=()=>{selectColor(cat.id,c,item);setView(cat.view)};
+      grid.appendChild(item);
+      if(c.def) selectColor(cat.id,c,item);
+    });
+  });
+  
+  Object.keys(OPTS).forEach(key=>{
+    const acc=document.createElement('div');
+    acc.className='cfg-acc';
+    acc.innerHTML=`<div class="cfg-acc-hd" onclick="this.parentElement.classList.toggle('open')"><div class="cfg-acc-icon">⚙</div><div class="cfg-acc-name">${key.toUpperCase()}</div></div><div class="cfg-acc-body"><div class="cfg-acc-content" id="opt-${key}"></div></div>`;
+    root.appendChild(acc);
+    OPTS[key].forEach(o=>{
+      const div=document.createElement('div');
+      div.className='cfg-opt'+(o.def?' sel':'');
+      div.innerHTML=`<div class="cfg-opt-radio"></div><div class="cfg-opt-name">${o.val}</div><div class="cfg-opt-price">+${o.price}€</div>`;
+      div.onclick=()=>selectOpt(key,o,div);
+      acc.querySelector('#opt-'+key).appendChild(div);
+      if(o.def) selectOpt(key,o,div);
+    });
+  });
+}
+
+function selectColor(id,c,el){
+  const grid=$('grid-'+id);
+  if(grid) grid.querySelectorAll('.cfg-color-item').forEach(i=>i.classList.remove('sel'));
+  el.classList.add('sel');
+  state.colors[id]={name:c.name,color:c.color,premium:c.premium};
+  $('cur-'+id).innerHTML=`<strong>${c.name}</strong> ${c.premium?'+'+c.premium+'€':''}`;
+  applyTints();updatePrice();updateLabel(id,c.name,true);
+}
+
+function selectOpt(id,o,el){
+  el.parentElement.querySelectorAll('.cfg-opt').forEach(i=>i.classList.remove('sel'));
+  el.classList.add('sel');
+  state.options[id]={val:o.val,price:o.price};
+  updatePrice();updateLabel(id,o.val,true);
+  if(id === 'paddle'){ setView('back'); applyTints(); }
+}
+
+function updateLabel(id,val,active){
+  const l=$('label-'+id);
+  if(l){
+      l.querySelector('small').innerText=val;
+      const isCorrectView = l.dataset.side === currentView;
+      l.classList.toggle('show', active && isCorrectView);
+  }
+}
+
+/* === ZENTRALE FUNKTION ZUM EINFÄRBEN === */
+function applyTints(){
+  // Mask-Tints (falls Mask-PNGs existieren)
+  const parts = ['frontshell', 'backshell', 'buttons', 'dpad', 'stickcap', 'triggercolor', 'touchpad'];
+  parts.forEach(part => {
+      const c = state.colors[part];
+      const layer = $('tint-' + part);
+      if(layer && c) {
+          if(c.color !== '#ffffff') {
+              layer.style.backgroundColor = c.color;
+              layer.classList.add('active');
+          } else {
+              layer.classList.remove('active');
+          }
+      }
+  });
+
+  // === COLOR SPOTS — Fallback (sichtbar auch ohne mask_*.png) ===
+  applySpot('buttons',     ['spot-buttons']);
+  applySpot('dpad',        ['spot-dpad']);
+
+  // Paddles
+  const pOpt = state.options.paddle;
+  const pImg = $('paddle-img');
+  if(pImg && pOpt){
+      if(pOpt.val.includes('2×')){
+          pImg.src = 'paddles_2x.png'; 
+          pImg.classList.add('active');
+      } else if(pOpt.val.includes('4×')){
+          pImg.src = 'paddles_4x.png';
+          pImg.classList.add('active');
+      } else {
+          pImg.classList.remove('active');
+      }
+  }
+}
+
+function applySpot(stateKey, spotIds){
+    const c = state.colors[stateKey];
+    spotIds.forEach(sid => {
+        const spot = $(sid);
+        if(!spot) return;
+        if(c && c.color && c.color.toLowerCase() !== '#ffffff' && c.color.toLowerCase() !== '#fff'){
+            spot.style.backgroundColor = c.color;
+            spot.classList.add('active');
+        } else {
+            spot.classList.remove('active');
+        }
+    });
+}
+
+function updatePrice(){
+  let p=BASE_PRICE;
+  Object.values(state.colors).forEach(c=>p+=(c?c.premium:0));
+  Object.values(state.options).forEach(o=>p+=(o?o.price:0));
+  $('total-price').innerText=p.toFixed(2).replace('.',',')+' €';
+}
+
+function setView(v){
+  currentView=v;
+  $('stack-front').style.display=v==='front'?'flex':'none';
+  $('stack-back').style.display=v==='back'?'flex':'none';
+  document.querySelectorAll('.ctrl-toggle button').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
+  
+  document.querySelectorAll('.part-label').forEach(l => {
+      l.classList.remove('show');
+      const id = l.id.replace('label-', '');
+      let isActive = false;
+      if(state.colors[id]) isActive = true;
+      if(state.options[id] && state.options[id].val !== 'Keine' && state.options[id].val !== 'Standard') isActive = true;
+      if(state.colors[id] || state.options[id]) isActive = true;
+
+      if(isActive && l.dataset.side === v){
+          l.classList.add('show');
+      }
+  });
+}
+
+/* === CHECKOUT-TRANSFER === */
+function buildCartItem(){
+    const totalPrice = parseFloat(
+        $('total-price').innerText.replace('€','').replace(',','.').trim()
+    );
+    return {
+        id: 'ps5_' + Date.now(),
+        product: 'PS5 DualSense Custom Controller',
+        productSlug: 'ps5-controller',
+        basePrice: BASE_PRICE,
+        totalPrice: totalPrice,
+        quantity: 1,
+        timestamp: new Date().toISOString(),
+        config: {
+            colors: state.colors,
+            options: state.options
+        },
+        summary: buildSummary()
+    };
+}
+
+function buildSummary(){
+    const lines = [];
+    Object.keys(state.colors).forEach(k => {
+        const c = state.colors[k];
+        if(c) lines.push(`${k.toUpperCase()}: ${c.name}${c.premium ? ' (+'+c.premium+'€)' : ''}`);
+    });
+    Object.keys(state.options).forEach(k => {
+        const o = state.options[k];
+        if(o) lines.push(`${k.toUpperCase()}: ${o.val}${o.price ? ' (+'+o.price+'€)' : ''}`);
+    });
+    return lines.join(' | ');
+}
+
+function addToCartAndCheckout(){
+    haptic(50);
+    const cartItem = buildCartItem();
+    
+    // 1. localStorage füllen (für index.html / checkout)
+    let cart = [];
+    try {
+        cart = JSON.parse(localStorage.getItem('lexord_cart') || '[]');
+        if(!Array.isArray(cart)) cart = [];
+    } catch(e){ cart = []; }
+    cart.push(cartItem);
+    
+    try {
+        localStorage.setItem('lexord_cart', JSON.stringify(cart));
+        localStorage.setItem('lexord_last_config', JSON.stringify(cartItem));
+    } catch(e){
+        console.error('localStorage Fehler:', e);
+    }
+
+    // 2. sessionStorage als Backup
+    try {
+        sessionStorage.setItem('lexord_pending_item', JSON.stringify(cartItem));
+    } catch(e){}
+
+    // 3. Konsolen-Log (zur Verifikation)
+    console.log('✓ Warenkorb-Item:', cartItem);
+    console.log('✓ Aktueller Warenkorb:', cart);
+    
+    // 4. Toast + Weiterleitung zu Checkout
+    toast('✓ ZUM WARENKORB HINZUGEFÜGT!');
+    
+    setTimeout(() => {
+        // Weiterleitung zur index.html
+        const cartItemEncoded = encodeURIComponent(JSON.stringify(cartItem));
+        window.location.href = 'index.html?item=' + cartItemEncoded;
+    }, 1100);
+}
+
+function init(){
+  buildPresets();
+  buildSections();
+  $('view-front-btn').onclick=()=>setView('front');
+  $('view-back-btn').onclick=()=>setView('back');
+  
+  $('add-cart-btn').onclick = addToCartAndCheckout;
+
+  setTimeout(()=>$('cfg-loading').classList.add('hidden'),800);
+}
+
+init();
+</script>
+
+</body>
+</html>

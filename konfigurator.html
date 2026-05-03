@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5">
+<title>PS5 Konfigurator | LEXORD®</title>
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--neon:#00f2ff;--neon2:#bc13fe;--green:#00b67a;--err:#ff4d4f}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+html,body{overflow-x:hidden}
+body{background:#000;color:#fff;font-family:'Inter',sans-serif;min-height:100vh;padding-bottom:120px}
+
+.aurora{position:fixed;inset:0;z-index:-3;background:#000;overflow:hidden}
+.ab{position:absolute;border-radius:50%;filter:blur(90px);opacity:.4;animation:af 25s ease-in-out infinite}
+.ab:nth-child(1){width:55%;height:55%;background:radial-gradient(circle,rgba(0,242,255,.5),transparent 70%);top:-10%;left:-10%}
+.ab:nth-child(2){width:50%;height:50%;background:radial-gradient(circle,rgba(188,19,254,.4),transparent 70%);bottom:-10%;right:-10%;animation-delay:-8s}
+.ab:nth-child(3){width:40%;height:40%;background:radial-gradient(circle,rgba(255,46,110,.25),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:-15s}
+@keyframes af{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(15%,-10%) scale(1.1)}}
+.grid-overlay{position:fixed;inset:0;z-index:-2;background-image:linear-gradient(rgba(0,242,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,242,255,.025) 1px,transparent 1px);background-size:50px 50px;pointer-events:none}
+
+/* HEADER */
+.cfg-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:10px;padding:10px 4%;background:rgba(0,0,0,.92);backdrop-filter:blur(22px);border-bottom:1px solid rgba(0,242,255,.15)}
+.cfg-back{display:inline-flex;align-items:center;gap:6px;font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;font-weight:700;color:#aaa;text-decoration:none;padding:9px 12px;border:1px solid #1a1a1e;border-radius:8px;background:rgba(10,10,12,.7)}
+.cfg-title{font-family:'Orbitron';font-weight:900;font-size:10px;letter-spacing:2px;color:#ddd;text-align:center;flex:1}
+.cfg-live{font-family:'Orbitron';font-size:8px;letter-spacing:1.5px;color:var(--neon);background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.25);padding:6px 10px;border-radius:7px;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.cfg-live::before{content:'';width:5px;height:5px;background:var(--neon);border-radius:50%;animation:ldot 1.5s infinite;box-shadow:0 0 8px var(--neon)}
+@keyframes ldot{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* HERO */
+.cfg-hero{text-align:center;padding:25px 5% 15px}
+.cfg-hero-eyebrow{display:inline-block;padding:5px 12px;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.25);border-radius:20px;font-family:'Orbitron';font-size:8px;color:var(--neon);letter-spacing:2px;margin-bottom:12px}
+.cfg-hero-title{font-family:'Orbitron';font-weight:900;font-size:clamp(1.3rem,5vw,2.2rem);letter-spacing:-1px;line-height:1.1;margin-bottom:8px;background:linear-gradient(180deg,#fff,rgba(255,255,255,.5));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.cfg-hero-sub{font-family:'Orbitron';font-size:9px;letter-spacing:2px;color:#666}
+
+/* TOGGLE */
+.ctrl-wrap{display:flex;flex-direction:column;align-items:center;padding:5px 4% 20px}
+.ctrl-toggle{display:flex;gap:6px;margin-bottom:14px;background:rgba(12,12,14,.7);padding:4px;border-radius:11px;border:1px solid rgba(255,255,255,.06)}
+.ctrl-toggle button{font-family:'Orbitron';font-size:9.5px;letter-spacing:1.5px;font-weight:700;background:transparent;border:none;color:#888;padding:10px 18px;border-radius:8px;cursor:pointer;transition:.25s}
+.ctrl-toggle button.active{background:linear-gradient(135deg,rgba(0,242,255,.2),rgba(0,242,255,.08));color:var(--neon);box-shadow:0 0 12px rgba(0,242,255,.2)}
+
+/* STAGE — contains SVG overlay system */
+.ctrl-stage{position:relative;width:100%;max-width:560px;margin:0 auto}
+.ctrl-stage-inner{position:relative;width:100%;padding-bottom:95%;overflow:visible}
+.ctrl-stage-inner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(0,242,255,.18) 0%,transparent 60%);filter:blur(30px);pointer-events:none;z-index:0}
+
+/* Base photo */
+.ctrl-photo-wrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1;animation:floatY 5s ease-in-out infinite}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.ctrl-photo-wrap img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 25px 45px rgba(0,242,255,.18)) drop-shadow(0 12px 20px rgba(0,0,0,.8))}
+
+/* SVG overlay — covers whole stage, parts colored via fill */
+.ctrl-svg-overlay{position:absolute;inset:0;z-index:2;pointer-events:none;width:100%;height:100%}
+.ctrl-svg-overlay svg{width:100%;height:100%}
+
+/* Engrave text on controller */
+.engrave-txt{position:absolute;top:37%;left:50%;transform:translate(-50%,-50%);font-family:'Orbitron';font-weight:900;font-size:clamp(9px,2vw,13px);letter-spacing:2px;pointer-events:none;z-index:6;opacity:0;transition:.3s;text-shadow:0 1px 3px rgba(0,0,0,.7);white-space:nowrap}
+.engrave-txt.show{opacity:.9}
+
+/* Lightbar */
+#lightbar-glow{position:absolute;top:42.5%;left:50%;transform:translateX(-50%);width:20%;height:4px;border-radius:4px;background:#4a90e2;filter:blur(4px);opacity:0;transition:.4s;z-index:5;pointer-events:none}
+#lightbar-glow.on{opacity:.95;box-shadow:0 0 20px 8px currentColor}
+
+/* PART LABELS — positioned absolutely on stage */
+.part-label{
+  position:absolute;background:linear-gradient(135deg,rgba(8,8,12,.97),rgba(4,4,8,.97));
+  border:1px solid rgba(0,242,255,.5);color:#fff;padding:6px 10px;border-radius:9px;
+  font-family:'Orbitron';font-size:7.5px;font-weight:800;letter-spacing:.5px;
+  white-space:nowrap;opacity:0;transform:scale(.85);transition:opacity .35s,transform .35s;
+  box-shadow:0 4px 14px rgba(0,0,0,.7),0 0 12px rgba(0,242,255,.25);
+  pointer-events:none;z-index:7;text-transform:uppercase;max-width:130px
+}
+.part-label.show{opacity:1;transform:scale(1)}
+.part-label small{display:block;color:var(--neon);font-size:9px;font-weight:700;margin-top:2px;letter-spacing:.3px;text-transform:none;text-shadow:0 0 6px rgba(0,242,255,.5)}
+.part-label::before{content:'';position:absolute;height:1.5px;width:30px;background:linear-gradient(90deg,var(--neon),rgba(0,242,255,.2));box-shadow:0 0 6px var(--neon);top:50%}
+.part-label.left::before{right:-30px;background:linear-gradient(90deg,var(--neon),rgba(0,242,255,.2))}
+.part-label.right::before{left:-30px;background:linear-gradient(90deg,rgba(0,242,255,.2),var(--neon))}
+.part-label::after{content:'';position:absolute;width:8px;height:8px;background:var(--neon);border-radius:50%;box-shadow:0 0 10px var(--neon),0 0 16px rgba(0,242,255,.5);top:50%;transform:translateY(-50%);animation:dotPulse 2s infinite}
+.part-label.left::after{right:-37px}
+.part-label.right::after{left:-37px}
+@keyframes dotPulse{0%,100%{box-shadow:0 0 10px var(--neon),0 0 16px rgba(0,242,255,.5)}50%{box-shadow:0 0 14px var(--neon),0 0 22px rgba(0,242,255,.7)}}
+
+/* FRONT label positions (% of stage) */
+#label-frontshell{top:5%;left:2%}
+#label-lightbar{top:5%;right:2%}
+#label-dpad{top:45%;left:1%}
+#label-buttons{top:35%;right:1%}
+#label-stickcap{top:62%;left:1%}
+#label-stick{top:55%;right:1%}
+#label-triggercolor{top:8%;left:2%}
+#label-trigger{top:8%;right:2%}
+#label-engraving{top:78%;left:50%;transform:translateX(-50%) scale(.85);border-color:rgba(188,19,254,.5)}
+#label-engraving.show{transform:translateX(-50%) scale(1)}
+#label-engraving::before,#label-engraving::after{display:none}
+/* BACK label positions */
+#label-backshell{top:10%;left:2%}
+#label-paddle{top:55%;right:1%}
+
+@media(max-width:520px){
+  .ctrl-stage{max-width:340px}
+  .part-label{font-size:7px;padding:5px 8px;max-width:105px}
+  .part-label small{font-size:8px}
+  .part-label::before{width:20px}
+  .part-label.left::before{right:-20px}
+  .part-label.right::before{left:-20px}
+  .part-label.left::after{right:-26px}
+  .part-label.right::after{left:-26px}
+  .part-label::after{width:6px;height:6px}
+}
+
+/* PRESETS */
+.preset-wrap{padding:5px 4% 18px;max-width:780px;margin:0 auto}
+.preset-label{font-family:'Orbitron';font-size:8.5px;color:#666;letter-spacing:2px;margin-bottom:8px;display:block}
+.preset-row{display:flex;gap:8px;overflow-x:auto;padding:4px 0;scrollbar-width:none}
+.preset-row::-webkit-scrollbar{display:none}
+.preset-btn{flex-shrink:0;padding:11px 16px;border-radius:11px;border:1.5px solid rgba(255,255,255,.06);background:rgba(255,255,255,.025);font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;font-weight:700;color:#bbb;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:7px}
+.preset-btn.active{border-color:var(--neon);background:rgba(0,242,255,.08);color:var(--neon)}
+.preset-dot{width:9px;height:9px;border-radius:50%;display:inline-block;border:1px solid rgba(255,255,255,.1)}
+
+/* DIVIDER */
+.cfg-divider{padding:8px 4% 0;text-align:center;max-width:780px;margin:0 auto}
+.cfg-divider-line{height:1px;background:linear-gradient(90deg,transparent,rgba(0,242,255,.4),transparent);margin:0 auto 14px}
+.cfg-divider-text{font-family:'Orbitron';font-size:11px;letter-spacing:4px;color:var(--neon);margin-bottom:5px;font-weight:700}
+.cfg-divider-sub{font-size:11px;color:#888}
+
+/* ACCORDIONS */
+.cfg-sections{padding:18px 4% 30px;max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.cfg-acc{background:rgba(12,12,16,.7);border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden}
+.cfg-acc.open{border-color:rgba(0,242,255,.3);box-shadow:0 8px 30px rgba(0,242,255,.08)}
+.cfg-acc-hd{display:flex;align-items:center;gap:14px;padding:18px;cursor:pointer;font-family:'Orbitron';font-size:11px;font-weight:700;color:#ddd;letter-spacing:1.5px;user-select:none;-webkit-user-select:none}
+.cfg-acc-hd:active{background:rgba(0,242,255,.04)}
+.cfg-acc-icon{width:42px;height:42px;background:linear-gradient(135deg,rgba(0,242,255,.12),rgba(0,242,255,.04));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;border:1px solid rgba(0,242,255,.18)}
+.cfg-acc-name{flex:1;min-width:0}
+.cfg-acc-cur{font-family:'Inter';font-size:10px;font-weight:400;color:#777;margin-top:3px;letter-spacing:0;text-transform:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cfg-acc-cur strong{color:var(--neon);font-weight:600}
+.cfg-acc-arr{font-size:18px;color:#555;transition:.3s;flex-shrink:0}
+.cfg-acc.open .cfg-acc-arr{transform:rotate(90deg);color:var(--neon)}
+.cfg-acc-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.cfg-acc.open .cfg-acc-body{max-height:2000px}
+.cfg-acc-content{padding:0 16px 18px}
+
+/* COLOR GRID */
+.cfg-color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:10px;margin-top:6px}
+.cfg-color-item{aspect-ratio:1/1;border-radius:11px;cursor:pointer;border:2px solid rgba(255,255,255,.05);transition:.2s;position:relative;overflow:visible;min-height:56px}
+.cfg-color-item:active{transform:scale(.94)}
+.cfg-color-item.sel{border-color:var(--neon);box-shadow:0 0 0 2px rgba(0,242,255,.3),0 4px 16px rgba(0,242,255,.4);transform:scale(1.05)}
+.cfg-color-item.sel::after{content:'✓';position:absolute;top:3px;right:3px;width:18px;height:18px;background:var(--neon);color:#000;font-size:11px;font-weight:900;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 8px rgba(0,242,255,.6)}
+.cfg-color-name{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-family:'Orbitron';font-size:7px;color:#999;letter-spacing:.5px;white-space:nowrap;opacity:0;transition:.2s}
+.cfg-color-item.sel .cfg-color-name{opacity:1;color:var(--neon)}
+
+/* OPT LIST */
+.cfg-opt-list{display:flex;flex-direction:column;gap:9px}
+.cfg-opt{display:flex;align-items:center;gap:14px;padding:15px;background:rgba(255,255,255,.025);border:1.5px solid rgba(255,255,255,.05);border-radius:11px;cursor:pointer;transition:.25s;text-align:left}
+.cfg-opt:active{transform:scale(.98)}
+.cfg-opt.sel{border-color:var(--neon);background:rgba(0,242,255,.06);box-shadow:0 0 12px rgba(0,242,255,.1)}
+.cfg-opt-radio{width:20px;height:20px;border:2px solid rgba(255,255,255,.2);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.25s}
+.cfg-opt.sel .cfg-opt-radio{border-color:var(--neon);background:var(--neon)}
+.cfg-opt.sel .cfg-opt-radio::after{content:'';width:7px;height:7px;background:#000;border-radius:50%}
+.cfg-opt-info{flex:1;min-width:0}
+.cfg-opt-name{font-family:'Orbitron';font-size:10.5px;font-weight:700;color:#fff;letter-spacing:.5px;line-height:1.3}
+.cfg-opt-desc{font-size:10.5px;color:#888;margin-top:3px;line-height:1.4}
+.cfg-opt-price{font-family:'Orbitron';font-size:10.5px;font-weight:900;color:var(--neon);flex-shrink:0;text-align:right}
+.cfg-opt-price.free{color:#666}
+.cfg-opt-badge{display:inline-block;background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;font-family:'Orbitron';font-size:7px;font-weight:900;padding:3px 6px;border-radius:4px;margin-left:7px}
+
+/* ENGRAVE INPUT */
+.cfg-engrave-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.05);border-radius:11px;padding:13px 15px}
+.cfg-engrave-row:focus-within{border-color:var(--neon);background:rgba(0,242,255,.03)}
+.cfg-engrave-row input{flex:1;background:transparent;border:none;color:#fff;font-family:'Orbitron';font-size:14px;letter-spacing:1.5px;outline:none;text-transform:uppercase;min-width:0}
+.cfg-engrave-row input::placeholder{color:#444;text-transform:none}
+.cfg-engrave-cnt{font-family:'Orbitron';font-size:9px;color:#555}
+.cfg-engrave-color-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.cfg-engrave-color{width:36px;height:36px;border-radius:8px;cursor:pointer;border:2px solid rgba(255,255,255,.1);transition:.2s;position:relative}
+.cfg-engrave-color:active{transform:scale(.92)}
+.cfg-engrave-color.sel{border-color:var(--neon);box-shadow:0 0 0 2px rgba(0,242,255,.3)}
+.cfg-engrave-color.sel::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;font-weight:900;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+
+/* BENEFITS */
+.benefits-row{padding:25px 4%;max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.benefit-item{padding:15px;background:rgba(12,12,16,.5);border:1px solid rgba(255,255,255,.05);border-radius:12px;text-align:center}
+.benefit-icon{font-size:22px;margin-bottom:8px}
+.benefit-title{font-family:'Orbitron';font-size:9px;color:var(--neon);letter-spacing:1.5px;margin-bottom:5px;font-weight:700}
+.benefit-desc{font-size:10.5px;color:#666;line-height:1.5}
+
+/* BOTTOM BAR */
+.cfg-bottom{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(4,4,8,.97);backdrop-filter:blur(28px);border-top:1px solid rgba(0,242,255,.18);padding:11px 4%;display:flex;align-items:center;gap:10px;box-shadow:0 -10px 40px rgba(0,0,0,.7)}
+.cfg-bottom-price{flex:1;min-width:0}
+.cfg-bottom-price-lbl{font-family:'Orbitron';font-size:7.5px;color:#666;letter-spacing:1.5px}
+.cfg-bottom-price-val{font-family:'Orbitron';font-size:20px;font-weight:900;color:#fff;line-height:1;margin-top:3px;white-space:nowrap}
+.cfg-bottom-price-val span{color:var(--neon)}
+.cfg-qty{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:9px;padding:3px}
+.cfg-qty button{width:30px;height:30px;background:transparent;border:none;color:#fff;font-size:18px;cursor:pointer;border-radius:6px}
+.cfg-qty button:active{background:rgba(0,242,255,.15);color:var(--neon)}
+.cfg-qty span{font-family:'Orbitron';font-size:13px;font-weight:700;min-width:22px;text-align:center}
+.cfg-add-cart{font-family:'Orbitron';font-size:10px;letter-spacing:1.5px;font-weight:900;color:#000;background:linear-gradient(135deg,var(--neon),#00bdd6);border:none;padding:14px 20px;border-radius:11px;cursor:pointer;box-shadow:0 6px 20px rgba(0,242,255,.45);white-space:nowrap}
+.cfg-add-cart:active{transform:scale(.97)}
+
+/* TOAST */
+#toast{position:fixed;top:75px;left:50%;transform:translateX(-50%) translateY(-100px);z-index:1000;background:linear-gradient(135deg,#0a0a0c,#06060a);border:1px solid var(--neon);border-radius:12px;padding:13px 18px;font-family:'Orbitron';font-size:10px;color:var(--neon);letter-spacing:1.5px;box-shadow:0 8px 24px rgba(0,242,255,.3);transition:.4s;max-width:90%;text-align:center}
+#toast.show{transform:translateX(-50%) translateY(0)}
+
+/* LOADING */
+#cfg-loading{position:fixed;inset:0;background:#000;z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;transition:opacity .6s}
+#cfg-loading.hidden{opacity:0;pointer-events:none}
+.cfg-loader-spinner{width:50px;height:50px;border:3px solid rgba(0,242,255,.15);border-top-color:var(--neon);border-radius:50%;animation:spinL 1s linear infinite}
+@keyframes spinL{to{transform:rotate(360deg)}}
+.cfg-loader-text{font-family:'Orbitron';font-size:9px;color:var(--neon);letter-spacing:3px;font-weight:700}
+
+@media(max-width:520px){
+  .ctrl-stage{max-width:360px}
+  .cfg-bottom-price-val{font-size:17px}
+  .cfg-add-cart{padding:12px 14px;font-size:9px}
+  .cfg-acc-hd{padding:15px 14px;font-size:10.5px}
+  .cfg-acc-content{padding:0 12px 16px}
+  .cfg-color-grid{grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:9px}
+}
+</style>
+</head>
+<body>
+
+<div class="aurora"><div class="ab"></div><div class="ab"></div><div class="ab"></div></div>
+<div class="grid-overlay"></div>
+
+<div id="cfg-loading">
+  <div class="cfg-loader-spinner"></div>
+  <div class="cfg-loader-text">⟫ KONFIGURATOR LÄDT ⟪</div>
+</div>
+
+<header class="cfg-header">
+  <a href="index.html" class="cfg-back">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    ZURÜCK
+  </a>
+  <div class="cfg-title">PS5 KONFIGURATOR</div>
+  <div class="cfg-live">LIVE</div>
+</header>
+
+<div class="cfg-hero">
+  <div class="cfg-hero-eyebrow">⟫  MADE IN GERMANY ⟪</div>
+  <h1 class="cfg-hero-title">BAUE DEINEN PERFEKTEN CONTROLLER</h1>
+  <p class="cfg-hero-sub">FARBEN · TMR · HALL EFFECT · PADDLES · GRAVUR</p>
+</div>
+
+<div class="ctrl-wrap">
+  <div class="ctrl-toggle">
+    <button id="view-front-btn" class="active" data-view="front">⟫ VORDERSEITE</button>
+    <button id="view-back-btn" data-view="back">RÜCKSEITE ⟪</button>
+  </div>
+
+  <!-- STAGE -->
+  <div class="ctrl-stage">
+    <div class="ctrl-stage-inner">
+      <!-- FRONT -->
+      <div class="ctrl-photo-wrap" id="stack-front">
+        <img src="Photoroom_20260501_094506.png" alt="PS5 Controller Vorderseite" id="img-front" onerror="this.src='IMG_0611.jpeg'">
+        <!-- SVG OVERLAY for per-part coloring — all paths are approximate PS5 DualSense shapes -->
+        <svg class="ctrl-svg-overlay" id="svg-front" viewBox="0 0 560 532" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <!-- multiply blend: darkens only colored areas, transparent stays transparent -->
+            <style>
+              .part-fill{mix-blend-mode:multiply;transition:fill .35s ease,opacity .35s ease}
+              .part-fill-screen{mix-blend-mode:screen;transition:fill .35s ease,opacity .35s ease}
+            </style>
+          </defs>
+
+          <!-- ═══════════════════════════════════════════════
+               FRONT SHELL — left + right wings + center bar
+               Approximate DualSense Vorderseite Silhouette
+          ═══════════════════════════════════════════════ -->
+          <!-- Left Wing -->
+          <path id="svg-frontshell-left" class="part-fill" fill="#ffffff" opacity="0"
+            d="M 30 180 C 10 200, 5 240, 8 270 C 12 310, 25 345, 50 375
+               C 75 405, 115 430, 155 440 C 185 447, 205 438, 220 420
+               C 235 402, 240 378, 238 355 C 235 330, 228 308, 215 288
+               C 202 268, 185 252, 170 240 C 152 226, 130 215, 108 205
+               C 85 195, 58 180, 30 180 Z"/>
+          <!-- Right Wing -->
+          <path id="svg-frontshell-right" class="part-fill" fill="#ffffff" opacity="0"
+            d="M 530 180 C 550 200, 555 240, 552 270 C 548 310, 535 345, 510 375
+               C 485 405, 445 430, 405 440 C 375 447, 355 438, 340 420
+               C 325 402, 320 378, 322 355 C 325 330, 332 308, 345 288
+               C 358 268, 375 252, 390 240 C 408 226, 430 215, 452 205
+               C 475 195, 502 180, 530 180 Z"/>
+          <!-- Top bar / center strip -->
+          <path id="svg-frontshell-top" class="part-fill" fill="#ffffff" opacity="0"
+            d="M 148 155 C 175 135, 215 120, 260 115 C 300 110, 340 115, 375 130
+               C 400 142, 415 155, 415 170 C 415 182, 400 190, 378 194
+               C 355 198, 325 198, 295 198 C 265 198, 235 198, 210 196
+               C 185 193, 162 185, 148 175 C 140 169, 140 161, 148 155 Z"/>
+
+          <!-- ═══════════════════════════════════════════════
+               D-PAD — cross shape, left side
+          ═══════════════════════════════════════════════ -->
+          <!-- horizontal bar -->
+          <rect id="svg-dpad-h" class="part-fill" fill="#f0f0f2" opacity="0" rx="8"
+            x="92" y="250" width="90" height="34"/>
+          <!-- vertical bar -->
+          <rect id="svg-dpad-v" class="part-fill" fill="#f0f0f2" opacity="0" rx="8"
+            x="122" y="220" width="34" height="90"/>
+
+          <!-- ═══════════════════════════════════════════════
+               ACTION BUTTONS — triangle/circle/cross/square, right side
+          ═══════════════════════════════════════════════ -->
+          <!-- Triangle (top) -->
+          <circle id="svg-btn-tri" class="part-fill" fill="#f0f0f2" opacity="0" cx="393" cy="225" r="17"/>
+          <!-- Circle (right) -->
+          <circle id="svg-btn-cir" class="part-fill" fill="#f0f0f2" opacity="0" cx="420" cy="252" r="17"/>
+          <!-- Cross (bottom) -->
+          <circle id="svg-btn-cro" class="part-fill" fill="#f0f0f2" opacity="0" cx="393" cy="279" r="17"/>
+          <!-- Square (left) -->
+          <circle id="svg-btn-sq" class="part-fill" fill="#f0f0f2" opacity="0" cx="366" cy="252" r="17"/>
+
+          <!-- ═══════════════════════════════════════════════
+               STICK CAPS — left + right analog stick tops
+          ═══════════════════════════════════════════════ -->
+          <circle id="svg-stick-left" class="part-fill" fill="#0a0a0c" opacity="0" cx="162" cy="312" r="38"/>
+          <circle id="svg-stick-right" class="part-fill" fill="#0a0a0c" opacity="0" cx="363" cy="330" r="38"/>
+
+          <!-- ═══════════════════════════════════════════════
+               TRIGGERS — L1/L2 top-left, R1/R2 top-right
+          ═══════════════════════════════════════════════ -->
+          <!-- L1 -->
+          <path id="svg-trigger-l1" class="part-fill" fill="#f0f0f2" opacity="0" rx="8"
+            d="M 68 132 C 80 118, 105 108, 135 105 C 155 103, 168 108, 172 120
+               C 175 130, 165 140, 148 145 C 128 150, 100 148, 80 142
+               C 68 138, 62 136, 68 132 Z"/>
+          <!-- L2 -->
+          <path id="svg-trigger-l2" class="part-fill" fill="#f0f0f2" opacity="0"
+            d="M 42 92 C 55 70, 88 55, 128 52 C 155 50, 172 58, 175 72
+               C 178 85, 162 97, 138 103 C 112 109, 80 108, 58 100
+               C 44 95, 36 97, 42 92 Z"/>
+          <!-- R1 -->
+          <path id="svg-trigger-r1" class="part-fill" fill="#f0f0f2" opacity="0"
+            d="M 492 132 C 480 118, 455 108, 425 105 C 405 103, 392 108, 388 120
+               C 385 130, 395 140, 412 145 C 432 150, 460 148, 480 142
+               C 492 138, 498 136, 492 132 Z"/>
+          <!-- R2 -->
+          <path id="svg-trigger-r2" class="part-fill" fill="#f0f0f2" opacity="0"
+            d="M 518 92 C 505 70, 472 55, 432 52 C 405 50, 388 58, 385 72
+               C 382 85, 398 97, 422 103 C 448 109, 480 108, 502 100
+               C 516 95, 524 97, 518 92 Z"/>
+
+          <!-- ═══════════════════════════════════════════════
+               LIGHTBAR — thin strip below touchpad
+          ═══════════════════════════════════════════════ -->
+          <rect id="svg-lightbar" class="part-fill-screen" fill="#4a90e2" opacity="0" rx="3"
+            x="215" y="222" width="130" height="8"/>
+
+          <!-- ═══════════════════════════════════════════════
+               TOUCHPAD + ENGRAVING area (center panel)
+          ═══════════════════════════════════════════════ -->
+          <rect id="svg-touchpad" class="part-fill" fill="#cccccc" opacity="0" rx="18"
+            x="210" y="185" width="140" height="88"/>
+
+        </svg>
+
+        <!-- Engrave overlay text -->
+        <div class="engrave-txt" id="engrave-front"></div>
+        <!-- Lightbar glow -->
+        <div id="lightbar-glow"></div>
+      </div>
+
+      <!-- BACK -->
+      <div class="ctrl-photo-wrap" id="stack-back" style="display:none">
+        <img src="Photoroom_20260501_090821.png" alt="PS5 Controller Rückseite" id="img-back" onerror="this.src='IMG_0562.jpeg'">
+        <svg class="ctrl-svg-overlay" id="svg-back" viewBox="0 0 560 532" xmlns="http://www.w3.org/2000/svg">
+          <defs><style>.part-fill{mix-blend-mode:multiply;transition:fill .35s ease,opacity .35s ease}</style></defs>
+
+          <!-- BACK SHELL — full back housing -->
+          <path id="svg-backshell" class="part-fill" fill="#ffffff" opacity="0"
+            d="M 55 175 C 25 205, 12 250, 10 290 C 8 335, 20 378, 48 410
+               C 78 444, 125 468, 178 478 C 215 485, 248 480, 270 468
+               C 295 480, 330 485, 368 478 C 420 468, 465 444, 498 410
+               C 528 378, 542 335, 540 290 C 538 250, 525 205, 498 175
+               C 470 144, 432 128, 390 118 C 360 110, 330 108, 300 108
+               C 285 108, 270 109, 260 110 C 250 109, 235 108, 220 108
+               C 190 108, 160 110, 130 118 C 88 128, 75 144, 55 175 Z"/>
+
+          <!-- BACK GRIPS -->
+          <path id="svg-backshell-grip-l" class="part-fill" fill="#ffffff" opacity="0"
+            d="M 55 300 C 30 320, 18 355, 20 390 C 22 420, 40 448, 70 465
+               C 95 480, 130 482, 162 472 C 185 465, 200 450, 205 432
+               C 210 412, 200 390, 188 370 C 175 350, 155 335, 130 320
+               C 105 305, 75 295, 55 300 Z"/>
+          <path id="svg-backshell-grip-r" class="part-fill" fill="#ffffff" opacity="0"
+            d="M 505 300 C 530 320, 542 355, 540 390 C 538 420, 520 448, 490 465
+               C 465 480, 430 482, 398 472 C 375 465, 360 450, 355 432
+               C 350 412, 360 390, 372 370 C 385 350, 405 335, 430 320
+               C 455 305, 485 295, 505 300 Z"/>
+
+          <!-- PADDLES — bottom back, 2 or 4 paddle area -->
+          <path id="svg-paddle-l1" class="part-fill" fill="#888888" opacity="0" rx="10"
+            d="M 110 390 C 100 400, 98 418, 105 432 C 112 446, 128 452, 148 448
+               C 165 444, 175 430, 172 415 C 168 398, 152 388, 135 387
+               C 124 387, 115 387, 110 390 Z"/>
+          <path id="svg-paddle-r1" class="part-fill" fill="#888888" opacity="0"
+            d="M 450 390 C 460 400, 462 418, 455 432 C 448 446, 432 452, 412 448
+               C 395 444, 385 430, 388 415 C 392 398, 408 388, 425 387
+               C 436 387, 445 387, 450 390 Z"/>
+          <path id="svg-paddle-l2" class="part-fill" fill="#888888" opacity="0"
+            d="M 148 430 C 136 438, 130 452, 135 465 C 140 477, 156 484, 172 480
+               C 186 476, 194 463, 190 449 C 186 435, 172 426, 158 427 Z"/>
+          <path id="svg-paddle-r2" class="part-fill" fill="#888888" opacity="0"
+            d="M 412 430 C 424 438, 430 452, 425 465 C 420 477, 404 484, 388 480
+               C 374 476, 366 463, 370 449 C 374 435, 388 426, 402 427 Z"/>
+        </svg>
+        <div class="engrave-txt" id="engrave-back"></div>
+      </div>
+
+      <!-- PART LABELS (relative to stage) -->
+      <div class="part-label left" id="label-frontshell" data-side="front">FRONTGEHÄUSE<small>–</small></div>
+      <div class="part-label right" id="label-lightbar" data-side="front">LIGHT BAR<small>–</small></div>
+      <div class="part-label left" id="label-dpad" data-side="front">D-PAD<small>–</small></div>
+      <div class="part-label right" id="label-buttons" data-side="front">BUTTONS<small>–</small></div>
+      <div class="part-label left" id="label-stickcap" data-side="front">STICK CAPS<small>–</small></div>
+      <div class="part-label right" id="label-stick" data-side="front">⚡ STICKS<small>–</small></div>
+      <div class="part-label left" id="label-triggercolor" data-side="front">TRIGGER FARBE<small>–</small></div>
+      <div class="part-label right" id="label-trigger" data-side="front">⚡ TRIGGER<small>–</small></div>
+      <div class="part-label" id="label-engraving" data-side="front">✨ GRAVUR<small>–</small></div>
+      <div class="part-label left" id="label-backshell" data-side="back">RÜCKSCHALE<small>–</small></div>
+      <div class="part-label right" id="label-paddle" data-side="back">⚙ PADDLES<small>–</small></div>
+    </div>
+  </div>
+</div>
+
+<div class="preset-wrap">
+  <span class="preset-label">⟫ SCHNELL-PRESETS (1 TAP)</span>
+  <div class="preset-row" id="preset-row"></div>
+</div>
+
+<div class="cfg-divider">
+  <div class="cfg-divider-line"></div>
+  <div class="cfg-divider-text">⟫ DEINE KONFIGURATION ⟪</div>
+  <div class="cfg-divider-sub">Tippe auf eine Kategorie um sie zu öffnen</div>
+</div>
+
+<div class="cfg-sections" id="cfg-sections"></div>
+
+<div class="benefits-row">
+  <div class="benefit-item"><div class="benefit-icon">🇩🇪</div><div class="benefit-title">MADE IN GERMANY</div><div class="benefit-desc">Handmontiert in Domsühl</div></div>
+  <div class="benefit-item"><div class="benefit-icon">⚡</div><div class="benefit-title">8-12 TAGE</div><div class="benefit-desc">Premium-Fertigung</div></div>
+  <div class="benefit-item"><div class="benefit-icon">🛡</div><div class="benefit-title">24 MONATE</div><div class="benefit-desc">Gewährleistung</div></div>
+  <div class="benefit-item"><div class="benefit-icon">🔄</div><div class="benefit-title">14 TAGE</div><div class="benefit-desc">Rückgaberecht</div></div>
+</div>
+
+<div class="cfg-bottom">
+  <div class="cfg-bottom-price">
+    <div class="cfg-bottom-price-lbl">⟫ DEIN PREIS</div>
+    <div class="cfg-bottom-price-val">ab <span id="total-price">79,00 €</span></div>
+  </div>
+  <div class="cfg-qty">
+    <button id="qty-minus">−</button>
+    <span id="qty-val">1</span>
+    <button id="qty-plus">+</button>
+  </div>
+  <button class="cfg-add-cart" id="add-cart-btn">IN DEN<br>WARENKORB</button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+'use strict';
+
+/* ═══════════ COLOR DATA ═══════════ */
+const SHELL_COLORS=[
+  {name:'Weiß',color:'#ffffff',premium:0,def:true},
+  {name:'Schwarz',color:'#1a1a1c',premium:0},
+  {name:'Mitternacht',color:'#0a1633',premium:8},
+  {name:'Galactic Purple',color:'#3d1a52',premium:8},
+  {name:'Cosmic Red',color:'#5c0d10',premium:8},
+  {name:'Forest Green',color:'#0d2f17',premium:8},
+  {name:'Sunset Orange',color:'#cc4a1a',premium:10},
+  {name:'Pink Punch',color:'#e63174',premium:10},
+  {name:'Cyan Neon',color:'#00b4d8',premium:10},
+  {name:'Lila Neon',color:'#9933ff',premium:10},
+  {name:'Eis Blau',color:'#80d8ff',premium:8},
+  {name:'Mint',color:'#80e6c8',premium:8},
+  {name:'Gold',color:'#d4af37',premium:18},
+  {name:'Chrome',color:'#c0c0c0',premium:18},
+  {name:'Carbon',color:'#1c1c1f',premium:22},
+  {name:'Hologramm',color:'#b873e5',premium:25}
+];
+const BTN_COLORS=[
+  {name:'Standard',color:'#f0f0f2',premium:0,def:true},
+  {name:'Schwarz',color:'#222222',premium:5},
+  {name:'Cyan',color:'#00f2ff',premium:7},
+  {name:'Pink',color:'#ff2e6e',premium:7},
+  {name:'Gold',color:'#d4af37',premium:12},
+  {name:'Lila',color:'#bc13fe',premium:7},
+  {name:'Rot',color:'#dc143c',premium:7},
+  {name:'Grün',color:'#00b67a',premium:7},
+  {name:'Orange',color:'#ff7a1a',premium:7},
+  {name:'Weiß',color:'#ffffff',premium:5}
+];
+const STICK_COLORS=[
+  {name:'Schwarz',color:'#0a0a0c',premium:0,def:true},
+  {name:'Weiß',color:'#e8e8ea',premium:5},
+  {name:'Cyan',color:'#00f2ff',premium:8},
+  {name:'Pink',color:'#ff2e6e',premium:8},
+  {name:'Gold',color:'#d4af37',premium:12},
+  {name:'Rot',color:'#dc143c',premium:8},
+  {name:'Lila',color:'#bc13fe',premium:8},
+  {name:'Grün',color:'#00b67a',premium:8}
+];
+const TRIG_COLORS=[
+  {name:'Standard',color:'#f0f0f2',premium:0,def:true},
+  {name:'Schwarz',color:'#1a1a1c',premium:5},
+  {name:'Cyan',color:'#00f2ff',premium:9},
+  {name:'Pink',color:'#ff2e6e',premium:9},
+  {name:'Gold',color:'#d4af37',premium:14},
+  {name:'Rot',color:'#dc143c',premium:9}
+];
+const LB_COLORS=[
+  {name:'Blau',color:'#4a90e2',premium:0,def:true},
+  {name:'Cyan',color:'#00f2ff',premium:5},
+  {name:'Pink',color:'#ff2e6e',premium:5},
+  {name:'Lila',color:'#bc13fe',premium:5},
+  {name:'Rot',color:'#ff3030',premium:5},
+  {name:'Grün',color:'#00ff80',premium:5},
+  {name:'Weiß',color:'#ffffff',premium:5},
+  {name:'Gold',color:'#ffd700',premium:8}
+];
+const ENG_COLORS=[
+  {name:'Schwarz',color:'#222',def:true},
+  {name:'Weiß',color:'#fff'},
+  {name:'Cyan',color:'#00f2ff'},
+  {name:'Gold',color:'#d4af37'},
+  {name:'Pink',color:'#ff2e6e'},
+  {name:'Rot',color:'#dc143c'}
+];
+
+/* ═══════════ PART → SVG ELEMENT MAPPING ═══════════
+   Each category maps to an array of SVG element IDs.
+   When a color is selected, those elements get fill + opacity set.
+*/
+const PART_SVG={
+  frontshell:['svg-frontshell-left','svg-frontshell-right','svg-frontshell-top'],
+  backshell:['svg-backshell','svg-backshell-grip-l','svg-backshell-grip-r'],
+  buttons:['svg-btn-tri','svg-btn-cir','svg-btn-cro','svg-btn-sq'],
+  dpad:['svg-dpad-h','svg-dpad-v'],
+  stickcap:['svg-stick-left','svg-stick-right'],
+  triggercolor:['svg-trigger-l1','svg-trigger-l2','svg-trigger-r1','svg-trigger-r2'],
+  lightbar:['svg-lightbar']
+};
+
+/* Opacity for white (default) stays 0 — only show tint for non-white colors */
+function getPartOpacity(catId, colorHex){
+  const WHITE=['#ffffff','#fff','#f0f0f2','#e8e8ea'];
+  const isDefault=WHITE.some(w=>colorHex.toLowerCase()===w);
+  if(catId==='lightbar') return 0.9; // lightbar always shows
+  if(catId==='stickcap') return colorHex.toLowerCase()==='#0a0a0c'?0:0.75;
+  return isDefault ? 0 : 0.72;
+}
+
+function setSvgPart(catId, colorHex){
+  const ids=PART_SVG[catId];
+  if(!ids) return;
+  const opacity=getPartOpacity(catId,colorHex);
+  ids.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){
+      el.setAttribute('fill', colorHex);
+      el.setAttribute('opacity', String(opacity));
+    }
+  });
+}
+
+/* Lightbar glow in DOM (separate from SVG) */
+function updateLightbarGlow(colorHex){
+  const lg=document.getElementById('lightbar-glow');
+  if(!lg) return;
+  lg.style.background=colorHex;
+  lg.style.color=colorHex;
+  lg.style.boxShadow='0 0 20px 8px '+colorHex;
+  lg.classList.add('on');
+}
+
+/* ═══════════ CATEGORIES ═══════════ */
+const CATS=[
+  {id:'frontshell',icon:'🎨',name:'FRONTGEHÄUSE',colors:SHELL_COLORS,view:'front'},
+  {id:'backshell',icon:'🛡',name:'RÜCKSCHALE',colors:SHELL_COLORS,view:'back'},
+  {id:'buttons',icon:'🔘',name:'ACTION BUTTONS',colors:BTN_COLORS,view:'front'},
+  {id:'dpad',icon:'✚',name:'D-PAD',colors:BTN_COLORS,view:'front'},
+  {id:'stickcap',icon:'🕹',name:'STICK CAPS',colors:STICK_COLORS,view:'front'},
+  {id:'triggercolor',icon:'🎯',name:'TRIGGER FARBE',colors:TRIG_COLORS,view:'front'},
+  {id:'lightbar',icon:'💡',name:'LIGHT BAR',colors:LB_COLORS,view:'front'}
+];
+
+const OPTS={
+  stick:[
+    {val:'Standard',price:0,desc:'Original PS5 Sticks',def:true},
+    {val:'Hall Effect',price:35,desc:'Magnetisch — kein Drift'},
+    {val:'TMR',price:55,desc:'Pro-Genauigkeit',badge:'TOP'}
+  ],
+  trigger:[
+    {val:'Adaptive',price:0,desc:'Original Sony Adaptive',def:true},
+    {val:'Smart Clicky',price:25,desc:'Klick-Feedback wie Maus'},
+    {val:'Digital 1mm',price:35,desc:'Ultra-kurzer Travel',badge:'PRO'}
+  ],
+  paddle:[
+    {val:'Keine',price:0,desc:'Original DualSense',def:true},
+    {val:'2× Paddles',price:39,desc:'2 frei programmierbar'},
+    {val:'4× Paddles',price:59,desc:'Maximale Kontrolle'}
+  ],
+  express:[
+    {val:'Standard 8-12 Tage',price:0,desc:'Premium-Fertigung',def:true},
+    {val:'Express 4-6 Tage',price:25,desc:'Beschleunigt'},
+    {val:'Priority 2-3 Tage',price:45,desc:'Höchste Priorität',badge:'FAST'}
+  ]
+};
+
+/* ═══════════ PRESETS ═══════════ */
+const PRESETS={
+  default:{frontshell:'#ffffff',backshell:'#ffffff',buttons:'#f0f0f2',dpad:'#f0f0f2',stickcap:'#0a0a0c',triggercolor:'#f0f0f2',lightbar:'#4a90e2'},
+  stealth:{frontshell:'#1a1a1c',backshell:'#1a1a1c',buttons:'#222222',dpad:'#222222',stickcap:'#0a0a0c',triggercolor:'#1a1a1c',lightbar:'#4a90e2'},
+  neon:{frontshell:'#0a1633',backshell:'#0a1633',buttons:'#00f2ff',dpad:'#00f2ff',stickcap:'#00f2ff',triggercolor:'#00f2ff',lightbar:'#00f2ff'},
+  fire:{frontshell:'#5c0d10',backshell:'#5c0d10',buttons:'#dc143c',dpad:'#dc143c',stickcap:'#dc143c',triggercolor:'#dc143c',lightbar:'#ff3030'},
+  ice:{frontshell:'#80d8ff',backshell:'#80d8ff',buttons:'#00f2ff',dpad:'#00f2ff',stickcap:'#00f2ff',triggercolor:'#f0f0f2',lightbar:'#00f2ff'},
+  gold:{frontshell:'#1a1a1c',backshell:'#1a1a1c',buttons:'#d4af37',dpad:'#d4af37',stickcap:'#d4af37',triggercolor:'#d4af37',lightbar:'#ffd700'},
+  cyber:{frontshell:'#3d1a52',backshell:'#3d1a52',buttons:'#bc13fe',dpad:'#bc13fe',stickcap:'#ff2e6e',triggercolor:'#bc13fe',lightbar:'#bc13fe'},
+  emerald:{frontshell:'#0d2f17',backshell:'#0d2f17',buttons:'#00b67a',dpad:'#00b67a',stickcap:'#00b67a',triggercolor:'#00b67a',lightbar:'#00ff80'}
+};
+const PRESET_LIST=[
+  {id:'default',name:'STANDARD',color:'#fff'},
+  {id:'stealth',name:'STEALTH',color:'#1a1a1c'},
+  {id:'neon',name:'NEON',color:'#00f2ff'},
+  {id:'fire',name:'FIRE',color:'#dc143c'},
+  {id:'ice',name:'ICE',color:'#80d8ff'},
+  {id:'gold',name:'GOLD',color:'#d4af37'},
+  {id:'cyber',name:'CYBER',color:'#bc13fe'},
+  {id:'emerald',name:'EMERALD',color:'#00b67a'}
+];
+
+const BASE_PRICE=79;
+let qty=1;
+let currentView='front';
+let state={
+  colors:{frontshell:null,backshell:null,buttons:null,dpad:null,stickcap:null,triggercolor:null,lightbar:null},
+  options:{stick:null,trigger:null,paddle:null,express:null},
+  engraving:'',engraveColor:'#222',engraveColorName:'Schwarz'
+};
+
+/* ═══════════ UTILS ═══════════ */
+function haptic(p){try{if('vibrate' in navigator)navigator.vibrate(p||25);}catch(e){}}
+function $(id){return document.getElementById(id);}
+function toast(msg){
+  const t=$('toast');if(!t)return;
+  t.innerText=msg;t.classList.add('show');
+  clearTimeout(window.__tT);window.__tT=setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+/* ═══════════ BUILD PRESETS ═══════════ */
+function buildPresets(){
+  const row=$('preset-row');if(!row)return;
+  row.innerHTML='';
+  PRESET_LIST.forEach((p,i)=>{
+    const btn=document.createElement('button');
+    btn.className='preset-btn'+(i===0?' active':'');
+    btn.dataset.preset=p.id;
+    btn.innerHTML='<span class="preset-dot" style="background:'+p.color+'"></span>'+p.name;
+    btn.addEventListener('click',()=>loadPreset(p.id));
+    row.appendChild(btn);
+  });
+}
+
+/* ═══════════ BUILD SECTIONS ═══════════ */
+function buildSections(){
+  const root=$('cfg-sections');if(!root)return;
+  root.innerHTML='';
+  CATS.forEach((cat,i)=>{
+    const acc=document.createElement('div');
+    acc.className='cfg-acc'+(i===0?' open':'');
+    const def=cat.colors.find(c=>c.def);
+    acc.innerHTML=`
+      <div class="cfg-acc-hd">
+        <div class="cfg-acc-icon">${cat.icon}</div>
+        <div class="cfg-acc-name">${cat.name}<div class="cfg-acc-cur" id="cur-${cat.id}"><strong>${def?def.name:'–'}</strong>${def&&def.premium?' (+'+def.premium+' €)':''}</div></div>
+        <div class="cfg-acc-arr">›</div>
+      </div>
+      <div class="cfg-acc-body"><div class="cfg-acc-content"><div class="cfg-color-grid" id="grid-${cat.id}"></div></div></div>`;
+    root.appendChild(acc);
+    acc.querySelector('.cfg-acc-hd').addEventListener('click',()=>toggleAcc(acc,cat.view));
+    const grid=acc.querySelector('#grid-'+cat.id);
+    cat.colors.forEach(c=>{
+      const item=document.createElement('div');
+      item.className='cfg-color-item'+(c.def?' sel':'');
+      item.style.background=c.color;
+      if(c.color.toLowerCase()==='#ffffff'||c.color.toLowerCase()==='#fff')
+        item.style.border='2px solid #333';
+      item.title=c.name+(c.premium?' (+'+c.premium+' €)':'');
+      item.innerHTML='<div class="cfg-color-name">'+c.name+'</div>';
+      item.addEventListener('click',(e)=>{e.stopPropagation();selectColor(cat.id,c,item,cat);});
+      grid.appendChild(item);
+    });
+    if(def){
+      state.colors[cat.id]={color:def.color,name:def.name,premium:def.premium||0};
+      setSvgPart(cat.id,def.color);
+    }
+  });
+  buildOptCat('stick','⚡','STICK TECHNOLOGIE');
+  buildOptCat('trigger','🎮','TRIGGER TYP');
+  buildOptCat('paddle','⚙','BACK PADDLES');
+  buildEngrave();
+  buildOptCat('express','🚀','FERTIGUNGSZEIT');
+}
+
+function buildOptCat(catId,icon,name){
+  const root=$('cfg-sections');
+  const acc=document.createElement('div');
+  acc.className='cfg-acc';
+  const opts=OPTS[catId];
+  const def=opts.find(o=>o.def);
+  acc.innerHTML=`
+    <div class="cfg-acc-hd">
+      <div class="cfg-acc-icon">${icon}</div>
+      <div class="cfg-acc-name">${name}<div class="cfg-acc-cur" id="cur-${catId}"><strong>${def?def.val:'–'}</strong>${def&&def.price?' (+'+def.price+' €)':''}</div></div>
+      <div class="cfg-acc-arr">›</div>
+    </div>
+    <div class="cfg-acc-body"><div class="cfg-acc-content"><div class="cfg-opt-list" id="list-${catId}"></div></div></div>`;
+  root.appendChild(acc);
+  acc.querySelector('.cfg-acc-hd').addEventListener('click',()=>toggleAcc(acc,null));
+  const list=acc.querySelector('#list-'+catId);
+  opts.forEach(o=>{
+    const opt=document.createElement('div');
+    opt.className='cfg-opt'+(o.def?' sel':'');
+    const priceTxt=o.price===0?'inkl.':'+'+o.price+' €';
+    const badge=o.badge?'<span class="cfg-opt-badge">'+o.badge+'</span>':'';
+    opt.innerHTML=`<div class="cfg-opt-radio"></div><div class="cfg-opt-info"><div class="cfg-opt-name">${o.val}${badge}</div><div class="cfg-opt-desc">${o.desc}</div></div><div class="cfg-opt-price ${o.price===0?'free':''}">${priceTxt}</div>`;
+    opt.addEventListener('click',(e)=>{e.stopPropagation();selectOpt(catId,o,opt);});
+    list.appendChild(opt);
+  });
+  if(def)state.options[catId]={val:def.val,price:def.price||0};
+}
+
+function buildEngrave(){
+  const root=$('cfg-sections');
+  const acc=document.createElement('div');
+  acc.className='cfg-acc';
+  acc.innerHTML=`
+    <div class="cfg-acc-hd">
+      <div class="cfg-acc-icon">✨</div>
+      <div class="cfg-acc-name">GRAVUR<div class="cfg-acc-cur" id="cur-engraving"><strong>Keine</strong></div></div>
+      <div class="cfg-acc-arr">›</div>
+    </div>
+    <div class="cfg-acc-body">
+      <div class="cfg-acc-content">
+        <div style="font-size:10.5px;color:#888;margin-bottom:10px;line-height:1.5">Personalisiere mit Namen oder Gamertag — max. 12 Zeichen, direkt auf Touchpad eingraviert.</div>
+        <div class="cfg-engrave-row">
+          <input type="text" id="engrave-input" maxlength="12" placeholder="DEIN TEXT">
+          <span class="cfg-engrave-cnt" id="engrave-cnt">0/12</span>
+        </div>
+        <div style="font-family:'Orbitron';font-size:8.5px;color:#666;letter-spacing:1.5px;margin-top:14px;margin-bottom:8px">GRAVUR-FARBE</div>
+        <div class="cfg-engrave-color-row" id="engrave-color-row"></div>
+        <div style="display:flex;justify-content:space-between;margin-top:12px;font-family:'Orbitron';font-size:9.5px"><span style="color:#666">PERSONALISIERUNG</span><span id="price-engraving" style="color:var(--neon)">+0 €</span></div>
+      </div>
+    </div>`;
+  root.appendChild(acc);
+  acc.querySelector('.cfg-acc-hd').addEventListener('click',()=>toggleAcc(acc,null));
+  const inp=acc.querySelector('#engrave-input');
+  inp.addEventListener('input',function(){
+    state.engraving=this.value.toUpperCase();
+    this.value=state.engraving;
+    $('engrave-cnt').innerText=this.value.length+'/12';
+    $('cur-engraving').innerHTML='<strong>'+(this.value||'Keine')+'</strong>';
+    $('price-engraving').innerText=this.value?'+8 €':'+0 €';
+    updateEngraveOverlay();
+    updateLabel('engraving',this.value,!!this.value);
+    updatePrice();
+  });
+  const cRow=acc.querySelector('#engrave-color-row');
+  ENG_COLORS.forEach(c=>{
+    const el=document.createElement('div');
+    el.className='cfg-engrave-color'+(c.def?' sel':'');
+    el.style.background=c.color;
+    if(c.color==='#fff'||c.color==='#ffffff') el.style.border='2px solid #444';
+    el.title=c.name;
+    el.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      cRow.querySelectorAll('.cfg-engrave-color').forEach(o=>o.classList.remove('sel'));
+      el.classList.add('sel');
+      state.engraveColor=c.color;state.engraveColorName=c.name;
+      updateEngraveOverlay();
+      haptic(15);
+      toast('✓ Gravur-Farbe: '+c.name);
+    });
+    cRow.appendChild(el);
+  });
+}
+
+/* ═══════════ ACCORDION ═══════════ */
+function toggleAcc(acc, switchToView){
+  haptic(10);
+  acc.classList.toggle('open');
+  // Switch view automatically when opening a back-specific category
+  if(acc.classList.contains('open') && switchToView){
+    setView(switchToView);
+  }
+}
+
+/* ═══════════ SELECT COLOR ═══════════ */
+function selectColor(catId, color, itemEl, cat){
+  haptic([10,30,15]);
+  const grid=$('grid-'+catId);
+  if(grid) grid.querySelectorAll('.cfg-color-item').forEach(o=>o.classList.remove('sel'));
+  itemEl.classList.add('sel');
+  state.colors[catId]={color:color.color,name:color.name,premium:color.premium||0};
+  const cur=$('cur-'+catId);
+  if(cur) cur.innerHTML='<strong>'+color.name+'</strong>'+(color.premium?' (+'+color.premium+' €)':'');
+
+  // Switch view to where this part lives
+  if(cat && cat.view) setView(cat.view);
+
+  // Apply color to SVG part
+  setSvgPart(catId, color.color);
+
+  // Lightbar special glow
+  if(catId==='lightbar') updateLightbarGlow(color.color);
+
+  const def=cat.colors.find(c=>c.def);
+  const isCustom=!def||color.color.toLowerCase()!==def.color.toLowerCase();
+  updateLabel(catId, color.name, isCustom);
+  updatePrice();
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+  toast('✓ '+(cat?cat.name:catId)+': '+color.name);
+}
+
+/* ═══════════ SELECT OPTION ═══════════ */
+function selectOpt(catId, opt, itemEl){
+  haptic([10,30,15]);
+  const list=$('list-'+catId);
+  if(list) list.querySelectorAll('.cfg-opt').forEach(o=>o.classList.remove('sel'));
+  itemEl.classList.add('sel');
+  state.options[catId]={val:opt.val,price:opt.price||0};
+  const cur=$('cur-'+catId);
+  if(cur) cur.innerHTML='<strong>'+opt.val+'</strong>'+(opt.price?' (+'+opt.price+' €)':'');
+
+  // Paddle: switch to back view and show paddle SVG
+  if(catId==='paddle'){
+    setView('back');
+    const hasPaddles=opt.val!=='Keine';
+    ['svg-paddle-l1','svg-paddle-r1','svg-paddle-l2','svg-paddle-r2'].forEach((id,i)=>{
+      const el=document.getElementById(id);
+      if(!el) return;
+      if(opt.val==='4× Paddles') el.setAttribute('opacity','0.75');
+      else if(opt.val==='2× Paddles' && i<2) el.setAttribute('opacity','0.75');
+      else el.setAttribute('opacity','0');
+    });
+    updateLabel('paddle', opt.val, hasPaddles);
+  }
+  if(catId==='stick'||catId==='trigger'){
+    const def=OPTS[catId].find(o=>o.def);
+    updateLabel(catId, opt.val, opt.val!==def.val);
+  }
+  updatePrice();
+  toast('✓ '+opt.val);
+}
+
+/* ═══════════ LABELS ═══════════ */
+function updateLabel(part, value, isActive){
+  const label=$('label-'+part);
+  if(!label) return;
+  const valEl=label.querySelector('small');
+  if(valEl) valEl.textContent=value||'–';
+  const side=label.dataset.side;
+  const correctSide=!side||side===currentView;
+  label.classList.toggle('show', !!isActive && correctSide);
+}
+
+function refreshAllLabels(){
+  CATS.forEach(cat=>{
+    const c=state.colors[cat.id];
+    if(!c){updateLabel(cat.id,'',false);return;}
+    const def=cat.colors.find(x=>x.def);
+    const isCustom=!def||c.color.toLowerCase()!==def.color.toLowerCase();
+    updateLabel(cat.id,c.name,isCustom);
+  });
+  ['stick','trigger'].forEach(catId=>{
+    const o=state.options[catId];if(!o)return;
+    const def=OPTS[catId].find(x=>x.def);
+    updateLabel(catId,o.val,o.val!==def.val);
+  });
+  // paddle
+  const po=state.options['paddle'];
+  if(po) updateLabel('paddle',po.val,po.val!=='Keine');
+  updateLabel('engraving',state.engraving,!!state.engraving);
+}
+
+/* ═══════════ ENGRAVE OVERLAY ═══════════ */
+function updateEngraveOverlay(){
+  ['engrave-front','engrave-back'].forEach(id=>{
+    const el=$(id);if(!el)return;
+    el.textContent=state.engraving||'';
+    el.style.color=state.engraveColor;
+    state.engraving?el.classList.add('show'):el.classList.remove('show');
+  });
+}
+
+/* ═══════════ VIEW SWITCH ═══════════ */
+function setView(view){
+  if(currentView===view) return;
+  currentView=view;
+  document.querySelectorAll('.ctrl-toggle button').forEach(b=>{
+    b.classList.toggle('active',b.dataset.view===view);
+  });
+  const sf=$('stack-front'),sb=$('stack-back');
+  if(view==='front'){if(sf)sf.style.display='flex';if(sb)sb.style.display='none';}
+  else{if(sf)sf.style.display='none';if(sb)sb.style.display='flex';}
+  refreshAllLabels();
+}
+
+/* ═══════════ LOAD PRESET ═══════════ */
+function loadPreset(id){
+  haptic([20,40,30,40,20]);
+  document.querySelectorAll('.preset-btn').forEach(b=>{
+    b.classList.toggle('active',b.dataset.preset===id);
+  });
+  const p=PRESETS[id];if(!p)return;
+  Object.keys(p).forEach(catId=>{
+    const target=p[catId];
+    const cat=CATS.find(c=>c.id===catId);if(!cat)return;
+    const idx=cat.colors.findIndex(c=>c.color.toLowerCase()===target.toLowerCase());
+    if(idx<0)return;
+    const colorObj=cat.colors[idx];
+    const grid=$('grid-'+catId);
+    if(grid){
+      const items=grid.querySelectorAll('.cfg-color-item');
+      items.forEach(o=>o.classList.remove('sel'));
+      if(items[idx])items[idx].classList.add('sel');
+    }
+    state.colors[catId]={color:colorObj.color,name:colorObj.name,premium:colorObj.premium||0};
+    const cur=$('cur-'+catId);
+    if(cur)cur.innerHTML='<strong>'+colorObj.name+'</strong>'+(colorObj.premium?' (+'+colorObj.premium+' €)':'');
+    setSvgPart(catId,colorObj.color);
+    if(catId==='lightbar') updateLightbarGlow(colorObj.color);
+  });
+  refreshAllLabels();
+  updatePrice();
+  toast('✓ '+id.toUpperCase()+' geladen');
+}
+
+/* ═══════════ PRICE ═══════════ */
+function updatePrice(){
+  let price=BASE_PRICE;
+  Object.values(state.colors).forEach(c=>{if(c)price+=c.premium||0;});
+  Object.values(state.options).forEach(o=>{if(o)price+=o.price||0;});
+  if(state.engraving)price+=8;
+  const total=price*qty;
+  const tp=$('total-price');
+  if(tp)tp.innerText=total.toFixed(2).replace('.',',')+' €';
+}
+
+/* ═══════════ QTY ═══════════ */
+function changeQty(d){
+  haptic(15);
+  qty=Math.max(1,Math.min(99,qty+d));
+  $('qty-val').innerText=qty;
+  updatePrice();
+}
+
+/* ═══════════ ADD TO CART ═══════════ */
+function addCustomToCart(){
+  haptic([30,40,30,40,50]);
+  let price=BASE_PRICE;
+  Object.values(state.colors).forEach(c=>{if(c)price+=c.premium||0;});
+  Object.values(state.options).forEach(o=>{if(o)price+=o.price||0;});
+  if(state.engraving)price+=8;
+  const upgrades=[];
+  Object.entries(state.colors).forEach(([k,v])=>{if(v&&v.premium>0)upgrades.push(v.name);});
+  Object.entries(state.options).forEach(([k,v])=>{if(v&&v.price>0)upgrades.push(v.val);});
+  if(state.engraving)upgrades.push('Gravur:'+state.engraving);
+  const item={
+    name:'Custom PS5 Controller'+(upgrades.length?' ('+upgrades.length+' Upgrades)':''),
+    price,img:'IMG_0611.jpeg',qty,custom:true,config:state
+  };
+  let cart=[];
+  try{const s=localStorage.getItem('lxrd_cart');if(s)cart=JSON.parse(s);}catch(e){}
+  cart.push(item);
+  try{localStorage.setItem('lxrd_cart',JSON.stringify(cart));}catch(e){}
+  toast('✓ '+qty+'× Custom Controller hinzugefügt');
+  setTimeout(()=>{window.location.href='index.html#cart-open';},800);
+}
+
+/* ═══════════ INIT ═══════════ */
+function init(){
+  try{
+    buildPresets();
+    buildSections();
+    document.querySelectorAll('.ctrl-toggle button').forEach(b=>{
+      b.addEventListener('click',()=>{haptic(20);setView(b.dataset.view);});
+    });
+    $('qty-minus').addEventListener('click',()=>changeQty(-1));
+    $('qty-plus').addEventListener('click',()=>changeQty(1));
+    $('add-cart-btn').addEventListener('click',addCustomToCart);
+    // Init lightbar default
+    updateLightbarGlow('#4a90e2');
+    updatePrice();
+    refreshAllLabels();
+  }catch(err){
+    console.error('[init]',err);
+  }
+  setTimeout(()=>{
+    const l=$('cfg-loading');
+    if(l){l.classList.add('hidden');setTimeout(()=>{l.style.display='none';},700);}
+  },600);
+}
+
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
+else{init();}
+setTimeout(()=>{const l=$('cfg-loading');if(l&&l.style.display!=='none'){l.style.display='none';}},3000);
+</script>
+</body>
+</html>

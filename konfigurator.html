@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LEXORD® Pro Configurator | PS5</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --accent: #00f2ff;
+            --accent-glow: rgba(0, 242, 255, 0.5);
+            --bg: #050505;
+            --card: rgba(20, 20, 25, 0.8);
+            --border: rgba(255, 255, 255, 0.08);
+            --text-dim: #888;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg); 
+            color: #fff; 
+            overflow-x: hidden; 
+            line-height: 1.5;
+        }
+
+        /* --- AURORA ANIMATION --- */
+        .aurora-bg {
+            position: fixed; inset: 0; z-index: -1;
+            background: #000; overflow: hidden;
+        }
+        .blob {
+            position: absolute; width: 60vw; height: 60vw; border-radius: 50%;
+            filter: blur(80px); opacity: 0.2; animation: move 20s infinite alternate;
+        }
+        .b1 { background: #00f2ff; top: -10%; left: -10%; }
+        .b2 { background: #bc13fe; bottom: -10%; right: -10%; animation-delay: -5s; }
+        @keyframes move { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(15%, 10%) scale(1.2); } }
+
+        /* --- LAYOUT --- */
+        .wrapper { display: flex; flex-direction: column; min-height: 100vh; }
+        
+        header {
+            padding: 20px 5%; display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 100; background: rgba(0,0,0,0.7);
+        }
+        .logo { font-family: 'Orbitron'; font-weight: 900; font-size: 1.2rem; letter-spacing: 4px; color: #fff; }
+        .logo span { color: var(--accent); }
+
+        /* --- VISUALIZER --- */
+        .visualizer {
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px; position: relative; min-height: 450px;
+        }
+
+        .view-toggle {
+            display: flex; gap: 10px; background: rgba(255,255,255,0.05);
+            padding: 5px; border-radius: 50px; margin-bottom: 20px; z-index: 10;
+        }
+        .view-toggle button {
+            border: none; background: transparent; color: #fff; padding: 8px 20px;
+            border-radius: 50px; cursor: pointer; font-family: 'Orbitron'; font-size: 10px;
+            transition: 0.3s; opacity: 0.5;
+        }
+        .view-toggle button.active { background: var(--accent); color: #000; opacity: 1; }
+
+        .stage {
+            position: relative; width: 100%; max-width: 500px; aspect-ratio: 1;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* LAYER SYSTEM */
+        .layer-stack { position: absolute; inset: 0; }
+        .layer {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: contain; transition: 0.4s ease;
+        }
+        
+        /* Die Magie: Der Tint-Filter */
+        .tint-layer {
+            mix-blend-mode: multiply; /* Erhält Schatten & Details */
+            opacity: 0;
+        }
+        .tint-layer.active { opacity: 0.85; }
+
+        /* --- CONFIGURATION PANEL --- */
+        .config-panel {
+            background: var(--card); backdrop-filter: blur(20px);
+            border-radius: 30px 30px 0 0; border: 1px solid var(--border);
+            padding: 30px 5%; padding-bottom: 120px;
+        }
+
+        .cat-title {
+            font-family: 'Orbitron'; font-size: 12px; letter-spacing: 2px;
+            margin-bottom: 15px; color: var(--text-dim); display: flex; align-items: center; gap: 10px;
+        }
+        .cat-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+        .scroll-x {
+            display: flex; gap: 15px; overflow-x: auto; padding: 10px 0 30px;
+            scrollbar-width: none;
+        }
+        .scroll-x::-webkit-scrollbar { display: none; }
+
+        .color-bubble {
+            flex: 0 0 65px; height: 65px; border-radius: 20px;
+            border: 2px solid transparent; cursor: pointer; transition: 0.3s;
+            position: relative; display: flex; align-items: center; justify-content: center;
+        }
+        .color-bubble.active { border-color: var(--accent); transform: scale(1.1); box-shadow: 0 0 20px var(--accent-glow); }
+        .color-bubble .check { position: absolute; font-size: 12px; color: #000; opacity: 0; }
+        .color-bubble.active .check { opacity: 1; }
+
+        .option-card {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            padding: 20px; border-radius: 15px; margin-bottom: 12px;
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer; transition: 0.2s;
+        }
+        .option-card.active { border-color: var(--accent); background: rgba(0, 242, 255, 0.05); }
+        .opt-meta h4 { font-family: 'Orbitron'; font-size: 11px; margin-bottom: 4px; }
+        .opt-meta p { font-size: 10px; color: var(--text-dim); }
+        .opt-price { font-family: 'Orbitron'; font-size: 12px; color: var(--accent); }
+
+        /* --- BOTTOM BAR --- */
+        .bottom-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(20px);
+            padding: 20px 5%; border-top: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between; z-index: 200;
+        }
+        .price-display { display: flex; flex-direction: column; }
+        .price-display span { font-size: 10px; color: var(--text-dim); font-family: 'Orbitron'; }
+        .price-display strong { font-size: 24px; font-family: 'Orbitron'; color: #fff; }
+
+        .btn-buy {
+            background: var(--accent); color: #000; border: none;
+            padding: 15px 40px; border-radius: 12px; font-family: 'Orbitron';
+            font-weight: 900; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .btn-buy:hover { transform: translateY(-3px); box-shadow: 0 0 30px var(--accent); }
+
+        /* --- HELPERS --- */
+        .hidden { display: none; }
+        
+        /* Mobile Optimierung */
+        @media (max-width: 600px) {
+            .visualizer { min-height: 350px; }
+            .price-display strong { font-size: 20px; }
+            .btn-buy { padding: 15px 25px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="aurora-bg">
+        <div class="blob b1"></div>
+        <div class="blob b2"></div>
+    </div>
+
+    <div class="wrapper">
+        <header>
+            <div class="logo">LEXORD<span>®</span></div>
+            <div style="font-size: 9px; font-family: 'Orbitron'; color: var(--accent);">PREMIUM CONFIGURATOR</div>
+        </header>
+
+        <main class="visualizer">
+            <div class="view-toggle">
+                <button id="btn-front" class="active" onclick="switchView('front')">FRONT</button>
+                <button id="btn-back" onclick="switchView('back')">BACK</button>
+            </div>
+
+            <div class="stage" id="main-stage">
+                <!-- FRONT VIEW LAYER -->
+                <div id="group-front" class="layer-stack">
+                    <img src="Photoroom_20260501_094506.png" class="layer" id="base-f">
+                    <!-- Tint Overlays mit Masken (Simuliert durch Clip-Paths) -->
+                    <div id="layer-frontshell" class="layer tint-layer" style="background: white; clip-path: polygon(0 30%, 100% 30%, 100% 100%, 0 100%);"></div>
+                    <div id="layer-buttons" class="layer tint-layer" style="background: white; clip-path: circle(15% at 80% 50%);"></div>
+                </div>
+
+                <!-- BACK VIEW LAYER -->
+                <div id="group-back" class="layer-stack hidden">
+                    <img src="Photoroom_20260501_090821.png" class="layer" id="base-b">
+                    <div id="layer-backshell" class="layer tint-layer" style="background: white;"></div>
+                </div>
+            </div>
+        </main>
+
+        <section class="config-panel">
+            <!-- GEHÄUSE -->
+            <div class="cat-title">GEHÄUSE FARBE</div>
+            <div class="scroll-x" id="colors-shell">
+                <!-- Wird per JS gefüllt -->
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="cat-title">ACTION BUTTONS</div>
+            <div class="scroll-x" id="colors-buttons">
+                <!-- Wird per JS gefüllt -->
+            </div>
+
+            <!-- PADDLES -->
+            <div class="cat-title">PRO FEATURES</div>
+            <div id="options-pro">
+                <!-- Wird per JS gefüllt -->
+            </div>
+        </section>
+    </div>
+
+    <div class="bottom-bar">
+        <div class="price-display">
+            <span>GESAMTSUMME</span>
+            <strong id="total-price">79,00 €</strong>
+        </div>
+        <button class="btn-buy" onclick="finishConfig()">KONFIGURATION BEENDEN</button>
+    </div>
+
+    <script>
+        // DATENSTRUKTUR WIE BEI ZYPA
+        const CONFIG = {
+            colors: [
+                { id: 'white', name: 'Original White', hex: '#ffffff', price: 0 },
+                { id: 'black', name: 'Midnight Black', hex: '#111111', price: 0 },
+                { id: 'red', name: 'Cosmic Red', hex: '#ff1a1a', price: 15 },
+                { id: 'cyan', name: 'Sky Blue', hex: '#00f2ff', price: 15 },
+                { id: 'purple', name: 'Galactic Purple', hex: '#bc13fe', price: 15 },
+                { id: 'gold', name: 'Luxury Gold', hex: '#d4af37', price: 25 }
+            ],
+            proOptions: [
+                { id: 'standard', name: 'Standard Sticks', desc: 'Sony Original Ersatzteile', price: 0 },
+                { id: 'hall', name: 'Hall-Effect Sticks', desc: 'Kein Stick-Drift möglich', price: 39 },
+                { id: 'paddles2', name: '2er Paddles', desc: 'X/O Belegung auf der Rückseite', price: 45 },
+                { id: 'paddles4', name: '4er Paddles Pro', desc: 'Maximale Kontrolle für E-Sport', price: 69 }
+            ]
+        };
+
+        let state = {
+            view: 'front',
+            shell: CONFIG.colors[0],
+            buttons: CONFIG.colors[0],
+            pro: CONFIG.proOptions[0],
+            basePrice: 79.00
+        };
+
+        // INITIALISIERUNG
+        function init() {
+            renderColors('colors-shell', 'shell');
+            renderColors('colors-buttons', 'buttons');
+            renderOptions();
+            updateUI();
+        }
+
+        function renderColors(containerId, part) {
+            const container = document.getElementById(containerId);
+            CONFIG.colors.forEach(color => {
+                const div = document.createElement('div');
+                div.className = `color-bubble ${state[part].id === color.id ? 'active' : ''}`;
+                div.style.backgroundColor = color.hex;
+                div.innerHTML = `<span class="check">✔</span>`;
+                div.onclick = () => {
+                    state[part] = color;
+                    if(part === 'shell') switchView('front'); // Auto-Switch für bessere Sicht
+                    updateUI();
+                    renderColors(containerId, part); // Refresh Active State
+                };
+                container.appendChild(div);
+            });
+            // Container leeren vor neuem Render
+            container.innerHTML = '';
+            CONFIG.colors.forEach(color => {
+                const div = document.createElement('div');
+                div.className = `color-bubble ${state[part].id === color.id ? 'active' : ''}`;
+                div.style.backgroundColor = color.hex;
+                div.innerHTML = `<span class="check">✔</span>`;
+                div.onclick = () => {
+                    state[part] = color;
+                    updateUI();
+                    document.querySelectorAll(`#${containerId} .color-bubble`).forEach(b => b.classList.remove('active'));
+                    div.classList.add('active');
+                };
+                container.appendChild(div);
+            });
+        }
+
+        function renderOptions() {
+            const container = document.getElementById('options-pro');
+            CONFIG.proOptions.forEach(opt => {
+                const div = document.createElement('div');
+                div.className = `option-card ${state.pro.id === opt.id ? 'active' : ''}`;
+                div.innerHTML = `
+                    <div class="opt-meta">
+                        <h4>${opt.name.toUpperCase()}</h4>
+                        <p>${opt.desc}</p>
+                    </div>
+                    <div class="opt-price">+${opt.price}€</div>
+                `;
+                div.onclick = () => {
+                    state.pro = opt;
+                    document.querySelectorAll('.option-card').forEach(c => c.classList.remove('active'));
+                    div.classList.add('active');
+                    updateUI();
+                };
+                container.appendChild(div);
+            });
+        }
+
+        function switchView(view) {
+            state.view = view;
+            document.getElementById('group-front').classList.toggle('hidden', view !== 'front');
+            document.getElementById('group-back').classList.toggle('hidden', view !== 'back');
+            document.getElementById('btn-front').classList.toggle('active', view === 'front');
+            document.getElementById('btn-back').classList.toggle('active', view === 'back');
+        }
+
+        function updateUI() {
+            // Farben anwenden
+            const shellLayer = document.getElementById('layer-frontshell');
+            const backLayer = document.getElementById('layer-backshell');
+            const btnLayer = document.getElementById('layer-buttons');
+
+            // Frontgehäuse & Rückseite (Gleiche Farbe)
+            shellLayer.style.backgroundColor = state.shell.hex;
+            shellLayer.classList.toggle('active', state.shell.id !== 'white');
+            
+            backLayer.style.backgroundColor = state.shell.hex;
+            backLayer.classList.toggle('active', state.shell.id !== 'white');
+
+            // Buttons
+            btnLayer.style.backgroundColor = state.buttons.hex;
+            btnLayer.classList.toggle('active', state.buttons.id !== 'white');
+
+            // Preis berechnen
+            let total = state.basePrice + state.shell.price + state.buttons.price + state.pro.price;
+            document.getElementById('total-price').innerText = total.toFixed(2).replace('.', ',') + ' €';
+        }
+
+        function finishConfig() {
+            alert("Konfiguration gespeichert! Weiterleitung zum Warenkorb...");
+            console.log("Final State:", state);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>

@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5">
+<title>PS5 Konfigurator | LEXORD®</title>
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--neon:#00f2ff;--neon2:#bc13fe;--green:#00b67a;--err:#ff4d4f}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+html,body{overflow-x:hidden}
+body{background:#000;color:#fff;font-family:'Inter',sans-serif;min-height:100vh;padding-bottom:120px}
+
+/* AURORA */
+.aurora{position:fixed;inset:0;z-index:-3;background:#000;overflow:hidden}
+.ab{position:absolute;border-radius:50%;filter:blur(90px);opacity:.4;animation:af 25s ease-in-out infinite}
+.ab:nth-child(1){width:55%;height:55%;background:radial-gradient(circle,rgba(0,242,255,.5),transparent 70%);top:-10%;left:-10%}
+.ab:nth-child(2){width:50%;height:50%;background:radial-gradient(circle,rgba(188,19,254,.4),transparent 70%);bottom:-10%;right:-10%;animation-delay:-8s}
+.ab:nth-child(3){width:40%;height:40%;background:radial-gradient(circle,rgba(255,46,110,.25),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:-15s}
+@keyframes af{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(15%,-10%) scale(1.1)}}
+.grid-overlay{position:fixed;inset:0;z-index:-2;background-image:linear-gradient(rgba(0,242,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,242,255,.025) 1px,transparent 1px);background-size:50px 50px;pointer-events:none}
+
+/* HEADER */
+.cfg-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:10px;padding:10px 4%;background:rgba(0,0,0,.92);backdrop-filter:blur(22px);border-bottom:1px solid rgba(0,242,255,.15)}
+.cfg-back{display:inline-flex;align-items:center;gap:6px;font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;font-weight:700;color:#aaa;text-decoration:none;padding:9px 12px;border:1px solid #1a1a1e;border-radius:8px;background:rgba(10,10,12,.7)}
+.cfg-back:active{color:var(--neon);border-color:var(--neon)}
+.cfg-title{font-family:'Orbitron';font-weight:900;font-size:10px;letter-spacing:2px;color:#ddd;text-align:center;flex:1}
+.cfg-live{font-family:'Orbitron';font-size:8px;letter-spacing:1.5px;color:var(--neon);background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.25);padding:6px 10px;border-radius:7px;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.cfg-live::before{content:'';width:5px;height:5px;background:var(--neon);border-radius:50%;animation:ldot 1.5s infinite;box-shadow:0 0 8px var(--neon)}
+@keyframes ldot{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* HERO */
+.cfg-hero{text-align:center;padding:25px 5% 15px}
+.cfg-hero-eyebrow{display:inline-block;padding:5px 12px;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.25);border-radius:20px;font-family:'Orbitron';font-size:8px;color:var(--neon);letter-spacing:2px;margin-bottom:12px}
+.cfg-hero-title{font-family:'Orbitron';font-weight:900;font-size:clamp(1.3rem,5vw,2.2rem);letter-spacing:-1px;line-height:1.1;margin-bottom:8px;background:linear-gradient(180deg,#fff,rgba(255,255,255,.5));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.cfg-hero-sub{font-family:'Orbitron';font-size:9px;letter-spacing:2px;color:#666}
+
+/* TOGGLE */
+.ctrl-wrap{display:flex;flex-direction:column;align-items:center;padding:5px 4% 20px}
+.ctrl-toggle{display:flex;gap:6px;margin-bottom:14px;background:rgba(12,12,14,.7);padding:4px;border-radius:11px;border:1px solid rgba(255,255,255,.06)}
+.ctrl-toggle button{font-family:'Orbitron';font-size:9.5px;letter-spacing:1.5px;font-weight:700;background:transparent;border:none;color:#888;padding:10px 18px;border-radius:8px;cursor:pointer;transition:.25s}
+.ctrl-toggle button.active{background:linear-gradient(135deg,rgba(0,242,255,.2),rgba(0,242,255,.08));color:var(--neon);box-shadow:0 0 12px rgba(0,242,255,.2)}
+
+/* STAGE */
+.ctrl-stage{position:relative;width:100%;max-width:540px;aspect-ratio:1.05/1}
+.ctrl-stage::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(0,242,255,.18) 0%,transparent 60%);filter:blur(30px);pointer-events:none;z-index:0}
+
+.photo-stack{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;animation:floatY 5s ease-in-out infinite}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+.photo-stack .photo-img{
+width:100%;height:100%;object-fit:contain;
+filter:drop-shadow(0 25px 45px rgba(0,242,255,.18)) drop-shadow(0 12px 20px rgba(0,0,0,.8));
+position:absolute;inset:0;z-index:1
+}
+
+/* TINT — uses photo itself as mask, only colors NON-TRANSPARENT pixels (controller) */
+.tint-layer{
+position:absolute;inset:0;z-index:2;
+opacity:0;transition:opacity .4s ease;pointer-events:none;
+mix-blend-mode:multiply;
+-webkit-mask-size:contain;mask-size:contain;
+-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+-webkit-mask-position:center;mask-position:center;
+}
+.tint-layer.active{opacity:.85}
+#tint-front{
+-webkit-mask-image:url('ps5-front.svg');
+mask-image:url('ps5-front.svg');
+}
+#tint-back{
+-webkit-mask-image:url('ps5-back.svg');
+mask-image:url('ps5-back.svg');
+}
+
+/* LIGHTBAR */
+#lightbar-glow{position:absolute;top:42%;left:50%;transform:translateX(-50%);width:22%;height:5px;border-radius:5px;background:#4a90e2;filter:blur(5px);opacity:0;transition:.4s;z-index:5;pointer-events:none}
+#lightbar-glow.on{opacity:.95;box-shadow:0 0 20px 7px currentColor}
+
+/* ENGRAVE */
+.engrave-txt{position:absolute;top:36%;left:50%;transform:translate(-50%,-50%);font-family:'Orbitron';font-weight:900;font-size:clamp(11px,2.2vw,15px);letter-spacing:2px;pointer-events:none;z-index:6;opacity:0;transition:.3s;text-shadow:0 1px 2px rgba(0,0,0,.5);white-space:nowrap}
+.engrave-txt.show{opacity:.95}
+
+/* PART LABELS — makemycon-style with NEON CONNECTING LINES */
+.part-label{
+position:absolute;background:linear-gradient(135deg,rgba(8,8,12,.97),rgba(4,4,8,.97));
+border:1px solid rgba(0,242,255,.5);color:#fff;padding:7px 11px;border-radius:9px;
+font-family:'Orbitron';font-size:8px;font-weight:800;letter-spacing:.5px;
+white-space:nowrap;opacity:0;transform:scale(.85);transition:opacity .35s,transform .35s;
+box-shadow:0 4px 14px rgba(0,0,0,.7),0 0 12px rgba(0,242,255,.25);
+pointer-events:none;z-index:7;text-transform:uppercase;
+max-width:140px
+}
+.part-label.show{opacity:1;transform:scale(1)}
+.part-label small{display:block;color:var(--neon);font-size:9.5px;font-weight:700;margin-top:3px;letter-spacing:.3px;text-transform:none;text-shadow:0 0 6px rgba(0,242,255,.5)}
+
+/* Connecting LINE from label to controller */
+.part-label::before{
+content:'';position:absolute;
+height:1.5px;width:40px;
+background:linear-gradient(90deg,var(--neon),rgba(0,242,255,.3));
+box-shadow:0 0 6px var(--neon),0 0 10px rgba(0,242,255,.4);
+top:50%;
+}
+.part-label.left::before{right:-40px;background:linear-gradient(90deg,var(--neon),rgba(0,242,255,.3))}
+.part-label.right::before{left:-40px;background:linear-gradient(90deg,rgba(0,242,255,.3),var(--neon))}
+
+/* DOT at end of line — pin marker */
+.part-label::after{
+content:'';position:absolute;
+width:9px;height:9px;background:var(--neon);border-radius:50%;
+box-shadow:0 0 10px var(--neon),0 0 16px rgba(0,242,255,.5),inset 0 0 3px rgba(255,255,255,.4);
+top:50%;transform:translateY(-50%);
+animation:dotPulse 2s infinite
+}
+.part-label.left::after{right:-46px}
+.part-label.right::after{left:-46px}
+
+@keyframes dotPulse{0%,100%{box-shadow:0 0 10px var(--neon),0 0 16px rgba(0,242,255,.5),inset 0 0 3px rgba(255,255,255,.4)}50%{box-shadow:0 0 14px var(--neon),0 0 22px rgba(0,242,255,.7),inset 0 0 3px rgba(255,255,255,.4)}}
+
+/* Label positions — FRONT view */
+#label-frontshell{top:8%;left:0%}
+#label-lightbar{top:8%;right:0%}
+#label-dpad{top:32%;left:-2%}
+#label-buttons{top:32%;right:-2%}
+#label-stickcap{top:52%;left:-2%}
+#label-stick{top:52%;right:-2%}
+#label-triggercolor{top:74%;left:-2%}
+#label-trigger{top:74%;right:-2%}
+#label-engraving{top:88%;left:50%;transform:translateX(-50%) scale(.85)}
+#label-engraving.show{transform:translateX(-50%) scale(1)}
+#label-engraving::before,#label-engraving::after{display:none}
+
+/* Label positions — BACK view */
+#label-backshell{top:12%;left:0%}
+#label-paddle{top:50%;right:0%}
+
+@media(max-width:520px){
+.part-label{font-size:7.5px;padding:5px 9px;max-width:110px}
+.part-label small{font-size:8.5px;margin-top:2px}
+.part-label::before{width:25px}
+.part-label.left::before{right:-25px}
+.part-label.right::before{left:-25px}
+.part-label.left::after{right:-31px}
+.part-label.right::after{left:-31px}
+.part-label::after{width:7px;height:7px}
+}
+
+/* PRESETS */
+.preset-wrap{padding:5px 4% 18px;max-width:780px;margin:0 auto}
+.preset-label{font-family:'Orbitron';font-size:8.5px;color:#666;letter-spacing:2px;margin-bottom:8px;display:block}
+.preset-row{display:flex;gap:8px;overflow-x:auto;padding:4px 0;scrollbar-width:none}
+.preset-row::-webkit-scrollbar{display:none}
+.preset-btn{flex-shrink:0;padding:11px 16px;border-radius:11px;border:1.5px solid rgba(255,255,255,.06);background:rgba(255,255,255,.025);font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;font-weight:700;color:#bbb;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:7px}
+.preset-btn.active{border-color:var(--neon);background:rgba(0,242,255,.08);color:var(--neon)}
+.preset-dot{width:9px;height:9px;border-radius:50%;display:inline-block;border:1px solid rgba(255,255,255,.1)}
+
+/* DIVIDER */
+.cfg-divider{padding:8px 4% 0;text-align:center;max-width:780px;margin:0 auto}
+.cfg-divider-line{height:1px;background:linear-gradient(90deg,transparent,rgba(0,242,255,.4),transparent);margin:0 auto 14px}
+.cfg-divider-text{font-family:'Orbitron';font-size:11px;letter-spacing:4px;color:var(--neon);margin-bottom:5px;font-weight:700}
+.cfg-divider-sub{font-size:11px;color:#888}
+
+/* ACCORDIONS */
+.cfg-sections{padding:18px 4% 30px;max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.cfg-acc{background:rgba(12,12,16,.7);border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden}
+.cfg-acc.open{border-color:rgba(0,242,255,.3);box-shadow:0 8px 30px rgba(0,242,255,.08)}
+.cfg-acc-hd{display:flex;align-items:center;gap:14px;padding:18px;cursor:pointer;font-family:'Orbitron';font-size:11px;font-weight:700;color:#ddd;letter-spacing:1.5px;user-select:none;-webkit-user-select:none}
+.cfg-acc-hd:active{background:rgba(0,242,255,.04)}
+.cfg-acc-icon{width:42px;height:42px;background:linear-gradient(135deg,rgba(0,242,255,.12),rgba(0,242,255,.04));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;border:1px solid rgba(0,242,255,.18)}
+.cfg-acc-name{flex:1;min-width:0}
+.cfg-acc-cur{font-family:'Inter';font-size:10px;font-weight:400;color:#777;margin-top:3px;letter-spacing:0;text-transform:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cfg-acc-cur strong{color:var(--neon);font-weight:600}
+.cfg-acc-arr{font-size:18px;color:#555;transition:.3s;flex-shrink:0}
+.cfg-acc.open .cfg-acc-arr{transform:rotate(90deg);color:var(--neon)}
+.cfg-acc-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.cfg-acc.open .cfg-acc-body{max-height:2000px}
+.cfg-acc-content{padding:0 16px 18px}
+
+/* COLOR GRID */
+.cfg-color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:10px;margin-top:6px}
+.cfg-color-item{aspect-ratio:1/1;border-radius:11px;cursor:pointer;border:2px solid rgba(255,255,255,.05);transition:.2s;position:relative;overflow:visible;min-height:60px}
+.cfg-color-item:active{transform:scale(.94)}
+.cfg-color-item.sel{border-color:var(--neon);box-shadow:0 0 0 2px rgba(0,242,255,.3),0 4px 16px rgba(0,242,255,.4);transform:scale(1.05)}
+.cfg-color-item.sel::after{content:'✓';position:absolute;top:3px;right:3px;width:20px;height:20px;background:var(--neon);color:#000;font-size:12px;font-weight:900;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 8px rgba(0,242,255,.6)}
+.cfg-color-name{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-family:'Orbitron';font-size:7.5px;color:#999;letter-spacing:.5px;white-space:nowrap;opacity:0;transition:.2s}
+.cfg-color-item.sel .cfg-color-name{opacity:1;color:var(--neon)}
+
+/* OPT LIST */
+.cfg-opt-list{display:flex;flex-direction:column;gap:9px}
+.cfg-opt{display:flex;align-items:center;gap:14px;padding:15px;background:rgba(255,255,255,.025);border:1.5px solid rgba(255,255,255,.05);border-radius:11px;cursor:pointer;transition:.25s;text-align:left}
+.cfg-opt:active{transform:scale(.98)}
+.cfg-opt.sel{border-color:var(--neon);background:rgba(0,242,255,.06);box-shadow:0 0 12px rgba(0,242,255,.1)}
+.cfg-opt-radio{width:20px;height:20px;border:2px solid rgba(255,255,255,.2);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.25s}
+.cfg-opt.sel .cfg-opt-radio{border-color:var(--neon);background:var(--neon)}
+.cfg-opt.sel .cfg-opt-radio::after{content:'';width:7px;height:7px;background:#000;border-radius:50%}
+.cfg-opt-info{flex:1;min-width:0}
+.cfg-opt-name{font-family:'Orbitron';font-size:10.5px;font-weight:700;color:#fff;letter-spacing:.5px;line-height:1.3}
+.cfg-opt-desc{font-size:10.5px;color:#888;margin-top:3px;line-height:1.4}
+.cfg-opt-price{font-family:'Orbitron';font-size:10.5px;font-weight:900;color:var(--neon);flex-shrink:0;text-align:right}
+.cfg-opt-price.free{color:#666}
+.cfg-opt-badge{display:inline-block;background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;font-family:'Orbitron';font-size:7px;font-weight:900;padding:3px 6px;border-radius:4px;margin-left:7px}
+
+/* ENGRAVE INPUT */
+.cfg-engrave-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.05);border-radius:11px;padding:13px 15px}
+.cfg-engrave-row:focus-within{border-color:var(--neon);background:rgba(0,242,255,.03)}
+.cfg-engrave-row input{flex:1;background:transparent;border:none;color:#fff;font-family:'Orbitron';font-size:14px;letter-spacing:1.5px;outline:none;text-transform:uppercase;min-width:0}
+.cfg-engrave-row input::placeholder{color:#444;text-transform:none}
+.cfg-engrave-cnt{font-family:'Orbitron';font-size:9px;color:#555}
+.cfg-engrave-color-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.cfg-engrave-color{width:36px;height:36px;border-radius:8px;cursor:pointer;border:2px solid rgba(255,255,255,.1);transition:.2s;position:relative}
+.cfg-engrave-color:active{transform:scale(.92)}
+.cfg-engrave-color.sel{border-color:var(--neon);box-shadow:0 0 0 2px rgba(0,242,255,.3)}
+.cfg-engrave-color.sel::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;font-weight:900;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+
+/* BENEFITS */
+.benefits-row{padding:25px 4%;max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.benefit-item{padding:15px;background:rgba(12,12,16,.5);border:1px solid rgba(255,255,255,.05);border-radius:12px;text-align:center}
+.benefit-icon{font-size:22px;margin-bottom:8px}
+.benefit-title{font-family:'Orbitron';font-size:9px;color:var(--neon);letter-spacing:1.5px;margin-bottom:5px;font-weight:700}
+.benefit-desc{font-size:10.5px;color:#666;line-height:1.5}
+
+/* BOTTOM BAR */
+.cfg-bottom{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(4,4,8,.97);backdrop-filter:blur(28px);border-top:1px solid rgba(0,242,255,.18);padding:11px 4%;display:flex;align-items:center;gap:10px;box-shadow:0 -10px 40px rgba(0,0,0,.7)}
+.cfg-bottom-price{flex:1;min-width:0}
+.cfg-bottom-price-lbl{font-family:'Orbitron';font-size:7.5px;color:#666;letter-spacing:1.5px}
+.cfg-bottom-price-val{font-family:'Orbitron';font-size:20px;font-weight:900;color:#fff;line-height:1;margin-top:3px;white-space:nowrap}
+.cfg-bottom-price-val span{color:var(--neon)}
+.cfg-qty{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:9px;padding:3px}
+.cfg-qty button{width:30px;height:30px;background:transparent;border:none;color:#fff;font-size:18px;cursor:pointer;border-radius:6px}
+.cfg-qty button:active{background:rgba(0,242,255,.15);color:var(--neon)}
+.cfg-qty span{font-family:'Orbitron';font-size:13px;font-weight:700;min-width:22px;text-align:center}
+.cfg-add-cart{font-family:'Orbitron';font-size:10px;letter-spacing:1.5px;font-weight:900;color:#000;background:linear-gradient(135deg,var(--neon),#00bdd6);border:none;padding:14px 20px;border-radius:11px;cursor:pointer;box-shadow:0 6px 20px rgba(0,242,255,.45);white-space:nowrap}
+.cfg-add-cart:active{transform:scale(.97)}
+
+/* TOAST */
+#toast{position:fixed;top:75px;left:50%;transform:translateX(-50%) translateY(-100px);z-index:1000;background:linear-gradient(135deg,#0a0a0c,#06060a);border:1px solid var(--neon);border-radius:12px;padding:13px 18px;font-family:'Orbitron';font-size:10px;color:var(--neon);letter-spacing:1.5px;box-shadow:0 8px 24px rgba(0,242,255,.3);transition:.4s;max-width:90%;text-align:center}
+#toast.show{transform:translateX(-50%) translateY(0)}
+
+/* LOADING */
+#cfg-loading{position:fixed;inset:0;background:#000;z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;transition:opacity .6s}
+#cfg-loading.hidden{opacity:0;pointer-events:none}
+.cfg-loader-spinner{width:50px;height:50px;border:3px solid rgba(0,242,255,.15);border-top-color:var(--neon);border-radius:50%;animation:spinL 1s linear infinite}
+@keyframes spinL{to{transform:rotate(360deg)}}
+.cfg-loader-text{font-family:'Orbitron';font-size:9px;color:var(--neon);letter-spacing:3px;font-weight:700}
+
+@media(max-width:520px){
+.ctrl-stage{max-width:340px}
+.cfg-bottom-price-val{font-size:17px}
+.cfg-add-cart{padding:12px 14px;font-size:9px}
+.cfg-acc-hd{padding:15px 14px;font-size:10.5px}
+.cfg-acc-content{padding:0 12px 16px}
+.cfg-color-grid{grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:9px}
+.cfg-color-item{min-height:54px}
+}
+</style>
+</head>
+<body>
+
+<div class="aurora"><div class="ab"></div><div class="ab"></div><div class="ab"></div></div>
+<div class="grid-overlay"></div>
+
+<div id="cfg-loading">
+  <div class="cfg-loader-spinner"></div>
+  <div class="cfg-loader-text">⟫ KONFIGURATOR LÄDT ⟪</div>
+</div>
+
+<header class="cfg-header">
+  <a href="index.html" class="cfg-back">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    ZURÜCK
+  </a>
+  <div class="cfg-title">PS5 KONFIGURATOR</div>
+  <div class="cfg-live">LIVE</div>
+</header>
+
+<div class="cfg-hero">
+  <div class="cfg-hero-eyebrow">⟫  MADE IN GERMANY ⟪</div>
+  <h1 class="cfg-hero-title">BAUE DEINEN PERFEKTEN CONTROLLER</h1>
+  <p class="cfg-hero-sub">FARBEN · TMR · HALL EFFECT · PADDLES · GRAVUR</p>
+</div>
+
+<div class="ctrl-wrap">
+  <div class="ctrl-toggle">
+    <button id="view-front-btn" class="active" data-view="front">⟫ VORDERSEITE</button>
+    <button id="view-back-btn" data-view="back">RÜCKSEITE ⟪</button>
+  </div>
+
+  <div class="ctrl-stage">
+    <!-- FRONT -->
+    <div class="photo-stack" id="stack-front">
+      <!-- HIER DIE SVG FÜR DIE VORDERSEITE -->
+      <img src="ps5-front.svg" alt="PS5 Vorderseite" class="photo-img" id="img-front">
+      <div class="tint-layer" id="tint-front"></div>
+      <div id="lightbar-glow"></div>
+      <div class="engrave-txt" id="engrave-front"></div>
+    </div>
+
+    <!-- BACK -->
+    <div class="photo-stack" id="stack-back" style="display:none">
+      <!-- HIER DIE SVG FÜR DIE RÜCKSEITE -->
+      <img src="ps5-back.svg" alt="PS5 Rückseite" class="photo-img" id="img-back">
+      <div class="tint-layer" id="tint-back"></div>
+      <div class="engrave-txt" id="engrave-back"></div>
+    </div>
+
+    <!-- PART LABELS -->
+    <div class="part-label left" id="label-frontshell" data-side="front">FRONT<small>–</small></div>
+    <div class="part-label right" id="label-lightbar" data-side="front">LIGHT BAR<small>–</small></div>
+    <div class="part-label left" id="label-dpad" data-side="front">D-PAD<small>–</small></div>
+    <div class="part-label right" id="label-buttons" data-side="front">BUTTONS<small>–</small></div>
+    <div class="part-label left" id="label-stickcap" data-side="front">STICK CAPS<small>–</small></div>
+    <div class="part-label right" id="label-stick" data-side="front">⚡ STICKS<small>–</small></div>
+    <div class="part-label left" id="label-triggercolor" data-side="front">TRIGGER FARBE<small>–</small></div>
+    <div class="part-label right" id="label-trigger" data-side="front">⚡ TRIGGER<small>–</small></div>
+    <div class="part-label" id="label-engraving" data-side="front">✨ GRAVUR<small>–</small></div>
+    <div class="part-label left" id="label-backshell" data-side="back">RÜCKSCHALE<small>–</small></div>
+    <div class="part-label right" id="label-paddle" data-side="back">⚙ PADDLES<small>–</small></div>
+  </div>
+</div>
+
+<div class="preset-wrap">
+  <span class="preset-label">⟫ SCHNELL-PRESETS (1 TAP)</span>
+  <div class="preset-row" id="preset-row"></div>
+</div>
+
+<div class="cfg-divider">
+  <div class="cfg-divider-line"></div>
+  <div class="cfg-divider-text">⟫ DEINE KONFIGURATION ⟪</div>
+  <div class="cfg-divider-sub">Tippe auf eine Kategorie um sie zu öffnen</div>
+</div>
+
+<div class="cfg-sections" id="cfg-sections"></div>
+
+<div class="benefits-row">
+  <div class="benefit-item"><div class="benefit-icon">🇩🇪</div><div class="benefit-title">MADE IN GERMANY</div><div class="benefit-desc">Handmontiert in Domsühl</div></div>
+  <div class="benefit-item"><div class="benefit-icon">⚡</div><div class="benefit-title">8-12 TAGE</div><div class="benefit-desc">Premium-Fertigung</div></div>
+  <div class="benefit-item"><div class="benefit-icon">🛡</div><div class="benefit-title">24 MONATE</div><div class="benefit-desc">Gewährleistung</div></div>
+  <div class="benefit-item"><div class="benefit-icon">🔄</div><div class="benefit-title">14 TAGE</div><div class="benefit-desc">Rückgaberecht</div></div>
+</div>
+
+<div class="cfg-bottom">
+  <div class="cfg-bottom-price">
+    <div class="cfg-bottom-price-lbl">⟫ DEIN PREIS</div>
+    <div class="cfg-bottom-price-val">ab <span id="total-price">79,00 €</span></div>
+  </div>
+  <div class="cfg-qty">
+    <button id="qty-minus">−</button>
+    <span id="qty-val">1</span>
+    <button id="qty-plus">+</button>
+  </div>
+  <button class="cfg-add-cart" id="add-cart-btn">IN DEN<br>WARENKORB</button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+'use strict';
+
+const SHELL_COLORS=[
+  {name:'Weiß',color:'#ffffff',premium:0,def:true},
+  {name:'Schwarz',color:'#1a1a1c',premium:0},
+  {name:'Mitternacht',color:'#0a1633',premium:8},
+  {name:'Galactic Purple',color:'#3d1a52',premium:8},
+  {name:'Cosmic Red',color:'#5c0d10',premium:8},
+  {name:'Forest Green',color:'#0d2f17',premium:8},
+  {name:'Sunset Orange',color:'#cc4a1a',premium:10},
+  {name:'Pink Punch',color:'#e63174',premium:10},
+  {name:'Cyan Neon',color:'#00b4d8',premium:10},
+  {name:'Lila Neon',color:'#9933ff',premium:10},
+  {name:'Eis Blau',color:'#80d8ff',premium:8},
+  {name:'Mint',color:'#80e6c8',premium:8},
+  {name:'Gold',color:'#d4af37',premium:18},
+  {name:'Chrome',color:'#c0c0c0',premium:18},
+  {name:'Carbon',color:'#1c1c1f',premium:22},
+  {name:'Hologramm',color:'#b873e5',premium:25}
+];
+const BTN_COLORS=[
+  {name:'Standard',color:'#f0f0f2',premium:0,def:true},
+  {name:'Schwarz',color:'#222',premium:5},
+  {name:'Cyan',color:'#00f2ff',premium:7},
+  {name:'Pink',color:'#ff2e6e',premium:7},
+  {name:'Gold',color:'#d4af37',premium:12},
+  {name:'Lila',color:'#bc13fe',premium:7},
+  {name:'Rot',color:'#dc143c',premium:7},
+  {name:'Grün',color:'#00b67a',premium:7},
+  {name:'Orange',color:'#ff7a1a',premium:7},
+  {name:'Weiß',color:'#fff',premium:5}
+];
+const STICK_COLORS=[
+  {name:'Schwarz',color:'#0a0a0c',premium:0,def:true},
+  {name:'Weiß',color:'#fff',premium:5},
+  {name:'Cyan',color:'#00f2ff',premium:8},
+  {name:'Pink',color:'#ff2e6e',premium:8},
+  {name:'Gold',color:'#d4af37',premium:12},
+  {name:'Rot',color:'#dc143c',premium:8},
+  {name:'Lila',color:'#bc13fe',premium:8},
+  {name:'Grün',color:'#00b67a',premium:8}
+];
+const TRIG_COLORS=[
+  {name:'Standard',color:'#f0f0f2',premium:0,def:true},
+  {name:'Schwarz',color:'#1a1a1c',premium:5},
+  {name:'Cyan',color:'#00f2ff',premium:9},
+  {name:'Pink',color:'#ff2e6e',premium:9},
+  {name:'Gold',color:'#d4af37',premium:14},
+  {name:'Rot',color:'#dc143c',premium:9}
+];
+const LB_COLORS=[
+  {name:'Blau',color:'#4a90e2',premium:0,def:true},
+  {name:'Cyan',color:'#00f2ff',premium:5},
+  {name:'Pink',color:'#ff2e6e',premium:5},
+  {name:'Lila',color:'#bc13fe',premium:5},
+  {name:'Rot',color:'#ff3030',premium:5},
+  {name:'Grün',color:'#00ff80',premium:5},
+  {name:'Weiß',color:'#fff',premium:5},
+  {name:'Gold',color:'#ffd700',premium:8}
+];
+const ENG_COLORS=[
+  {name:'Schwarz',color:'#222',def:true},
+  {name:'Weiß',color:'#fff'},
+  {name:'Cyan',color:'#00f2ff'},
+  {name:'Gold',color:'#d4af37'},
+  {name:'Pink',color:'#ff2e6e'},
+  {name:'Rot',color:'#dc143c'}
+];
+
+const CATS=[
+  {id:'frontshell',icon:'🎨',name:'FRONTGEHÄUSE',colors:SHELL_COLORS,view:'front'},
+  {id:'backshell',icon:'🛡',name:'RÜCKSCHALE',colors:SHELL_COLORS,view:'back'},
+  {id:'buttons',icon:'🔘',name:'ACTION BUTTONS',colors:BTN_COLORS,view:'front'},
+  {id:'dpad',icon:'✚',name:'D-PAD',colors:BTN_COLORS,view:'front'},
+  {id:'stickcap',icon:'🕹',name:'STICK CAPS',colors:STICK_COLORS,view:'front'},
+  {id:'triggercolor',icon:'🎯',name:'TRIGGER FARBE',colors:TRIG_COLORS,view:'front'},
+  {id:'lightbar',icon:'💡',name:'LIGHT BAR',colors:LB_COLORS,view:'front'}
+];
+
+const OPTS={
+  stick:[
+    {val:'Standard',price:0,desc:'Original PS5 Sticks',def:true},
+    {val:'Hall Effect',price:35,desc:'Magnetisch — kein Drift'},
+    {val:'TMR',price:55,desc:'Pro-Genauigkeit',badge:'TOP'}
+  ],
+  trigger:[
+    {val:'Adaptive',price:0,desc:'Original Sony Adaptive',def:true},
+    {val:'Smart Clicky',price:25,desc:'Klick-Feedback wie Maus'},
+    {val:'Digital 1mm',price:35,desc:'Ultra-kurzer Travel',badge:'PRO'}
+  ],
+  paddle:[
+    {val:'Keine',price:0,desc:'Original DualSense',def:true},
+    {val:'2× Paddles',price:39,desc:'2 frei programmierbar'},
+    {val:'4× Paddles',price:59,desc:'Maximale Kontrolle'}
+  ],
+  express:[
+    {val:'Standard 8-12 Tage',price:0,desc:'Premium-Fertigung',def:true},
+    {val:'Express 4-6 Tage',price:25,desc:'Beschleunigt'},
+    {val:'Priority 2-3 Tage',price:45,desc:'Höchste Priorität',badge:'FAST'}
+  ]
+};
+
+const PRESETS={
+  default:{frontshell:'#ffffff',backshell:'#ffffff',buttons:'#f0f0f2',dpad:'#f0f0f2',stickcap:'#0a0a0c',triggercolor:'#f0f0f2',lightbar:'#4a90e2'},
+  stealth:{frontshell:'#1a1a1c',backshell:'#1a1a1c',buttons:'#222',dpad:'#222',stickcap:'#0a0a0c',triggercolor:'#1a1a1c',lightbar:'#4a90e2'},
+  neon:{frontshell:'#0a1633',backshell:'#0a1633',buttons:'#00f2ff',dpad:'#00f2ff',stickcap:'#00f2ff',triggercolor:'#00f2ff',lightbar:'#00f2ff'},
+  fire:{frontshell:'#5c0d10',backshell:'#5c0d10',buttons:'#dc143c',dpad:'#dc143c',stickcap:'#dc143c',triggercolor:'#dc143c',lightbar:'#ff3030'},
+  ice:{frontshell:'#80d8ff',backshell:'#80d8ff',buttons:'#00f2ff',dpad:'#00f2ff',stickcap:'#00f2ff',triggercolor:'#fff',lightbar:'#00f2ff'},
+  gold:{frontshell:'#1a1a1c',backshell:'#1a1a1c',buttons:'#d4af37',dpad:'#d4af37',stickcap:'#d4af37',triggercolor:'#d4af37',lightbar:'#ffd700'},
+  cyber:{frontshell:'#3d1a52',backshell:'#3d1a52',buttons:'#bc13fe',dpad:'#bc13fe',stickcap:'#ff2e6e',triggercolor:'#bc13fe',lightbar:'#bc13fe'},
+  emerald:{frontshell:'#0d2f17',backshell:'#0d2f17',buttons:'#00b67a',dpad:'#00b67a',stickcap:'#00b67a',triggercolor:'#00b67a',lightbar:'#00ff80'}
+};
+
+const PRESET_LIST=[
+  {id:'default',name:'STANDARD',color:'#fff'},
+  {id:'stealth',name:'STEALTH',color:'#1a1a1c'},
+  {id:'neon',name:'NEON',color:'#00f2ff'},
+  {id:'fire',name:'FIRE',color:'#dc143c'},
+  {id:'ice',name:'ICE',color:'#80d8ff'},
+  {id:'gold',name:'GOLD',color:'#d4af37'},
+  {id:'cyber',name:'CYBER',color:'#bc13fe'},
+  {id:'emerald',name:'EMERALD',color:'#00b67a'}
+];
+
+const BASE_PRICE=79;
+let qty=1;
+let currentView='front';
+let state={
+  colors:{frontshell:null,backshell:null,buttons:null,dpad:null,stickcap:null,triggercolor:null,lightbar:null},
+  options:{stick:null,trigger:null,paddle:null,express:null},
+  engraving:'',engraveColor:'#222',engraveColorName:'Schwarz'
+};
+
+function haptic(p){try{if('vibrate' in navigator)navigator.vibrate(p||25);}catch(e){}}
+function $(id){return document.getElementById(id);}
+function toast(msg){
+  const t=$('toast');if(!t)return;
+  t.innerText=msg;t.classList.add('show');
+  clearTimeout(window.__tT);window.__tT=setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+function buildPresets(){
+  const row=$('preset-row');if(!row)return;
+  row.innerHTML='';
+  PRESET_LIST.forEach((p,i)=>{
+    const btn=document.createElement('button');
+    btn.className='preset-btn'+(i===0?' active':'');
+    btn.dataset.preset=p.id;
+    btn.innerHTML='<span class="preset-dot" style="background:'+p.color+'"></span>'+p.name;
+    btn.addEventListener('click',()=>loadPreset(p.id));
+    row.appendChild(btn);
+  });
+}
+
+function buildSections(){
+  const root=$('cfg-sections');if(!root)return;
+  root.innerHTML='';
+  CATS.forEach((cat,i)=>{
+    const acc=document.createElement('div');
+    acc.className='cfg-acc'+(i===0?' open':'');
+    const def=cat.colors.find(c=>c.def);
+    const curName=def?def.name:'–';
+    const curPremium=def&&def.premium?' (+'+def.premium+' €)':'';
+    acc.innerHTML=`
+      <div class="cfg-acc-hd">
+        <div class="cfg-acc-icon">${cat.icon}</div>
+        <div class="cfg-acc-name">${cat.name}<div class="cfg-acc-cur" id="cur-${cat.id}"><strong>${curName}</strong>${curPremium}</div></div>
+        <div class="cfg-acc-arr">›</div>
+      </div>
+      <div class="cfg-acc-body"><div class="cfg-acc-content"><div class="cfg-color-grid" id="grid-${cat.id}"></div></div></div>`;
+    root.appendChild(acc);
+    acc.querySelector('.cfg-acc-hd').addEventListener('click',()=>toggleAcc(acc));
+    const grid=acc.querySelector('#grid-'+cat.id);
+    cat.colors.forEach(c=>{
+      const item=document.createElement('div');
+      item.className='cfg-color-item'+(c.def?' sel':'');
+      item.style.background=c.color;
+      item.title=c.name+(c.premium?' (+'+c.premium+' €)':'');
+      item.innerHTML='<div class="cfg-color-name">'+c.name+'</div>';
+      item.addEventListener('click',(e)=>{e.stopPropagation();selectColor(cat.id,c,item);});
+      grid.appendChild(item);
+    });
+    if(def)state.colors[cat.id]={color:def.color,name:def.name,premium:def.premium||0};
+  });
+  buildOptCat('stick','⚡','STICK TECHNOLOGIE');
+  buildOptCat('trigger','🎮','TRIGGER TYP');
+  buildOptCat('paddle','⚙','BACK PADDLES');
+  buildEngrave();
+  buildOptCat('express','🚀','FERTIGUNGSZEIT');
+}
+
+function buildOptCat(catId,icon,name){
+  const root=$('cfg-sections');
+  const acc=document.createElement('div');
+  acc.className='cfg-acc';
+  const opts=OPTS[catId];
+  const def=opts.find(o=>o.def);
+  const curName=def?def.val:'–';
+  const curPrice=def&&def.price?' (+'+def.price+' €)':'';
+  acc.innerHTML=`
+    <div class="cfg-acc-hd">
+      <div class="cfg-acc-icon">${icon}</div>
+      <div class="cfg-acc-name">${name}<div class="cfg-acc-cur" id="cur-${catId}"><strong>${curName}</strong>${curPrice}</div></div>
+      <div class="cfg-acc-arr">›</div>
+    </div>
+    <div class="cfg-acc-body"><div class="cfg-acc-content"><div class="cfg-opt-list" id="list-${catId}"></div></div></div>`;
+  root.appendChild(acc);
+  acc.querySelector('.cfg-acc-hd').addEventListener('click',()=>toggleAcc(acc));
+  const list=acc.querySelector('#list-'+catId);
+  opts.forEach(o=>{
+    const opt=document.createElement('div');
+    opt.className='cfg-opt'+(o.def?' sel':'');
+    const priceTxt=o.price===0?'inkl.':'+'+o.price+' €';
+    const priceClass=o.price===0?'free':'';
+    const badge=o.badge?'<span class="cfg-opt-badge">'+o.badge+'</span>':'';
+    opt.innerHTML=`<div class="cfg-opt-radio"></div><div class="cfg-opt-info"><div class="cfg-opt-name">${o.val}${badge}</div><div class="cfg-opt-desc">${o.desc}</div></div><div class="cfg-opt-price ${priceClass}">${priceTxt}</div>`;
+    opt.addEventListener('click',(e)=>{e.stopPropagation();selectOpt(catId,o,opt);});
+    list.appendChild(opt);
+  });
+  if(def)state.options[catId]={val:def.val,price:def.price||0};
+}
+
+function buildEngrave(){
+  const root=$('cfg-sections');
+  const acc=document.createElement('div');
+  acc.className='cfg-acc';
+  acc.innerHTML=`
+    <div class="cfg-acc-hd">
+      <div class="cfg-acc-icon">✨</div>
+      <div class="cfg-acc-name">GRAVUR<div class="cfg-acc-cur" id="cur-engraving"><strong>Keine</strong></div></div>
+      <div class="cfg-acc-arr">›</div>
+    </div>
+    <div class="cfg-acc-body">
+      <div class="cfg-acc-content">
+        <div style="font-size:10.5px;color:#888;margin-bottom:10px;line-height:1.5">Personalisiere mit Namen oder Gamertag — max. 12 Zeichen, direkt auf Touchpad eingraviert.</div>
+        <div class="cfg-engrave-row">
+          <input type="text" id="engrave-input" maxlength="12" placeholder="DEIN TEXT">
+          <span class="cfg-engrave-cnt" id="engrave-cnt">0/12</span>
+        </div>
+        <div style="font-family:'Orbitron';font-size:8.5px;color:#666;letter-spacing:1.5px;margin-top:14px;margin-bottom:8px">GRAVUR-FARBE</div>
+        <div class="cfg-engrave-color-row" id="engrave-color-row"></div>
+        <div style="display:flex;justify-content:space-between;margin-top:12px;font-family:'Orbitron';font-size:9.5px"><span style="color:#666">PERSONALISIERUNG</span><span id="price-engraving" style="color:var(--neon)">+0 €</span></div>
+      </div>
+    </div>`;
+  root.appendChild(acc);
+  acc.querySelector('.cfg-acc-hd').addEventListener('click',()=>toggleAcc(acc));
+  const inp=acc.querySelector('#engrave-input');
+  inp.addEventListener('input',function(){
+    state.engraving=this.value.toUpperCase();
+    this.value=state.engraving;
+    $('engrave-cnt').innerText=this.value.length+'/12';
+    $('cur-engraving').innerHTML='<strong>'+(this.value||'Keine')+'</strong>';
+    $('price-engraving').innerText=this.value?'+8 €':'+0 €';
+    updateEngraveOverlay();
+    updateLabel('engraving',this.value,!!this.value);
+    updatePrice();
+  });
+  const cRow=acc.querySelector('#engrave-color-row');
+  ENG_COLORS.forEach(c=>{
+    const el=document.createElement('div');
+    el.className='cfg-engrave-color'+(c.def?' sel':'');
+    el.style.background=c.color;
+    el.title=c.name;
+    el.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      cRow.querySelectorAll('.cfg-engrave-color').forEach(o=>o.classList.remove('sel'));
+      el.classList.add('sel');
+      state.engraveColor=c.color;state.engraveColorName=c.name;
+      updateEngraveOverlay();
+      haptic(15);
+      toast('✓ Gravur-Farbe: '+c.name);
+    });
+    cRow.appendChild(el);
+  });
+}
+
+function toggleAcc(acc){haptic(10);acc.classList.toggle('open');}
+
+function selectColor(catId,color,itemEl){
+  haptic([10,30,15]);
+  const grid=$('grid-'+catId);
+  if(grid)grid.querySelectorAll('.cfg-color-item').forEach(o=>o.classList.remove('sel'));
+  itemEl.classList.add('sel');
+  state.colors[catId]={color:color.color,name:color.name,premium:color.premium||0};
+  const cur=$('cur-'+catId);
+  if(cur)cur.innerHTML='<strong>'+color.name+'</strong>'+(color.premium?' (+'+color.premium+' €)':'');
+  const cat=CATS.find(c=>c.id===catId);
+  if(cat)setView(cat.view);
+  applyTints();
+  const def=cat.colors.find(c=>c.def);
+  const isCustom=!def||color.color.toLowerCase()!==def.color.toLowerCase();
+  updateLabel(catId,color.name,isCustom);
+  updatePrice();
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+  toast('✓ '+(cat?cat.name:catId)+': '+color.name);
+}
+
+function selectOpt(catId,opt,itemEl){
+  haptic([10,30,15]);
+  const list=$('list-'+catId);
+  if(list)list.querySelectorAll('.cfg-opt').forEach(o=>o.classList.remove('sel'));
+  itemEl.classList.add('sel');
+  state.options[catId]={val:opt.val,price:opt.price||0};
+  const cur=$('cur-'+catId);
+  if(cur)cur.innerHTML='<strong>'+opt.val+'</strong>'+(opt.price?' (+'+opt.price+' €)':'');
+  if(catId==='stick'||catId==='trigger'||catId==='paddle'){
+    const def=OPTS[catId].find(o=>o.def);
+    const isCustom=!def||opt.val!==def.val;
+    updateLabel(catId,opt.val,isCustom);
+  }
+  updatePrice();
+  toast('✓ '+opt.val);
+}
+
+function updateLabel(part,value,isActive){
+  const label=$('label-'+part);
+  if(!label)return;
+  const valEl=label.querySelector('small');
+  if(valEl)valEl.textContent=value||'–';
+  const side=label.dataset.side;
+  const correctSide=!side||side===currentView;
+  label.classList.toggle('show',!!isActive && correctSide);
+}
+
+function applyTints(){
+  // FRONT: tint via mask-image — only colors controller, NOT background
+  const fs=state.colors.frontshell;
+  const tf=$('tint-front');
+  if(tf){
+    if(fs && fs.color && fs.color.toLowerCase()!=='#ffffff' && fs.color.toLowerCase()!=='#fff'){
+      tf.style.background=fs.color;
+      tf.classList.add('active');
+    } else {
+      tf.classList.remove('active');
+    }
+  }
+  // BACK
+  const bs=state.colors.backshell;
+  const tb=$('tint-back');
+  if(tb){
+    if(bs && bs.color && bs.color.toLowerCase()!=='#ffffff' && bs.color.toLowerCase()!=='#fff'){
+      tb.style.background=bs.color;
+      tb.classList.add('active');
+    } else {
+      tb.classList.remove('active');
+    }
+  }
+  const lb=state.colors.lightbar;
+  const lg=$('lightbar-glow');
+  if(lg){
+    const col=(lb&&lb.color)?lb.color:'#4a90e2';
+    lg.style.background=col;lg.style.color=col;lg.classList.add('on');
+  }
+  updateEngraveOverlay();
+}
+
+function updateEngraveOverlay(){
+  ['engrave-front','engrave-back'].forEach(id=>{
+    const el=$(id);if(!el)return;
+    el.textContent=state.engraving||'';
+    el.style.color=state.engraveColor;
+    if(state.engraving)el.classList.add('show');
+    else el.classList.remove('show');
+  });
+}
+
+function setView(view){
+  currentView=view;
+  document.querySelectorAll('.ctrl-toggle button').forEach(b=>{
+    b.classList.toggle('active',b.dataset.view===view);
+  });
+  const sf=$('stack-front'),sb=$('stack-back');
+  if(view==='front'){if(sf)sf.style.display='flex';if(sb)sb.style.display='none';}
+  else{if(sf)sf.style.display='none';if(sb)sb.style.display='flex';}
+  refreshAllLabels();
+}
+
+function refreshAllLabels(){
+  CATS.forEach(cat=>{
+    const c=state.colors[cat.id];
+    if(!c){updateLabel(cat.id,'',false);return;}
+    const def=cat.colors.find(x=>x.def);
+    const isCustom=!def||c.color.toLowerCase()!==def.color.toLowerCase();
+    updateLabel(cat.id,c.name,isCustom);
+  });
+  ['stick','trigger','paddle'].forEach(catId=>{
+    const o=state.options[catId];
+    if(!o){updateLabel(catId,'',false);return;}
+    const def=OPTS[catId].find(x=>x.def);
+    const isCustom=!def||o.val!==def.val;
+    updateLabel(catId,o.val,isCustom);
+  });
+  updateLabel('engraving',state.engraving,!!state.engraving);
+}
+
+function loadPreset(id){
+  haptic([20,40,30,40,20]);
+  document.querySelectorAll('.preset-btn').forEach(b=>{
+    b.classList.toggle('active',b.dataset.preset===id);
+  });
+  const p=PRESETS[id];if(!p)return;
+  Object.keys(p).forEach(catId=>{
+    const target=p[catId];
+    const cat=CATS.find(c=>c.id===catId);
+    if(!cat)return;
+    const idx=cat.colors.findIndex(c=>c.color.toLowerCase()===target.toLowerCase());
+    if(idx<0)return;
+    const colorObj=cat.colors[idx];
+    const grid=$('grid-'+catId);
+    if(grid){
+      const items=grid.querySelectorAll('.cfg-color-item');
+      items.forEach(o=>o.classList.remove('sel'));
+      if(items[idx])items[idx].classList.add('sel');
+    }
+    state.colors[catId]={color:colorObj.color,name:colorObj.name,premium:colorObj.premium||0};
+    const cur=$('cur-'+catId);
+    if(cur)cur.innerHTML='<strong>'+colorObj.name+'</strong>'+(colorObj.premium?' (+'+colorObj.premium+' €)':'');
+  });
+  applyTints();
+  refreshAllLabels();
+  updatePrice();
+  toast('✓ '+id.toUpperCase()+' geladen');
+}
+
+function updatePrice(){
+  let price=BASE_PRICE;
+  Object.values(state.colors).forEach(c=>{if(c)price+=c.premium||0;});
+  Object.values(state.options).forEach(o=>{if(o)price+=o.price||0;});
+  if(state.engraving)price+=8;
+  const total=price*qty;
+  const tp=$('total-price');
+  if(tp)tp.innerText=total.toFixed(2).replace('.',',')+' €';
+}
+
+function changeQty(d){
+  haptic(15);
+  qty=Math.max(1,Math.min(99,qty+d));
+  $('qty-val').innerText=qty;
+  updatePrice();
+}
+
+function addCustomToCart(){
+  haptic([30,40,30,40,50]);
+  const desc=[];
+  Object.entries(state.colors).forEach(([k,v])=>{if(v&&v.premium>0)desc.push(v.name);});
+  Object.entries(state.options).forEach(([k,v])=>{if(v&&v.price>0)desc.push(v.val);});
+  if(state.engraving)desc.push('Gravur:'+state.engraving);
+  let price=BASE_PRICE;
+  Object.values(state.colors).forEach(c=>{if(c)price+=c.premium||0;});
+  Object.values(state.options).forEach(o=>{if(o)price+=o.price||0;});
+  if(state.engraving)price+=8;
+  const item={
+    name:'Custom PS5 Controller'+(desc.length?' ('+desc.length+' Upgrades)':''),
+    price:price,img:'ps5-front.svg',qty:qty,custom:true,config:state
+  };
+  let cart=[];
+  try{const s=localStorage.getItem('lxrd_cart');if(s)cart=JSON.parse(s);}catch(e){}
+  cart.push(item);
+  try{localStorage.setItem('lxrd_cart',JSON.stringify(cart));}catch(e){}
+  toast('✓ '+qty+'× Custom Controller hinzugefügt');
+  setTimeout(()=>{window.location.href='index.html#cart-open';},800);
+}
+
+function init(){
+  try{
+    buildPresets();
+    buildSections();
+    document.querySelectorAll('.ctrl-toggle button').forEach(b=>{
+      b.addEventListener('click',()=>{haptic(20);setView(b.dataset.view);});
+    });
+    $('qty-minus').addEventListener('click',()=>changeQty(-1));
+    $('qty-plus').addEventListener('click',()=>changeQty(1));
+    $('add-cart-btn').addEventListener('click',addCustomToCart);
+    applyTints();
+    updatePrice();
+    refreshAllLabels();
+  }catch(err){console.error('[init]',err);alert('Fehler: '+err.message);}
+  setTimeout(()=>{
+    const l=$('cfg-loading');
+    if(l){l.classList.add('hidden');setTimeout(()=>{l.style.display='none';},700);}
+  },600);
+}
+
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
+else{init();}
+setTimeout(()=>{const l=$('cfg-loading');if(l&&l.style.display!=='none'){l.style.display='none';}},3000);
+</script>
+
+</body>
+</html>

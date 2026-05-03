@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5">
+<title>PS5 Konfigurator | LEXORD®</title>
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--neon:#00f2ff;--neon2:#bc13fe;--green:#00b67a}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+html,body{overflow-x:hidden}
+body{background:#000;color:#fff;font-family:'Inter',sans-serif;min-height:100vh;padding-bottom:130px}
+
+/* AURORA & GRID */
+.aurora{position:fixed;inset:0;z-index:-3;background:#000;overflow:hidden}
+.ab{position:absolute;border-radius:50%;filter:blur(90px);opacity:.38;animation:af 26s ease-in-out infinite}
+.ab:nth-child(1){width:55%;height:55%;background:radial-gradient(circle,rgba(0,242,255,.52),transparent 70%);top:-10%;left:-10%}
+.ab:nth-child(2){width:50%;height:50%;background:radial-gradient(circle,rgba(188,19,254,.42),transparent 70%);bottom:-10%;right:-10%;animation-delay:-9s}
+.ab:nth-child(3){width:42%;height:42%;background:radial-gradient(circle,rgba(255,46,110,.22),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:-17s}
+@keyframes af{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(13%,-9%) scale(1.09)}}
+.grid-bg{position:fixed;inset:0;z-index:-2;background-image:linear-gradient(rgba(0,242,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(0,242,255,.022) 1px,transparent 1px);background-size:50px 50px;pointer-events:none}
+
+/* HEADER */
+.cfg-header{position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:10px;padding:10px 4%;background:rgba(0,0,0,.93);backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,242,255,.14)}
+.cfg-back{display:inline-flex;align-items:center;gap:6px;font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;font-weight:700;color:#aaa;text-decoration:none;padding:9px 13px;border:1px solid #1c1c22;border-radius:9px;background:rgba(10,10,14,.8);transition:.2s}
+.cfg-title{font-family:'Orbitron';font-weight:900;font-size:10px;letter-spacing:2.5px;color:#ddd;text-align:center;flex:1}
+.cfg-live{font-family:'Orbitron';font-size:8px;letter-spacing:1.5px;color:var(--neon);background:rgba(0,242,255,.07);border:1px solid rgba(0,242,255,.22);padding:7px 11px;border-radius:8px;display:flex;align-items:center;gap:5px}
+
+/* HERO */
+.cfg-hero{text-align:center;padding:22px 5% 14px}
+.cfg-hero-title{font-family:'Orbitron';font-weight:900;font-size:clamp(1.2rem,4.5vw,2rem);letter-spacing:-1px;margin-bottom:7px;background:linear-gradient(175deg,#fff 30%,rgba(255,255,255,.4));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+
+/* VISUALIZER STAGE */
+.ctrl-wrap{display:flex;flex-direction:column;align-items:center;padding:4px 4% 20px}
+.ctrl-stage{position:relative;width:100%;max-width:520px;margin:0 auto}
+.ctrl-view{position:relative;width:100%;padding-bottom:94%;display:none}
+.ctrl-view.active{display:block}
+
+.base-img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:contain;z-index:1;
+  filter:drop-shadow(0 20px 40px rgba(0,0,0,0.8));
+}
+
+/* OVERLAY CSS */
+.part-overlay{
+  position:absolute;inset:0;width:100%;height:100%;
+  pointer-events:none;z-index:2;
+  opacity:0;
+  transition:background-color .32s ease, opacity .32s ease;
+  mix-blend-mode: multiply; /* Farbe vermischt sich mit Schatten des Bildes */
+}
+
+/* CLIP PATHS FÜR DIE VORDERSEITE (Exakt auf image.png angepasst) */
+.p-frontshell-l{clip-path:polygon(30% 22%, 18% 28%, 10% 45%, 8% 65%, 15% 85%, 35% 65%, 32% 40%)}
+.p-frontshell-r{clip-path:polygon(70% 22%, 82% 28%, 90% 45%, 92% 65%, 85% 85%, 65% 65%, 68% 40%)}
+.p-touchpad{clip-path:polygon(35% 21%, 65% 21%, 63% 41%, 37% 41%)}
+.p-btn-tri{clip-path:circle(5% at 79% 32%)}
+.p-btn-cir{clip-path:circle(5% at 88% 40%)}
+.p-btn-cro{clip-path:circle(5% at 79% 48%)}
+.p-btn-sq{clip-path:circle(5% at 71% 40%)}
+
+/* UI ELEMENTE */
+.divider{padding:20px 4%; text-align:center;}
+.div-title{font-family:'Orbitron'; color:var(--neon); letter-spacing:3px; font-weight:700}
+
+.cfg-sects{padding:10px 4%; max-width:800px; margin:0 auto; display:flex; flex-direction:column; gap:10px}
+.acc{background:rgba(20,20,25,0.8); border:1px solid rgba(255,255,255,0.05); border-radius:15px; overflow:hidden}
+.acc-hd{padding:18px; cursor:pointer; display:flex; align-items:center; gap:15px}
+.acc-name{font-family:'Orbitron'; font-size:11px; letter-spacing:1px}
+.acc-body{max-height:0; overflow:hidden; transition:max-height 0.4s ease}
+.acc.open .acc-body{max-height:1000px}
+
+.color-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(60px, 1fr)); gap:10px; padding:15px}
+.ci{aspect-ratio:1; border-radius:10px; cursor:pointer; border:2px solid transparent; transition:0.2s}
+.ci.sel{border-color:var(--neon); transform:scale(1.05)}
+
+/* BOTTOM BAR */
+.cfg-bottom{position:fixed; bottom:0; left:0; right:0; background:#050508; border-top:1px solid var(--neon); padding:15px 5%; display:flex; justify-content:space-between; align-items:center; z-index:500}
+.cfg-price-val{font-family:'Orbitron'; font-size:22px; font-weight:900}
+.cart-btn{background:var(--neon); color:#000; border:none; padding:15px 25px; border-radius:10px; font-family:'Orbitron'; font-weight:900; cursor:pointer}
+
+</style>
+</head>
+<body>
+
+<div class="aurora"><div class="ab"></div><div class="ab"></div><div class="ab"></div></div>
+<div class="grid-bg"></div>
+
+<header class="cfg-header">
+  <div class="cfg-back">ZURÜCK</div>
+  <div class="cfg-title">LEXORD® CONFIGURATOR</div>
+  <div class="cfg-live">LIVE</div>
+</header>
+
+<div class="cfg-hero">
+  <h1 class="cfg-hero-title">DEIN DUALSENSE PRO</h1>
+</div>
+
+<div class="ctrl-wrap">
+  <div class="ctrl-stage">
+    <!-- FRONT VIEW nutzt jetzt image.png -->
+    <div class="ctrl-view active" id="view-front">
+      <img class="base-img" src="image.png" id="img-front" alt="PS5 Vorderseite">
+      
+      <!-- Overlays -->
+      <div class="part-overlay p-frontshell-l" id="ov-shell-l"></div>
+      <div class="part-overlay p-frontshell-r" id="ov-shell-r"></div>
+      <div class="part-overlay p-touchpad" id="ov-touchpad"></div>
+      <div class="part-overlay p-btn-tri" id="ov-tri"></div>
+      <div class="part-overlay p-btn-cir" id="ov-cir"></div>
+      <div class="part-overlay p-btn-cro" id="ov-cro"></div>
+      <div class="part-overlay p-btn-sq" id="ov-sq"></div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><div class="div-title">⟫ KONFIGURATION ⟪</div></div>
+
+<div class="cfg-sects" id="cfg-sects">
+  <!-- Wird per JS gefüllt -->
+</div>
+
+<div class="cfg-bottom">
+  <div class="cfg-price-val" id="total-price">161,00 €</div>
+  <button class="cart-btn">IN DEN WARENKORB</button>
+</div>
+
+<script>
+const COLORS = [
+  {n:'Standard', hex:'transparent', p:0},
+  {n:'Lila Neon', hex:'#bc13fe', p:10},
+  {n:'Cosmic Red', hex:'#d1001c', p:8},
+  {n:'Cyan', hex:'#00f2ff', p:10},
+  {n:'Schwarz', hex:'#111111', p:5}
+];
+
+const SECTIONS = [
+  {id:'shell', name:'FRONTGEHÄUSE', targets:['ov-shell-l', 'ov-shell-r']},
+  {id:'touchpad', name:'TOUCHPAD', targets:['ov-touchpad']},
+  {id:'buttons', name:'ACTION BUTTONS', targets:['ov-tri', 'ov-cir', 'ov-cro', 'ov-sq']}
+];
+
+let state = { shell:0, touchpad:0, buttons:0 };
+
+function init() {
+  const container = document.getElementById('cfg-sects');
+  SECTIONS.forEach(sec => {
+    const acc = document.createElement('div');
+    acc.className = 'acc';
+    acc.innerHTML = `
+      <div class="acc-hd" onclick="this.parentElement.classList.toggle('open')">
+        <div class="acc-name">${sec.name}</div>
+      </div>
+      <div class="acc-body">
+        <div class="color-grid" id="grid-${sec.id}"></div>
+      </div>
+    `;
+    container.appendChild(acc);
+
+    const grid = document.getElementById(`grid-${sec.id}`);
+    COLORS.forEach((col, idx) => {
+      const ci = document.createElement('div');
+      ci.className = 'ci' + (idx===0?' sel':'');
+      ci.style.backgroundColor = col.hex === 'transparent' ? '#333' : col.hex;
+      ci.onclick = () => {
+        // UI Update
+        grid.querySelectorAll('.ci').forEach(el => el.classList.remove('sel'));
+        ci.classList.add('sel');
+        
+        // Farbe anwenden
+        sec.targets.forEach(tId => {
+          const el = document.getElementById(tId);
+          el.style.backgroundColor = col.hex;
+          el.style.opacity = col.hex === 'transparent' ? '0' : '0.8';
+        });
+        
+        state[sec.id] = col.p;
+        updatePrice();
+      };
+      grid.appendChild(ci);
+    });
+  });
+}
+
+function updatePrice() {
+  let total = 141 + state.shell + state.touchpad + state.buttons;
+  document.getElementById('total-price').innerText = total.toFixed(2).replace('.', ',') + ' €';
+}
+
+init();
+</script>
+
+</body>
+</html>

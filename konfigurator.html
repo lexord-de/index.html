@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5">
+    <title>LEXORD® PS5 Pro Konfigurator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon: #00f2ff; --neon2: #bc13fe; --bg: #000; --panel: rgba(15,15,20,0.8); }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; padding-bottom: 120px; }
+
+        /* AURORA & GRID */
+        .aurora { position: fixed; inset: 0; z-index: -2; overflow: hidden; background: #000; }
+        .ab { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.3; animation: move 20s infinite alternate; }
+        .ab1 { width: 60%; height: 60%; background: radial-gradient(circle, var(--neon), transparent); top: -10%; left: -10%; }
+        .ab2 { width: 50%; height: 50%; background: radial-gradient(circle, var(--neon2), transparent); bottom: -10%; right: -10%; }
+        @keyframes move { from { transform: translate(0,0) scale(1); } to { transform: translate(10%, 10%) scale(1.1); } }
+        .grid { position: fixed; inset: 0; z-index: -1; background-image: linear-gradient(rgba(0,242,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,242,255,0.03) 1px, transparent 1px); background-size: 40px 40px; }
+
+        /* HEADER */
+        header { position: sticky; top: 0; z-index: 100; background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); padding: 15px 5%; border-bottom: 1px solid rgba(0,242,255,0.2); display: flex; align-items: center; justify-content: space-between; }
+        .logo { font-family: 'Orbitron'; font-weight: 900; letter-spacing: 2px; font-size: 14px; }
+        .back-btn { text-decoration: none; color: #888; font-family: 'Orbitron'; font-size: 10px; border: 1px solid #333; padding: 8px 15px; border-radius: 5px; }
+
+        /* STAGE & CONTROLLER */
+        .stage { position: relative; width: 100%; max-width: 600px; margin: 20px auto; aspect-ratio: 1.1; display: flex; align-items: center; justify-content: center; }
+        .view-toggle { position: absolute; top: 0; display: flex; gap: 10px; z-index: 20; }
+        .view-toggle button { background: var(--panel); border: 1px solid #333; color: #fff; padding: 8px 15px; border-radius: 20px; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; transition: 0.3s; }
+        .view-toggle button.active { border-color: var(--neon); color: var(--neon); box-shadow: 0 0 10px rgba(0,242,255,0.3); }
+
+        .controller-wrap { position: relative; width: 90%; height: 90%; animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .main-img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 20px 50px rgba(0,0,0,0.8)); position: relative; z-index: 2; }
+        
+        /* COLOR LAYERS (EXACT OUTLINE) */
+        .mask-layer { position: absolute; inset: 0; z-index: 3; pointer-events: none; mix-blend-mode: multiply; opacity: 0; transition: 0.4s; -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center; }
+        #mask-front { -webkit-mask-image: url('Photoroom_20260501_094506.png'); }
+        #mask-back { -webkit-mask-image: url('Photoroom_20260501_090821.png'); }
+        .mask-layer.active { opacity: 0.85; }
+
+        /* PRECISION SPOTS (BUTTONS & DPAD) */
+        .spot { position: absolute; z-index: 10; pointer-events: none; mix-blend-mode: color; opacity: 0; transition: 0.4s; filter: blur(1px); }
+        .spot.active { opacity: 1; }
+        /* Koordinaten angepasst an Standard PS5 Layout */
+        .s-tri { top: 32.5%; left: 78.3%; width: 6%; height: 6%; border-radius: 50%; }
+        .s-cir { top: 41.6%; left: 85.1%; width: 6%; height: 6%; border-radius: 50%; }
+        .s-cro { top: 50.7%; left: 78.3%; width: 6%; height: 6%; border-radius: 50%; }
+        .s-squ { top: 41.6%; left: 71.5%; width: 6%; height: 6%; border-radius: 50%; }
+        .s-up  { top: 32.5%; left: 16.1%; width: 6.5%; height: 6.5%; border-radius: 20%; }
+        .s-do  { top: 50.7%; left: 16.1%; width: 6.5%; height: 6.5%; border-radius: 20%; }
+        .s-le  { top: 41.6%; left: 9.3%;  width: 6.5%; height: 6.5%; border-radius: 20%; }
+        .s-ri  { top: 41.6%; left: 22.9%; width: 6.5%; height: 6.5%; border-radius: 20%; }
+        .s-sl  { top: 53%; left: 26.5%; width: 14%; height: 14%; border-radius: 50%; }
+        .s-sr  { top: 53%; left: 59.5%; width: 14%; height: 14%; border-radius: 50%; }
+
+        /* UI COMPONENTS */
+        .config-container { max-width: 800px; margin: 0 auto; padding: 0 5%; }
+        .acc { background: var(--panel); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+        .acc-head { padding: 18px; cursor: pointer; display: flex; align-items: center; gap: 15px; font-family: 'Orbitron'; font-size: 11px; }
+        .acc-head i { color: var(--neon); font-style: normal; font-size: 18px; }
+        .acc-body { max-height: 0; transition: 0.4s ease; overflow: hidden; background: rgba(0,0,0,0.2); }
+        .acc.open .acc-body { max-height: 1000px; padding: 15px; }
+
+        .grid-options { display: grid; grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); gap: 10px; }
+        .color-item { aspect-ratio: 1; border-radius: 8px; border: 2px solid transparent; cursor: pointer; transition: 0.2s; position: relative; }
+        .color-item.selected { border-color: var(--neon); transform: scale(1.05); }
+        .color-item.selected::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #000; font-weight: 900; }
+
+        .tech-opt { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 8px; cursor: pointer; border: 1px solid transparent; }
+        .tech-opt.selected { border-color: var(--neon); background: rgba(0,242,255,0.05); }
+        .tech-name { font-family: 'Orbitron'; font-size: 10px; }
+        .tech-price { color: var(--neon); font-size: 11px; font-weight: 600; }
+
+        /* BOTTOM BAR */
+        .bottom-bar { position: fixed; bottom: 0; inset: x 0; width: 100%; background: rgba(5,5,5,0.95); backdrop-filter: blur(20px); border-top: 1px solid rgba(0,242,255,0.2); padding: 20px 5%; display: flex; align-items: center; justify-content: space-between; z-index: 1000; }
+        .price-display { font-family: 'Orbitron'; font-size: 22px; font-weight: 900; }
+        .price-display span { color: var(--neon); font-size: 12px; font-weight: 400; margin-left: 5px; }
+        .buy-btn { background: var(--neon); color: #000; border: none; padding: 15px 30px; border-radius: 8px; font-family: 'Orbitron'; font-weight: 900; font-size: 12px; cursor: pointer; box-shadow: 0 0 20px rgba(0,242,255,0.4); }
+
+        #toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: var(--neon); color: #000; padding: 10px 25px; border-radius: 5px; font-family: 'Orbitron'; font-weight: 700; font-size: 11px; display: none; z-index: 2000; }
+    </style>
+</head>
+<body>
+
+<div class="aurora"><div class="ab ab1"></div><div class="ab ab2"></div></div>
+<div class="grid"></div>
+
+<header>
+    <div class="logo">LEXORD®</div>
+    <a href="index.html" class="back-btn">VERLASSEN</a>
+</header>
+
+<div class="stage">
+    <div class="view-toggle">
+        <button id="v-front" class="active">FRONT</button>
+        <button id="v-back">BACK</button>
+    </div>
+    
+    <div class="controller-wrap" id="ctrl-container">
+        <!-- Front View -->
+        <div id="view-front-wrap" style="width:100%; height:100%;">
+            <img src="Photoroom_20260501_094506.png" class="main-img" id="img-main-f">
+            <div id="mask-front" class="mask-layer"></div>
+            <!-- Spots -->
+            <div class="spot s-tri" id="sp-tri"></div>
+            <div class="spot s-cir" id="sp-cir"></div>
+            <div class="spot s-cro" id="sp-cro"></div>
+            <div class="spot s-squ" id="sp-squ"></div>
+            <div class="spot s-up"  id="sp-up"></div>
+            <div class="spot s-do"  id="sp-do"></div>
+            <div class="spot s-le"  id="sp-le"></div>
+            <div class="spot s-ri"  id="sp-ri"></div>
+            <div class="spot s-sl"  id="sp-sl"></div>
+            <div class="spot s-sr"  id="sp-sr"></div>
+        </div>
+        <!-- Back View -->
+        <div id="view-back-wrap" style="width:100%; height:100%; display:none;">
+            <img src="Photoroom_20260501_090821.png" class="main-img">
+            <div id="mask-back" class="mask-layer"></div>
+        </div>
+    </div>
+</div>
+
+<div class="config-container" id="ui-root"></div>
+
+<div class="bottom-bar">
+    <div class="price-display"><span id="final-price">79,00</span> €</div>
+    <button class="buy-btn" id="cart-btn">WARENKORB</button>
+</div>
+
+<div id="toast">HINZUGEFÜGT!</div>
+
+<script>
+    const COLORS = [
+        {name:'Standard', hex:'#ffffff', p:0, def:true},
+        {name:'Stealth Black', hex:'#151517', p:5},
+        {name:'Electric Cyan', hex:'#00f2ff', p:8},
+        {name:'Lava Red', hex:'#ff2e2e', p:8},
+        {name:'Royal Purple', hex:'#bc13fe', p:8},
+        {name:'Luxury Gold', hex:'#d4af37', p:15}
+    ];
+
+    const DATA = [
+        {id:'shell', name:'GEHÄUSE', icon:'🎨', type:'color', items:COLORS, target:'mask'},
+        {id:'buttons', name:'ACTION BUTTONS', icon:'🔘', type:'color', items:COLORS, target:'spots', ids:['sp-tri','sp-cir','sp-cro','sp-squ']},
+        {id:'dpad', name:'STEUERKREUZ', icon:'✚', type:'color', items:COLORS, target:'spots', ids:['sp-up','sp-do','sp-le','sp-ri']},
+        {id:'sticks', name:'STICKS', icon:'🕹', type:'color', items:COLORS, target:'spots', ids:['sp-sl','sp-sr']},
+        {id:'tech_sticks', name:'STICK UPGRADES', icon:'⚙', type:'tech', items:[
+            {name:'Standard', p:0, def:true},
+            {name:'Hall Effect (Anti-Drift)', p:35},
+            {name:'TMR Pro Sensoren', p:55}
+        ]},
+        {id:'tech_paddles', name:'PADDLE SYSTEM', icon:'🎮', type:'tech', items:[
+            {name:'Keine', p:0, def:true},
+            {name:'2er Pro Paddles', p:40},
+            {name:'4er Ultimate Paddles', p:65}
+        ]}
+    ];
+
+    let state = { colors: {}, tech: {}, total: 79 };
+
+    function initUI() {
+        const root = document.getElementById('ui-root');
+        DATA.forEach(cat => {
+            const acc = document.createElement('div');
+            acc.className = 'acc';
+            acc.innerHTML = `
+                <div class="acc-head" onclick="this.parentElement.classList.toggle('open')">
+                    <i>${cat.icon}</i> ${cat.name}
+                </div>
+                <div class="acc-body">
+                    <div class="${cat.type === 'color' ? 'grid-options' : 'tech-list'}" id="cat-${cat.id}"></div>
+                </div>
+            `;
+            root.appendChild(acc);
+            
+            cat.items.forEach(item => {
+                const el = document.createElement('div');
+                if(cat.type === 'color') {
+                    el.className = `color-item ${item.def ? 'selected' : ''}`;
+                    el.style.backgroundColor = item.hex;
+                    el.onclick = () => selectColor(cat, item, el);
+                } else {
+                    el.className = `tech-opt ${item.def ? 'selected' : ''}`;
+                    el.innerHTML = `<span class="tech-name">${item.name}</span><span class="tech-price">+${item.p}€</span>`;
+                    el.onclick = () => selectTech(cat, item, el);
+                }
+                document.getElementById(`cat-${cat.id}`).appendChild(el);
+                if(item.def) {
+                    if(cat.type === 'color') selectColor(cat, item, el);
+                    else selectTech(cat, item, el);
+                }
+            });
+        });
+    }
+
+    function selectColor(cat, item, el) {
+        document.querySelectorAll(`#cat-${cat.id} .color-item`).forEach(i => i.classList.remove('selected'));
+        el.classList.add('selected');
+        state.colors[cat.id] = { name: item.name, price: item.p };
+
+        if(cat.target === 'mask') {
+            const m = document.getElementById('mask-front');
+            const mb = document.getElementById('mask-back');
+            if(item.hex === '#ffffff') { m.classList.remove('active'); mb.classList.remove('active'); }
+            else { 
+                m.style.backgroundColor = item.hex; m.classList.add('active'); 
+                mb.style.backgroundColor = item.hex; mb.classList.add('active');
+            }
+        } else if(cat.target === 'spots') {
+            cat.ids.forEach(sid => {
+                const s = document.getElementById(sid);
+                if(item.hex === '#ffffff') s.classList.remove('active');
+                else { s.style.backgroundColor = item.hex; s.classList.add('active'); }
+            });
+        }
+        calc();
+    }
+
+    function selectTech(cat, item, el) {
+        document.querySelectorAll(`#cat-${cat.id} .tech-opt`).forEach(i => i.classList.remove('selected'));
+        el.classList.add('selected');
+        state.tech[cat.id] = { name: item.name, price: item.p };
+        calc();
+    }
+
+    function calc() {
+        let total = 79;
+        Object.values(state.colors).forEach(c => total += c.price);
+        Object.values(state.tech).forEach(t => total += t.price);
+        state.total = total;
+        document.getElementById('final-price').innerText = total.toFixed(2).replace('.', ',');
+    }
+
+    // View Toggle
+    document.getElementById('v-front').onclick = function() {
+        this.classList.add('active'); document.getElementById('v-back').classList.remove('active');
+        document.getElementById('view-front-wrap').style.display = 'block';
+        document.getElementById('view-back-wrap').style.display = 'none';
+    };
+    document.getElementById('v-back').onclick = function() {
+        this.classList.add('active'); document.getElementById('v-front').classList.remove('active');
+        document.getElementById('view-front-wrap').style.display = 'none';
+        document.getElementById('view-back-wrap').style.display = 'block';
+    };
+
+    // Warenkorb
+    document.getElementById('cart-btn').onclick = function() {
+        localStorage.setItem('lexord_cart', JSON.stringify(state));
+        const t = document.getElementById('toast');
+        t.style.display = 'block';
+        setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+    };
+
+    initUI();
+</script>
+</body>
+</html>

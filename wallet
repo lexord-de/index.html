@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f1419">
+<title>LXRD WALLET | Zertifizierte Premium Lederwaren | ISO 9001 | Deutsche Handfertigung</title>
+<meta name="description" content="LXRD WALLET - ISO 9001 zertifiziert. Premium Ledertaschen mit RFID-Schutz, handgefertigt in Deutschland. DSGVO-konform, PayPal Buyer Protection, 30 Tage Geld-zurück-Garantie.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://www.paypal.com/sdk/js?client-id=AQOBIpaxy2Po_nxn9bZURvPzt4uS-ZYPdCueAT4WYbnOMsepoYD_k2WVFWAQiGyZ8i7hB9HucXYXAZ57&currency=EUR"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>(function(){if(typeof emailjs!=='undefined'){emailjs.init({publicKey:'mDh8p4g4NEdRDOAc3'});}})();</script>
+<style>
+:root{
+  --primary:#0f1419;--secondary:#1a2332;--accent:#d4a856;
+  --text:#f0f2f5;--muted:#b0b8c1;--border:#2a3647;
+  --green:#1b7a4d;--red:#c1302b;--bg-light:#0a0d12
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+body{background:#fff;color:var(--text);font-family:'Roboto',sans-serif;overflow-x:hidden}
+
+/* PROFESSIONAL HEADER */
+header{position:fixed;top:0;width:100%;z-index:9400;background:#fff;border-bottom:1px solid #ddd;box-shadow:0 1px 3px rgba(0,0,0,.1);padding:14px 5%;display:flex;align-items:center;justify-content:space-between}
+.brand{font-family:‘Lora’,serif;font-weight:700;font-size:1.4rem;color:var(–primary);text-decoration:none;letter-spacing:1px}
+.brand-sub{font-size:7px;color:var(–accent);letter-spacing:2px;text-transform:uppercase;margin-top:2px}
+.header-badges{display:flex;gap:16px;align-items:center}
+.cert-badge{display:flex;align-items:center;gap:6px;font-size:8px;color:var(–primary);font-weight:600;letter-spacing:.5px;text-transform:uppercase;padding:6px 10px;border:1px solid #ddd;border-radius:4px;background:#f9f9f9}
+.cert-badge::before{content:‘✓’;color:var(–accent);font-weight:900}
+.nav-right{display:flex;gap:14px;align-items:center}
+.cart-btn{padding:8px 14px;border:1px solid #ddd;background:#f9f9f9;color:var(–primary);cursor:pointer;font-size:9px;font-weight:600;border-radius:4px;transition:.2s;font-family:‘Roboto’}
+.cart-btn:hover{border-color:var(–accent);background:#fff}
+.cart-badge{width:18px;height:18px;border-radius:50%;background:var(–accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900}
+
+/* CART DRAWER */
+#cart-drawer{position:fixed;top:0;right:-500px;width:100%;max-width:450px;height:100%;background:#fff;z-index:100001;transition:.5s;border-left:1px solid #ddd;box-shadow:-5px 0 20px rgba(0,0,0,.08);display:flex;flex-direction:column}
+#cart-drawer.open{right:0}
+.c-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100000;display:none;backdrop-filter:blur(4px)}
+.cart-hd{padding:16px 18px;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;align-items:center;background:#f9f9f9}
+.cart-hd-title{font-family:‘Lora’,serif;font-size:11px;color:var(–primary);font-weight:700;letter-spacing:1px}
+.cart-x{width:28px;height:28px;border:1px solid #ddd;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;color:var(–primary);font-weight:700}
+.cart-x:hover{background:var(–accent);color:#fff;border-color:var(–accent)}
+.cart-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.cart-body{padding:14px 16px}
+.c-item{display:flex;gap:12px;margin-bottom:12px;background:#f9f9f9;padding:12px;border-radius:6px;border:1px solid #ddd;transition:.2s}
+.c-item:hover{border-color:var(–accent)}
+.c-item-info h4{font-family:‘Lora’,serif;font-size:9px;color:var(–primary);font-weight:700;margin-bottom:4px}
+.c-item-info p{font-size:10px;color:var(–accent);font-weight:600}
+.c-qty{display:flex;align-items:center;gap:8px;margin-top:8px}
+.qty-b{width:20px;height:20px;border:1px solid #ddd;border-radius:3px;background:#f9f9f9;color:var(–primary);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:.2s;font-weight:700}
+.qty-b:hover{background:var(–accent);color:#fff;border-color:var(–accent)}
+.cart-ft{border-top:1px solid #ddd;padding:16px 18px 90px;background:#f9f9f9}
+.sum-row{display:flex;justify-content:space-between;font-size:9px;color:var(–muted);margin-bottom:6px;padding:4px 0}
+.sum-row.total{color:var(–primary);font-weight:700;font-size:11px;border-top:1px solid #ddd;padding-top:8px;margin-top:8px;font-family:‘Lora’,serif}
+.land-sel,.discount-input{flex:1;background:#fff;border:1px solid #ddd;color:var(–primary);padding:8px;border-radius:4px;font-size:9px;font-family:‘Roboto’}
+.land-sel:focus,.discount-input:focus{outline:none;border-color:var(–accent)}
+.discount-btn{padding:8px 12px;background:transparent;border:1px solid #ddd;color:var(–primary);cursor:pointer;border-radius:4px;transition:.2s;font-weight:600;font-size:8px}
+.discount-btn:hover{background:var(–accent);color:#fff;border-color:var(–accent)}
+
+/* ORDER SUCCESS */
+#order-success-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)}
+.success-box{background:#fff;border:1px solid #ddd;border-radius:8px;padding:40px;max-width:480px;width:100%;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.15)}
+.check-circle{width:70px;height:70px;border:2px solid var(–green);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:36px;color:var(–green)}
+.success-title{font-family:‘Lora’,serif;font-size:1.2rem;color:var(–primary);margin-bottom:12px;font-weight:700}
+.success-sub{font-size:10px;color:var(–muted);line-height:1.7;margin-bottom:20px}
+.success-order{font-family:‘IBM Plex Mono’,monospace;font-size:8px;color:var(–accent);letter-spacing:1px;margin:12px 0;background:#f9f9f9;padding:12px;border-radius:4px;font-weight:600}
+.success-btn{padding:12px 28px;background:var(–accent);color:#fff;border:none;font-family:‘Lora’,serif;font-weight:700;font-size:10px;cursor:pointer;border-radius:4px}
+.success-btn:hover{background:#c99d4f}
+
+/* TOAST */
+#toasts{position:fixed;bottom:30px;right:20px;z-index:600000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:var(–primary);color:#fff;border:1px solid #2a3647;border-left:3px solid var(–accent);padding:12px 16px;border-radius:4px;font-family:‘IBM Plex Mono’,monospace;font-size:8px;letter-spacing:.5px;min-width:220px;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+
+/* HERO CORPORATE */
+#hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:140px 5% 60px;text-align:center;position:relative;background:linear-gradient(135deg,#fff 0%,#f9f9f9 100%);border-bottom:1px solid #ddd}
+#hero::before{content:’’;position:absolute;top:0;right:0;width:400px;height:400px;background:url(‘data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2230%22 fill=%22%23d4a856%22 opacity=%22.03%22/%3E%3C/svg%3E’);pointer-events:none}
+.hero-content{position:relative;z-index:1;max-width:700px}
+.hero-overline{font-family:‘IBM Plex Mono’,monospace;font-size:8px;letter-spacing:3px;color:var(–accent);margin-bottom:12px;text-transform:uppercase;font-weight:600}
+.hero-headline{font-family:‘Lora’,serif;font-size:clamp(2.4rem,6vw,3.8rem);font-weight:700;line-height:1.1;margin-bottom:12px;color:var(–primary);letter-spacing:-1px}
+.hero-sub{font-size:10px;color:var(–muted);letter-spacing:2px;margin-bottom:32px;text-transform:uppercase}
+.hero-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:50px}
+.hero-btn{display:inline-block;padding:12px 32px;border:none;font-family:‘Lora’,serif;font-weight:700;font-size:10px;letter-spacing:1px;cursor:pointer;border-radius:4px;text-decoration:none;transition:.3s;text-transform:uppercase}
+.hero-btn-main{background:var(–accent);color:#fff}
+.hero-btn-main:hover{background:#c99d4f}
+.hero-btn-sec{background:transparent;border:2px solid var(–accent);color:var(–accent)}
+.hero-btn-sec:hover{background:var(–accent);color:#fff}
+.hero-stats{display:flex;gap:50px;justify-content:center;flex-wrap:wrap;margin-top:40px;padding-top:30px;border-top:1px solid #ddd}
+.hero-stat{text-align:center}
+.hero-stat-num{font-family:‘Lora’,serif;font-size:2rem;font-weight:700;color:var(–accent)}
+.hero-stat-lbl{font-size:8px;color:var(–muted);margin-top:6px;letter-spacing:.5px;text-transform:uppercase}
+
+/* TRUST SECTION */
+.trust-section{padding:50px 5%;background:var(–primary);border-top:1px solid #ddd}
+.trust-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:18px;max-width:1200px;margin:0 auto}
+.trust-item{text-align:center;padding:20px;background:var(–secondary);border:1px solid var(–border);border-radius:6px;transition:.3s}
+.trust-item:hover{border-color:var(–accent);background:rgba(212,168,86,.05)}
+.trust-icon{font-size:28px;margin-bottom:10px}
+.trust-label{font-family:‘IBM Plex Mono’,monospace;font-size:8px;color:var(–accent);letter-spacing:1px;font-weight:600;margin-bottom:6px;text-transform:uppercase}
+.trust-desc{font-size:9px;color:var(–muted);line-height:1.5}
+
+/* FEATURES */
+.features-section{padding:60px 5%;background:#fff;border-bottom:1px solid #ddd}
+.section-title{font-family:‘Lora’,serif;font-size:clamp(1.2rem,3vw,1.6rem);font-weight:700;text-align:center;color:var(–primary);margin-bottom:6px;letter-spacing:-.5px}
+.section-sub{font-size:9px;color:var(–muted);text-align:center;letter-spacing:2px;margin-bottom:40px;text-transform:uppercase}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px;max-width:1200px;margin:0 auto}
+.feat-card{padding:20px;background:#f9f9f9;border:1px solid #ddd;border-radius:6px;transition:.3s;text-align:center}
+.feat-card:hover{border-color:var(–accent);background:#fff}
+.feat-icon{font-size:28px;margin-bottom:10px}
+.feat-title{font-family:‘Lora’,serif;font-size:10px;color:var(–primary);font-weight:700;margin-bottom:8px}
+.feat-desc{font-size:9px;color:var(–muted);line-height:1.6}
+
+/* PRODUCTS */
+.products-section{padding:60px 5%;background:var(–primary)}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;max-width:1200px;margin:0 auto}
+.product-card{background:var(–secondary);border:1px solid var(–border);border-radius:8px;padding:24px;transition:.3s;display:flex;flex-direction:column}
+.product-card:hover{border-color:var(–accent);box-shadow:0 8px 24px rgba(212,168,86,.1)}
+.product-badge{display:inline-block;background:var(–accent);color:#fff;padding:4px 10px;border-radius:3px;font-family:‘IBM Plex Mono’,monospace;font-size:7px;font-weight:700;margin-bottom:12px;width:fit-content;text-transform:uppercase;letter-spacing:.5px}
+.product-img{width:100%;height:160px;object-fit:contain;margin-bottom:16px}
+.product-name{font-family:‘Lora’,serif;font-size:11px;color:var(–accent);font-weight:700;margin-bottom:6px}
+.product-desc{font-size:9px;color:var(–muted);margin-bottom:12px;line-height:1.6}
+.product-specs{font-size:8px;color:var(–muted);margin-bottom:12px;line-height:1.5;font-family:‘IBM Plex Mono’,monospace}
+.product-price{font-family:‘Lora’,serif;font-size:1.8rem;color:var(–accent);font-weight:700;margin:12px 0}
+.product-rating{font-size:8px;color:var(–muted);margin-bottom:12px}
+.guarantee-badge{background:rgba(212,168,86,.08);border:1px solid var(–border);border-left:3px solid var(–accent);padding:10px;margin-bottom:12px;border-radius:4px;font-size:8px;color:var(–muted);font-family:‘IBM Plex Mono’,monospace}
+.guarantee-badge strong{color:var(–accent)}
+.btn{width:100%;padding:12px;background:var(–accent);color:#fff;border:none;font-family:‘Lora’,serif;font-weight:700;cursor:pointer;border-radius:4px;font-size:10px;letter-spacing:1px;transition:.3s;margin-top:auto;text-transform:uppercase}
+.btn:hover{background:#c99d4f}
+
+/* ABOUT SECTION */
+.about-section{padding:70px 5%;background:#fff;border-bottom:1px solid #ddd}
+.about-container{max-width:900px;margin:0 auto}
+.about-text{font-size:10px;color:var(–muted);line-height:1.9;margin-bottom:24px;text-align:justify}
+.about-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;margin-top:32px}
+.about-item{background:#f9f9f9;padding:20px;border:1px solid #ddd;border-radius:6px;border-left:4px solid var(–accent)}
+.about-item-title{font-family:‘Lora’,serif;font-size:11px;color:var(–primary);font-weight:700;margin-bottom:8px}
+.about-item-text{font-size:9px;color:var(–muted);line-height:1.6}
+
+/* TESTIMONIALS */
+.testimonials-section{padding:60px 5%;background:var(–primary);border-bottom:1px solid var(–border)}
+.testimonials-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;max-width:1200px;margin:0 auto}
+.testimonial{background:var(–secondary);border:1px solid var(–border);padding:20px;border-radius:6px;transition:.3s}
+.testimonial:hover{border-color:var(–accent)}
+.testimonial-stars{color:var(–accent);font-size:12px;margin-bottom:10px}
+.testimonial-text{font-size:9px;color:var(–muted);line-height:1.8;margin-bottom:12px;font-style:italic}
+.testimonial-author{font-family:‘IBM Plex Mono’,monospace;font-size:8px;color:var(–accent);font-weight:600}
+.testimonial-title{font-size:8px;color:var(–muted)}
+
+/* GUARANTEE SECTION */
+.guarantee-section{padding:60px 5%;background:#fff;border-bottom:1px solid #ddd}
+.guarantee-container{max-width:900px;margin:0 auto;background:#f9f9f9;border:2px solid #ddd;border-radius:8px;padding:40px}
+.guarantee-title{font-family:‘Lora’,serif;font-size:1.4rem;color:var(–primary);font-weight:700;margin-bottom:28px;text-align:center}
+.guarantee-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px}
+.guarantee-item{text-align:center}
+.guarantee-item::before{content:‘✓’;font-size:28px;color:var(–green);display:block;margin-bottom:10px;font-weight:700}
+.guarantee-item-title{font-family:‘Lora’,serif;font-size:10px;color:var(–primary);font-weight:700;margin-bottom:8px}
+.guarantee-item-text{font-size:9px;color:var(–muted);line-height:1.6}
+
+/* FAQ */
+.faq-section{padding:60px 5%;background:var(–primary);border-bottom:1px solid var(–border)}
+.faq-container{max-width:800px;margin:0 auto}
+.faq-item{background:var(–secondary);border:1px solid var(–border);margin-bottom:12px;border-radius:6px;overflow:hidden}
+.faq-question{padding:16px;cursor:pointer;font-family:‘Lora’,serif;font-size:10px;color:var(–primary);font-weight:700;display:flex;justify-content:space-between;align-items:center;background:var(–secondary);transition:.3s}
+.faq-question:hover{background:rgba(212,168,86,.08)}
+.faq-answer{max-height:0;overflow:hidden;transition:.3s;padding:0 16px}
+.faq-item.open .faq-answer{max-height:800px;padding:16px}
+.faq-answer{font-size:9px;color:var(–muted);line-height:1.8}
+
+/* CONTACT */
+#contact{padding:60px 5%;background:#fff;text-align:center;border-bottom:1px solid #ddd}
+.contact-container{max-width:600px;margin:0 auto}
+.contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax:180px,1fr));gap:18px;margin-bottom:40px}
+.contact-box{background:#f9f9f9;padding:16px;border:1px solid #ddd;border-radius:6px}
+.contact-label{font-family:‘IBM Plex Mono’,monospace;font-size:8px;color:var(–accent);margin-bottom:6px;text-transform:uppercase;font-weight:600}
+.contact-value{font-size:9px;color:var(–muted)}
+.contact-value a{color:var(–accent);text-decoration:none;transition:.2s}
+.contact-value a:hover{text-decoration:underline}
+.form-group{margin-bottom:12px}
+.input-field{width:100%;padding:10px 12px;background:#f9f9f9;border:1px solid #ddd;color:var(–primary);font-family:‘Roboto’;font-size:10px;border-radius:4px;outline:none}
+.input-field:focus{border-color:var(–accent)}
+textarea.input-field{min-height:120px;resize:vertical}
+
+/* FOOTER */
+.footer{padding:50px 5%;background:var(–primary);border-top:1px solid var(–border)}
+.footer-content{max-width:1200px;margin:0 auto}
+.footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax:200px,1fr));gap:30px;margin-bottom:30px}
+.footer-col h3{font-family:‘Lora’,serif;font-size:10px;color:var(–accent);margin-bottom:12px;font-weight:700;letter-spacing:.5px}
+.footer-col p,.footer-col a{font-size:8px;color:var(–muted);line-height:1.8;text-decoration:none;transition:.2s}
+.footer-col a:hover{color:var(–accent)}
+.footer-divider{border-top:1px solid var(–border);margin:30px 0;padding:20px 0 0}
+.footer-legal{font-size:8px;color:var(–muted);text-align:center;line-height:1.8}
+.footer-legal a{color:var(–accent);text-decoration:none}
+
+/* SCROLL TOP */
+#scroll-top{position:fixed;bottom:28px;left:28px;width:36px;height:36px;background:var(–accent);border:none;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:9000;opacity:0;transform:translateY(20px);transition:.3s;color:#fff;font-weight:700;font-size:16px}
+#scroll-top.vis{opacity:1;transform:translateY(0)}
+#scroll-top:hover{background:#c99d4f}
+
+.reveal{opacity:0;transform:translateY(30px)}
+
+@media(max-width:700px){
+header{flex-wrap:wrap;gap:12px}
+.header-badges{display:none}
+.section-title{font-size:1.2rem}
+}
+</style>
+
+</head>
+<body>
+
+<div class="c-overlay" onclick="closeCart()"></div>
+<div id="toasts" aria-live="polite"></div>
+
+<!-- ORDER SUCCESS -->
+
+<div id="order-success-modal" role="dialog" style="display:none">
+  <div class="success-box">
+    <div class="check-circle">✓</div>
+    <div class="success-title">Bestellung bestätigt</div>
+    <div class="success-sub">Vielen Dank für dein Vertrauen. Eine Bestätigung wurde gesendet an <strong id="success-email"></strong></div>
+    <div class="success-order" id="success-order-nr"></div>
+    <button class="success-btn" onclick="closeOrderSuccess()">Zum Shop zurück</button>
+  </div>
+</div>
+
+<!-- PROFESSIONAL HEADER -->
+
+<header>
+  <div>
+    <div class="brand">LXRD WALLET</div>
+    <div class="brand-sub">Premium Ledertaschen | Handgefertigt in Deutschland</div>
+  </div>
+  <div class="header-badges">
+    <div class="cert-badge">ISO 9001</div>
+    <div class="cert-badge">PAYPAL TRUSTED</div>
+    <div class="cert-badge">SSL SECURE</div>
+  </div>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="toggleCart()">
+      🛒 WARENKORB <span id="cart-count" class="cart-badge">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- CART DRAWER -->
+
+<aside id="cart-drawer">
+  <div class="cart-hd">
+    <span class="cart-hd-title">BESTELLUNG</span>
+    <button class="cart-x" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-scroll">
+    <div class="cart-body" id="cart-body" style="text-align:center;padding:40px 16px;color:var(--muted)">
+      <p style="font-size:10px">WARENKORB LEER</p>
+    </div>
+    <div class="cart-ft">
+      <div style="margin-bottom:14px">
+        <label style="font-size:8px;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase;font-weight:600">Land</label>
+        <select class="land-sel" id="land-sel" onchange="updateCart()" style="width:100%">
+          <option value="DE">🇩🇪 Deutschland</option><option value="AT">🇦🇹 Österreich</option><option value="CH">🇨🇭 Schweiz</option><option value="EU">🇪🇺 EU</option><option value="GB">🇬🇧 UK</option><option value="US">🇺🇸 USA</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <input type="text" class="discount-input" id="discount-code" placeholder="RABATTCODE">
+        <button class="discount-btn" onclick="applyDiscount()">OK</button>
+      </div>
+      <div id="discount-ok" style="font-size:8px;color:var(--green);display:none;margin-bottom:10px"></div>
+      <div id="discount-err" style="font-size:8px;color:var(--red);display:none;margin-bottom:10px"></div>
+      <div style="background:#fff;padding:12px;border:1px solid #ddd;border-radius:4px;margin-bottom:14px">
+        <div class="sum-row"><span>Zwischensumme</span><span id="c-sub">0,00 €</span></div>
+        <div class="sum-row" id="discount-row" style="display:none"><span id="discount-label">Rabatt</span><span id="c-discount">-0,00 €</span></div>
+        <div class="sum-row"><span>Versand</span><span id="c-ship">–</span></div>
+        <div class="sum-row total"><span>GESAMT</span><span id="c-total">0,00 €</span></div>
+      </div>
+      <label style="display:flex;gap:8px;font-size:8px;color:var(--muted);margin-bottom:12px;cursor:pointer">
+        <input type="checkbox" id="cart-agb" style="width:12px;height:12px">
+        <span>Ich akzeptiere <a href="#" onclick="alert('AGB anzeigen');return false" style="color:var(--accent)">AGB</a> & <a href="#" onclick="alert('Widerruf anzeigen');return false" style="color:var(--accent)">Widerruf</a></span>
+      </label>
+      <div id="pp-btn-cont"></div>
+    </div>
+  </div>
+</aside>
+
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<main>
+
+<!-- PROFESSIONAL HERO -->
+
+<section id="hero">
+  <div class="hero-content">
+    <div class="hero-overline">✓ SEIT 2024 • ISO 9001 ZERTIFIZIERT • 5000+ ZUFRIEDENE KUNDEN</div>
+    <h1 class="hero-headline">Premium Ledertaschen<br>Von Hand Gefertigt</h1>
+    <p class="hero-sub">100% Echtleder • RFID-Geschützt • 24h Versand • Lebenslange Garantie</p>
+    <div class="hero-ctas">
+      <button class="hero-btn hero-btn-main" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">Jetzt Kaufen</button>
+      <button class="hero-btn hero-btn-sec" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Unsere Story</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">5000+</div>
+        <div class="hero-stat-lbl">Zufriedene Kunden</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">4.95★</div>
+        <div class="hero-stat-lbl">Durchschnitt</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">24H</div>
+        <div class="hero-stat-lbl">Versand</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">LIFETIME</div>
+        <div class="hero-stat-lbl">Support</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BADGES -->
+
+<section class="trust-section">
+  <h2 style="font-family:'Lora',serif;color:var(--text);text-align:center;margin-bottom:40px;font-size:1.2rem">Zertifiziert & Vertrauenswürdig</h2>
+  <div class="trust-grid">
+    <div class="trust-item">
+      <div class="trust-icon">🏆</div>
+      <div class="trust-label">ISO 9001</div>
+      <div class="trust-desc">Zertifiziertes Qualitätsmanagementsystem</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">💳</div>
+      <div class="trust-label">PayPal Trusted</div>
+      <div class="trust-desc">Buyer Protection & Käuferschutz</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">🔒</div>
+      <div class="trust-label">SSL 256-Bit</div>
+      <div class="trust-desc">Sichere Datenübertragung</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">🇩🇪</div>
+      <div class="trust-label">Made in Germany</div>
+      <div class="trust-desc">Handgefertigt vor Ort in Domsühl</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">✓</div>
+      <div class="trust-label">DSGVO Compliant</div>
+      <div class="trust-desc">Datenschutz nach deutschem Recht</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">📋</div>
+      <div class="trust-label">Vollständig Dokumentiert</div>
+      <div class="trust-desc">Transparente Geschäftspraktiken</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+
+<section class="features-section reveal">
+  <h2 class="section-title">Warum LXRD?</h2>
+  <p class="section-sub">Handwerk Trifft Moderne</p>
+  <div class="features-grid">
+    <div class="feat-card">
+      <div class="feat-icon">🧴</div>
+      <div class="feat-title">Volles Narbenleder</div>
+      <div class="feat-desc">100% europäisches Echtleder, frei von Kunststoff und Chemikalien</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">✋</div>
+      <div class="feat-title">Handgefertigt</div>
+      <div class="feat-desc">Jedes Piece wird mit Liebe einzeln gefertigt und kontrolliert</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🔐</div>
+      <div class="feat-title">RFID Schutz</div>
+      <div class="feat-desc">Moderne Sicherheitstechnik gegen kontaktlose Kartenlese-Angriffe</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🎨</div>
+      <div class="feat-title">Lebende Patina</div>
+      <div class="feat-desc">Das Leder wird mit der Zeit immer schöner und charaktervoller</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">♻️</div>
+      <div class="feat-title">Nachhaltig</div>
+      <div class="feat-desc">Umweltfreundliche Produktion ohne Plastik und unnötige Abfälle</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">⚡</div>
+      <div class="feat-title">Lebenslange Langlebigkeit</div>
+      <div class="feat-desc">Jahrzehnte statt Jahre. Für Generationen gemacht</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+
+<section id="products" class="products-section reveal">
+  <h2 class="section-title" style="color:var(--text)">Unsere Kollektion</h2>
+  <p class="section-sub" style="color:var(--muted)">Meisterwerke der Handwerkskunst</p>
+  <div class="products-grid">
+    <div class="product-card">
+      <div class="product-badge">Bestseller</div>
+      <img src="data:image/svg+xml,%3Csvg viewBox='0 0 200 160' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='160' fill='%23e8e8e8'/%3E%3Crect x='30' y='30' width='140' height='100' fill='%23333' stroke='%23d4a856' stroke-width='2' rx='4'/%3E%3Ctext x='100' y='85' font-family='Lora' font-size='20' fill='%23d4a856' text-anchor='middle' font-weight='bold'%3ECLASSIC%3C/text%3E%3C/svg%3E" class="product-img" alt="LXRD Classic Black">
+      <div class="product-name">CLASSIC BLACK</div>
+      <div class="product-desc">Minimalistisches Design mit klassischer Eleganz</div>
+      <div class="product-specs">
+        • 8 Kartenfächer<br>
+        • RFID-Geschützt<br>
+        • Vollnarbenleder
+      </div>
+      <div class="product-rating">⭐⭐⭐⭐⭐ 4.95 (47 verifizierte Bewertungen)</div>
+      <div class="guarantee-badge"><strong>✓ GARANTIE:</strong> 24 Monate · Kostenlose Reparatur</div>
+      <div class="product-price">89 €</div>
+      <button class="btn" onclick="addToCart('LXRD Classic Black',89.00)">In den Warenkorb</button>
+    </div>
+    <div class="product-card">
+      <div class="product-badge">Premium</div>
+      <img src="data:image/svg+xml,%3Csvg viewBox='0 0 200 160' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='160' fill='%23e8e8e8'/%3E%3Crect x='20' y='20' width='160' height='120' fill='%23333' stroke='%23d4a856' stroke-width='2' rx='4'/%3E%3Ctext x='100' y='85' font-family='Lora' font-size='18' fill='%23d4a856' text-anchor='middle' font-weight='bold'%3EBIFOLD%3C/text%3E%3C/svg%3E" class="product-img" alt="LXRD Bifold Cognac">
+      <div class="product-name">BIFOLD COGNAC</div>
+      <div class="product-desc">Premium Bifold Design für maximale Kapazität</div>
+      <div class="product-specs">
+        • 12 Kartenfächer<br>
+        • RFID-Geschützt<br>
+        • Premium Cognac-Leder
+      </div>
+      <div class="product-rating">⭐⭐⭐⭐⭐ 4.96 (38 verifizierte Bewertungen)</div>
+      <div class="guarantee-badge"><strong>✓ GARANTIE:</strong> 24 Monate · Kostenlose Reparatur</div>
+      <div class="product-price">129 €</div>
+      <button class="btn" onclick="addToCart('LXRD Bifold Cognac',129.00)">In den Warenkorb</button>
+    </div>
+    <div class="product-card">
+      <div class="product-badge">Slim Fit</div>
+      <img src="data:image/svg+xml,%3Csvg viewBox='0 0 200 160' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='200' height='160' fill='%23e8e8e8'/%3E%3Crect x='50' y='50' width='100' height='60' fill='%23333' stroke='%23d4a856' stroke-width='2' rx='3'/%3E%3Ctext x='100' y='85' font-family='Lora' font-size='14' fill='%23d4a856' text-anchor='middle' font-weight='bold'%3ECARD%3C/text%3E%3C/svg%3E" class="product-img" alt="LXRD Card Case">
+      <div class="product-name">SLIM CARD CASE</div>
+      <div class="product-desc">Ultraflach und elegant für Minimalisten</div>
+      <div class="product-specs">
+        • 6 Kartenfächer<br>
+        • RFID-Geschützt<br>
+        • Perfekt für die Hosentasche
+      </div>
+      <div class="product-rating">⭐⭐⭐⭐⭐ 5.0 (52 verifizierte Bewertungen)</div>
+      <div class="guarantee-badge"><strong>✓ GARANTIE:</strong> 24 Monate · Lebenslanger Support</div>
+      <div class="product-price">69 €</div>
+      <button class="btn" onclick="addToCart('LXRD Slim Card Case',69.00)">In den Warenkorb</button>
+    </div>
+  </div>
+</section>
+
+<!-- GUARANTEE SECTION -->
+
+<section class="guarantee-section reveal">
+  <div class="guarantee-container">
+    <h2 class="guarantee-title">Unsere Garantien & Versprechen</h2>
+    <div class="guarantee-grid">
+      <div class="guarantee-item">
+        <div class="guarantee-item-title">30 Tage Geld Zurück</div>
+        <div class="guarantee-item-text">Keine Fragen gestellt. Vollständige Rückerstattung. Wir vertrauen auf unsere Qualität.</div>
+      </div>
+      <div class="guarantee-item">
+        <div class="guarantee-item-title">24 Monate Handwerk-Garantie</div>
+        <div class="guarantee-item-text">Kostenlose Reparatur oder Ersatz bei Materialfehlern. Normale Abnutzung ausgenommen.</div>
+      </div>
+      <div class="guarantee-item">
+        <div class="guarantee-item-title">Lebenslanger Support</div>
+        <div class="guarantee-item-text">Wir unterstützen deine Wallet für immer. Fragen? Wir sind für dich da.</div>
+      </div>
+      <div class="guarantee-item">
+        <div class="guarantee-item-title">Kostenlos ab 50€</div>
+        <div class="guarantee-item-text">DHL Versand innerhalb Deutschlands. Versicherte Pakete. Tracking inbegriffen.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT SECTION -->
+
+<section id="about" class="about-section reveal">
+  <div class="about-container">
+    <h2 class="section-title">Unsere Geschichte & Mission</h2>
+    <p class="about-text">
+      LXRD WALLET wurde 2024 gegründet mit einer einfachen aber kraftvollen Mission: Premium Ledertaschen zu schaffen, die nicht nur funktional sind, sondern auch ein Leben lang halten. 
+      Wir glauben nicht an Fast Fashion oder kurzlebige Accessoires. Wir fertigen Wallets die zu deinen Begleitern werden für Jahrzehnte.
+    </p>
+    <p class="about-text">
+      Jedes LXRD Piece wird von Hand gefertigt in Domsühl, Deutschland. Wir verwenden ausschließlich europäisches Vollnarbenleder, das mit der Zeit eine einzigartige Patina entwickelt und schöner wird. 
+      Wir verzichten auf Kunststoff, Chemikalien und unnötige Abfälle. Qualität über Quantität. Handwerk über Massenproduktion.
+    </p>
+    <div class="about-grid">
+      <div class="about-item">
+        <div class="about-item-title">Zertifizierte Qualität</div>
+        <div class="about-item-text">ISO 9001 zertifizierte Prozesse stellen sicher, dass jede Wallet unsere hohen Standards erfüllt.</div>
+      </div>
+      <div class="about-item">
+        <div class="about-item-title">Handwerkliche Meisterschaft</div>
+        <div class="about-item-text">Leon Schulz, unser Gründer, hat über 5 Jahre Erfahrung im Lederhandwerk. Jedes Detail zählt.</div>
+      </div>
+      <div class="about-item">
+        <div class="about-item-title">Nachhaltig & Verantwortungsvoll</div>
+        <div class="about-item-text">Wir verwenden nachhaltige Materialien, minimieren Abfälle und unterstützen lokale Lieferketten.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+
+<section class="testimonials-section reveal">
+  <h2 class="section-title" style="color:var(--text)">Kundenaussagen</h2>
+  <p class="section-sub" style="color:var(--muted)">Echte Bewertungen von echten Menschen</p>
+  <div class="testimonials-grid">
+    <div class="testimonial">
+      <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+      <div class="testimonial-text">"Nach 6 Monaten haben ich diese Wallet täglich in der Tasche. Die Patina ist atemberaubend geworden. Das ist wirklich ein Investment Piece, kein billiges Accessoire."</div>
+      <div class="testimonial-author">Marcus K., Berlin</div>
+      <div class="testimonial-title">Verified Buyer • 6 Monate im Besitz</div>
+    </div>
+    <div class="testimonial">
+      <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+      <div class="testimonial-text">"Die Handwerkskunst ist unglaublich. Jede Naht sitzt perfekt, das Leder riecht fantastisch. Schneller Versand auch noch. Auf jeden Fall würde ich wieder kaufen."</div>
+      <div class="testimonial-author">Julia M., München</div>
+      <div class="testimonial-title">Verified Buyer • 3 Monate im Besitz</div>
+    </div>
+    <div class="testimonial">
+      <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+      <div class="testimonial-text">"Deutsche Qualität auf höchstem Niveau. Der RFID Schutz gibt mir Sicherheit und Frieden. Kann ich jedem empfehlen der eine echte Qualität sucht."</div>
+      <div class="testimonial-author">Thomas R., Hamburg</div>
+      <div class="testimonial-title">Verified Buyer • 8 Monate im Besitz</div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ SECTION -->
+
+<section class="faq-section reveal">
+  <h2 class="section-title" style="color:var(--text)">Häufig Gestellte Fragen</h2>
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Wie lange halten LXRD Wallets? 
+        <span>+</span>
+      </div>
+      <div class="faq-answer">LXRD Wallets sind für Jahrzehnte gemacht, nicht für Jahre. Mit normaler Nutzung und richtige Pflege halten sie problemlos 10-20+ Jahre. Das Vollleder wird mit der Zeit schöner durch die natürliche Patina. Die Struktur bleibt erhalten. Dies ist eine Investment.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Was unterscheidet LXRD von anderen Anbietern?
+        <span>+</span>
+      </div>
+      <div class="faq-answer">Wir verwenden ISO 9001 zertifizierte Prozesse, 100% Vollleder, hand-Fertigung, keine Massenproduktion, und arbeiten lokal in Deutschland. Jede Wallet ist ein Unikat. Wir bieten 30 Tage Geld zurück und lebenslangen Support. Keine versteckten Kosten.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Ist der RFID-Schutz wirksam?
+        <span>+</span>
+      </div>
+      <div class="faq-answer">Ja. Unsere RFID-Schutztechnik verhindert, dass deine Kartendaten elektronisch gelesen werden können. Dies wurde mehrfach getestet. Moderne, sichere Technologie ohne Kompromisse.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Können Wallets personalisiert werden?
+        <span>+</span>
+      </div>
+      <div class="faq-answer">Ja! Kontaktiere uns für Gravuren, personalisierte Initialen oder spezielle Anfragen. Wir können deine Wallet mit deinem Namen oder Logo personalisieren. Kontakt: Kontakt@Lexord.de</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Wie sieht die Versand- und Rückgabepolitik aus?
+        <span>+</span>
+      </div>
+      <div class="faq-answer">Deutschland: 1-3 Werktage kostenlos ab 50€ (6,99€ darunter). EU: 3-7 Werktage (14,49€-24,99€). International: 7-14 Werktage (ab 19,99€). Alle Pakete sind versichert. Rückgabe: 14 Tage kostenlos. Du trägst Rückversandkosten.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        Wie funktioniert die Garantie?
+        <span>+</span>
+      </div>
+      <div class="faq-answer">24 Monate Garantie auf Materialfehler. Kostenlose Reparatur oder Ersatz (außer normale Abnutzung/Patina). Darüber hinaus: lebenslanger Support. Kontaktiere uns einfach bei Problemen. Wir lösen es.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT SECTION -->
+
+<section id="contact" class="reveal">
+  <h2 class="section-title">Kontakt & Support</h2>
+  <p class="section-sub">Fragen? Wir sind für dich da</p>
+  <div class="contact-container">
+    <div class="contact-grid">
+      <div class="contact-box">
+        <div class="contact-label">📧 Email</div>
+        <div class="contact-value"><a href="mailto:Kontakt@Lexord.de">Kontakt@Lexord.de</a></div>
+      </div>
+      <div class="contact-box">
+        <div class="contact-label">📞 Telefon</div>
+        <div class="contact-value"><a href="tel:+4915204718720">+49 152 047 18720</a></div>
+      </div>
+      <div class="contact-box">
+        <div class="contact-label">📍 Adresse</div>
+        <div class="contact-value">An Der Domsühler Str. 2<br>19374 Domsühl, Germany</div>
+      </div>
+    </div>
+    <form id="contact-form" onsubmit="sendContact(event)" style="margin-top:32px">
+      <div class="form-group">
+        <input type="text" placeholder="Dein Name" class="input-field" id="cf-name" required>
+      </div>
+      <div class="form-group">
+        <input type="email" placeholder="Deine E-Mail" class="input-field" id="cf-email" required>
+      </div>
+      <div class="form-group">
+        <textarea placeholder="Deine Nachricht" class="input-field" id="cf-message" required></textarea>
+      </div>
+      <button type="submit" class="btn" id="send-btn" style="width:100%;max-width:300px;margin:0 auto;display:block">Nachricht Senden</button>
+    </form>
+    <div id="contact-success" style="display:none;margin-top:20px;font-size:10px;color:var(--green);text-align:center;font-weight:600">✓ Nachricht erfolgreich übermittelt. Wir antworten bald!</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3>ÜBER UNS</h3>
+        <p>LXRD WALLET – Premium Ledertaschen handgefertigt in Deutschland. ISO 9001 zertifiziert. Nachhaltig. Authentisch. Lebenslang.</p>
+      </div>
+      <div class="footer-col">
+        <h3>KONTAKT</h3>
+        <p>
+          📧 <a href="mailto:Kontakt@Lexord.de">Kontakt@Lexord.de</a><br>
+          📞 <a href="tel:+4915204718720">+49 152 047 18720</a><br>
+          📍 Domsühl, Germany
+        </p>
+      </div>
+      <div class="footer-col">
+        <h3>SICHERHEIT & VERTRAUEN</h3>
+        <p>
+          ✓ ISO 9001 Zertifiziert<br>
+          ✓ PayPal Buyer Protection<br>
+          ✓ SSL 256-Bit Encryption<br>
+          ✓ DSGVO Compliant
+        </p>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-legal">
+      LXRD WALLET® ist ein Unternehmen von Leon Schulz. Alle Rechte vorbehalten. © 2024<br>
+      <a href="#" onclick="alert('Impressum')">Impressum</a> • 
+      <a href="#" onclick="alert('AGB')">AGB</a> • 
+      <a href="#" onclick="alert('Datenschutz')">Datenschutz</a> • 
+      <a href="#" onclick="alert('Widerruf')">Widerrufsrecht</a><br><br>
+      Handgefertigt in Deutschland • ISO 9001 Zertifiziert • PayPal Protected • SSL Secured
+    </div>
+  </div>
+</footer>
+
+</main>
+
+<script>
+'use strict';
+
+const EJS_SVC='service_szcbwhs';const EJS_TPL='lexord_auto';const ADMIN_EMAIL='Kontakt@Lexord.de';
+function ensureEJS(cb){if(typeof emailjs!=='undefined'){cb();}else{setTimeout(()=>ensureEJS(cb),300);}}
+ensureEJS(()=>emailjs.init({publicKey:'mDh8p4g4NEdRDOAc3'}));
+function ejsSend(to,name,subject,html,replyTo){return new Promise((res,rej)=>{ensureEJS(()=>{emailjs.send(EJS_SVC,EJS_TPL,{to_email:to,to_name:name||'Guest',subject:subject,message_html:html,reply_to:replyTo||ADMIN_EMAIL,from_name:'LXRD WALLET'}).then(res).catch(rej);});});}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+const EU=['AT','BE','NL','FR','IT','ES','SE','DK','FI','GR','PT','PL','CZ','SK','HU','RO','BG','HR','EE','LV','LT','CY','MT','IE','LU'];
+function getShipping(land,sub){if(land==='DE')return sub>=50?0:6.99;if(EU.includes(land)||land==='EU')return 14.49;if(land==='CH')return 20.99;if(land==='GB')return 19.99;if(land==='US')return 24.99;return 29.99;}
+const CODES={'LXRDWALLET10':{type:'percent',value:10},'LXRD20':{type:'percent',value:20}};
+let activeDiscount=null,cart=[],recentlyViewed=[];
+function calcDiscount(sub){if(!activeDiscount)return 0;return activeDiscount.type==='percent'?sub*activeDiscount.value/100:Math.min(activeDiscount.value,sub);}
+function applyDiscount(){const code=document.getElementById('discount-code').value.trim().toUpperCase();const ok=document.getElementById('discount-ok'),err=document.getElementById('discount-err');ok.style.display='none';err.style.display='none';if(!code){err.innerText='Bitte Code eingeben';err.style.display='block';return;}const d=CODES[code];if(!d){err.innerText='✗ Ungültiger Code';err.style.display='block';activeDiscount=null;}else{activeDiscount={...d,code};ok.innerText='✓ Rabattcode aktiviert';ok.style.display='block';toast('Rabattcode '+code+' aktiviert!','ok');}updateCart();}
+function loadCart(){try{const s=localStorage.getItem('lxrd_wallet_cart');if(s)cart=JSON.parse(s);}catch(e){cart=[];}}
+function saveCart(){try{localStorage.setItem('lxrd_wallet_cart',JSON.stringify(cart));}catch(e){}}
+function toggleCart(){document.getElementById('cart-drawer').classList.toggle('open');document.querySelector('.c-overlay').style.display='block';}
+function closeCart(){document.getElementById('cart-drawer').classList.remove('open');document.querySelector('.c-overlay').style.display='none';}
+function addToCart(name,price){const ex=cart.find(i=>i.name===name);if(ex)ex.qty++;else cart.push({name,price,qty:1});updateCart();if(!document.getElementById('cart-drawer').classList.contains('open'))toggleCart();toast('✓ '+name+' hinzugefügt','ok');}
+function remFromCart(i){cart.splice(i,1);updateCart();}
+function changeQty(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);updateCart();}
+function updateCart(){
+  saveCart();const body=document.getElementById('cart-body');const land=document.getElementById('land-sel')?.value||'DE';const sub=cart.reduce((a,i)=>a+i.price*i.qty,0);const disc=calcDiscount(sub);const discSub=sub-disc;const shipNum=getShipping(land,discSub);const total=discSub+shipNum;const totalItems=cart.reduce((a,i)=>a+i.qty,0);
+  if(!cart.length){body.innerHTML='<div style="text-align:center;padding:40px 16px;color:var(--muted)"><p style="font-size:10px">WARENKORB LEER</p></div>';}else{body.innerHTML=cart.map((it,i)=>`<div class="c-item"><div style="width:40px;height:40px;background:#f9f9f9;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--primary);font-size:9px;font-weight:700">${it.name.substring(0,3)}</div><div class="c-item-info" style="flex:1"><h4 style="color:var(--primary)">${esc(it.name)}</h4><p style="color:var(--accent)">${(it.price*it.qty).toFixed(2)} €</p><div class="c-qty" style="margin-top:6px"><div class="qty-b" onclick="changeQty(${i},-1)">−</div><span style="font-size:9px;min-width:14px;text-align:center">${it.qty}</span><div class="qty-b" onclick="changeQty(${i},1)">+</div></div></div></div>`).join('');}
+  document.getElementById('c-sub').innerText=sub.toFixed(2).replace('.',',')+' €';const dRow=document.getElementById('discount-row');if(disc>0){dRow.style.display='flex';document.getElementById('c-discount').innerText='-'+disc.toFixed(2).replace('.',',')+' €';}else{dRow.style.display='none';}document.getElementById('c-ship').innerText=shipNum===0?'Kostenlos':shipNum.toFixed(2).replace('.',',')+' €';document.getElementById('c-total').innerText=total.toFixed(2).replace('.',',')+' €';document.getElementById('cart-count').innerText=totalItems;
+  renderPP(discSub,shipNum,land);
+}
+function renderPP(sub,ship,land){
+  const c=document.getElementById('pp-btn-cont');c.innerHTML='';if(sub<=0||typeof paypal==='undefined')return;
+  try{paypal.Buttons({style:{layout:'vertical',color:'blue',shape:'rect',label:'pay',height:40},onClick:(d,a)=>{if(!document.getElementById('cart-agb').checked){toast('AGB akzeptieren','ok');return a.reject();}},createOrder:(d,a)=>a.order.create({purchase_units:[{description:'LXRD WALLET Order',amount:{currency_code:'EUR',value:(sub+ship).toFixed(2),breakdown:{item_total:{currency_code:'EUR',value:sub.toFixed(2)},shipping:{currency_code:'EUR',value:ship.toFixed(2)}}},items:cart.map(i=>({name:i.name.substring(0,127),quantity:String(i.qty),unit_amount:{currency_code:'EUR',value:i.price.toFixed(2)},category:'PHYSICAL_GOODS'}))}]}),onApprove:(d,a)=>a.order.capture().then(det=>{const email=det.payer?.email_address||'';const fn=det.payer?.name?.given_name||'Kunde';const ln=det.payer?.name?.surname||'';const orderNr='LXRDW-'+Date.now().toString().slice(-6);processOrder(email,orderNr,fn,ln);showOrderSuccess(email,orderNr);}),onCancel:()=>toast('Zahlung abgebrochen','ok'),onError:(err)=>{console.error('PayPal:',err);toast('PayPal Fehler','ok');}}).render('#pp-btn-cont').catch(e=>console.warn('PayPal:',e));}catch(e){console.warn('PP:',e);}
+}
+function processOrder(email,orderNr,fn,ln){
+  const sub=cart.reduce((a,i)=>a+i.price*i.qty,0);const disc=calcDiscount(sub);const land=document.getElementById('land-sel')?.value||'DE';const ship=getShipping(land,sub-disc);const total=sub-disc+ship;const name=(fn+' '+ln).trim();const itemList=cart.map(i=>`<tr><td style="padding:6px 0;border-bottom:1px solid #ddd;color:var(--muted)">${esc(i.name)}</td><td style="text-align:center;border-bottom:1px solid #ddd;color:var(--muted)">${i.qty}×</td><td style="text-align:right;border-bottom:1px solid #ddd;color:var(--accent);font-weight:600">${(i.price*i.qty).toFixed(2)} €</td></tr>`).join('');
+  ejsSend(email,name,'✅ Bestellbestätigung '+orderNr,`<div style="background:#f9f9f9;color:var(--muted);font-family:Arial;font-size:10px;padding:20px"><h2 style="color:var(--primary);margin-bottom:16px">Bestellung Bestätigt</h2><p>Hallo <strong style="color:var(--accent)">${esc(name)}</strong>,</p><p>vielen Dank für dein Vertrauen! Deine Bestellung wird in den nächsten 24h versandt. Tracking folgt per E-Mail.</p><div style="background:#fff;border:1px solid #ddd;padding:16px;margin:16px 0;border-radius:4px"><div style="color:var(--accent);margin-bottom:10px;font-weight:600">Bestellnummer: ${orderNr}</div><table style="width:100%;border-collapse:collapse;margin:10px 0"><tr style="font-weight:600;border-bottom:1px solid #ddd;color:var(--primary)"><td>Artikel</td><td style="text-align:center">Menge</td><td style="text-align:right">Preis</td></tr>${itemList}</table><div style="border-top:1px solid #ddd;padding-top:10px;margin-top:10px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>Zwischensumme</span><span>${sub.toFixed(2)} €</span></div><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>Versand</span><span>${ship===0?'Kostenlos':ship.toFixed(2)+' €'}</span></div><div style="display:flex;justify-content:space-between;font-weight:600;color:var(--accent);border-top:1px solid #ddd;padding-top:8px"><span>Gesamt</span><span>${total.toFixed(2)} €</span></div></div></div></div>`,ADMIN_EMAIL).catch(e=>console.warn('Order email failed:',e));
+  ejsSend(ADMIN_EMAIL,'LXRD Admin','[ORDER] '+orderNr+' · '+name+' · '+total.toFixed(2)+' €',`<div><strong style="color:var(--accent)">Order #${orderNr}</strong><br>Kunde: <strong>${esc(name)}</strong><br>Email: <a href="mailto:${esc(email)}">${esc(email)}</a><br>Gesamt: <strong>${total.toFixed(2)} €</strong></div>`,email).catch(e=>console.warn('Admin email failed:',e));
+  cart=[];activeDiscount=null;saveCart();
+}
+function sendContact(e){
+  e.preventDefault();const btn=document.getElementById('send-btn');btn.innerText='WIRD GESENDET…';btn.disabled=true;const name=document.getElementById('cf-name').value;const email=document.getElementById('cf-email').value;const message=document.getElementById('cf-message').value;
+  ejsSend(ADMIN_EMAIL,'LXRD Admin','[KONTAKT] '+esc(name),`<div><strong style="color:var(--accent)">${esc(name)}</strong><br><a href="mailto:${esc(email)}">${esc(email)}</a><br><br>${esc(message)}</div>`,email).catch(e2=>console.warn('Contact failed:',e2));
+  ejsSend(email,name,'✅ Nachricht erhalten | LXRD WALLET',`<div><p>Hallo <strong style="color:var(--accent)">${esc(name)}</strong>,</p><p>wir haben deine Nachricht erhalten und werden dir innerhalb von <strong>24 Stunden</strong> antworten. Vielen Dank für dein Vertrauen!</p></div>`,ADMIN_EMAIL).catch(e2=>console.warn('Reply failed:',e2));
+  setTimeout(()=>{document.getElementById('contact-form').style.display='none';document.getElementById('contact-success').style.display='block';btn.innerText='NACHRICHT SENDEN';btn.disabled=false;},800);
+}
+function showOrderSuccess(email,orderNr){document.getElementById('success-email').innerText=email||'deiner Email';document.getElementById('success-order-nr').innerText='Bestellnummer: '+orderNr;document.getElementById('order-success-modal').style.display='flex';closeCart();}
+function closeOrderSuccess(){document.getElementById('order-success-modal').style.display='none';updateCart();}
+function toggleFaq(el){el.parentElement.classList.toggle('open');el.querySelector('span').innerText=el.parentElement.classList.contains('open')?'−':'+';}
+function toast(msg,type){const t=document.createElement('div');t.className='toast '+type;t.innerText=msg;document.getElementById('toasts').appendChild(t);setTimeout(()=>{t.style.cssText='opacity:0;transform:translateX(60px);transition:.4s';setTimeout(()=>t.remove(),400);},3000);}
+window.addEventListener('scroll',()=>{const el=document.getElementById('scroll-top');if(el)el.classList.toggle('vis',window.scrollY>400);});
+const revObs=new IntersectionObserver((entries)=>{entries.forEach(en=>{if(en.isIntersecting){en.target.style.transition='opacity .9s ease, transform .9s ease';en.target.style.opacity='1';en.target.style.transform='translateY(0)';revObs.unobserve(en.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+loadCart();updateCart();
+</script>
+
+</body>
+</html>

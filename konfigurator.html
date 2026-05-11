@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5,viewport-fit=cover">
+<title>PS5 Konfigurator | LEXORD</title>
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--neon:#00f2ff;--neon2:#bc13fe;--green:#00b67a;--err:#ff4d4f;--gold:#d4af37;--pink:#ff2e6e;--bg:#000;--card:#0a0a0e;--border:rgba(255,255,255,.08);--text:#e8e8ec;--mute:#888;--ease:cubic-bezier(.32,.72,0,1);--spring:cubic-bezier(.34,1.56,.64,1)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+html,body{overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sans-serif;min-height:100vh;padding-bottom:104px;overscroll-behavior:none}
+
+/* AURORA BACKGROUND - bleibt */
+.aurora{position:fixed;inset:0;z-index:-3;background:#000;overflow:hidden}
+.ab{position:absolute;border-radius:50%;filter:blur(90px);opacity:.4;animation:af 25s ease-in-out infinite}
+.ab:nth-child(1){width:55%;height:55%;background:radial-gradient(circle,rgba(0,242,255,.5),transparent 70%);top:-10%;left:-10%}
+.ab:nth-child(2){width:50%;height:50%;background:radial-gradient(circle,rgba(188,19,254,.4),transparent 70%);bottom:-10%;right:-10%;animation-delay:-8s}
+.ab:nth-child(3){width:40%;height:40%;background:radial-gradient(circle,rgba(255,46,110,.25),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:-15s}
+@keyframes af{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(15%,-10%) scale(1.1)}}
+.grid-overlay{position:fixed;inset:0;z-index:-2;background-image:linear-gradient(rgba(0,242,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,242,255,.025) 1px,transparent 1px);background-size:50px 50px;pointer-events:none}
+
+/* HEADER */
+.cfg-header{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:10px;padding:env(safe-area-inset-top,0) 4% 12px;padding-top:max(12px,env(safe-area-inset-top));background:rgba(0,0,0,.85);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border-bottom:1px solid var(--border)}
+.cfg-back{display:inline-flex;align-items:center;gap:7px;font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;font-weight:700;color:#aaa;text-decoration:none;padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.03);transition:all .25s var(--ease)}
+.cfg-back:active{color:var(--neon);border-color:var(--neon);transform:scale(.94)}
+.cfg-title{font-family:'Orbitron';font-weight:900;font-size:11px;letter-spacing:2.5px;color:#fff;text-align:center;flex:1}
+.cfg-title sup{color:var(--neon);font-size:8px}
+.cfg-live{font-family:'Orbitron';font-size:8px;letter-spacing:1.5px;color:var(--neon);background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.25);padding:7px 10px;border-radius:8px;display:flex;align-items:center;gap:5px;white-space:nowrap;font-weight:700}
+.cfg-live::before{content:'';width:5px;height:5px;background:var(--neon);border-radius:50%;animation:ldot 1.5s infinite;box-shadow:0 0 8px var(--neon)}
+@keyframes ldot{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* HERO */
+.cfg-hero{text-align:center;padding:22px 5% 8px}
+.cfg-hero-eyebrow{display:inline-block;padding:5px 14px;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.25);border-radius:20px;font-family:'Orbitron';font-size:8.5px;color:var(--neon);letter-spacing:2.5px;margin-bottom:10px;font-weight:700}
+.cfg-hero-title{font-family:'Orbitron';font-weight:900;font-size:clamp(1.4rem,5.5vw,2.3rem);letter-spacing:-1px;line-height:1.05;margin-bottom:6px;background:linear-gradient(180deg,#fff 30%,rgba(255,255,255,.55));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.cfg-hero-sub{font-family:'Orbitron';font-size:9px;letter-spacing:2px;color:#666;font-weight:500}
+
+/* VIEW TOGGLE */
+.view-ctrl{display:flex;justify-content:center;padding:12px 4% 4px}
+.view-toggle{display:flex;position:relative;background:rgba(12,12,16,.85);padding:5px;border-radius:13px;border:1px solid var(--border);backdrop-filter:blur(20px);box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.view-toggle button{font-family:'Orbitron';font-size:10px;letter-spacing:1.5px;font-weight:700;background:transparent;border:none;color:#888;padding:10px 22px;border-radius:9px;cursor:pointer;position:relative;z-index:1;transition:color .35s var(--ease)}
+.view-toggle button.active{color:#000}
+.view-indicator{position:absolute;top:5px;bottom:5px;left:5px;width:calc(50% - 5px);background:linear-gradient(135deg,var(--neon),#00bdd6);border-radius:9px;transition:transform .45s var(--spring);z-index:0;box-shadow:0 4px 14px rgba(0,242,255,.4)}
+.view-indicator.back{transform:translateX(100%)}
+
+/* STAGE */
+.stage-wrap{position:relative;display:flex;justify-content:center;align-items:center;padding:10px 4%;perspective:1200px}
+.stage{position:relative;width:100%;max-width:540px;aspect-ratio:1.05/1;transform-style:preserve-3d;transition:transform .65s var(--ease)}
+.stage::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(0,242,255,.18) 0%,transparent 60%);filter:blur(30px);pointer-events:none;z-index:0}
+.stage.flipping{animation:flip3D .7s var(--ease)}
+@keyframes flip3D{0%{transform:rotateY(0deg)}50%{transform:rotateY(90deg) scale(.92)}100%{transform:rotateY(0deg)}}
+
+.photo-stack{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;animation:floatY 5s ease-in-out infinite;transition:opacity .3s var(--ease)}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.photo-stack.hidden{opacity:0;pointer-events:none;display:none}
+.photo-img{width:100%;height:100%;object-fit:contain;position:absolute;inset:0}
+.photo-img.base{z-index:1;filter:drop-shadow(0 25px 45px rgba(0,242,255,.18)) drop-shadow(0 12px 20px rgba(0,0,0,.8))}
+
+/* PART TINT (mask-image system - bleibt für Farbverlauf) */
+.part-tint{position:absolute;inset:0;z-index:3;opacity:0;pointer-events:none;mix-blend-mode:multiply;transition:opacity .45s var(--ease),background .3s var(--ease);-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
+.part-tint.active{opacity:.85}
+#tint-frontshell{-webkit-mask-image:url('mask-frontshell.PNG');mask-image:url('mask-frontshell.PNG')}
+#tint-backshell{-webkit-mask-image:url('mask-backshell.PNG');mask-image:url('mask-backshell.PNG')}
+#tint-dpad{-webkit-mask-image:url('mask-dpad.PNG');mask-image:url('mask-dpad.PNG')}
+#tint-buttons{-webkit-mask-image:url('mask-buttons.PNG');mask-image:url('mask-buttons.PNG')}
+#tint-stickcap{-webkit-mask-image:url('mask-stickcap.PNG');mask-image:url('mask-stickcap.PNG');mix-blend-mode:screen}
+#tint-triggercolor{-webkit-mask-image:url('mask-triggercolor.PNG');mask-image:url('mask-triggercolor.PNG')}
+#tint-lightbar{-webkit-mask-image:url('mask-lightbar.PNG');mask-image:url('mask-lightbar.PNG');mix-blend-mode:screen}
+#tint-paddles{-webkit-mask-image:url('mask-paddles.PNG');mask-image:url('mask-paddles.PNG')}
+
+/* MATERIAL EFFECTS - per CSS overlay */
+.mat-fx{position:absolute;inset:0;z-index:4;opacity:0;pointer-events:none;transition:opacity .5s var(--ease)}
+.mat-fx.active{opacity:1}
+/* Glossy: spiegelnde Highlights */
+.mat-glossy{background:linear-gradient(135deg,rgba(255,255,255,.3) 0%,transparent 35%,transparent 60%,rgba(255,255,255,.15) 100%);mix-blend-mode:overlay}
+/* Carbon: subtile Pattern */
+.mat-carbon{background:repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0 2px,rgba(0,0,0,.06) 2px 4px);mix-blend-mode:overlay}
+/* Chrom: metallisch */
+.mat-chrome{background:linear-gradient(180deg,rgba(255,255,255,.4) 0%,rgba(180,180,200,.2) 30%,rgba(80,80,100,.3) 60%,rgba(220,220,230,.35) 100%);mix-blend-mode:overlay}
+/* Gold: schimmernd */
+.mat-gold{background:linear-gradient(135deg,rgba(255,220,100,.35) 0%,rgba(212,175,55,.2) 50%,rgba(255,235,150,.25) 100%);mix-blend-mode:overlay;animation:goldShimmer 4s ease-in-out infinite}
+@keyframes goldShimmer{0%,100%{opacity:.7}50%{opacity:1}}
+
+/* LIGHTBAR GLOW */
+#lightbar-glow{position:absolute;top:42%;left:50%;transform:translateX(-50%);width:22%;height:5px;border-radius:5px;filter:blur(5px);opacity:0;transition:.5s var(--ease);z-index:5;pointer-events:none}
+#lightbar-glow.on{opacity:.95;box-shadow:0 0 26px 9px currentColor;animation:glowPulse 3s ease-in-out infinite}
+@keyframes glowPulse{0%,100%{filter:blur(5px);opacity:.95}50%{filter:blur(8px);opacity:1}}
+
+/* HOTSPOTS - clickable circles direkt auf dem Foto */
+.hotspot{position:absolute;width:36px;height:36px;border-radius:50%;cursor:pointer;z-index:10;display:flex;align-items:center;justify-content:center;pointer-events:auto;transform:translate(-50%,-50%);transition:transform .2s var(--ease);-webkit-tap-highlight-color:transparent}
+.hotspot:active{transform:translate(-50%,-50%) scale(.85)}
+.hotspot .hs-pulse{position:absolute;inset:0;background:rgba(0,242,255,.25);border:2px solid var(--neon);border-radius:50%;animation:hsPulse 2.2s ease-in-out infinite;box-shadow:0 0 14px rgba(0,242,255,.5)}
+@keyframes hsPulse{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.25);opacity:.4}}
+.hotspot .hs-dot{position:relative;width:14px;height:14px;background:var(--neon);border-radius:50%;box-shadow:0 0 12px var(--neon),0 2px 6px rgba(0,0,0,.5);z-index:2}
+.hotspot .hs-icon{position:relative;color:#000;font-family:'Orbitron';font-size:11px;font-weight:900;line-height:1;z-index:3}
+.hotspot.active .hs-pulse{background:rgba(188,19,254,.3);border-color:var(--neon2);box-shadow:0 0 18px var(--neon2)}
+.hotspot.active .hs-dot{background:var(--neon2);box-shadow:0 0 14px var(--neon2)}
+/* Hotspot tooltip */
+.hs-tip{position:absolute;background:linear-gradient(135deg,rgba(10,10,14,.97),rgba(4,4,8,.97));border:1px solid rgba(0,242,255,.5);border-radius:9px;font-family:'Orbitron';font-size:8px;font-weight:800;letter-spacing:.5px;color:#fff;padding:6px 10px;white-space:nowrap;opacity:0;transform:translate(-50%,-130%) scale(.85);transition:opacity .25s var(--ease),transform .25s var(--ease);pointer-events:none;box-shadow:0 6px 18px rgba(0,0,0,.6),0 0 14px rgba(0,242,255,.25);left:50%;top:0;text-transform:uppercase;z-index:11}
+.hs-tip strong{color:var(--neon);display:block;font-size:9px;margin-top:2px;letter-spacing:.3px;text-transform:none}
+.hotspot:hover .hs-tip,.hotspot.show-tip .hs-tip{opacity:1;transform:translate(-50%,-110%) scale(1)}
+
+/* Hotspot positions */
+.hs-frontshell{top:18%;left:50%}
+.hs-triggercolor{top:8%;left:50%}
+.hs-lightbar{top:42%;left:50%}
+.hs-dpad{top:50%;left:22%}
+.hs-buttons{top:50%;left:78%}
+.hs-stickcap{top:67%;left:37%}
+.hs-engraving{top:33%;left:50%}
+.hs-stick{top:67%;left:63%}
+.hs-trigger{top:8%;left:78%}
+.hs-backshell{top:22%;left:50%}
+.hs-paddlecolor{top:52%;left:50%}
+.hs-paddle{top:75%;left:50%}
+
+/* PADDLE PLATZHALTER (auf Rückseite) */
+.paddle-placeholder{position:absolute;background:rgba(0,242,255,.12);border:2px dashed var(--neon);border-radius:9px;font-family:'Orbitron';font-size:8px;font-weight:900;color:var(--neon);display:flex;flex-direction:column;align-items:center;justify-content:center;letter-spacing:1px;opacity:0;transition:opacity .4s var(--ease),transform .4s var(--spring);pointer-events:none;z-index:5;box-shadow:0 0 14px rgba(0,242,255,.3),inset 0 0 12px rgba(0,242,255,.15);text-shadow:0 0 6px rgba(0,242,255,.6);transform:scale(.85)}
+.paddle-placeholder.show{opacity:.95;transform:scale(1)}
+.paddle-placeholder small{display:block;font-size:6px;color:#aaa;letter-spacing:1px;margin-top:2px;font-weight:700}
+#pad-bl{top:58%;left:14%;width:16%;height:9%}
+#pad-br{top:58%;right:14%;width:16%;height:9%}
+#pad-tl{top:42%;left:18%;width:16%;height:9%}
+#pad-tr{top:42%;right:18%;width:16%;height:9%}
+
+/* SWIPE HINT */
+.swipe-hint{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-family:'Orbitron';font-size:8px;color:rgba(0,242,255,.6);letter-spacing:2px;font-weight:700;pointer-events:none;animation:hintFade 4s ease-in-out infinite;display:flex;align-items:center;gap:8px;z-index:6}
+.swipe-hint.hide{display:none}
+@keyframes hintFade{0%,100%{opacity:.4;transform:translateX(-50%)}50%{opacity:.9;transform:translateX(-50%) translateX(3px)}}
+
+/* QUICK STATS BAR */
+.stats-bar{display:flex;gap:8px;padding:4px 4% 6px;max-width:780px;margin:0 auto;overflow-x:auto;scrollbar-width:none}
+.stats-bar::-webkit-scrollbar{display:none}
+.stat-chip{flex-shrink:0;padding:7px 12px;background:rgba(12,12,16,.7);border:1px solid var(--border);border-radius:20px;font-family:'Orbitron';font-size:8.5px;letter-spacing:1px;color:#888;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;backdrop-filter:blur(10px);transition:all .25s var(--ease)}
+.stat-chip strong{color:var(--neon);font-weight:900;letter-spacing:.5px}
+.stat-chip.has-value{border-color:rgba(0,242,255,.3);color:#ddd;background:rgba(0,242,255,.05)}
+
+/* PRESETS */
+.preset-wrap{padding:4px 4% 12px;max-width:780px;margin:0 auto}
+.preset-label{font-family:'Orbitron';font-size:8.5px;color:#555;letter-spacing:2.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px;font-weight:700}
+.preset-label::before{content:'';width:14px;height:1px;background:var(--neon);box-shadow:0 0 6px var(--neon)}
+.preset-row{display:flex;gap:8px;overflow-x:auto;padding:6px 0;scrollbar-width:none}
+.preset-row::-webkit-scrollbar{display:none}
+.preset-btn{flex-shrink:0;padding:11px 14px;border-radius:13px;border:1.5px solid var(--border);background:rgba(12,12,16,.6);font-family:'Orbitron';font-size:9px;color:#bbb;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:8px;transition:all .25s var(--spring);font-weight:700;letter-spacing:.8px;backdrop-filter:blur(10px)}
+.preset-btn:active{transform:scale(.94)}
+.preset-btn.active{border-color:var(--neon);background:rgba(0,242,255,.1);color:var(--neon);box-shadow:0 4px 14px rgba(0,242,255,.25)}
+.preset-swatch{width:20px;height:20px;border-radius:50%;border:1.5px solid rgba(255,255,255,.15);flex-shrink:0;box-shadow:inset 0 1px 3px rgba(0,0,0,.4)}
+
+/* SUMMARY (Compact stats) */
+.summary-wrap{padding:6px 4% 14px;max-width:780px;margin:0 auto}
+.summary-card{background:linear-gradient(180deg,rgba(0,242,255,.05),rgba(188,19,254,.02));border:1px solid rgba(0,242,255,.2);border-radius:14px;padding:14px 18px;backdrop-filter:blur(20px)}
+.summary-title{font-family:'Orbitron';font-size:8.5px;color:#555;letter-spacing:2px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+.summary-title strong{color:var(--neon)}
+.summary-list{display:flex;flex-wrap:wrap;gap:5px}
+.summary-tag{padding:5px 10px;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.2);border-radius:7px;font-family:'Orbitron';font-size:8px;font-weight:700;color:#ddd;letter-spacing:.5px}
+.summary-tag.empty{color:#444;border-color:rgba(255,255,255,.05);background:transparent}
+
+/* BOTTOM BAR */
+.cfg-bottom{position:fixed;bottom:0;left:0;right:0;z-index:60;padding:12px 4% calc(12px + env(safe-area-inset-bottom));background:rgba(0,0,0,.92);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border-top:1px solid rgba(0,242,255,.18);display:flex;align-items:center;gap:10px}
+.cfg-price-block{flex:1;min-width:0}
+.cfg-price-label{font-family:'Orbitron';font-size:7.5px;color:#555;letter-spacing:2.5px;font-weight:700}
+.cfg-price-val{font-family:'Orbitron';font-size:22px;font-weight:900;color:#fff;margin-top:2px;display:flex;align-items:baseline;gap:6px}
+.cfg-price-val span{color:var(--neon);transition:color .25s}
+.cfg-price-val.bumped{animation:priceBump .5s var(--spring)}
+@keyframes priceBump{0%{transform:scale(1)}40%{transform:scale(1.12);color:var(--neon)}100%{transform:scale(1)}}
+.cfg-bot-btns{display:flex;gap:8px;align-items:center}
+.cfg-save-btn{font-family:'Orbitron';font-size:9.5px;font-weight:900;background:transparent;border:1px solid rgba(0,242,255,.35);color:var(--neon);padding:14px 14px;border-radius:13px;cursor:pointer;transition:all .25s var(--ease);white-space:nowrap;letter-spacing:1px}
+.cfg-save-btn:active{transform:scale(.95);background:rgba(0,242,255,.1)}
+.cfg-add-cart{font-family:'Orbitron';font-size:10.5px;font-weight:900;background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;border:none;padding:15px 22px;border-radius:13px;cursor:pointer;box-shadow:0 6px 22px rgba(0,242,255,.45);transition:all .2s var(--spring);white-space:nowrap;letter-spacing:1.2px;display:flex;align-items:center;gap:7px}
+.cfg-add-cart:active{transform:scale(.96)}
+.cfg-add-cart svg{width:14px;height:14px}
+
+/* ================ SIDE DRAWER (Modal für Auswahl) ================ */
+.drawer-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:200;opacity:0;pointer-events:none;transition:opacity .45s var(--ease)}
+.drawer-backdrop.show{opacity:1;pointer-events:auto}
+.drawer{position:fixed;right:0;top:0;bottom:0;width:420px;max-width:100vw;background:linear-gradient(180deg,#0a0a0e 0%,#040406 100%);border-left:1px solid rgba(0,242,255,.2);z-index:201;transform:translateX(100%);transition:transform .55s var(--spring);display:flex;flex-direction:column;box-shadow:-25px 0 70px rgba(0,0,0,.7),-5px 0 35px rgba(0,242,255,.1)}
+.drawer.show{transform:translateX(0)}
+@media(max-width:640px){
+  .drawer{right:0;left:0;top:auto;bottom:0;width:100%;height:80vh;border-left:none;border-top:1px solid rgba(0,242,255,.25);border-radius:22px 22px 0 0;transform:translateY(100%)}
+  .drawer.show{transform:translateY(0)}
+}
+.dr-head{padding:20px 22px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;border-bottom:1px solid var(--border);position:relative}
+@media(max-width:640px){.dr-head::before{content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);width:38px;height:4px;background:rgba(255,255,255,.15);border-radius:2px}}
+.dr-head-info{flex:1;min-width:0}
+.dr-eyebrow{font-family:'Orbitron';font-size:8.5px;letter-spacing:2.5px;color:var(--neon);margin-bottom:6px;font-weight:700;display:flex;align-items:center;gap:6px}
+.dr-eyebrow .icon{font-size:14px}
+.dr-title{font-family:'Orbitron';font-size:18px;font-weight:900;color:#fff;letter-spacing:1.5px;line-height:1.15;text-transform:uppercase}
+.dr-sub{font-family:'Inter';font-size:12px;color:#777;margin-top:4px;font-weight:500}
+.dr-close{width:38px;height:38px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:50%;color:#888;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s var(--ease)}
+.dr-close:active{transform:scale(.92);color:#fff;border-color:var(--err)}
+
+.dr-body{flex:1;overflow-y:auto;padding:18px 22px 22px;-webkit-overflow-scrolling:touch}
+.dr-body::-webkit-scrollbar{width:4px}
+.dr-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:4px}
+
+.dr-section-label{font-family:'Orbitron';font-size:8.5px;color:#555;letter-spacing:2px;margin:14px 0 10px;font-weight:700;text-transform:uppercase}
+.dr-section-label:first-child{margin-top:0}
+
+/* Colors grid (drawer) */
+.dr-color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:10px}
+.dr-color-item{aspect-ratio:1/1;border-radius:13px;cursor:pointer;border:2px solid var(--border);position:relative;transition:all .25s var(--spring);overflow:hidden;box-shadow:inset 0 2px 6px rgba(0,0,0,.3),0 2px 6px rgba(0,0,0,.4)}
+.dr-color-item:active{transform:scale(.92)}
+.dr-color-item.sel{border-color:var(--neon);transform:scale(1.06);box-shadow:0 0 18px rgba(0,242,255,.4),inset 0 2px 6px rgba(0,0,0,.3)}
+.dr-color-item.sel::after{content:'\2713';position:absolute;top:5px;right:5px;width:22px;height:22px;background:var(--neon);color:#000;font-size:12px;font-weight:900;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,242,255,.6)}
+.dr-color-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,rgba(0,0,0,.9),rgba(0,0,0,.5),transparent);padding:5px 3px 3px;font-family:'Orbitron';font-size:7.5px;text-align:center;letter-spacing:.5px;color:#fff;font-weight:700}
+.dr-premium-tag{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.85);color:var(--neon);font-family:'Orbitron';font-size:7px;font-weight:900;padding:3px 6px;border-radius:5px;letter-spacing:.5px}
+
+/* Option list (drawer) */
+.dr-opt{display:flex;align-items:center;gap:14px;padding:16px;background:rgba(255,255,255,.025);border:1.5px solid var(--border);border-radius:14px;margin-bottom:8px;cursor:pointer;transition:all .25s var(--spring)}
+.dr-opt:active{transform:scale(.98)}
+.dr-opt.sel{border-color:var(--neon);background:rgba(0,242,255,.07);box-shadow:0 4px 18px rgba(0,242,255,.15)}
+.dr-opt-radio{width:22px;height:22px;border:2px solid rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .25s var(--spring)}
+.dr-opt.sel .dr-opt-radio{border-color:var(--neon);background:var(--neon)}
+.dr-opt.sel .dr-opt-radio::after{content:'';width:8px;height:8px;background:#000;border-radius:50%}
+.dr-opt-info{flex:1;min-width:0}
+.dr-opt-name{font-family:'Orbitron';font-size:11.5px;font-weight:700;color:#fff;letter-spacing:.5px}
+.dr-opt-desc{font-size:11.5px;color:#777;margin-top:4px;line-height:1.45}
+.dr-opt-price{font-family:'Orbitron';font-size:11.5px;color:var(--neon);font-weight:900;flex-shrink:0}
+.dr-opt-price.free{color:#666}
+.dr-badge{display:inline-block;padding:2.5px 7px;border-radius:6px;font-family:'Orbitron';font-size:7px;font-weight:900;letter-spacing:1px;margin-left:6px;vertical-align:middle}
+.dr-badge.pro{background:rgba(0,242,255,.12);border:1px solid rgba(0,242,255,.4);color:var(--neon)}
+.dr-badge.best{background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.4);color:var(--gold)}
+.dr-badge.new{background:rgba(255,46,110,.12);border:1px solid rgba(255,46,110,.4);color:var(--pink)}
+
+/* Material picker (within drawer) */
+.dr-mat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-bottom:8px}
+.dr-mat{aspect-ratio:1.4/1;border-radius:11px;border:1.5px solid var(--border);cursor:pointer;display:flex;align-items:flex-end;justify-content:center;padding:6px;font-family:'Orbitron';font-size:8px;font-weight:900;letter-spacing:.8px;color:#fff;transition:all .25s var(--spring);position:relative;overflow:hidden}
+.dr-mat:active{transform:scale(.92)}
+.dr-mat.sel{border-color:var(--neon);box-shadow:0 0 14px rgba(0,242,255,.3)}
+.dr-mat-std{background:linear-gradient(135deg,#666,#444)}
+.dr-mat-glossy{background:linear-gradient(135deg,#888 0%,#bbb 30%,#999 60%,#666 100%);box-shadow:inset 0 -8px 14px rgba(255,255,255,.2)}
+.dr-mat-matte{background:linear-gradient(135deg,#555,#333);filter:saturate(.85)}
+.dr-mat-carbon{background:#1a1a1a repeating-linear-gradient(45deg,rgba(255,255,255,.06) 0 3px,transparent 3px 6px)}
+.dr-mat-chrome{background:linear-gradient(180deg,#e0e0e8 0%,#888 50%,#444 70%,#aaa 100%);color:#000}
+.dr-mat-gold{background:linear-gradient(135deg,#f4d975 0%,#d4af37 50%,#9a7d1a 100%);color:#000}
+
+/* Engraving input */
+.dr-engrave-input{width:100%;padding:14px 16px;background:rgba(255,255,255,.04);border:1.5px solid var(--border);color:#fff;border-radius:13px;font-family:'Orbitron';font-size:15px;letter-spacing:2px;font-weight:700;outline:none;text-transform:uppercase;transition:all .25s var(--ease);text-align:center}
+.dr-engrave-input:focus{border-color:var(--neon);background:rgba(0,242,255,.05)}
+.dr-engrave-input::placeholder{color:#333;letter-spacing:1px}
+.dr-engrave-counter{font-family:'Orbitron';font-size:9px;color:#555;text-align:center;margin-top:8px;letter-spacing:1px}
+
+/* Apply button (drawer footer) */
+.dr-foot{padding:14px 22px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--border);background:rgba(4,4,8,.95)}
+.dr-apply{width:100%;padding:16px;background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;border:none;border-radius:13px;font-family:'Orbitron';font-size:11.5px;font-weight:900;letter-spacing:1.5px;cursor:pointer;box-shadow:0 6px 22px rgba(0,242,255,.4);transition:all .2s var(--spring)}
+.dr-apply:active{transform:scale(.97)}
+
+/* TOAST */
+#toast{position:fixed;top:calc(76px + env(safe-area-inset-top));left:50%;transform:translateX(-50%) translateY(-100px);z-index:1000;background:rgba(10,10,14,.95);backdrop-filter:blur(20px);border:1px solid var(--neon);border-radius:14px;padding:14px 22px;font-family:'Orbitron';font-size:10px;color:var(--neon);transition:transform .5s var(--spring);pointer-events:none;letter-spacing:1.5px;font-weight:700;box-shadow:0 10px 30px rgba(0,242,255,.25)}
+#toast.show{transform:translateX(-50%) translateY(0)}
+#toast.error{border-color:var(--err);color:var(--err);box-shadow:0 10px 30px rgba(255,77,79,.25)}
+
+/* LOADING */
+#cfg-loading{position:fixed;inset:0;background:#000;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;transition:opacity .6s var(--ease)}
+#cfg-loading.hidden{opacity:0;pointer-events:none}
+.cfg-loader-spinner{width:54px;height:54px;border:3px solid rgba(0,242,255,.15);border-top-color:var(--neon);border-radius:50%;animation:spinL 1s linear infinite}
+@keyframes spinL{to{transform:rotate(360deg)}}
+
+/* ADD-TO-CART CELEBRATION */
+#cart-burst{position:fixed;inset:0;z-index:9998;pointer-events:none;display:none;align-items:center;justify-content:center}
+#cart-burst.show{display:flex}
+.cb-circle{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,var(--neon),var(--neon2));display:flex;align-items:center;justify-content:center;color:#000;font-size:48px;font-weight:900;animation:cbBurst .9s var(--spring);box-shadow:0 0 80px rgba(0,242,255,.6),0 0 40px rgba(188,19,254,.4)}
+@keyframes cbBurst{0%{transform:scale(0) rotate(-90deg);opacity:0}50%{transform:scale(1.15) rotate(15deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
+</style>
+</head>
+<body>
+
+<div class="aurora"><div class="ab"></div><div class="ab"></div><div class="ab"></div></div>
+<div class="grid-overlay"></div>
+
+<div id="cfg-loading">
+  <div class="cfg-loader-spinner"></div>
+  <div style="font-family:'Orbitron';color:var(--neon);font-size:10px;letter-spacing:4px;font-weight:700">LEXORD KONFIGURATOR</div>
+</div>
+
+<header class="cfg-header">
+  <a href="index.html" class="cfg-back">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    ZURUECK
+  </a>
+  <div class="cfg-title">LEXORD<sup>&reg;</sup> KONFIGURATOR</div>
+  <div class="cfg-live">LIVE 3D</div>
+</header>
+
+<div class="cfg-hero">
+  <div class="cfg-hero-eyebrow">MADE IN GERMANY</div>
+  <h1 class="cfg-hero-title">BAUE DEINEN CONTROLLER</h1>
+  <p class="cfg-hero-sub">TAP \u00B7 SWIPE \u00B7 CUSTOMIZE</p>
+</div>
+
+<div class="view-ctrl">
+  <div class="view-toggle">
+    <div class="view-indicator" id="view-indicator"></div>
+    <button id="view-front-btn" class="active" data-view="front">VORDERSEITE</button>
+    <button id="view-back-btn" data-view="back">RUECKSEITE</button>
+  </div>
+</div>
+
+<div class="stage-wrap">
+  <div class="stage" id="stage">
+
+    <!-- FRONT VIEW -->
+    <div class="photo-stack" id="stack-front">
+      <img src="Photoroom_20260501_094506.png" alt="PS5 Vorderseite" class="photo-img base">
+      <div class="part-tint" id="tint-frontshell"></div>
+      <div class="part-tint" id="tint-dpad"></div>
+      <div class="part-tint" id="tint-buttons"></div>
+      <div class="part-tint" id="tint-stickcap"></div>
+      <div class="part-tint" id="tint-triggercolor"></div>
+      <div class="part-tint" id="tint-lightbar"></div>
+      <div class="mat-fx" id="matfx-frontshell"></div>
+      <div id="lightbar-glow"></div>
+
+      <!-- HOTSPOTS Front -->
+      <div class="hotspot hs-frontshell" data-cat="frontshell"><div class="hs-pulse"></div><div class="hs-dot"></div><div class="hs-tip">FRONT GEHAEUSE<strong id="tip-frontshell">-</strong></div></div>
+      <div class="hotspot hs-triggercolor" data-cat="triggercolor"><div class="hs-pulse"></div><div class="hs-dot"></div><div class="hs-tip">TRIGGER FARBE<strong id="tip-triggercolor">-</strong></div></div>
+      <div class="hotspot hs-trigger" data-opt="trigger"><div class="hs-pulse"></div><div class="hs-dot"></div><div class="hs-tip">TRIGGER SYSTEM<strong id="tip-trigger">-</strong></div></div>
+      <div class="hotspot hs-engraving" data-special="engraving"><div class="hs-pulse"></div><div class="hs-dot"></div><div class="hs-tip">GRAVUR<strong id="tip-engraving">-</strong></div></div>
+      <div class="hotspot hs-lightbar" data-cat="lightbar"><div class="hs-pulse"></div><div class="hs-dot"></div><div class="hs-tip">LIGHT BAR<strong id="tip-lightbar">-</strong></div></div>
+      <div class="hotspot hs-dpad" data-cat="dpad"><div class="hs-pulse"></div><div class="hs-dot"></div><div class="hs-tip">D-PAD<strong id="tip-dpad">-</strong></div></div>
+      <div class="hotspot hs-buttons" data-cat="buttons"><div class="hs-pulse"></div><div class="hs-dot"></div><div class="hs-tip">BUTTONS<strong id="tip-buttons">-</strong></div></div>
+      <div class="hotspot hs-stickcap" data-cat="stickcap"><div class="hs-pulse"></div><div class="hs-dot"></div><div class="hs-tip">STICK CAPS<strong id="tip-stickcap">-</strong></div></div>
+      <div class="hotspot hs-stick" data-opt="stick"><div class="hs-pulse"></div><div class="hs-dot"></div><div class="hs-tip">STICK SYSTEM<strong id="tip-stick">-</strong></div></div>
+    </div>
+
+    <!-- BACK VIEW -->
+    <div class="photo-stack hidden" id="stack-back">
+      <img src="Photoroom_20260501_090821.png" alt="PS5 Rueckseite" class="photo-img base">
+      <div class="part-tint" id="tint-backshell"></div>
+      <div class="part-tint" id="tint-paddles"></div>
+      <div class="mat-fx" id="matfx-backshell"></div>
+      <!-- Paddle-Platzhalter -->
+      <div class="paddle-placeholder" id="pad-bl">P1<small>LINKS</small></div>
+      <div class="paddle-placeholder" id="pad-br">P2<small>RECHTS</small></div>
+      <div class="paddle-placeholder" id="pad-tl">P3<small>LINKS OBEN</small></div>
+      <div class="paddle-placeholder" id="pad-tr">P4<small>RECHTS OBEN</small></div>
+      <!-- HOTSPOTS Back -->
+      <div class="hotspot hs-backshell" data-cat="backshell"><div class="hs-pulse"></div><div class="hs-dot"></div><div class="hs-tip">RUECKSCHALE<strong id="tip-backshell">-</strong></div></div>
+      <div class="hotspot hs-paddle" data-opt="paddle"><div class="hs-pulse"></div><div class="hs-dot"></div><div class="hs-tip">PADDLES<strong id="tip-paddle">-</strong></div></div>
+    </div>
+
+    <div class="swipe-hint" id="swipe-hint">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l-6 6 6 6M15 18l6-6-6-6"/></svg>
+      WISCHEN ZUM DREHEN
+    </div>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar" id="stats-bar">
+  <span class="stat-chip"><strong>9</strong> Teile anpassbar</span>
+  <span class="stat-chip"><strong>5</strong> Materialien</span>
+  <span class="stat-chip"><strong>30+</strong> Farben</span>
+  <span class="stat-chip"><strong>6 Mon.</strong> Garantie</span>
+  <span class="stat-chip"><strong>24h</strong> Versand</span>
+</div>
+
+<div class="preset-wrap">
+  <span class="preset-label">SCHNELL-PRESETS</span>
+  <div class="preset-row" id="preset-row"></div>
+</div>
+
+<div class="summary-wrap">
+  <div class="summary-card">
+    <div class="summary-title">DEINE KONFIG <strong id="sum-count">0 Anpassungen</strong></div>
+    <div class="summary-list" id="summary-list"></div>
+  </div>
+</div>
+
+<div class="cfg-bottom">
+  <div class="cfg-price-block">
+    <div class="cfg-price-label">GESAMT</div>
+    <div class="cfg-price-val" id="price-val"><span id="total-price">79,00</span> EUR</div>
+  </div>
+  <div class="cfg-bot-btns">
+    <button class="cfg-save-btn" id="save-btn">SAVE</button>
+    <button class="cfg-add-cart" id="add-cart-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 22a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM20 22a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+      WARENKORB
+    </button>
+  </div>
+</div>
+
+<!-- DRAWER -->
+<div class="drawer-backdrop" id="drawer-backdrop" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="dr-head">
+    <div class="dr-head-info">
+      <div class="dr-eyebrow"><span class="icon" id="dr-icon">\u2728</span> <span id="dr-eyebrow-text">FARBE WAEHLEN</span></div>
+      <div class="dr-title" id="dr-title">Front Gehaeuse</div>
+      <div class="dr-sub" id="dr-sub">Waehle Farbe & Material</div>
+    </div>
+    <button class="dr-close" onclick="closeDrawer()">&times;</button>
+  </div>
+  <div class="dr-body" id="dr-body"></div>
+  <div class="dr-foot">
+    <button class="dr-apply" onclick="closeDrawer()">UEBERNEHMEN</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+<div id="cart-burst"><div class="cb-circle">\u2713</div></div>
+
+<script>
+'use strict';
+
+/* ==================== DATA ==================== */
+var SHELL_COLORS=[
+  {name:'Weiss',color:'#ffffff',premium:0,def:true,isDefault:true},
+  {name:'Schwarz',color:'#1a1a1c',premium:0},
+  {name:'Mitternacht',color:'#0a1633',premium:8},
+  {name:'Purple',color:'#3d1a52',premium:8},
+  {name:'Cosmic Red',color:'#5c0d10',premium:8},
+  {name:'Forest',color:'#0d2f17',premium:8},
+  {name:'Gold',color:'#d4af37',premium:18,material:'gold'},
+  {name:'Carbon',color:'#1c1c1f',premium:22,material:'carbon'},
+  {name:'Chrom',color:'#a8a8b0',premium:24,material:'chrome'}
+];
+var BTN_COLORS=[
+  {name:'Standard',color:'#f0f0f2',premium:0,def:true,isDefault:true},
+  {name:'Schwarz',color:'#222222',premium:5},
+  {name:'Weiss',color:'#fff',premium:5},
+  {name:'Cyan',color:'#00f2ff',premium:7},
+  {name:'Magenta',color:'#bc13fe',premium:7},
+  {name:'Rot',color:'#e63946',premium:7},
+  {name:'Gold',color:'#d4af37',premium:12,material:'gold'}
+];
+var STICK_COLORS=[
+  {name:'Schwarz',color:'#0a0a0c',premium:0,def:true,isDefault:true},
+  {name:'Weiss',color:'#e8e8e8',premium:5},
+  {name:'Cyan',color:'#00f2ff',premium:8},
+  {name:'Magenta',color:'#bc13fe',premium:8},
+  {name:'Gold',color:'#d4af37',premium:14,material:'gold'}
+];
+var TRIG_COLORS=[
+  {name:'Standard',color:'#f0f0f2',premium:0,def:true,isDefault:true},
+  {name:'Schwarz',color:'#1a1a1c',premium:5},
+  {name:'Cyan',color:'#00f2ff',premium:9},
+  {name:'Gold',color:'#d4af37',premium:14,material:'gold'}
+];
+var LB_COLORS=[
+  {name:'Blau',color:'#4a90e2',premium:0,def:true},
+  {name:'Cyan',color:'#00f2ff',premium:5},
+  {name:'Pink',color:'#ff2e6e',premium:5},
+  {name:'Gruen',color:'#00b67a',premium:5},
+  {name:'Lila',color:'#bc13fe',premium:5},
+  {name:'Rot',color:'#e63946',premium:5},
+  {name:'Gelb',color:'#ffd60a',premium:5}
+];
+var ENG_COLORS=[
+  {name:'Schwarz',color:'#222222',def:true},
+  {name:'Weiss',color:'#eeeeee'},
+  {name:'Cyan',color:'#00f2ff'},
+  {name:'Magenta',color:'#bc13fe'},
+  {name:'Gold',color:'#d4af37'}
+];
+
+var MATERIALS=[
+  {id:'std',name:'STANDARD',def:true},
+  {id:'glossy',name:'GLANZ',price:8},
+  {id:'matte',name:'MATT',price:6},
+  {id:'carbon',name:'CARBON',price:18},
+  {id:'chrome',name:'CHROM',price:22},
+  {id:'gold',name:'GOLD',price:25}
+];
+
+var CATS={
+  frontshell:{icon:'\uD83C\uDFA8',name:'Front Gehaeuse',sub:'Vorderseite des Controllers',colors:SHELL_COLORS,view:'front',blend:'multiply',hasMaterial:true},
+  backshell:{icon:'\uD83D\uDEE1',name:'Rueckschale',sub:'Hintere Gehaeuse-Schale',colors:SHELL_COLORS,view:'back',blend:'multiply',hasMaterial:true},
+  buttons:{icon:'\u26AB',name:'Action Buttons',sub:'X / Kreis / Dreieck / Quadrat',colors:BTN_COLORS,view:'front',blend:'multiply'},
+  dpad:{icon:'\u271A',name:'D-Pad',sub:'Steuerkreuz',colors:BTN_COLORS,view:'front',blend:'multiply'},
+  stickcap:{icon:'\uD83D\uDD79',name:'Stick Caps',sub:'Beide Stick-Kappen',colors:STICK_COLORS,view:'front',blend:'screen'},
+  triggercolor:{icon:'\uD83C\uDFAF',name:'Trigger Farbe',sub:'L1/R1/L2/R2 Buttons',colors:TRIG_COLORS,view:'front',blend:'multiply'},
+  lightbar:{icon:'\uD83D\uDCA1',name:'Light Bar',sub:'Leuchtstreifen am Touchpad',colors:LB_COLORS,view:'front',blend:'screen'}
+};
+
+var OPTS={
+  stick:{icon:'\uD83D\uDD79',label:'Analog Sticks',sub:'Drift-Schutz & Praezision',view:'front',items:[
+    {val:'Standard',price:0,desc:'Original PS5 Sticks',def:true},
+    {val:'Hall Effect',price:35,desc:'Magnetisch - 0% Drift',badge:'pro',badgeLabel:'KEIN DRIFT'},
+    {val:'TMR',price:55,desc:'Hoechste Genauigkeit',badge:'best',badgeLabel:'BEST IN CLASS'}
+  ]},
+  trigger:{icon:'\u26A1',label:'Trigger System',sub:'Adaptive vs Clicky',view:'front',items:[
+    {val:'Adaptive',price:0,desc:'Original Sony Adaptive',def:true},
+    {val:'Smart Clicky',price:25,desc:'Maus-Klick Feeling',badge:'new',badgeLabel:'NEU'}
+  ]},
+  paddle:{icon:'\u2699',label:'Paddles',sub:'Rueckseiten-Paddles',view:'back',items:[
+    {val:'Keine',price:0,desc:'Ohne Paddles',def:true},
+    {val:'2x Paddles',price:39,desc:'2 frei programmierbar',badge:'pro',badgeLabel:'EMPFOHLEN'},
+    {val:'4x Paddles',price:59,desc:'4 Paddles - Pro Setup',badge:'best',badgeLabel:'PRO'}
+  ]}
+};
+
+var PRESETS={
+  'STANDARD':{colors:{frontshell:'#ffffff',backshell:'#ffffff',buttons:'#f0f0f2',dpad:'#f0f0f2',stickcap:'#0a0a0c',triggercolor:'#f0f0f2',lightbar:'#4a90e2'},swA:'#ffffff',swB:'#1a1a1c'},
+  'STEALTH':{colors:{frontshell:'#1a1a1c',backshell:'#1a1a1c',buttons:'#222222',dpad:'#222222',stickcap:'#0a0a0c',triggercolor:'#1a1a1c',lightbar:'#4a90e2'},swA:'#1a1a1c',swB:'#0a0a0c'},
+  'CYBER':{colors:{frontshell:'#0a1633',backshell:'#0a1633',buttons:'#00f2ff',dpad:'#00f2ff',stickcap:'#0a0a0c',triggercolor:'#0a1633',lightbar:'#00f2ff'},swA:'#0a1633',swB:'#00f2ff'},
+  'COSMIC RED':{colors:{frontshell:'#5c0d10',backshell:'#5c0d10',buttons:'#f0f0f2',dpad:'#f0f0f2',stickcap:'#0a0a0c',triggercolor:'#5c0d10',lightbar:'#ff2e6e'},swA:'#5c0d10',swB:'#ff2e6e'},
+  'GOLD ELITE':{colors:{frontshell:'#1a1a1c',backshell:'#1a1a1c',buttons:'#d4af37',dpad:'#d4af37',stickcap:'#0a0a0c',triggercolor:'#1a1a1c',lightbar:'#d4af37'},swA:'#1a1a1c',swB:'#d4af37'},
+  'CARBON':{colors:{frontshell:'#1c1c1f',backshell:'#1c1c1f',buttons:'#222222',dpad:'#222222',stickcap:'#0a0a0c',triggercolor:'#1c1c1f',lightbar:'#00f2ff'},swA:'#1c1c1f',swB:'#00f2ff'}
+};
+
+var BASE_PRICE=79;
+var CART_KEY='lxrd_cart';
+var DRAFT_KEY='lxrd_cfg_draft';
+
+var currentView='front';
+var currentDrawer=null; // {type:'cat'|'opt'|'engraving', key:'frontshell'}
+var state={
+  colors:{frontshell:null,backshell:null,buttons:null,dpad:null,stickcap:null,triggercolor:null,lightbar:null},
+  materials:{frontshell:'std',backshell:'std'},
+  options:{stick:null,trigger:null,paddle:null},
+  engraving:'',engraveColor:'#222222'
+};
+
+/* ==================== HELPERS ==================== */
+function $(id){return document.getElementById(id);}
+function haptic(p){try{if(navigator.vibrate)navigator.vibrate(p||15);}catch(e){}}
+function toast(msg,isError){var t=$('toast');t.className=isError?'error':'';t.innerText=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2000);}
+
+/* ==================== TINT / MATERIAL ==================== */
+function applyPartTint(partId,colorObj,blendMode){
+  var tint=$('tint-'+partId);
+  if(!tint)return;
+  tint.style.mixBlendMode=blendMode||'multiply';
+  if(colorObj.isDefault){tint.classList.remove('active');tint.style.background='';return;}
+  tint.style.background=colorObj.color;
+  tint.classList.add('active');
+}
+
+function applyMaterial(partId,matId){
+  var matFx=$('matfx-'+partId);
+  if(!matFx)return;
+  matFx.className='mat-fx';
+  if(matId && matId!=='std'){
+    matFx.classList.add('active','mat-'+matId);
+  }
+}
+
+function applyLightbar(colorObj){
+  var glow=$('lightbar-glow');
+  glow.style.background=colorObj.color;
+  glow.style.color=colorObj.color;
+  glow.classList.add('on');
+  applyPartTint('lightbar',colorObj,'screen');
+}
+
+/* ==================== PRICE ==================== */
+function updatePrice(){
+  var p=BASE_PRICE;
+  Object.keys(state.colors).forEach(function(k){var c=state.colors[k];if(c)p+=(c.premium||0);});
+  Object.keys(state.options).forEach(function(k){var o=state.options[k];if(o)p+=(o.price||0);});
+  // Material premium
+  Object.keys(state.materials).forEach(function(k){
+    var matId=state.materials[k];
+    if(matId && matId!=='std'){
+      var mat=MATERIALS.find(function(m){return m.id===matId;});
+      if(mat && mat.price)p+=mat.price;
+    }
+  });
+  if(state.engraving)p+=15;
+  var priceEl=$('total-price');
+  priceEl.innerText=p.toFixed(2).replace('.',',');
+  $('price-val').classList.remove('bumped');
+  setTimeout(function(){$('price-val').classList.add('bumped');},10);
+  setTimeout(function(){$('price-val').classList.remove('bumped');},600);
+  updateSummary();
+  updateHotspotTips();
+  saveDraft();
+}
+
+function updateSummary(){
+  var tags=[];
+  Object.keys(state.colors).forEach(function(k){
+    var c=state.colors[k];
+    if(c && !c.isDefault)tags.push(CATS[k].name+': '+c.name);
+  });
+  Object.keys(state.options).forEach(function(k){
+    var o=state.options[k];
+    if(o && o.price>0)tags.push(o.val);
+  });
+  Object.keys(state.materials).forEach(function(k){
+    if(state.materials[k]&&state.materials[k]!=='std'){
+      var mat=MATERIALS.find(function(m){return m.id===state.materials[k];});
+      if(mat)tags.push('Material '+k+': '+mat.name);
+    }
+  });
+  if(state.engraving)tags.push('Gravur: '+state.engraving);
+  var listEl=$('summary-list');
+  if(!tags.length){
+    listEl.innerHTML='<span class="summary-tag empty">Standard-Konfiguration</span>';
+    $('sum-count').innerText='0 Anpassungen';
+  }else{
+    listEl.innerHTML=tags.map(function(t){return '<span class="summary-tag">'+t+'</span>';}).join('');
+    $('sum-count').innerText=tags.length+' Anpassungen';
+  }
+}
+
+function updateHotspotTips(){
+  Object.keys(CATS).forEach(function(k){
+    var c=state.colors[k];
+    var tip=$('tip-'+k);
+    if(tip)tip.innerText=c?c.name:'-';
+  });
+  Object.keys(OPTS).forEach(function(k){
+    var o=state.options[k];
+    var tip=$('tip-'+k);
+    if(tip)tip.innerText=o?o.val:'-';
+  });
+  var tipEng=$('tip-engraving');
+  if(tipEng)tipEng.innerText=state.engraving||'-';
+}
+
+/* ==================== VIEW (FLIP ANIMATION) ==================== */
+function setView(v,skipFlip){
+  if(currentView===v)return;
+  var indicator=$('view-indicator');
+  if(v==='back')indicator.classList.add('back');else indicator.classList.remove('back');
+
+  var btns=document.querySelectorAll('.view-toggle button');
+  for(var i=0;i<btns.length;i++)btns[i].classList.toggle('active',btns[i].dataset.view===v);
+
+  var stage=$('stage');
+  if(!skipFlip){
+    stage.classList.add('flipping');
+    setTimeout(function(){
+      currentView=v;
+      $('stack-front').classList.toggle('hidden',v!=='front');
+      $('stack-back').classList.toggle('hidden',v!=='back');
+      refreshPaddles();
+    },350); // mid-flip
+    setTimeout(function(){stage.classList.remove('flipping');},700);
+  }else{
+    currentView=v;
+    $('stack-front').classList.toggle('hidden',v!=='front');
+    $('stack-back').classList.toggle('hidden',v!=='back');
+    refreshPaddles();
+  }
+  // Hide hint after first interaction
+  $('swipe-hint').classList.add('hide');
+  haptic(20);
+}
+
+function refreshPaddles(){
+  var p=state.options.paddle;
+  ['pad-bl','pad-br','pad-tl','pad-tr'].forEach(function(id){$(id).classList.remove('show');});
+  if(p&&p.val==='2x Paddles'){$('pad-bl').classList.add('show');$('pad-br').classList.add('show');}
+  if(p&&p.val==='4x Paddles'){$('pad-bl').classList.add('show');$('pad-br').classList.add('show');$('pad-tl').classList.add('show');$('pad-tr').classList.add('show');}
+}
+
+/* ==================== SWIPE TO FLIP ==================== */
+function setupSwipe(){
+  var stage=$('stage');
+  var startX=0,startY=0,moveX=0;
+  var isSwipe=false;
+  stage.addEventListener('touchstart',function(e){
+    if(e.target.closest('.hotspot'))return;
+    startX=e.touches[0].clientX;
+    startY=e.touches[0].clientY;
+    moveX=0;
+    isSwipe=true;
+  },{passive:true});
+  stage.addEventListener('touchmove',function(e){
+    if(!isSwipe)return;
+    moveX=e.touches[0].clientX-startX;
+    var moveY=e.touches[0].clientY-startY;
+    if(Math.abs(moveY)>Math.abs(moveX))isSwipe=false;
+  },{passive:true});
+  stage.addEventListener('touchend',function(){
+    if(!isSwipe)return;
+    if(Math.abs(moveX)>50){
+      setView(currentView==='front'?'back':'front');
+    }
+    isSwipe=false;
+  });
+}
+
+/* ==================== DRAWER ==================== */
+function openDrawer(config){
+  // config: {type:'cat'|'opt'|'engraving', key:'frontshell'}
+  currentDrawer=config;
+  haptic(15);
+
+  if(config.type==='cat'){
+    var cat=CATS[config.key];
+    var saved=state.colors[config.key];
+    $('dr-icon').innerHTML=cat.icon;
+    $('dr-eyebrow-text').innerText='FARBE WAEHLEN';
+    $('dr-title').innerText=cat.name;
+    $('dr-sub').innerText=cat.sub;
+    renderColorDrawer(config.key,cat);
+  }else if(config.type==='opt'){
+    var opt=OPTS[config.key];
+    $('dr-icon').innerHTML=opt.icon;
+    $('dr-eyebrow-text').innerText='OPTION';
+    $('dr-title').innerText=opt.label;
+    $('dr-sub').innerText=opt.sub;
+    renderOptionDrawer(config.key,opt);
+  }else if(config.type==='engraving'){
+    $('dr-icon').innerHTML='\u270D';
+    $('dr-eyebrow-text').innerText='PERSONALISIERUNG';
+    $('dr-title').innerText='Gravur (+15 EUR)';
+    $('dr-sub').innerText='Bis 16 Zeichen - wird ins Touchpad graviert';
+    renderEngravingDrawer();
+  }
+  // Highlight active hotspot
+  document.querySelectorAll('.hotspot').forEach(function(h){h.classList.remove('active');});
+  var activeHs=null;
+  if(config.type==='cat')activeHs=document.querySelector('.hotspot[data-cat="'+config.key+'"]');
+  else if(config.type==='opt')activeHs=document.querySelector('.hotspot[data-opt="'+config.key+'"]');
+  else activeHs=document.querySelector('.hotspot[data-special="engraving"]');
+  if(activeHs)activeHs.classList.add('active');
+
+  $('drawer').classList.add('show');
+  $('drawer-backdrop').classList.add('show');
+}
+
+function closeDrawer(){
+  $('drawer').classList.remove('show');
+  $('drawer-backdrop').classList.remove('show');
+  document.querySelectorAll('.hotspot').forEach(function(h){h.classList.remove('active');});
+  currentDrawer=null;
+}
+
+function renderColorDrawer(catId,cat){
+  var body=$('dr-body');
+  var saved=state.colors[catId];
+  var savedColor=saved?saved.color:cat.colors[0].color;
+
+  var html='<div class="dr-section-label">FARBE</div><div class="dr-color-grid">';
+  cat.colors.forEach(function(c){
+    var isSel=c.color===savedColor;
+    var prem=c.premium?'<div class="dr-premium-tag">+'+c.premium+'\u20AC</div>':'';
+    html+='<div class="dr-color-item'+(isSel?' sel':'')+'" style="background:'+c.color+'" data-color="'+c.color+'" data-name="'+c.name+'" data-premium="'+(c.premium||0)+'" data-default="'+(c.isDefault?'1':'0')+'" data-material="'+(c.material||'')+'">'+prem+'<div class="dr-color-label">'+c.name+'</div></div>';
+  });
+  html+='</div>';
+
+  // Material picker (for shells)
+  if(cat.hasMaterial){
+    var currentMat=state.materials[catId]||'std';
+    html+='<div class="dr-section-label">MATERIAL FINISH</div><div class="dr-mat-grid">';
+    MATERIALS.forEach(function(m){
+      var isSel=m.id===currentMat;
+      var priceTag=m.price?'<div style="position:absolute;top:5px;right:5px;font-family:Orbitron;font-size:7px;background:rgba(0,0,0,.7);color:var(--neon);padding:2px 5px;border-radius:4px;font-weight:900">+'+m.price+'\u20AC</div>':'';
+      html+='<div class="dr-mat dr-mat-'+m.id+(isSel?' sel':'')+'" data-mat="'+m.id+'" data-mat-price="'+(m.price||0)+'">'+priceTag+m.name+'</div>';
+    });
+    html+='</div>';
+  }
+  body.innerHTML=html;
+
+  // Bind clicks
+  body.querySelectorAll('.dr-color-item').forEach(function(item){
+    item.onclick=function(){
+      body.querySelectorAll('.dr-color-item').forEach(function(i){i.classList.remove('sel');});
+      item.classList.add('sel');
+      haptic(15);
+      var colorObj={
+        name:item.dataset.name,
+        color:item.dataset.color,
+        premium:parseFloat(item.dataset.premium)||0,
+        isDefault:item.dataset.default==='1',
+        material:item.dataset.material||null
+      };
+      state.colors[catId]=colorObj;
+      if(catId==='lightbar')applyLightbar(colorObj);
+      else applyPartTint(catId,colorObj,cat.blend);
+      // Auto-set material wenn Carbon/Gold/Chrom Farbe
+      if(colorObj.material && cat.hasMaterial){
+        state.materials[catId]=colorObj.material;
+        applyMaterial(catId,colorObj.material);
+      }
+      updatePrice();
+      // Switch view if needed
+      if(currentView!==cat.view)setView(cat.view);
+    };
+  });
+  body.querySelectorAll('.dr-mat').forEach(function(matEl){
+    matEl.onclick=function(){
+      body.querySelectorAll('.dr-mat').forEach(function(i){i.classList.remove('sel');});
+      matEl.classList.add('sel');
+      haptic(15);
+      state.materials[catId]=matEl.dataset.mat;
+      applyMaterial(catId,matEl.dataset.mat);
+      updatePrice();
+    };
+  });
+}
+
+function renderOptionDrawer(key,opt){
+  var body=$('dr-body');
+  var saved=state.options[key];
+  var savedVal=saved?saved.val:opt.items[0].val;
+  var html='<div class="dr-section-label">'+opt.label.toUpperCase()+'</div>';
+  opt.items.forEach(function(o){
+    var isSel=o.val===savedVal;
+    var badge=o.badge?'<span class="dr-badge '+o.badge+'">'+o.badgeLabel+'</span>':'';
+    var priceHtml=o.price?'+'+o.price+' EUR':'<span class="free">GRATIS</span>';
+    html+='<div class="dr-opt'+(isSel?' sel':'')+'" data-val="'+o.val+'" data-price="'+o.price+'"><div class="dr-opt-radio"></div><div class="dr-opt-info"><div class="dr-opt-name">'+o.val+badge+'</div><div class="dr-opt-desc">'+o.desc+'</div></div><div class="dr-opt-price">'+priceHtml+'</div></div>';
+  });
+  body.innerHTML=html;
+
+  body.querySelectorAll('.dr-opt').forEach(function(optEl){
+    optEl.onclick=function(){
+      body.querySelectorAll('.dr-opt').forEach(function(i){i.classList.remove('sel');});
+      optEl.classList.add('sel');
+      haptic(15);
+      state.options[key]={val:optEl.dataset.val,price:parseFloat(optEl.dataset.price)||0};
+      updatePrice();
+      refreshPaddles();
+      if(currentView!==opt.view)setView(opt.view);
+    };
+  });
+}
+
+function renderEngravingDrawer(){
+  var body=$('dr-body');
+  var html='<div class="dr-section-label">DEIN TEXT (16 ZEICHEN)</div>';
+  html+='<input type="text" class="dr-engrave-input" id="eng-input-modal" maxlength="16" placeholder="DEIN NAME" value="'+state.engraving+'">';
+  html+='<div class="dr-engrave-counter"><span id="eng-counter">'+state.engraving.length+'</span>/16 ZEICHEN</div>';
+  html+='<div class="dr-section-label" style="margin-top:20px">GRAVUR-FARBE</div><div class="dr-mat-grid">';
+  ENG_COLORS.forEach(function(c){
+    var isSel=c.color===state.engraveColor;
+    html+='<div class="dr-mat'+(isSel?' sel':'')+'" data-eng-color="'+c.color+'" style="background:'+c.color+';color:'+(c.color==='#222222'||c.color==='#bc13fe'?'#fff':'#000')+'">'+c.name+'</div>';
+  });
+  html+='</div>';
+  body.innerHTML=html;
+
+  var input=$('eng-input-modal');
+  input.oninput=function(){
+    state.engraving=this.value.toUpperCase().slice(0,16);
+    $('eng-counter').innerText=this.value.length;
+    updatePrice();
+  };
+  body.querySelectorAll('.dr-mat').forEach(function(swatch){
+    swatch.onclick=function(){
+      body.querySelectorAll('.dr-mat').forEach(function(i){i.classList.remove('sel');});
+      swatch.classList.add('sel');
+      state.engraveColor=swatch.dataset.engColor;
+      haptic(15);
+      saveDraft();
+    };
+  });
+}
+
+/* ==================== PRESETS ==================== */
+function buildPresets(){
+  var row=$('preset-row');
+  Object.keys(PRESETS).forEach(function(id){
+    var preset=PRESETS[id];
+    var btn=document.createElement('button');
+    btn.className='preset-btn';
+    btn.innerHTML='<span class="preset-swatch" style="background:'+preset.swA+'"></span><span class="preset-swatch" style="background:'+preset.swB+';margin-left:-10px"></span>'+id;
+    btn.onclick=function(){
+      document.querySelectorAll('.preset-btn').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      loadPreset(preset.colors);
+      haptic(30);
+      toast('Preset geladen: '+id);
+    };
+    row.appendChild(btn);
+  });
+}
+
+function loadPreset(colorMap){
+  Object.keys(colorMap).forEach(function(catId){
+    var cat=CATS[catId];
+    if(!cat)return;
+    var targetColor=colorMap[catId];
+    var colorObj=null;
+    for(var i=0;i<cat.colors.length;i++){
+      if(cat.colors[i].color===targetColor){colorObj=cat.colors[i];break;}
+    }
+    if(!colorObj)return;
+    state.colors[catId]={
+      name:colorObj.name,color:colorObj.color,premium:colorObj.premium||0,
+      isDefault:colorObj.isDefault||false,material:colorObj.material||null
+    };
+    if(catId==='lightbar')applyLightbar(state.colors[catId]);
+    else applyPartTint(catId,state.colors[catId],cat.blend);
+    if(colorObj.material && cat.hasMaterial){
+      state.materials[catId]=colorObj.material;
+      applyMaterial(catId,colorObj.material);
+    }
+  });
+  updatePrice();
+}
+
+/* ==================== CART ==================== */
+function buildCustomDescription(){
+  var parts=[];
+  Object.keys(state.colors).forEach(function(k){
+    var c=state.colors[k];
+    if(c && !c.isDefault)parts.push(CATS[k].name+': '+c.name);
+  });
+  Object.keys(state.materials).forEach(function(k){
+    if(state.materials[k]&&state.materials[k]!=='std'){
+      var mat=MATERIALS.find(function(m){return m.id===state.materials[k];});
+      if(mat)parts.push(CATS[k].name+' Material: '+mat.name);
+    }
+  });
+  Object.keys(state.options).forEach(function(k){
+    var o=state.options[k];
+    if(o && o.price>0)parts.push(o.val);
+  });
+  if(state.engraving)parts.push('Gravur: '+state.engraving);
+  return parts.length?parts.join(' \u00B7 '):'Standard-Konfiguration';
+}
+
+function buildCartItem(){
+  var priceTxt=$('total-price').innerText.replace(',','.');
+  var price=parseFloat(priceTxt)||BASE_PRICE;
+  return {
+    id:'custom-'+Date.now(),
+    name:'Custom LEXORD Controller',
+    price:price,qty:1,
+    img:'Photoroom_20260501_094506.png',
+    custom:true,
+    customization:buildCustomDescription(),
+    config:{
+      colors:state.colors,materials:state.materials,
+      options:state.options,
+      engraving:state.engraving,engraveColor:state.engraveColor
+    }
+  };
+}
+
+function addToCart(){
+  haptic([30,20,30]);
+  try{
+    var item=buildCartItem();
+    var cart=[];
+    try{cart=JSON.parse(localStorage.getItem(CART_KEY)||'[]');}catch(e){cart=[];}
+    cart.push(item);
+    localStorage.setItem(CART_KEY,JSON.stringify(cart));
+    localStorage.removeItem(DRAFT_KEY);
+    $('cart-burst').classList.add('show');
+    setTimeout(function(){
+      $('cart-burst').classList.remove('show');
+      window.location.href='index.html?cart=open';
+    },900);
+  }catch(e){toast('Fehler',true);}
+}
+
+function saveConfig(){
+  haptic(20);
+  try{
+    localStorage.setItem('lxrd_saved_config',JSON.stringify(buildCartItem()));
+    toast('Konfiguration gespeichert');
+  }catch(e){toast('Fehler',true);}
+}
+
+/* ==================== DRAFT (Auto-Save) ==================== */
+function saveDraft(){
+  try{
+    localStorage.setItem(DRAFT_KEY,JSON.stringify({state:state,savedAt:new Date().toISOString()}));
+  }catch(e){}
+}
+
+function restoreDraft(){
+  try{
+    var raw=localStorage.getItem(DRAFT_KEY);
+    if(!raw)return;
+    var draft=JSON.parse(raw);
+    if(!draft.state)return;
+    var age=Date.now()-new Date(draft.savedAt).getTime();
+    if(age>7*24*60*60*1000){localStorage.removeItem(DRAFT_KEY);return;}
+    setTimeout(function(){
+      // Restore colors silently
+      Object.keys(CATS).forEach(function(catId){
+        var saved=draft.state.colors[catId];
+        if(!saved)return;
+        state.colors[catId]=saved;
+        if(catId==='lightbar')applyLightbar(saved);
+        else applyPartTint(catId,saved,CATS[catId].blend);
+      });
+      // Restore materials
+      if(draft.state.materials){
+        Object.keys(draft.state.materials).forEach(function(k){
+          state.materials[k]=draft.state.materials[k];
+          applyMaterial(k,draft.state.materials[k]);
+        });
+      }
+      // Restore options
+      Object.keys(OPTS).forEach(function(key){
+        var saved=draft.state.options[key];
+        if(saved)state.options[key]=saved;
+      });
+      if(draft.state.engraving)state.engraving=draft.state.engraving;
+      if(draft.state.engraveColor)state.engraveColor=draft.state.engraveColor;
+      refreshPaddles();
+      updatePrice();
+    },150);
+  }catch(e){}
+}
+
+/* ==================== INIT ==================== */
+function setDefaults(){
+  // Set defaults from data
+  Object.keys(CATS).forEach(function(k){
+    var cat=CATS[k];
+    var def=cat.colors.find(function(c){return c.def;})||cat.colors[0];
+    state.colors[k]={
+      name:def.name,color:def.color,premium:def.premium||0,
+      isDefault:def.isDefault||false,material:def.material||null
+    };
+    if(k==='lightbar')applyLightbar(state.colors[k]);
+    else applyPartTint(k,state.colors[k],cat.blend);
+  });
+  Object.keys(OPTS).forEach(function(k){
+    var def=OPTS[k].items.find(function(o){return o.def;})||OPTS[k].items[0];
+    state.options[k]={val:def.val,price:def.price||0};
+  });
+  updatePrice();
+}
+
+function bindHotspots(){
+  document.querySelectorAll('.hotspot').forEach(function(hs){
+    hs.addEventListener('click',function(e){
+      e.stopPropagation();
+      var cat=hs.dataset.cat;
+      var opt=hs.dataset.opt;
+      var special=hs.dataset.special;
+      if(cat)openDrawer({type:'cat',key:cat});
+      else if(opt)openDrawer({type:'opt',key:opt});
+      else if(special==='engraving')openDrawer({type:'engraving'});
+    });
+  });
+}
+
+function init(){
+  setDefaults();
+  buildPresets();
+  bindHotspots();
+  setupSwipe();
+  $('view-front-btn').onclick=function(){setView('front');};
+  $('view-back-btn').onclick=function(){setView('back');};
+  $('add-cart-btn').onclick=addToCart;
+  $('save-btn').onclick=saveConfig;
+  // Hint hide after 6s
+  setTimeout(function(){$('swipe-hint').classList.add('hide');},6000);
+  // Restore draft silently
+  restoreDraft();
+  // Save on unload
+  window.addEventListener('beforeunload',saveDraft);
+  setTimeout(function(){$('cfg-loading').classList.add('hidden');},700);
+}
+
+init();
+</script>
+</body>
+</html>

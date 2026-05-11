@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5">
+<title>PS5 Konfigurator | LEXORD®</title>
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--neon:#00f2ff;--neon2:#bc13fe;--green:#00b67a;--err:#ff4d4f}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+html,body{overflow-x:hidden}
+body{background:#000;color:#fff;font-family:'Inter',sans-serif;min-height:100vh;padding-bottom:120px}
+.aurora{position:fixed;inset:0;z-index:-3;background:#000;overflow:hidden}
+.ab{position:absolute;border-radius:50%;filter:blur(90px);opacity:.4;animation:af 25s ease-in-out infinite}
+.ab:nth-child(1){width:55%;height:55%;background:radial-gradient(circle,rgba(0,242,255,.5),transparent 70%);top:-10%;left:-10%}
+.ab:nth-child(2){width:50%;height:50%;background:radial-gradient(circle,rgba(188,19,254,.4),transparent 70%);bottom:-10%;right:-10%;animation-delay:-8s}
+.ab:nth-child(3){width:40%;height:40%;background:radial-gradient(circle,rgba(255,46,110,.25),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:-15s}
+@keyframes af{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(15%,-10%) scale(1.1)}}
+.grid-overlay{position:fixed;inset:0;z-index:-2;background-image:linear-gradient(rgba(0,242,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,242,255,.025) 1px,transparent 1px);background-size:50px 50px;pointer-events:none}
+
+/* HEADER */
+.cfg-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:10px;padding:10px 4%;background:rgba(0,0,0,.92);backdrop-filter:blur(22px);border-bottom:1px solid rgba(0,242,255,.15)}
+.cfg-back{display:inline-flex;align-items:center;gap:6px;font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;font-weight:700;color:#aaa;text-decoration:none;padding:9px 12px;border:1px solid #1a1a1e;border-radius:8px;background:rgba(10,10,12,.7)}
+.cfg-back:active{color:var(--neon);border-color:var(--neon)}
+.cfg-title{font-family:'Orbitron';font-weight:900;font-size:10px;letter-spacing:2px;color:#ddd;text-align:center;flex:1}
+.cfg-live{font-family:'Orbitron';font-size:8px;letter-spacing:1.5px;color:var(--neon);background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.25);padding:6px 10px;border-radius:7px;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.cfg-live::before{content:'';width:5px;height:5px;background:var(--neon);border-radius:50%;animation:ldot 1.5s infinite;box-shadow:0 0 8px var(--neon)}
+@keyframes ldot{0%,100%{opacity:1}50%{opacity:.3}}
+
+.cfg-hero{text-align:center;padding:25px 5% 15px}
+.cfg-hero-eyebrow{display:inline-block;padding:5px 12px;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.25);border-radius:20px;font-family:'Orbitron';font-size:8px;color:var(--neon);letter-spacing:2px;margin-bottom:12px}
+.cfg-hero-title{font-family:'Orbitron';font-weight:900;font-size:clamp(1.3rem,5vw,2.2rem);letter-spacing:-1px;line-height:1.1;margin-bottom:8px;background:linear-gradient(180deg,#fff,rgba(255,255,255,.5));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.cfg-hero-sub{font-family:'Orbitron';font-size:9px;letter-spacing:2px;color:#666}
+
+/* TOGGLE & STAGE */
+.ctrl-wrap{display:flex;flex-direction:column;align-items:center;padding:5px 4% 20px}
+.ctrl-toggle{display:flex;gap:6px;margin-bottom:14px;background:rgba(12,12,14,.7);padding:4px;border-radius:11px;border:1px solid rgba(255,255,255,.06)}
+.ctrl-toggle button{font-family:'Orbitron';font-size:9.5px;letter-spacing:1.5px;font-weight:700;background:transparent;border:none;color:#888;padding:10px 18px;border-radius:8px;cursor:pointer;transition:.25s}
+.ctrl-toggle button.active{background:linear-gradient(135deg,rgba(0,242,255,.2),rgba(0,242,255,.08));color:var(--neon);box-shadow:0 0 12px rgba(0,242,255,.2)}
+
+.ctrl-stage{position:relative;width:100%;max-width:540px;aspect-ratio:1.05/1}
+.ctrl-stage::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(0,242,255,.18) 0%,transparent 60%);filter:blur(30px);pointer-events:none;z-index:0}
+.photo-stack{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;animation:floatY 5s ease-in-out infinite}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.photo-stack .photo-img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 25px 45px rgba(0,242,255,.18)) drop-shadow(0 12px 20px rgba(0,0,0,.8));position:absolute;inset:0;z-index:1}
+
+/* TINT LAYERS - SHELL FARBE */
+.tint-layer{position:absolute;inset:0;z-index:2;opacity:0;transition:opacity .4s ease;pointer-events:none;mix-blend-mode:multiply;-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center}
+.tint-layer.active{opacity:.78}
+#tint-front{-webkit-mask-image:url('Photoroom_20260501_094506.png');mask-image:url('Photoroom_20260501_094506.png')}
+#tint-back{-webkit-mask-image:url('Photoroom_20260501_090821.png');mask-image:url('Photoroom_20260501_090821.png')}
+
+/* PART OVERLAYS - reagieren auf Farbwechsel */
+.part-ov{position:absolute;z-index:4;opacity:0;transition:opacity .3s,background .3s,box-shadow .3s;pointer-events:none}
+.part-ov.on{opacity:.95}
+
+/* D-PAD CROSS (front, left) */
+#ov-dpad{top:46%;left:21.5%;width:16%;height:16%;transform:translate(-50%,-50%)}
+#ov-dpad .dp-arm{position:absolute;background:currentColor;border-radius:3px;box-shadow:0 0 8px currentColor}
+#ov-dpad .dp-arm.dp-vert{width:30%;height:100%;left:35%;top:0}
+#ov-dpad .dp-arm.dp-horz{width:100%;height:30%;top:35%;left:0}
+
+/* ACTION BUTTONS (front, right) - X O Triangle Square */
+#ov-buttons{top:46%;left:78.5%;width:18%;height:18%;transform:translate(-50%,-50%)}
+#ov-buttons .act-btn{position:absolute;width:31%;height:31%;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor,inset 0 -2px 4px rgba(0,0,0,0.3)}
+#ov-buttons .act-triangle{top:0;left:34.5%}
+#ov-buttons .act-circle{top:34.5%;right:0}
+#ov-buttons .act-cross{bottom:0;left:34.5%}
+#ov-buttons .act-square{top:34.5%;left:0}
+
+/* STICK CAPS */
+.ov-stick{top:64%;width:11.5%;height:11.5%;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor,inset 0 -3px 5px rgba(0,0,0,0.5)}
+#ov-stick-left{left:36.5%;transform:translate(-50%,-50%)}
+#ov-stick-right{left:63.5%;transform:translate(-50%,-50%)}
+
+/* TRIGGER COLOR (oberer Rand front) */
+.ov-trigger{top:5.5%;width:18%;height:7%;background:currentColor;border-radius:50% 50% 30% 30%/100% 100% 30% 30%;box-shadow:0 0 8px currentColor}
+#ov-trigger-left{left:20%}
+#ov-trigger-right{right:20%}
+
+/* LIGHTBAR */
+#lightbar-glow{position:absolute;top:42%;left:50%;transform:translateX(-50%);width:22%;height:6px;border-radius:6px;background:#4a90e2;filter:blur(5px);opacity:0;transition:.4s;z-index:5;pointer-events:none}
+#lightbar-glow.on{opacity:.95;box-shadow:0 0 24px 9px currentColor}
+
+/* PADDLES (Rückseite) */
+.ov-paddle{position:absolute;width:20%;height:25%;background:currentColor;border-radius:30% 30% 8px 8px;z-index:4;opacity:0;transition:.3s;box-shadow:0 4px 12px rgba(0,0,0,0.6),0 0 10px currentColor;pointer-events:none}
+.ov-paddle.on{opacity:.9}
+#ov-paddle-1{top:48%;left:18%;transform:rotate(-15deg)}
+#ov-paddle-2{top:48%;right:18%;transform:rotate(15deg)}
+#ov-paddle-3{top:48%;left:30%;transform:rotate(-8deg)}
+#ov-paddle-4{top:48%;right:30%;transform:rotate(8deg)}
+
+/* ENGRAVE TEXT (Touchpad) */
+.engrave-txt{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);font-family:'Orbitron';font-weight:900;font-size:clamp(11px,2.2vw,16px);letter-spacing:2px;pointer-events:none;z-index:6;opacity:0;transition:.3s;text-shadow:0 1px 2px rgba(0,0,0,.6);white-space:nowrap;text-transform:uppercase}
+.engrave-txt.show{opacity:.95}
+
+/* LABELS */
+.part-label{position:absolute;background:linear-gradient(135deg,rgba(8,8,12,.97),rgba(4,4,8,.97));border:1px solid rgba(0,242,255,.5);color:#fff;padding:7px 11px;border-radius:9px;font-family:'Orbitron';font-size:8px;font-weight:800;letter-spacing:.5px;white-space:nowrap;opacity:0;transform:scale(.85);transition:opacity .35s,transform .35s;box-shadow:0 4px 14px rgba(0,0,0,.7),0 0 12px rgba(0,242,255,.25);pointer-events:none;z-index:7;text-transform:uppercase;max-width:140px}
+.part-label.show{opacity:1;transform:scale(1)}
+.part-label small{display:block;color:var(--neon);font-size:9.5px;font-weight:700;margin-top:3px;letter-spacing:.3px;text-transform:none;text-shadow:0 0 6px rgba(0,242,255,.5)}
+.part-label::before{content:'';position:absolute;height:1.5px;width:36px;background:linear-gradient(90deg,var(--neon),rgba(0,242,255,.3));box-shadow:0 0 6px var(--neon);top:50%}
+.part-label.left::before{right:-36px}
+.part-label.right::before{left:-36px}
+#label-frontshell{top:8%;left:0%} #label-lightbar{top:8%;right:0%}
+#label-dpad{top:32%;left:-2%} #label-buttons{top:32%;right:-2%}
+#label-stickcap{top:52%;left:-2%} #label-stick{top:52%;right:-2%}
+#label-triggercolor{top:74%;left:-2%} #label-trigger{top:74%;right:-2%}
+#label-engraving{top:88%;left:50%;transform:translateX(-50%) scale(.85)}
+#label-engraving.show{transform:translateX(-50%) scale(1)}
+#label-engraving::before{display:none}
+#label-backshell{top:12%;left:0%} #label-paddle{top:50%;right:0%}
+
+/* PRESETS */
+.preset-wrap{padding:5px 4% 18px;max-width:780px;margin:0 auto}
+.preset-label{font-family:'Orbitron';font-size:8.5px;color:#666;letter-spacing:2px;margin-bottom:8px;display:block}
+.preset-row{display:flex;gap:8px;overflow-x:auto;padding:4px 0;scrollbar-width:none}
+.preset-row::-webkit-scrollbar{display:none}
+.preset-btn{flex-shrink:0;padding:11px 16px;border-radius:11px;border:1.5px solid rgba(255,255,255,.06);background:rgba(255,255,255,.025);font-family:'Orbitron';font-size:9px;color:#bbb;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:7px;letter-spacing:1.5px;font-weight:700;text-transform:uppercase}
+.preset-btn.active{border-color:var(--neon);background:rgba(0,242,255,.08);color:var(--neon)}
+.preset-dot{width:9px;height:9px;border-radius:50%;display:inline-block;border:1px solid rgba(255,255,255,.1)}
+
+/* SECTIONS */
+.cfg-sections{padding:18px 4% 30px;max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.cfg-acc{background:rgba(12,12,16,.7);border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden;transition:.3s}
+.cfg-acc.open{border-color:rgba(0,242,255,.3)}
+.cfg-acc-hd{display:flex;align-items:center;gap:14px;padding:18px;cursor:pointer;font-family:'Orbitron';font-size:11px;font-weight:700;color:#ddd;letter-spacing:1.5px}
+.cfg-acc-icon{width:42px;height:42px;background:rgba(0,242,255,.1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;border:1px solid rgba(0,242,255,.18);flex-shrink:0}
+.cfg-acc-name{flex:1;min-width:0}
+.cfg-acc-cur{font-family:'Inter';font-size:10px;color:#777;margin-top:3px;font-weight:400;letter-spacing:0}
+.cfg-acc-cur strong{color:var(--neon);font-weight:700}
+.cfg-acc-chev{color:#444;transition:.3s;flex-shrink:0;font-size:14px}
+.cfg-acc.open .cfg-acc-chev{transform:rotate(180deg);color:var(--neon)}
+.cfg-acc-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.cfg-acc.open .cfg-acc-body{max-height:2000px}
+.cfg-acc-content{padding:0 16px 18px}
+
+.cfg-color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:10px}
+.cfg-color-item{aspect-ratio:1/1;border-radius:11px;cursor:pointer;border:2px solid rgba(255,255,255,.05);position:relative;transition:transform .2s;box-shadow:inset 0 2px 6px rgba(0,0,0,0.3)}
+.cfg-color-item:active{transform:scale(.94)}
+.cfg-color-item.sel{border-color:var(--neon);transform:scale(1.05);box-shadow:0 0 14px rgba(0,242,255,.4)}
+.cfg-color-item.sel::after{content:'✓';position:absolute;top:3px;right:3px;width:18px;height:18px;background:var(--neon);color:#000;font-size:10px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900}
+.cfg-color-item .premium-tag{position:absolute;bottom:3px;left:3px;font-family:'Orbitron';font-size:7px;background:rgba(0,0,0,.7);color:var(--neon);padding:2px 5px;border-radius:4px;letter-spacing:.5px;font-weight:700}
+
+.cfg-opt{display:flex;align-items:center;gap:14px;padding:15px;background:rgba(255,255,255,.025);border:1.5px solid rgba(255,255,255,.05);border-radius:11px;margin-bottom:8px;cursor:pointer;transition:.25s}
+.cfg-opt:active{transform:scale(.98)}
+.cfg-opt.sel{border-color:var(--neon);background:rgba(0,242,255,.06);box-shadow:0 4px 14px rgba(0,242,255,.15)}
+.cfg-opt-radio{width:22px;height:22px;border:2px solid rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.2s}
+.cfg-opt.sel .cfg-opt-radio{border-color:var(--neon);background:var(--neon)}
+.cfg-opt.sel .cfg-opt-radio::after{content:'';width:7px;height:7px;background:#000;border-radius:50%}
+.cfg-opt-info{flex:1;min-width:0}
+.cfg-opt-name{font-family:'Orbitron';font-size:11px;font-weight:700;letter-spacing:1px;color:#eee}
+.cfg-opt-desc{font-size:11px;color:#888;margin-top:3px;line-height:1.4}
+.cfg-opt-price{font-family:'Orbitron';font-size:11px;color:var(--neon);font-weight:900;letter-spacing:1px;flex-shrink:0}
+.cfg-opt-price.free{color:#888}
+
+/* ENGRAVE */
+.cfg-engrave-wrap{padding:0 0 8px}
+.cfg-engrave-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.05);border-radius:11px;padding:13px 15px;transition:.25s}
+.cfg-engrave-row:focus-within{border-color:var(--neon);background:rgba(0,242,255,.04)}
+.cfg-engrave-row input{flex:1;background:transparent;border:none;color:#fff;font-family:'Orbitron';font-size:14px;outline:none;text-transform:uppercase;letter-spacing:2px;font-weight:700}
+.cfg-engrave-hint{font-size:10px;color:#666;margin-top:8px;font-family:'Inter'}
+.cfg-engrave-color-row{display:flex;gap:8px;margin-top:12px}
+.cfg-engrave-color{width:36px;height:36px;border-radius:8px;border:2px solid rgba(255,255,255,.1);cursor:pointer;flex-shrink:0;box-shadow:inset 0 2px 4px rgba(0,0,0,0.3)}
+.cfg-engrave-color.sel{border-color:var(--neon);box-shadow:0 0 12px rgba(0,242,255,.4)}
+
+/* SUMMARY */
+.cfg-summary{background:linear-gradient(180deg,rgba(0,242,255,.04),rgba(188,19,254,.02));border:1px solid rgba(0,242,255,.2);border-radius:14px;padding:18px;margin-bottom:14px}
+.cfg-sum-title{font-family:'Orbitron';font-size:9px;letter-spacing:2px;color:var(--neon);margin-bottom:12px;font-weight:700}
+.cfg-sum-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:12px;color:#aaa}
+.cfg-sum-row.bold{padding-top:12px;border-top:1px solid rgba(255,255,255,.1);margin-top:8px;font-family:'Orbitron';font-size:13px;color:#fff;font-weight:900}
+.cfg-sum-row span:last-child{color:#fff;font-weight:600}
+.cfg-sum-row.bold span:last-child{color:var(--neon);font-size:18px}
+
+/* BOTTOM BAR */
+.cfg-bottom{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(4,4,8,.97);backdrop-filter:blur(28px);border-top:1px solid rgba(0,242,255,.18);padding:12px 4%;display:flex;align-items:center;gap:10px}
+.cfg-bottom-info{flex:1;min-width:0}
+.cfg-bottom-price-lbl{font-family:'Orbitron';font-size:8px;letter-spacing:1.5px;color:#666;font-weight:700}
+.cfg-bottom-price-val{font-family:'Orbitron';font-size:22px;font-weight:900;color:#fff;line-height:1.2}
+.cfg-bottom-price-val span{color:var(--neon)}
+.cfg-add-cart{font-family:'Orbitron';font-size:11px;font-weight:900;background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000!important;border:none;padding:16px 24px;border-radius:11px;cursor:pointer;box-shadow:0 6px 20px rgba(0,242,255,.45);letter-spacing:1.5px;transition:.2s;display:flex;align-items:center;gap:8px;text-transform:uppercase}
+.cfg-add-cart:active{transform:scale(.96)}
+
+/* TOAST & LOADING */
+#toast{position:fixed;top:75px;left:50%;transform:translateX(-50%) translateY(-100px);z-index:1000;background:#0a0a0c;border:1px solid var(--neon);border-radius:12px;padding:13px 18px;font-family:'Orbitron';font-size:10px;color:var(--neon);transition:.4s;letter-spacing:1.5px;font-weight:700;box-shadow:0 10px 30px rgba(0,242,255,.25)}
+#toast.show{transform:translateX(-50%) translateY(0)}
+#toast.err{border-color:var(--err);color:var(--err);box-shadow:0 10px 30px rgba(255,77,79,.25)}
+#toast.ok{border-color:var(--green);color:var(--green);box-shadow:0 10px 30px rgba(0,182,122,.25)}
+#cfg-loading{position:fixed;inset:0;background:#000;z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px}
+#cfg-loading.hidden{opacity:0;pointer-events:none;transition:opacity .6s}
+.cfg-loader-spinner{width:50px;height:50px;border:3px solid rgba(0,242,255,.15);border-top-color:var(--neon);border-radius:50%;animation:spinL 1s linear infinite}
+@keyframes spinL{to{transform:rotate(360deg)}}
+
+/* ADDED-TO-CART OVERLAY */
+#added-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px}
+#added-overlay.show{display:flex}
+.added-box{background:linear-gradient(180deg,#0a0a0a,#000);border:1px solid var(--neon);border-radius:18px;padding:36px 28px;max-width:380px;width:100%;text-align:center;box-shadow:0 30px 80px rgba(0,242,255,.3)}
+.added-icon{width:72px;height:72px;background:linear-gradient(135deg,var(--neon),#00bdd6);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:32px;color:#000;font-weight:900;box-shadow:0 10px 30px rgba(0,242,255,.4)}
+.added-title{font-family:'Orbitron';font-size:14px;font-weight:900;letter-spacing:2px;color:#fff;margin-bottom:8px;text-transform:uppercase}
+.added-sub{font-size:13px;color:#999;margin-bottom:24px;line-height:1.6}
+.added-btns{display:flex;gap:10px;flex-direction:column}
+.added-btn{padding:14px;border-radius:10px;font-family:'Orbitron';font-size:10px;letter-spacing:1.5px;font-weight:900;cursor:pointer;border:none;text-decoration:none;display:block;text-transform:uppercase;transition:.2s}
+.added-btn-primary{background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;box-shadow:0 6px 20px rgba(0,242,255,.3)}
+.added-btn-secondary{background:transparent;border:1px solid #2a2a2a;color:#aaa}
+.added-btn-secondary:hover{border-color:var(--neon);color:var(--neon)}
+</style>
+</head>
+<body>
+
+<div class="aurora"><div class="ab"></div><div class="ab"></div><div class="ab"></div></div>
+<div class="grid-overlay"></div>
+
+<div id="cfg-loading">
+  <div class="cfg-loader-spinner"></div>
+  <div style="font-family:'Orbitron';color:var(--neon);font-size:9px;letter-spacing:3px">KONFIGURATOR LAEDT</div>
+</div>
+
+<header class="cfg-header">
+  <a href="index.html" class="cfg-back">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    ZURUECK
+  </a>
+  <div class="cfg-title">PS5 KONFIGURATOR</div>
+  <div class="cfg-live">LIVE 3D</div>
+</header>
+
+<div class="cfg-hero">
+  <div class="cfg-hero-eyebrow">MADE IN GERMANY</div>
+  <h1 class="cfg-hero-title">BAUE DEINEN PERFEKTEN CONTROLLER</h1>
+  <p class="cfg-hero-sub">FARBEN · TMR · HALL EFFECT · PADDLES · GRAVUR</p>
+</div>
+
+<div class="ctrl-wrap">
+  <div class="ctrl-toggle">
+    <button id="view-front-btn" class="active" data-view="front">VORDERSEITE</button>
+    <button id="view-back-btn" data-view="back">RUECKSEITE</button>
+  </div>
+
+  <div class="ctrl-stage">
+    <!-- FRONT VIEW -->
+    <div class="photo-stack" id="stack-front">
+      <img src="Photoroom_20260501_094506.png" alt="PS5 Vorderseite" class="photo-img" id="img-front">
+      <div class="tint-layer" id="tint-front"></div>
+      
+      <!-- VISUAL OVERLAYS - reagieren auf Farbwechsel -->
+      <div class="part-ov" id="ov-trigger-left"></div>
+      <div class="part-ov" id="ov-trigger-right"></div>
+      <div id="lightbar-glow"></div>
+      <div class="part-ov" id="ov-dpad">
+        <div class="dp-arm dp-vert"></div>
+        <div class="dp-arm dp-horz"></div>
+      </div>
+      <div class="part-ov" id="ov-buttons">
+        <div class="act-btn act-triangle"></div>
+        <div class="act-btn act-circle"></div>
+        <div class="act-btn act-cross"></div>
+        <div class="act-btn act-square"></div>
+      </div>
+      <div class="part-ov ov-stick" id="ov-stick-left"></div>
+      <div class="part-ov ov-stick" id="ov-stick-right"></div>
+      <div class="engrave-txt" id="engrave-front"></div>
+    </div>
+
+    <!-- BACK VIEW -->
+    <div class="photo-stack" id="stack-back" style="display:none">
+      <img src="Photoroom_20260501_090821.png" alt="PS5 Rueckseite" class="photo-img" id="img-back">
+      <div class="tint-layer" id="tint-back"></div>
+      <div class="ov-paddle" id="ov-paddle-1"></div>
+      <div class="ov-paddle" id="ov-paddle-2"></div>
+      <div class="ov-paddle" id="ov-paddle-3"></div>
+      <div class="ov-paddle" id="ov-paddle-4"></div>
+    </div>
+
+    <!-- LABELS -->
+    <div class="part-label left" id="label-frontshell" data-side="front">FRONT<small>–</small></div>
+    <div class="part-label right" id="label-lightbar" data-side="front">LIGHT BAR<small>–</small></div>
+    <div class="part-label left" id="label-dpad" data-side="front">D-PAD<small>–</small></div>
+    <div class="part-label right" id="label-buttons" data-side="front">BUTTONS<small>–</small></div>
+    <div class="part-label left" id="label-stickcap" data-side="front">STICK CAPS<small>–</small></div>
+    <div class="part-label right" id="label-stick" data-side="front">⚡ STICKS<small>–</small></div>
+    <div class="part-label left" id="label-triggercolor" data-side="front">TRIGGER FARBE<small>–</small></div>
+    <div class="part-label right" id="label-trigger" data-side="front">⚡ TRIGGER<small>–</small></div>
+    <div class="part-label" id="label-engraving" data-side="front">✨ GRAVUR<small>–</small></div>
+    <div class="part-label left" id="label-backshell" data-side="back">RUECKSCHALE<small>–</small></div>
+    <div class="part-label right" id="label-paddle" data-side="back">⚙ PADDLES<small>–</small></div>
+  </div>
+</div>
+
+<div class="preset-wrap">
+  <span class="preset-label">SCHNELL-PRESETS (1 TAP)</span>
+  <div class="preset-row" id="preset-row"></div>
+</div>
+
+<div class="cfg-sections" id="cfg-sections"></div>
+
+<div class="cfg-bottom">
+  <div class="cfg-bottom-info">
+    <div class="cfg-bottom-price-lbl">GESAMTPREIS</div>
+    <div class="cfg-bottom-price-val"><span id="total-price">79,00 €</span></div>
+  </div>
+  <button class="cfg-add-cart" id="add-cart-btn" onclick="addToCart()">
+    🛒 IN WARENKORB
+  </button>
+</div>
+
+<div id="toast"></div>
+
+<!-- ADDED TO CART OVERLAY -->
+<div id="added-overlay">
+  <div class="added-box">
+    <div class="added-icon">✓</div>
+    <div class="added-title">Hinzugefuegt!</div>
+    <div class="added-sub">Dein Custom Controller wurde zum Warenkorb hinzugefuegt. Du kannst noch weitere Produkte hinzufuegen oder direkt zur Kasse.</div>
+    <div class="added-btns">
+      <a href="index.html?cart=open" class="added-btn added-btn-primary">ZUM WARENKORB →</a>
+      <button class="added-btn added-btn-secondary" onclick="closeAddedOverlay()">WEITER KONFIGURIEREN</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+const SHELL_COLORS=[
+  {name:'Weiss',color:'#ffffff',premium:0,def:true},
+  {name:'Schwarz',color:'#1a1a1c',premium:0},
+  {name:'Mitternacht',color:'#0a1633',premium:8},
+  {name:'Galactic Purple',color:'#3d1a52',premium:8},
+  {name:'Cosmic Red',color:'#5c0d10',premium:8},
+  {name:'Forest Green',color:'#0d2f17',premium:8},
+  {name:'Sunset Orange',color:'#cc5500',premium:8},
+  {name:'Ice Blue',color:'#7ec8e3',premium:8},
+  {name:'Gold',color:'#d4af37',premium:18},
+  {name:'Silver',color:'#c0c0c0',premium:14},
+  {name:'Carbon',color:'#1c1c1f',premium:22},
+  {name:'Chrom',color:'#a8a8b0',premium:22}
+];
+const BTN_COLORS=[
+  {name:'Standard',color:'#f0f0f2',premium:0,def:true},
+  {name:'Schwarz',color:'#222',premium:5},
+  {name:'Weiss',color:'#fff',premium:5},
+  {name:'Cyan',color:'#00f2ff',premium:7},
+  {name:'Magenta',color:'#bc13fe',premium:7},
+  {name:'Rot',color:'#e63946',premium:7},
+  {name:'Gruen',color:'#06d6a0',premium:7},
+  {name:'Gold',color:'#d4af37',premium:12}
+];
+const STICK_COLORS=[
+  {name:'Schwarz',color:'#0a0a0c',premium:0,def:true},
+  {name:'Weiss',color:'#fff',premium:5},
+  {name:'Cyan',color:'#00f2ff',premium:8},
+  {name:'Magenta',color:'#bc13fe',premium:8},
+  {name:'Rot',color:'#e63946',premium:8},
+  {name:'Gold',color:'#d4af37',premium:14}
+];
+const TRIG_COLORS=[
+  {name:'Standard',color:'#f0f0f2',premium:0,def:true},
+  {name:'Schwarz',color:'#1a1a1c',premium:5},
+  {name:'Cyan',color:'#00f2ff',premium:9},
+  {name:'Magenta',color:'#bc13fe',premium:9},
+  {name:'Rot',color:'#e63946',premium:9},
+  {name:'Gold',color:'#d4af37',premium:14}
+];
+const LB_COLORS=[
+  {name:'Blau',color:'#4a90e2',premium:0,def:true},
+  {name:'Cyan',color:'#00f2ff',premium:5},
+  {name:'Pink',color:'#ff2e6e',premium:5},
+  {name:'Magenta',color:'#bc13fe',premium:5},
+  {name:'Gruen',color:'#06d6a0',premium:5},
+  {name:'Rot',color:'#e63946',premium:5},
+  {name:'Gelb',color:'#ffd60a',premium:5}
+];
+const PADDLE_COLORS=[
+  {name:'Schwarz',color:'#1a1a1c',def:true},
+  {name:'Weiss',color:'#fff'},
+  {name:'Cyan',color:'#00f2ff'},
+  {name:'Carbon',color:'#1c1c1f'},
+  {name:'Gold',color:'#d4af37'}
+];
+const ENG_COLORS=[
+  {name:'Schwarz',color:'#222',def:true},
+  {name:'Weiss',color:'#fff'},
+  {name:'Cyan',color:'#00f2ff'},
+  {name:'Magenta',color:'#bc13fe'},
+  {name:'Gold',color:'#d4af37'}
+];
+
+const CATS=[
+  {id:'frontshell',icon:'🎨',name:'FRONTGEHAEUSE',colors:SHELL_COLORS,view:'front'},
+  {id:'backshell',icon:'🛡',name:'RUECKSCHALE',colors:SHELL_COLORS,view:'back'},
+  {id:'buttons',icon:'🔘',name:'ACTION BUTTONS',colors:BTN_COLORS,view:'front'},
+  {id:'dpad',icon:'✚',name:'D-PAD',colors:BTN_COLORS,view:'front'},
+  {id:'stickcap',icon:'🕹',name:'STICK CAPS',colors:STICK_COLORS,view:'front'},
+  {id:'triggercolor',icon:'🎯',name:'TRIGGER FARBE',colors:TRIG_COLORS,view:'front'},
+  {id:'lightbar',icon:'💡',name:'LIGHT BAR',colors:LB_COLORS,view:'front'},
+  {id:'paddlecolor',icon:'⚙',name:'PADDLE FARBE',colors:PADDLE_COLORS,view:'back'}
+];
+
+const OPTS={
+  stick:{
+    label:'STICK MODULE',
+    items:[
+      {val:'Standard',price:0,desc:'Original PS5 Sticks',def:true},
+      {val:'Hall Effect',price:35,desc:'Magnetisch — kein Drift mehr'},
+      {val:'TMR Pro',price:55,desc:'Pro-Genauigkeit · 0% Drift · 5 Jahre Garantie'}
+    ]
+  },
+  trigger:{
+    label:'TRIGGER',
+    items:[
+      {val:'Adaptive',price:0,desc:'Original Sony Adaptive Trigger',def:true},
+      {val:'Smart Clicky',price:25,desc:'Klick-Feedback wie Maus · 20ms schneller'},
+      {val:'Hair Trigger Lock',price:40,desc:'Verstellbar · 1-stage / 2-stage'}
+    ]
+  },
+  paddle:{
+    label:'PADDLES (Rueckseite)',
+    items:[
+      {val:'Keine',price:0,desc:'Original DualSense',def:true},
+      {val:'2x Paddles',price:39,desc:'2 frei programmierbar'},
+      {val:'4x Paddles',price:59,desc:'Maximale Kontrolle · Pro-Setup'}
+    ]
+  }
+};
+
+const PRESETS={
+  Default:{frontshell:0,backshell:0,buttons:0,dpad:0,stickcap:0,triggercolor:0,lightbar:0,paddlecolor:0,_color:'#ffffff'},
+  Stealth:{frontshell:1,backshell:1,buttons:1,dpad:1,stickcap:0,triggercolor:1,lightbar:0,paddlecolor:0,_color:'#1a1a1c'},
+  Cyber:{frontshell:1,backshell:1,buttons:3,dpad:3,stickcap:2,triggercolor:2,lightbar:1,paddlecolor:2,_color:'#00f2ff'},
+  Magenta:{frontshell:3,backshell:3,buttons:4,dpad:4,stickcap:3,triggercolor:3,lightbar:3,paddlecolor:2,_color:'#bc13fe'},
+  Gold:{frontshell:8,backshell:8,buttons:7,dpad:7,stickcap:5,triggercolor:5,lightbar:6,paddlecolor:4,_color:'#d4af37'},
+  Carbon:{frontshell:10,backshell:10,buttons:1,dpad:1,stickcap:0,triggercolor:1,lightbar:0,paddlecolor:3,_color:'#1c1c1f'}
+};
+
+const BASE_PRICE=79;
+let currentView='front';
+let state={
+  colors:{frontshell:null,backshell:null,buttons:null,dpad:null,stickcap:null,triggercolor:null,lightbar:null,paddlecolor:null},
+  options:{stick:null,trigger:null,paddle:null},
+  engraving:'',engraveColor:'#222'
+};
+
+function $(id){return document.getElementById(id);}
+function haptic(p){try{if('vibrate' in navigator)navigator.vibrate(p||15);}catch(e){}}
+function toast(msg,type){const t=$('toast');t.innerText=msg;t.className='';if(type)t.classList.add(type);t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+
+function buildPresets(){
+  const row=$('preset-row');
+  Object.keys(PRESETS).forEach(id=>{
+    const btn=document.createElement('button');
+    btn.className='preset-btn';
+    const dot=PRESETS[id]._color||'#fff';
+    btn.innerHTML=`<span class="preset-dot" style="background:${dot}"></span>${id}`;
+    btn.onclick=()=>{loadPreset(id);haptic(20);};
+    row.appendChild(btn);
+  });
+}
+
+function buildSections(){
+  const root=$('cfg-sections');
+  
+  CATS.forEach(cat=>{
+    const acc=document.createElement('div');
+    acc.className='cfg-acc';
+    acc.innerHTML=`
+      <div class="cfg-acc-hd" onclick="toggleAcc(this)">
+        <div class="cfg-acc-icon">${cat.icon}</div>
+        <div class="cfg-acc-name">${cat.name}<div class="cfg-acc-cur" id="cur-${cat.id}"><strong>-</strong></div></div>
+        <div class="cfg-acc-chev">▼</div>
+      </div>
+      <div class="cfg-acc-body"><div class="cfg-acc-content"><div class="cfg-color-grid" id="grid-${cat.id}"></div></div></div>`;
+    root.appendChild(acc);
+    const grid=acc.querySelector('#grid-'+cat.id);
+    cat.colors.forEach((c,idx)=>{
+      const item=document.createElement('div');
+      item.className='cfg-color-item'+(c.def?' sel':'');
+      item.style.background=c.color;
+      if(c.premium>0)item.innerHTML=`<div class="premium-tag">+${c.premium}€</div>`;
+      item.dataset.idx=idx;
+      item.onclick=()=>{selectColor(cat.id,c,item);if(cat.view!==currentView)setView(cat.view);haptic(15);};
+      grid.appendChild(item);
+      if(c.def) selectColor(cat.id,c,item,true);
+    });
+  });
+  
+  // Options (Stick / Trigger / Paddle)
+  Object.keys(OPTS).forEach(key=>{
+    const cat=OPTS[key];
+    const acc=document.createElement('div');
+    acc.className='cfg-acc';
+    acc.innerHTML=`
+      <div class="cfg-acc-hd" onclick="toggleAcc(this)">
+        <div class="cfg-acc-icon">⚙</div>
+        <div class="cfg-acc-name">${cat.label}<div class="cfg-acc-cur" id="cur-opt-${key}"><strong>-</strong></div></div>
+        <div class="cfg-acc-chev">▼</div>
+      </div>
+      <div class="cfg-acc-body"><div class="cfg-acc-content" id="opt-${key}"></div></div>`;
+    root.appendChild(acc);
+    cat.items.forEach(o=>{
+      const div=document.createElement('div');
+      div.className='cfg-opt'+(o.def?' sel':'');
+      div.innerHTML=`
+        <div class="cfg-opt-radio"></div>
+        <div class="cfg-opt-info">
+          <div class="cfg-opt-name">${o.val}</div>
+          <div class="cfg-opt-desc">${o.desc}</div>
+        </div>
+        <div class="cfg-opt-price ${o.price===0?'free':''}">${o.price===0?'GRATIS':'+'+o.price+' €'}</div>`;
+      div.onclick=()=>{selectOpt(key,o,div);haptic(15);};
+      acc.querySelector('#opt-'+key).appendChild(div);
+      if(o.def) selectOpt(key,o,div,true);
+    });
+  });
+  
+  // ENGRAVING
+  const eng=document.createElement('div');
+  eng.className='cfg-acc';
+  eng.innerHTML=`
+    <div class="cfg-acc-hd" onclick="toggleAcc(this)">
+      <div class="cfg-acc-icon">✨</div>
+      <div class="cfg-acc-name">GRAVUR (optional, +15 €)<div class="cfg-acc-cur" id="cur-engraving"><strong>-</strong></div></div>
+      <div class="cfg-acc-chev">▼</div>
+    </div>
+    <div class="cfg-acc-body"><div class="cfg-acc-content">
+      <div class="cfg-engrave-wrap">
+        <div class="cfg-engrave-row">
+          <input type="text" id="engrave-input" placeholder="z.B. DEIN NAME" maxlength="12" oninput="updateEngrave(this.value)">
+          <span style="font-family:'Orbitron';font-size:9px;color:#666"><span id="eng-count">0</span>/12</span>
+        </div>
+        <div class="cfg-engrave-hint">Wird auf Touchpad graviert · max 12 Zeichen</div>
+        <div class="cfg-engrave-color-row" id="engrave-colors"></div>
+      </div>
+    </div></div>`;
+  root.appendChild(eng);
+  
+  const cRow=eng.querySelector('#engrave-colors');
+  ENG_COLORS.forEach(c=>{
+    const sw=document.createElement('div');
+    sw.className='cfg-engrave-color'+(c.def?' sel':'');
+    sw.style.background=c.color;
+    sw.onclick=()=>{cRow.querySelectorAll('.cfg-engrave-color').forEach(e=>e.classList.remove('sel'));sw.classList.add('sel');state.engraveColor=c.color;updateEngraveDisplay();haptic(15);};
+    cRow.appendChild(sw);
+  });
+  
+  // SUMMARY
+  const sum=document.createElement('div');
+  sum.className='cfg-summary';
+  sum.innerHTML=`
+    <div class="cfg-sum-title">DEINE KONFIGURATION</div>
+    <div id="cfg-summary-rows"></div>
+    <div class="cfg-sum-row bold"><span>GESAMTPREIS</span><span id="sum-total">79,00 €</span></div>
+  `;
+  root.appendChild(sum);
+}
+
+function toggleAcc(el){el.parentElement.classList.toggle('open');haptic(10);}
+
+function selectColor(id,c,el,silent){
+  const grid=$('grid-'+id);
+  if(grid) grid.querySelectorAll('.cfg-color-item').forEach(i=>i.classList.remove('sel'));
+  el.classList.add('sel');
+  state.colors[id]={name:c.name,color:c.color,premium:c.premium};
+  $('cur-'+id).innerHTML=`<strong>${c.name}</strong>${c.premium?' +'+c.premium+'€':''}`;
+  applyVisuals();updatePrice();updateLabel(id,c.name,true);
+  if(!silent)showLabel(id);
+}
+
+function selectOpt(id,o,el,silent){
+  el.parentElement.querySelectorAll('.cfg-opt').forEach(i=>i.classList.remove('sel'));
+  el.classList.add('sel');
+  state.options[id]={val:o.val,price:o.price};
+  $('cur-opt-'+id).innerHTML=`<strong>${o.val}</strong>${o.price?' +'+o.price+'€':''}`;
+  applyVisuals();updatePrice();
+  if(!silent && id==='paddle')setView('back');
+}
+
+function updateLabel(id,val,active){
+  const l=$('label-'+id);
+  if(l){
+    const s=l.querySelector('small');
+    if(s)s.innerText=val;
+  }
+}
+
+function showLabel(id){
+  // Brief flash on related label
+  const l=$('label-'+id);
+  if(l){
+    l.classList.add('show');
+    clearTimeout(l._t);
+    l._t=setTimeout(()=>l.classList.remove('show'),2200);
+  }
+}
+
+// MAIN: applyVisuals - reagiert auf ALLE Farbwechsel
+function applyVisuals(){
+  // FRONT SHELL TINT
+  const f=state.colors.frontshell;
+  if(f && f.color!=='#ffffff'){
+    $('tint-front').style.background=f.color;
+    $('tint-front').classList.add('active');
+  }else $('tint-front').classList.remove('active');
+  
+  // BACK SHELL TINT
+  const b=state.colors.backshell;
+  if(b && b.color!=='#ffffff'){
+    $('tint-back').style.background=b.color;
+    $('tint-back').classList.add('active');
+  }else $('tint-back').classList.remove('active');
+  
+  // LIGHTBAR
+  const lb=state.colors.lightbar;
+  if(lb){$('lightbar-glow').style.color=lb.color;$('lightbar-glow').style.background=lb.color;$('lightbar-glow').classList.add('on');}
+  
+  // D-PAD - immer eingefärbt wenn nicht Standard
+  const dp=state.colors.dpad;
+  if(dp && dp.color!=='#f0f0f2'){
+    $('ov-dpad').style.color=dp.color;
+    $('ov-dpad').classList.add('on');
+  }else $('ov-dpad').classList.remove('on');
+  
+  // ACTION BUTTONS
+  const bt=state.colors.buttons;
+  if(bt && bt.color!=='#f0f0f2'){
+    $('ov-buttons').style.color=bt.color;
+    $('ov-buttons').classList.add('on');
+  }else $('ov-buttons').classList.remove('on');
+  
+  // STICK CAPS
+  const sc=state.colors.stickcap;
+  if(sc){
+    $('ov-stick-left').style.color=sc.color;
+    $('ov-stick-right').style.color=sc.color;
+    $('ov-stick-left').classList.add('on');
+    $('ov-stick-right').classList.add('on');
+  }
+  
+  // TRIGGER COLOR
+  const tc=state.colors.triggercolor;
+  if(tc && tc.color!=='#f0f0f2'){
+    $('ov-trigger-left').style.color=tc.color;
+    $('ov-trigger-right').style.color=tc.color;
+    $('ov-trigger-left').classList.add('on');
+    $('ov-trigger-right').classList.add('on');
+  }else{
+    $('ov-trigger-left').classList.remove('on');
+    $('ov-trigger-right').classList.remove('on');
+  }
+  
+  // PADDLES auf Rückseite - nur anzeigen wenn Option 2x oder 4x gewählt
+  const pc=state.colors.paddlecolor;
+  const po=state.options.paddle;
+  const paddleColor=pc?pc.color:'#1a1a1c';
+  [1,2,3,4].forEach(i=>{
+    const p=$('ov-paddle-'+i);
+    p.style.color=paddleColor;
+    p.style.background=paddleColor;
+    p.classList.remove('on');
+  });
+  if(po){
+    if(po.val==='2x Paddles'){
+      $('ov-paddle-1').classList.add('on');
+      $('ov-paddle-2').classList.add('on');
+    }else if(po.val==='4x Paddles'){
+      $('ov-paddle-1').classList.add('on');
+      $('ov-paddle-2').classList.add('on');
+      $('ov-paddle-3').classList.add('on');
+      $('ov-paddle-4').classList.add('on');
+    }
+  }
+}
+
+function updateEngrave(val){
+  state.engraving=val.toUpperCase();
+  $('eng-count').innerText=val.length;
+  $('cur-engraving').innerHTML=val?`<strong>${val.toUpperCase()}</strong> +15€`:'<strong>-</strong>';
+  updateEngraveDisplay();
+  updatePrice();
+}
+
+function updateEngraveDisplay(){
+  const e=$('engrave-front');
+  if(state.engraving){
+    e.innerText=state.engraving;
+    e.style.color=state.engraveColor;
+    e.classList.add('show');
+  }else e.classList.remove('show');
+}
+
+function updatePrice(){
+  let p=BASE_PRICE;
+  const rows=[];
+  rows.push({lbl:'Basis Custom Controller',val:BASE_PRICE});
+  
+  Object.entries(state.colors).forEach(([k,c])=>{
+    if(c && c.premium>0){
+      p+=c.premium;
+      rows.push({lbl:'+ '+c.name+' ('+k+')',val:c.premium});
+    }
+  });
+  Object.entries(state.options).forEach(([k,o])=>{
+    if(o && o.price>0){
+      p+=o.price;
+      rows.push({lbl:'+ '+o.val,val:o.price});
+    }
+  });
+  if(state.engraving){
+    p+=15;
+    rows.push({lbl:'+ Gravur: '+state.engraving,val:15});
+  }
+  
+  $('total-price').innerText=p.toFixed(2).replace('.',',')+' €';
+  $('sum-total').innerText=p.toFixed(2).replace('.',',')+' €';
+  
+  const sumEl=$('cfg-summary-rows');
+  if(sumEl){
+    sumEl.innerHTML=rows.map(r=>`<div class="cfg-sum-row"><span>${r.lbl}</span><span>${r.val.toFixed(2).replace('.',',')} €</span></div>`).join('');
+  }
+  
+  state._totalPrice=p;
+}
+
+function setView(v){
+  currentView=v;
+  $('stack-front').style.display=v==='front'?'flex':'none';
+  $('stack-back').style.display=v==='back'?'flex':'none';
+  document.querySelectorAll('.ctrl-toggle button').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
+  // Show only labels of current side
+  document.querySelectorAll('.part-label').forEach(l=>{
+    if(l.dataset.side!==v)l.classList.remove('show');
+  });
+  haptic(15);
+}
+
+function loadPreset(id){
+  const preset=PRESETS[id];
+  if(!preset)return;
+  Object.keys(preset).forEach(catId=>{
+    if(catId.startsWith('_'))return;
+    const cat=CATS.find(c=>c.id===catId);
+    if(!cat)return;
+    const colorIdx=preset[catId];
+    const color=cat.colors[colorIdx];
+    if(!color)return;
+    const grid=$('grid-'+catId);
+    if(grid){
+      const items=grid.querySelectorAll('.cfg-color-item');
+      const targetItem=items[colorIdx];
+      if(targetItem)selectColor(catId,color,targetItem,true);
+    }
+  });
+  // Highlight active preset
+  document.querySelectorAll('.preset-btn').forEach(b=>{
+    b.classList.toggle('active',b.textContent.trim().toLowerCase().includes(id.toLowerCase()));
+  });
+  toast('✓ Preset '+id+' geladen','ok');
+}
+
+// === ADD TO CART (Übergabe an Hauptseite) ===
+function addToCart(){
+  haptic(30);
+  // Build customization summary
+  const customDesc=[];
+  Object.entries(state.colors).forEach(([k,c])=>{
+    if(c)customDesc.push(k+': '+c.name);
+  });
+  Object.entries(state.options).forEach(([k,o])=>{
+    if(o && o.price>0)customDesc.push(o.val);
+  });
+  if(state.engraving)customDesc.push('Gravur: '+state.engraving);
+  
+  const item={
+    id:'custom-'+Date.now(),
+    name:'Custom LEXORD® Controller',
+    price:state._totalPrice||BASE_PRICE,
+    qty:1,
+    img:'Photoroom_20260501_094506.png',
+    custom:true,
+    customization:customDesc.join(' · '),
+    config:state
+  };
+  
+  // Read existing cart from localStorage
+  let cart=[];
+  try{cart=JSON.parse(localStorage.getItem('lxrd_cart')||'[]');}catch(e){}
+  cart.push(item);
+  try{localStorage.setItem('lxrd_cart',JSON.stringify(cart));}catch(e){}
+  
+  // Show overlay
+  $('added-overlay').classList.add('show');
+}
+
+function closeAddedOverlay(){
+  $('added-overlay').classList.remove('show');
+}
+
+function init(){
+  buildPresets();
+  buildSections();
+  $('view-front-btn').onclick=()=>setView('front');
+  $('view-back-btn').onclick=()=>setView('back');
+  setTimeout(()=>$('cfg-loading').classList.add('hidden'),800);
+}
+
+init();
+</script>
+</body>
+</html>

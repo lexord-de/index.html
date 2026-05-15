@@ -224,6 +224,212 @@ header{position:fixed;top:30px;width:100%;z-index:9400;padding:11px 5%;display:f
 .pu-tmpl button{padding:11px;background:#0c0c0c;border:1px solid #1a1a1a;color:#888;font-family:'Orbitron';font-size:9px;border-radius:7px;cursor:pointer}
 .pu-tmpl button:hover{border-color:var(--neon);color:var(--neon)}
 @media(max-width:700px){.em-form{flex-direction:column}.pu-row{grid-template-columns:1fr}}
+
+/* ===== INTRO + BACKGROUNDS ===== */
+#intro-overlay{position:fixed;inset:0;background:#000;z-index:100000;display:flex;align-items:center;justify-content:center;flex-direction:column}
+#warp-canvas{position:absolute;inset:0;width:100%;height:100%}
+.intro-content{position:relative;z-index:2;text-align:center;pointer-events:none}
+.intro-logo{font-family:'Orbitron';font-weight:900;font-size:clamp(2rem,7vw,4.5rem);letter-spacing:.08em;color:#fff;display:flex;justify-content:center}
+.intro-letter{display:inline-block;opacity:0;transform:translateY(40px);animation:iL .6s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(.07s * var(--i,0));text-shadow:0 0 30px rgba(0,242,255,.6)}
+.intro-letter.intro-dot{color:var(--neon)}
+.intro-tagline{font-family:'Orbitron';font-size:clamp(.6rem,1.5vw,.85rem);letter-spacing:8px;color:var(--neon);margin-top:18px;opacity:0;animation:iF .8s ease forwards .85s}
+.intro-line{height:1px;width:0;background:linear-gradient(90deg,transparent,var(--neon),transparent);margin:16px auto 0;animation:iLine 1s ease forwards 1.1s}
+@keyframes iL{to{opacity:1;transform:translateY(0)}}
+@keyframes iF{to{opacity:1}}
+@keyframes iLine{to{width:240px}}
+#star-canvas{position:fixed;inset:0;z-index:-2;background:#000;pointer-events:none}
+#particle-canvas{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.5}
+#scroll-top{position:fixed;bottom:28px;left:28px;width:38px;height:38px;background:#0c0c0c;border:1px solid #1a1a1a;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:9000;transition:.3s;opacity:0;transform:translateY(15px);font-size:14px}
+#scroll-top.vis{opacity:1;transform:translateY(0)}
+#scroll-top:hover{border-color:var(--neon);color:var(--neon)}
+
+/* ===== TRUST REVIEWS ===== */
+.trust-sec{padding:55px 0;overflow:hidden;border-top:1px solid #0a0a0a;border-bottom:1px solid #0a0a0a}
+.trust-sec .ticker-cont{display:flex}
+.trust-sec .ticker-track{display:flex;gap:18px;animation:tR 40s linear infinite}
+@keyframes tR{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.rev-card{background:#080808;border:1px solid #111;padding:18px 20px;border-radius:12px;width:270px;flex-shrink:0;transition:.3s}
+.rev-card:hover{border-color:var(--neon)}
+.stars{color:#ffae00;font-size:12px;margin-bottom:7px}
+.src-tag{font-family:'Orbitron';font-size:7.5px;padding:3px 7px;border-radius:3px;display:inline-block;margin-bottom:7px}
+.g-tag{background:#4285F4;color:#fff}.tp-tag{background:var(--green);color:#fff}.eb-tag{background:#e53238;color:#fff}
+
+/* ===== CONFIGURATOR LAUNCHER ===== */
+#configurator{padding:90px 5% 60px;text-align:center;position:relative;overflow:hidden}
+.lightning-bg{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.lightning-line{position:absolute;width:2px;background:linear-gradient(to bottom,transparent,var(--neon),transparent);opacity:.25;animation:lF var(--dur,2s) var(--delay,0s) infinite}
+@keyframes lF{0%,90%,100%{opacity:0}92%,96%{opacity:.6}94%{opacity:0}}
+.cfg-launcher-wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+@media(max-width:800px){.cfg-launcher-wrap{grid-template-columns:1fr;gap:30px}}
+.cfg-launcher-img{width:100%;max-width:440px;animation:floatY 5s ease-in-out infinite;filter:drop-shadow(0 30px 60px rgba(0,242,255,.25))}
+.cfg-feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.cfg-feat-grid{grid-template-columns:1fr}}
+.cfg-feat{background:linear-gradient(180deg,rgba(12,12,14,.95),rgba(6,6,8,.95));border:1px solid #131318;border-radius:12px;padding:16px;text-align:left;transition:.3s}
+.cfg-feat:hover{border-color:rgba(0,242,255,.3);transform:translateY(-2px)}
+.cfg-feat-icon{font-size:20px;margin-bottom:7px}
+.cfg-feat-title{font-family:'Orbitron';font-size:8.5px;color:var(--neon);letter-spacing:1.5px;margin-bottom:4px}
+.cfg-feat-desc{font-size:10.5px;color:#888;line-height:1.5}
+.cfg-launch-btn{display:inline-flex;align-items:center;gap:14px;padding:20px 40px;background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000!important;font-family:'Orbitron';font-weight:900;font-size:12px;letter-spacing:3px;border-radius:14px;box-shadow:0 10px 30px rgba(0,242,255,.35)}
+.cfg-launch-btn:hover{transform:translateY(-3px) scale(1.02)}
+.cfg-trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding-top:22px;border-top:1px solid #131318}
+@media(max-width:480px){.cfg-trust-grid{grid-template-columns:repeat(2,1fr)}}
+.cfg-trust-num{font-family:'Orbitron';font-size:18px;font-weight:900;color:var(--neon);text-shadow:0 0 10px rgba(0,242,255,.4)}
+.cfg-trust-lbl{font-family:'Orbitron';font-size:7px;color:#bbb;letter-spacing:1.5px;margin-top:4px}
+
+/* ===== TESTER ===== */
+#tester-sec{padding:60px 5% 90px;background:#030303;border-top:1px solid #0a0a0a;text-align:center}
+.tester-ui{max-width:900px;margin:38px auto;background:#070707;border:1px solid #111;border-radius:24px;padding:34px}
+.tester-tabs{display:flex;gap:0;margin-bottom:28px;background:#0a0a0a;border-radius:10px;padding:4px;border:1px solid #111}
+.tester-tab{flex:1;padding:10px;font-family:'Orbitron';font-size:8.5px;letter-spacing:1.5px;color:#444;cursor:pointer;border-radius:7px;background:none;border:none}
+.tester-tab.active{background:rgba(0,242,255,.1);color:var(--neon);border:1px solid rgba(0,242,255,.2)}
+.tester-panel{display:none}
+.tester-panel.active{display:block}
+.tester-status{font-family:'Orbitron';font-size:10.5px;color:#333;margin-bottom:24px;letter-spacing:2px}
+.tester-status.on{color:var(--neon);text-shadow:0 0 10px var(--neon)}
+.c-visual{display:flex;justify-content:center;gap:45px;flex-wrap:wrap;margin-bottom:28px}
+.stick-disp{width:145px;height:145px;border:2px solid #111;border-radius:50%;position:relative;background:radial-gradient(circle,#0c0c0c,#000 70%)}
+.stick-dot{width:10px;height:10px;background:var(--neon);border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 12px var(--neon);transition:.05s linear}
+.stick-lbl{font-family:'Orbitron';font-size:8.5px;margin-top:11px;color:#555;letter-spacing:1.5px}
+.btn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:7px;margin-top:24px}
+.btn-ind{padding:8px 4px;background:#0c0c0c;border:1px solid #111;border-radius:6px;font-family:'Orbitron';font-size:7.5px;color:#333;text-align:center}
+.btn-ind.pressed{background:rgba(0,242,255,.12);color:var(--neon);border-color:var(--neon)}
+.trig-bar{width:100%;height:5px;background:#0c0c0c;border-radius:3px;margin-top:7px;overflow:hidden}
+.trig-fill{height:100%;background:var(--neon);width:0%;transition:.1s}
+.cal-stage{background:#0a0a0a;border:1px solid #151515;border-radius:16px;padding:28px;margin-bottom:18px;text-align:center}
+.cal-stage-title{font-family:'Orbitron';font-size:11px;letter-spacing:3px;color:var(--neon);margin-bottom:8px}
+.cal-stage-sub{font-size:9.5px;color:#555;font-family:'Orbitron';letter-spacing:1.5px;margin-bottom:22px}
+.cal-progress{display:flex;gap:8px;justify-content:center;margin-bottom:24px}
+.cal-step{width:28px;height:4px;background:#111;border-radius:2px;transition:.4s}
+.cal-step.done{background:var(--neon)}
+.cal-step.active{background:rgba(0,242,255,.5)}
+.cal-canvas{width:200px;height:200px;border:1px solid #1a1a1a;border-radius:50%;background:radial-gradient(circle,#0c0c0c,#000 70%);margin:0 auto 18px;position:relative;overflow:hidden}
+.cal-dot{width:12px;height:12px;background:var(--neon);border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 15px var(--neon)}
+.cal-btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.cal-btn{padding:11px 24px;font-family:'Orbitron';font-size:8.5px;letter-spacing:2px;border:none;cursor:pointer;border-radius:8px}
+.cal-btn.primary{background:var(--neon);color:#000;font-weight:900}
+.cal-btn.secondary{background:transparent;border:1px solid #1a1a1a;color:#555}
+
+/* ===== REPAIR WIZARD ===== */
+#repair-sec.full{padding:90px 5%;background:#020202;border-top:1px solid #0a0a0a;text-align:center}
+.repair-ui{max-width:780px;margin:40px auto}
+.repair-steps{display:flex;gap:0;justify-content:center;margin-bottom:40px;position:relative}
+.repair-steps::before{content:'';position:absolute;top:18px;left:10%;right:10%;height:1px;background:#111;z-index:0}
+.rep-step{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;position:relative;z-index:1}
+.rep-step-num{width:36px;height:36px;border:1px solid #1a1a1a;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Orbitron';font-size:9px;color:#333;background:#000;transition:.4s}
+.rep-step.active .rep-step-num{border-color:var(--neon);color:var(--neon);box-shadow:0 0 12px rgba(0,242,255,.3)}
+.rep-step.done .rep-step-num{background:var(--neon);color:#000;border-color:var(--neon)}
+.rep-step-lbl{font-family:'Orbitron';font-size:6.5px;color:#333;letter-spacing:1px;text-align:center}
+.rep-step.active .rep-step-lbl{color:var(--neon)}
+.repair-form-wrap{background:#080808;border:1px solid #111;border-radius:18px;padding:30px;text-align:left}
+.rep-panel{display:none}
+.rep-panel.active{display:block}
+.rep-section-title{font-family:'Orbitron';font-size:9.5px;color:var(--neon);letter-spacing:3px;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid #111}
+.rep-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.rep-input{width:100%;padding:11px 14px;background:#0c0c0c;border:1px solid #1a1a1a;color:#fff;font-size:12px;border-radius:7px;outline:none}
+.rep-input:focus{border-color:var(--neon)}
+.rep-label{font-family:'Orbitron';font-size:7.5px;color:#444;letter-spacing:1.5px;margin-bottom:6px;display:block}
+.rep-damage-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.rep-damage-opt{background:#0c0c0c;border:1px solid #151515;border-radius:10px;padding:14px 10px;cursor:pointer;text-align:center}
+.rep-damage-opt.sel{border-color:var(--neon);background:rgba(0,242,255,.07)}
+.rep-damage-icon{font-size:22px;margin-bottom:7px}
+.rep-damage-lbl{font-family:'Orbitron';font-size:7px;color:#666;letter-spacing:1px}
+.rep-damage-opt.sel .rep-damage-lbl{color:var(--neon)}
+.rep-price-est{background:#0a0a0a;border:1px solid var(--neon);border-radius:10px;padding:16px;margin:16px 0;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.rep-price-val{font-family:'Orbitron';font-size:1.1rem;color:var(--neon);font-weight:700}
+.rep-nav-row{display:flex;gap:10px;margin-top:20px}
+.rep-nav-btn{flex:1;padding:12px;font-family:'Orbitron';font-size:9px;letter-spacing:2px;border:none;cursor:pointer;border-radius:8px}
+.rep-nav-btn.next{background:var(--neon);color:#000;font-weight:900}
+.rep-nav-btn.back{background:transparent;border:1px solid #1a1a1a;color:#555}
+.rep-summary-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #0f0f0f;font-size:9.5px;color:#666}
+.rep-summary-item span:last-child{color:#ccc}
+.rep-success{text-align:center;padding:30px;display:none}
+.rep-success-icon{font-size:48px;margin-bottom:15px}
+.rep-success-title{font-family:'Orbitron';font-size:12px;color:var(--neon);letter-spacing:3px;margin-bottom:10px}
+textarea.rep-input{height:100px;resize:vertical}
+@media(max-width:700px){.rep-grid{grid-template-columns:1fr}.rep-damage-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ===== ABOUT US ===== */
+.about-block{margin-bottom:80px;opacity:0;transform:translateY(50px);transition:opacity 1s, transform 1s}
+.about-block.in-view{opacity:1;transform:translateY(0)}
+.about-img-wrap{width:100%;height:400px;border-radius:18px;overflow:hidden;border:1px solid #111;margin-bottom:50px;cursor:pointer;transition:.6s;background:#080808}
+.about-img-wrap:hover{transform:translateY(-8px) scale(1.01);border-color:rgba(0,242,255,.3)}
+.about-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform 1.4s}
+.about-img-wrap:hover img{transform:scale(1.06)}
+.about-img-wrap.tmr-hero{height:520px;background:radial-gradient(ellipse at center,#0a0a0a 0%,#000);display:flex;align-items:center;justify-content:center}
+.about-img-wrap.tmr-hero img{max-width:85%;max-height:460px;width:auto;height:auto;object-fit:contain;filter:drop-shadow(0 0 50px rgba(0,242,255,.35))}
+@media(max-width:700px){.about-img-wrap{height:280px}.about-img-wrap.tmr-hero{height:380px}}
+.about-num{font-family:'Orbitron';font-size:clamp(2.5rem,8vw,4.5rem);color:#1a1a1a;font-weight:900;line-height:.9;margin-bottom:14px;transition:.6s}
+.about-block:hover .about-num{color:var(--neon);text-shadow:0 0 20px rgba(0,242,255,.3)}
+
+/* ===== KI CHAT ===== */
+#lxrd-chat-fab{position:fixed;bottom:28px;right:28px;width:60px;height:60px;background:linear-gradient(135deg,var(--neon),var(--neon2));border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:9001;box-shadow:0 8px 28px rgba(0,242,255,.4);color:#000;transition:.3s;font-size:24px}
+#lxrd-chat-fab:hover{transform:translateY(-3px) scale(1.05)}
+#lxrd-chat-fab.open{transform:rotate(180deg) scale(.9)}
+#lxrd-chat-pulse{position:absolute;top:6px;right:6px;width:12px;height:12px;background:#00ff88;border:2px solid #000;border-radius:50%;animation:lP 2s infinite}
+@keyframes lP{0%,100%{box-shadow:0 0 0 0 rgba(0,255,136,.7)}50%{box-shadow:0 0 0 8px rgba(0,255,136,0)}}
+#lxrd-chat-panel{position:fixed;bottom:100px;right:28px;width:380px;max-width:calc(100vw - 28px);height:600px;max-height:calc(100vh - 130px);background:linear-gradient(180deg,#0a0a0a,#000);border:1px solid rgba(0,242,255,.3);border-radius:18px;display:none;flex-direction:column;z-index:9000;overflow:hidden}
+#lxrd-chat-panel.open{display:flex}
+.lxc-head{padding:18px 20px;background:#0c0c0c;border-bottom:1px solid rgba(0,242,255,.15);display:flex;justify-content:space-between;align-items:center}
+.lxc-head-info{display:flex;align-items:center;gap:12px}
+.lxc-head-avatar{width:38px;height:38px;background:linear-gradient(135deg,var(--neon),var(--neon2));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#000;font-size:18px}
+.lxc-head-title{font-family:'Orbitron';font-size:13px;font-weight:900;color:#fff;letter-spacing:2px}
+.lxc-head-sub{font-family:'Orbitron';font-size:8px;color:#888;letter-spacing:1.5px;margin-top:3px}
+.lxc-x{width:32px;height:32px;border:1px solid #1a1a1a;background:transparent;border-radius:50%;color:#666;font-size:18px;cursor:pointer}
+.lxc-messages{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px}
+.lxc-msg{display:flex}
+.lxc-msg.lxc-bot{justify-content:flex-start}
+.lxc-msg.lxc-user{justify-content:flex-end}
+.lxc-msg-bubble{max-width:78%;padding:11px 15px;border-radius:14px;font-size:13px;line-height:1.55;color:#e0e0e0}
+.lxc-msg.lxc-bot .lxc-msg-bubble{background:#0e0e0e;border:1px solid #1a1a1a;border-bottom-left-radius:4px}
+.lxc-msg.lxc-user .lxc-msg-bubble{background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;border-bottom-right-radius:4px}
+.lxc-typing{display:flex;gap:5px;padding:13px 15px;background:#0e0e0e;border-radius:14px;border:1px solid #1a1a1a;width:fit-content}
+.lxc-typing span{width:7px;height:7px;background:var(--neon);border-radius:50%;animation:lT 1.2s infinite}
+.lxc-typing span:nth-child(2){animation-delay:.2s}.lxc-typing span:nth-child(3){animation-delay:.4s}
+@keyframes lT{0%,80%,100%{transform:scale(.7);opacity:.4}40%{transform:scale(1.1);opacity:1}}
+.lxc-quick{padding:0 18px 12px;display:flex;gap:6px;flex-wrap:wrap}
+.lxc-quick-btn{padding:7px 12px;background:rgba(0,242,255,.06);border:1px solid rgba(0,242,255,.2);color:var(--neon);font-family:'Orbitron';font-size:8.5px;border-radius:14px;cursor:pointer;white-space:nowrap}
+.lxc-quick-btn:hover{background:var(--neon);color:#000}
+.lxc-input-row{padding:14px 18px;background:#050505;border-top:1px solid #0f0f0f;display:flex;gap:10px;align-items:center}
+.lxc-input{flex:1;padding:11px 14px;background:#0c0c0c;border:1px solid #1a1a1a;color:#fff;border-radius:22px;font-size:13px;outline:none}
+.lxc-input:focus{border-color:var(--neon)}
+.lxc-send{width:40px;height:40px;background:linear-gradient(135deg,var(--neon),#00bdd6);border:none;border-radius:50%;color:#000;cursor:pointer;font-size:16px}
+.lxc-foot{padding:8px 18px 12px;text-align:center;font-family:'Orbitron';font-size:7.5px;color:#444;letter-spacing:1px;border-top:1px solid #0a0a0a}
+@media(max-width:480px){#lxrd-chat-panel{bottom:90px;right:14px;left:14px;width:auto;max-width:none;height:75vh}#lxrd-chat-fab{bottom:22px;right:22px;width:56px;height:56px}}
+
+/* ===== ORDER SUCCESS / REVIEW / RECENTLY ===== */
+#order-success-modal{position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:300000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(20px)}
+#order-success-modal.show{display:flex}
+.success-box{background:#060606;border:1px solid var(--neon);border-radius:20px;padding:45px;max-width:480px;width:100%;text-align:center}
+.check-circle{width:70px;height:70px;border:2px solid var(--neon);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px;animation:pC 2s infinite}
+@keyframes pC{0%,100%{box-shadow:0 0 0 0 rgba(0,242,255,.4)}50%{box-shadow:0 0 0 15px rgba(0,242,255,0)}}
+.success-title{font-family:'Orbitron';font-size:1rem;letter-spacing:4px;color:var(--neon);margin-bottom:10px}
+.success-sub{font-size:11px;color:#666;line-height:1.7;margin-bottom:25px}
+.success-btn{padding:13px 30px;background:var(--neon);color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:9px;letter-spacing:2px;cursor:pointer;border-radius:8px}
+#review-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:60000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(12px);padding:20px}
+#review-modal.show{display:flex}
+#recently{padding:40px 5%;border-top:1px solid #0a0a0a;display:none}
+.rec-scroll{display:flex;gap:13px;overflow-x:auto;padding-bottom:8px}
+.rec-card{background:#0a0a0a;border:1px solid #0f0f0f;border-radius:10px;padding:13px;min-width:120px;cursor:pointer;text-align:center;flex-shrink:0}
+.rec-card:hover{border-color:var(--neon)}
+.rec-card img{width:55px;height:55px;object-fit:contain;margin-bottom:7px}
+.rec-name{font-family:'Orbitron';font-size:6.5px;letter-spacing:.8px;margin-bottom:3px}
+.rec-price{color:var(--neon);font-family:'Orbitron';font-size:8.5px}
+
+/* ===== MOBILE SEARCH ===== */
+#mob-srch-tog{display:none;cursor:pointer;color:#666;background:none;border:none;font-size:16px}
+#mob-srch-ov{position:fixed;inset:0;background:rgba(0,0,0,.98);z-index:50000;display:none;flex-direction:column;padding:80px 20px 20px}
+#mob-srch-ov.on{display:flex}
+.mob-srch-input{width:100%;padding:14px 16px;background:#0c0c0c;border:1px solid #1a1a1a;color:#fff;font-size:14px;border-radius:8px;outline:none;margin-bottom:14px}
+@media(max-width:480px){#mob-srch-tog{display:flex}}
+
+/* ===== SWIPER MOBILE TAP HINT ===== */
+@media(hover:none){
+  .swiper-slide:not(.flipped) .p-inner:after{content:'👆 TIPPEN ZUM DREHEN';position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-family:'Orbitron';font-size:8px;letter-spacing:2px;color:var(--neon);background:rgba(0,0,0,.75);padding:6px 14px;border-radius:20px;border:1px solid rgba(0,242,255,.4);pointer-events:none;z-index:6;animation:sB 2s infinite;white-space:nowrap}
+}
+@keyframes sB{0%,100%{opacity:.55}50%{opacity:1}}
+.swiper-slide.flipped .p-inner{transform:rotateY(180deg)!important}
+.p-back{transform:rotateY(180deg)!important;z-index:2}
+.p-back .btn,.p-back .outline{position:relative;z-index:10;width:82%;max-width:220px}
 </style>
 </head>
 <body>
@@ -260,6 +466,22 @@ header{position:fixed;top:30px;width:100%;z-index:9400;padding:11px 5%;display:f
   <a href="b2b.html" class="nav-link b2b" data-i18n="nav_b2b">🏢 B2B SHOP</a>
 </nav>
 
+<!-- INTRO OVERLAY -->
+<div id="intro-overlay">
+  <canvas id="warp-canvas"></canvas>
+  <div class="intro-content">
+    <div class="intro-logo">
+      <span class="intro-letter" style="--i:0">L</span><span class="intro-letter" style="--i:1">E</span><span class="intro-letter" style="--i:2">X</span><span class="intro-letter" style="--i:3">O</span><span class="intro-letter" style="--i:4">R</span><span class="intro-letter" style="--i:5">D</span><span class="intro-letter intro-dot" style="--i:6">.</span><span class="intro-letter" style="--i:7">D</span><span class="intro-letter" style="--i:8">E</span>
+    </div>
+    <div class="intro-tagline">BEYOND LIMITS</div>
+    <div class="intro-line"></div>
+  </div>
+</div>
+
+<canvas id="star-canvas"></canvas>
+<canvas id="particle-canvas"></canvas>
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
 <div id="toasts"></div>
 <div class="c-overlay" onclick="closeCart()"></div>
 
@@ -294,6 +516,57 @@ header{position:fixed;top:30px;width:100%;z-index:9400;padding:11px 5%;display:f
     <div class="feat-card"><div class="feat-icon">🇩🇪</div><div class="feat-title">MADE IN GERMANY</div><div class="feat-desc">Handgefertigt aus Domsühl</div></div>
   </div>
 </div>
+
+<!-- KONFIGURATOR LAUNCHER -->
+<section id="configurator">
+  <div class="lightning-bg" id="lightning-bg"></div>
+  <div style="text-align:center;padding:0 5% 50px;position:relative;z-index:1">
+    <div style="display:inline-block;padding:6px 14px;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.25);border-radius:20px;font-family:'Orbitron';font-size:8px;color:var(--neon);letter-spacing:3px;margin-bottom:14px">🎮 PROFESSIONAL KONFIGURATOR</div>
+    <h2 class="sec-title" style="margin-bottom:12px">BAUE DEINEN PERFEKTEN CONTROLLER</h2>
+    <p class="sec-sub" style="margin-bottom:0">100+ FARBEN · GRAVUR · HALL EFFECT · TMR · PADDLES · MADE IN GERMANY</p>
+  </div>
+  <div class="cfg-launcher-wrap">
+    <div style="position:relative;display:flex;align-items:center;justify-content:center">
+      <img src="Photoroom_20260501_094506.png" alt="PS5 Custom Controller" class="cfg-launcher-img" loading="lazy">
+    </div>
+    <div style="display:flex;flex-direction:column;gap:28px">
+      <div class="cfg-feat-grid">
+        <div class="cfg-feat"><div class="cfg-feat-icon">🎨</div><div class="cfg-feat-title">100+ FARBEN</div><div class="cfg-feat-desc">Front, Back, Buttons, Sticks, Trigger — individuell</div></div>
+        <div class="cfg-feat"><div class="cfg-feat-icon">⚡</div><div class="cfg-feat-title">HALL EFFECT &amp; TMR</div><div class="cfg-feat-desc">Drift-resistente Sticks für lebenslange Präzision</div></div>
+        <div class="cfg-feat"><div class="cfg-feat-icon">🎯</div><div class="cfg-feat-title">PADDLES &amp; CLICKY</div><div class="cfg-feat-desc">2× / 4× Paddles · Smart Clicky Trigger 1mm</div></div>
+        <div class="cfg-feat"><div class="cfg-feat-icon">✨</div><div class="cfg-feat-title">GRAVUR</div><div class="cfg-feat-desc">Dein Name, Team oder Logo direkt aufs Touchpad</div></div>
+      </div>
+      <div style="text-align:center">
+        <a href="konfigurator.html" class="cfg-launch-btn"><span>🎮 KONFIGURATOR STARTEN</span><span>→</span></a>
+        <p style="font-family:'Orbitron';font-size:8px;color:#444;margin-top:10px;letter-spacing:2px">⟫ Öffnet sich im neuen Fenster · Alle Preise inkl. ⟪</p>
+      </div>
+      <div class="cfg-trust-grid">
+        <div style="text-align:center"><div class="cfg-trust-num">3-5</div><div class="cfg-trust-lbl">WERKTAGE FERTIGUNG</div></div>
+        <div style="text-align:center"><div class="cfg-trust-num">100%</div><div class="cfg-trust-lbl">HANDARBEIT</div></div>
+        <div style="text-align:center"><div class="cfg-trust-num">4.9★</div><div class="cfg-trust-lbl">BEWERTUNG</div></div>
+        <div style="text-align:center"><div class="cfg-trust-num">🇩🇪</div><div class="cfg-trust-lbl">MADE IN DE</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST REVIEWS TICKER -->
+<section class="trust-sec">
+  <div class="ticker-cont">
+    <div class="ticker-track">
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Beste Scuf Alternative. Qualität ist Wahnsinn!"</p></article>
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag g-tag">GOOGLE</span><p style="font-size:10px;color:#aaa">"Stickzange perfekt. 24h Versand top!"</p></article>
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag eb-tag">EBAY</span><p style="font-size:10px;color:#aaa">"Engineering auf höchstem Level. Super Kontakt."</p></article>
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Kein Stick-Drift mehr. TMR Umbau top!"</p></article>
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag g-tag">GOOGLE</span><p style="font-size:10px;color:#aaa">"Mega schnelle Lieferung, Verarbeitung 10/10."</p></article>
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Konfigurator super easy, genau was ich wollte!"</p></article>
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Beste Scuf Alternative. Qualität ist Wahnsinn!"</p></article>
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag g-tag">GOOGLE</span><p style="font-size:10px;color:#aaa">"Stickzange perfekt. 24h Versand top!"</p></article>
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag eb-tag">EBAY</span><p style="font-size:10px;color:#aaa">"Engineering auf höchstem Level. Super Kontakt."</p></article>
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Kein Stick-Drift mehr. TMR Umbau top!"</p></article>
+    </div>
+  </div>
+</section>
 
 <section class="swiper-sec">
   <h2 class="sec-title" data-i18n="prem_title">PREMIUM CONTROLLER</h2>
@@ -422,6 +695,72 @@ header{position:fixed;top:30px;width:100%;z-index:9400;padding:11px 5%;display:f
   </div>
 </section>
 
+<!-- RECENTLY VIEWED -->
+<section id="recently">
+  <h2 class="sec-title" style="font-size:.95rem;margin-bottom:6px">ZULETZT ANGESEHEN</h2>
+  <div class="rec-scroll" id="rec-grid"></div>
+</section>
+
+<!-- TESTER -->
+<section id="tester-sec">
+  <h2 class="sec-title">CONTROLLER TESTER</h2>
+  <p class="sec-sub">PROFESSIONAL CALIBRATION SUITE · KOSTENLOS</p>
+  <div class="tester-ui">
+    <div class="tester-tabs">
+      <button class="tester-tab active" onclick="switchTesterTab('test')">🎮 CONTROLLER TEST</button>
+      <button class="tester-tab" onclick="switchTesterTab('cal')">🎯 KALIBRIERUNG</button>
+      <button class="tester-tab" onclick="switchTesterTab('drift')">📊 DRIFT ANALYSE</button>
+    </div>
+    <div id="tab-test" class="tester-panel active">
+      <div id="tester-status" class="tester-status">CONTROLLER ANSCHLIESSEN &amp; TASTE DRÜCKEN…</div>
+      <div class="c-visual">
+        <div><div class="stick-disp"><div id="stick-l" class="stick-dot"></div></div><div class="stick-lbl">LEFT STICK (L3)</div><div id="val-l" style="font-size:8.5px;margin-top:6px;color:var(--neon);font-family:Orbitron">X: 0.00 | Y: 0.00</div></div>
+        <div><div class="stick-disp"><div id="stick-r" class="stick-dot"></div></div><div class="stick-lbl">RIGHT STICK (R3)</div><div id="val-r" style="font-size:8.5px;margin-top:6px;color:var(--neon);font-family:Orbitron">X: 0.00 | Y: 0.00</div></div>
+      </div>
+      <div style="display:flex;gap:18px;margin-bottom:22px">
+        <div style="flex:1"><div class="stick-lbl">L2 TRIGGER</div><div class="trig-bar"><div id="fill-l2" class="trig-fill"></div></div><div id="val-l2" style="font-size:7.5px;color:#444;font-family:Orbitron;margin-top:4px">0%</div></div>
+        <div style="flex:1"><div class="stick-lbl">R2 TRIGGER</div><div class="trig-bar"><div id="fill-r2" class="trig-fill"></div></div><div id="val-r2" style="font-size:7.5px;color:#444;font-family:Orbitron;margin-top:4px">0%</div></div>
+      </div>
+      <div class="btn-grid">
+        <div class="btn-ind" id="btn-0">✕ / A</div><div class="btn-ind" id="btn-1">○ / B</div><div class="btn-ind" id="btn-2">□ / X</div><div class="btn-ind" id="btn-3">△ / Y</div>
+        <div class="btn-ind" id="btn-4">L1</div><div class="btn-ind" id="btn-5">R1</div><div class="btn-ind" id="btn-6">L2</div><div class="btn-ind" id="btn-7">R2</div>
+        <div class="btn-ind" id="btn-8">SELECT</div><div class="btn-ind" id="btn-9">START</div><div class="btn-ind" id="btn-10">L3</div><div class="btn-ind" id="btn-11">R3</div>
+        <div class="btn-ind" id="btn-12">↑</div><div class="btn-ind" id="btn-13">↓</div><div class="btn-ind" id="btn-14">←</div><div class="btn-ind" id="btn-15">→</div>
+        <div class="btn-ind" id="btn-16">PS</div><div class="btn-ind" id="btn-17">TOUCH</div>
+      </div>
+    </div>
+    <div id="tab-cal" class="tester-panel">
+      <div class="cal-stage">
+        <div class="cal-progress"><div class="cal-step active" id="cs0"></div><div class="cal-step" id="cs1"></div><div class="cal-step" id="cs2"></div><div class="cal-step" id="cs3"></div></div>
+        <div class="cal-stage-title" id="cal-title">SCHRITT 1: KALIBRIERUNG STARTEN</div>
+        <div class="cal-stage-sub" id="cal-sub">Controller anschließen und Kalibrierung beginnen</div>
+        <div style="display:flex;gap:30px;justify-content:center;flex-wrap:wrap;margin:20px 0">
+          <div><div class="stick-lbl" style="text-align:center;margin-bottom:8px">LEFT</div><div class="cal-canvas"><div class="cal-dot" id="cal-dot-l"></div></div></div>
+          <div><div class="stick-lbl" style="text-align:center;margin-bottom:8px">RIGHT</div><div class="cal-canvas"><div class="cal-dot" id="cal-dot-r"></div></div></div>
+        </div>
+        <div class="cal-btn-row">
+          <button class="cal-btn secondary" onclick="resetCal()">↺ ZURÜCKSETZEN</button>
+          <button class="cal-btn primary" id="cal-action-btn" onclick="calNext()">KALIBRIERUNG STARTEN</button>
+        </div>
+      </div>
+    </div>
+    <div id="tab-drift" class="tester-panel">
+      <div style="text-align:center;margin-bottom:24px">
+        <div style="font-family:Orbitron;font-size:10px;color:#555;letter-spacing:2px;margin-bottom:5px">DRIFT-DIAGNOSE · ECHTZEIT</div>
+        <div style="font-size:8.5px;color:#333;font-family:Orbitron;letter-spacing:1px">Controller anschließen — beide Sticks 5 Sek. nicht berühren</div>
+      </div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center">
+        <div style="flex:1;min-width:260px;background:#070707;border:1px solid #111;border-radius:10px;padding:18px"><div style="font-family:Orbitron;font-size:8.5px;color:var(--neon);margin-bottom:10px">LEFT STICK DRIFT</div><div style="font-family:Orbitron;font-size:18px;color:var(--neon)" id="drift-l-val">0.0000</div><div style="font-family:Orbitron;font-size:10px;margin-top:6px" id="drift-l-status">–</div></div>
+        <div style="flex:1;min-width:260px;background:#070707;border:1px solid #111;border-radius:10px;padding:18px"><div style="font-family:Orbitron;font-size:8.5px;color:var(--neon);margin-bottom:10px">RIGHT STICK DRIFT</div><div style="font-family:Orbitron;font-size:18px;color:var(--neon)" id="drift-r-val">0.0000</div><div style="font-family:Orbitron;font-size:10px;margin-top:6px" id="drift-r-status">–</div></div>
+      </div>
+      <div style="text-align:center;margin-top:24px;padding:16px;background:#0a0a0a;border-radius:10px;border:1px solid #111">
+        <div style="font-family:Orbitron;font-size:8px;color:#666;letter-spacing:1.5px;margin-bottom:8px">DRIFT ERKANNT? WIR REPARIEREN ES.</div>
+        <a href="#repair-sec" class="cal-btn primary" style="display:inline-block;text-decoration:none">→ JETZT REPARATUR ANFRAGEN</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="email-marketing">
   <div class="em-inner">
     <h2 class="sec-title">BLEIB AUF DEM LAUFENDEN</h2>
@@ -465,21 +804,138 @@ header{position:fixed;top:30px;width:100%;z-index:9400;padding:11px 5%;display:f
   </address>
 </section>
 
-<section id="repair-sec" style="padding:90px 5%;text-align:center;background:#020202;border-top:1px solid #0a0a0a">
+<section id="repair-sec" class="full">
   <h2 class="sec-title">CONTROLLER REPARATUR</h2>
-  <p class="sec-sub">PROFESSIONELL · MADE IN GERMANY · 6 MONATE GARANTIE</p>
-  <div style="max-width:700px;margin:30px auto;background:#080808;border:1px solid #111;border-radius:18px;padding:30px;text-align:left">
-    <p style="font-size:13px;color:#aaa;line-height:1.8;margin-bottom:18px">Stick-Drift · Trigger-Defekt · USB-C · Gehäuse · Akku · Upgrades. Sende deinen Controller an unsere Werkstatt — Reparaturzeit 3–5 Werktage.</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:22px">
-      <div style="background:#0a0a0a;border:1px solid #111;border-radius:8px;padding:12px;text-align:center"><div style="font-size:11px;color:var(--neon);font-family:Orbitron">🕹️ STICK-DRIFT</div><div style="font-size:10px;color:#666;margin-top:4px">ab 25 €</div></div>
-      <div style="background:#0a0a0a;border:1px solid #111;border-radius:8px;padding:12px;text-align:center"><div style="font-size:11px;color:var(--neon);font-family:Orbitron">🎮 TRIGGER</div><div style="font-size:10px;color:#666;margin-top:4px">ab 20 €</div></div>
-      <div style="background:#0a0a0a;border:1px solid #111;border-radius:8px;padding:12px;text-align:center"><div style="font-size:11px;color:var(--neon);font-family:Orbitron">🔘 TASTE</div><div style="font-size:10px;color:#666;margin-top:4px">ab 15 €</div></div>
-      <div style="background:#0a0a0a;border:1px solid #111;border-radius:8px;padding:12px;text-align:center"><div style="font-size:11px;color:var(--neon);font-family:Orbitron">🔌 USB-C</div><div style="font-size:10px;color:#666;margin-top:4px">ab 30 €</div></div>
-      <div style="background:#0a0a0a;border:1px solid #111;border-radius:8px;padding:12px;text-align:center"><div style="font-size:11px;color:var(--neon);font-family:Orbitron">🛡️ GEHÄUSE</div><div style="font-size:10px;color:#666;margin-top:4px">ab 35 €</div></div>
-      <div style="background:#0a0a0a;border:1px solid #111;border-radius:8px;padding:12px;text-align:center"><div style="font-size:11px;color:var(--neon);font-family:Orbitron">⚡ AKKU</div><div style="font-size:10px;color:#666;margin-top:4px">ab 20 €</div></div>
+  <p class="sec-sub">PROFESSIONELL · GÜNSTIG · SCHNELL · MADE IN GERMANY</p>
+  <div class="repair-ui">
+    <div class="repair-steps">
+      <div class="rep-step active" id="rs-0"><div class="rep-step-num">1</div><div class="rep-step-lbl">SCHADEN<br>AUSWÄHLEN</div></div>
+      <div class="rep-step" id="rs-1"><div class="rep-step-num">2</div><div class="rep-step-lbl">DEINE<br>DATEN</div></div>
+      <div class="rep-step" id="rs-2"><div class="rep-step-num">3</div><div class="rep-step-lbl">CONTROLLER<br>INFOS</div></div>
+      <div class="rep-step" id="rs-3"><div class="rep-step-num">4</div><div class="rep-step-lbl">ZUSAMMEN-<br>FASSUNG</div></div>
     </div>
-    <a href="mailto:Kontakt@Lexord.de?subject=Reparaturanfrage" class="btn outline" style="display:block;text-align:center">📧 REPARATUR ANFRAGEN</a>
-    <p style="font-size:9px;color:#444;margin-top:14px;line-height:1.6">Sende uns eine kurze Beschreibung (oder Foto) per E-Mail. Wir melden uns binnen 24h mit Diagnose &amp; Versandanweisung. Versand zu uns: 19374 Domsühl, An Der Domsühler Str. 2.</p>
+    <div class="repair-form-wrap">
+      <div class="rep-panel active" id="rp-0">
+        <div class="rep-section-title">⚠ WELCHER SCHADEN LIEGT VOR?</div>
+        <div class="rep-damage-grid">
+          <div class="rep-damage-opt" onclick="selectDamage(this,'stick-drift','Stick-Drift','ab 25 €')"><div class="rep-damage-icon">🕹️</div><div class="rep-damage-lbl">STICK-DRIFT</div></div>
+          <div class="rep-damage-opt" onclick="selectDamage(this,'trigger','Trigger-Problem','ab 20 €')"><div class="rep-damage-icon">🎮</div><div class="rep-damage-lbl">TRIGGER</div></div>
+          <div class="rep-damage-opt" onclick="selectDamage(this,'button','Taste defekt','ab 15 €')"><div class="rep-damage-icon">🔘</div><div class="rep-damage-lbl">TASTE</div></div>
+          <div class="rep-damage-opt" onclick="selectDamage(this,'usb','USB-C Defekt','ab 30 €')"><div class="rep-damage-icon">🔌</div><div class="rep-damage-lbl">USB-C</div></div>
+          <div class="rep-damage-opt" onclick="selectDamage(this,'gehaeuse','Gehäuse / Optik','ab 35 €')"><div class="rep-damage-icon">🛡️</div><div class="rep-damage-lbl">GEHÄUSE</div></div>
+          <div class="rep-damage-opt" onclick="selectDamage(this,'vibration','Vibration / Akku','ab 20 €')"><div class="rep-damage-icon">⚡</div><div class="rep-damage-lbl">AKKU</div></div>
+          <div class="rep-damage-opt" onclick="selectDamage(this,'upgrade','Upgrade / Umbau','ab 30 €')"><div class="rep-damage-icon">⚙️</div><div class="rep-damage-lbl">UPGRADE</div></div>
+          <div class="rep-damage-opt" onclick="selectDamage(this,'sonstiges','Sonstiges','auf Anfrage')"><div class="rep-damage-icon">❓</div><div class="rep-damage-lbl">SONSTIGES</div></div>
+        </div>
+        <div class="rep-price-est" id="rep-price-est" style="display:none">
+          <div><div style="font-family:Orbitron;font-size:8px;color:#555;letter-spacing:1.5px">GESCHÄTZTE KOSTEN</div><div style="font-size:8px;color:#333;font-family:Orbitron">Inkl. Diagnose · Endpreis nach Prüfung</div></div>
+          <div class="rep-price-val" id="rep-price-val">–</div>
+        </div>
+        <div class="rep-nav-row"><button class="rep-nav-btn next" onclick="repNext()">WEITER →</button></div>
+      </div>
+      <div class="rep-panel" id="rp-1">
+        <div class="rep-section-title">👤 DEINE KONTAKTDATEN</div>
+        <div class="rep-grid">
+          <div><label class="rep-label">VORNAME *</label><input type="text" class="rep-input" id="rep-fname"></div>
+          <div><label class="rep-label">NACHNAME *</label><input type="text" class="rep-input" id="rep-lname"></div>
+        </div>
+        <div><label class="rep-label">E-MAIL *</label><input type="email" class="rep-input" id="rep-email" style="margin-bottom:12px"></div>
+        <div><label class="rep-label">TELEFON</label><input type="tel" class="rep-input" id="rep-phone" style="margin-bottom:12px"></div>
+        <div><label class="rep-label">STRASSE &amp; HAUSNR. *</label><input type="text" class="rep-input" id="rep-addr" style="margin-bottom:12px"></div>
+        <div class="rep-grid">
+          <div><label class="rep-label">PLZ *</label><input type="text" class="rep-input" id="rep-zip"></div>
+          <div><label class="rep-label">STADT *</label><input type="text" class="rep-input" id="rep-city"></div>
+        </div>
+        <div class="rep-nav-row"><button class="rep-nav-btn back" onclick="repBack()">← ZURÜCK</button><button class="rep-nav-btn next" onclick="repNext()">WEITER →</button></div>
+      </div>
+      <div class="rep-panel" id="rp-2">
+        <div class="rep-section-title">🎮 CONTROLLER INFORMATIONEN</div>
+        <div><label class="rep-label">MODELL *</label><select class="rep-input" id="rep-model" style="margin-bottom:12px"><option value="">-- wählen --</option><option>PS5 DualSense</option><option>PS5 DualSense Edge</option><option>PS4 DualShock 4</option><option>LEXORD Custom</option><option>Sonstiger</option></select></div>
+        <div><label class="rep-label">SERIENNUMMER (optional)</label><input type="text" class="rep-input" id="rep-serial" style="margin-bottom:12px"></div>
+        <div><label class="rep-label">SCHADENBESCHREIBUNG *</label><textarea class="rep-input" id="rep-desc" placeholder="Beschreibe so genau wie möglich..." style="margin-bottom:12px"></textarea></div>
+        <div><label class="rep-label">SEIT WANN?</label><select class="rep-input" id="rep-since" style="margin-bottom:12px"><option>Wenige Tage</option><option>1–2 Wochen</option><option>1–3 Monate</option><option>Mehr als 3 Monate</option></select></div>
+        <div><label class="rep-label">GARANTIE</label><select class="rep-input" id="rep-warranty"><option value="6">6 Monate (inklusive)</option><option value="12">12 Monate (+15€)</option></select></div>
+        <div class="rep-nav-row"><button class="rep-nav-btn back" onclick="repBack()">← ZURÜCK</button><button class="rep-nav-btn next" onclick="repNext()">WEITER →</button></div>
+      </div>
+      <div class="rep-panel" id="rp-3">
+        <div class="rep-section-title">✓ ZUSAMMENFASSUNG</div>
+        <div id="rep-summary-content"></div>
+        <div style="background:#0a0a0a;border:1px solid #111;border-radius:10px;padding:16px;margin-top:16px">
+          <div style="font-family:Orbitron;font-size:8px;color:#666;letter-spacing:1.5px;margin-bottom:10px">VERSANDANWEISUNG</div>
+          <div style="font-size:9.5px;color:#aaa;line-height:1.9">📦 Schicke deinen Controller <strong>sicher verpackt</strong> an:<br><strong style="color:var(--neon)">Leon Schulz · An Der Domsühler Str. 2 · 19374 Domsühl</strong><br>📧 Bestellnummer beilegen<br>💡 Reparaturzeit: <strong style="color:#fff">3–5 Werktage</strong></div>
+        </div>
+        <label style="display:flex;align-items:flex-start;gap:8px;font-size:9px;color:#666;margin:14px 0;cursor:pointer"><input type="checkbox" id="rep-agb" style="accent-color:var(--neon);margin-top:2px;width:14px;height:14px"><span>Ich akzeptiere <a onclick="openLegal('agb')" style="color:var(--neon);cursor:pointer">AGB</a> &amp; <a onclick="openLegal('datenschutz')" style="color:var(--neon);cursor:pointer">Datenschutz</a>. Widerrufsrecht erlischt mit Reparaturbeginn (§ 356 Abs. 4 BGB). *</span></label>
+        <div class="rep-nav-row"><button class="rep-nav-btn back" onclick="repBack()">← ZURÜCK</button><button class="rep-nav-btn next" onclick="submitRepair()">🔧 ANFRAGEN</button></div>
+      </div>
+      <div class="rep-success" id="rep-success">
+        <div class="rep-success-icon">✅</div>
+        <div class="rep-success-title">ANFRAGE ERFOLGREICH!</div>
+        <div style="font-size:10px;color:#666;line-height:1.7">Übermittelt an <strong style="color:var(--neon)">Kontakt@Lexord.de</strong>.<br>Antwort innerhalb 24h.<br><br><span style="font-family:Orbitron;font-size:9px;color:#666">DEINE ANFRAGENUMMER: <span id="rep-nr" style="color:var(--neon)"></span></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT US -->
+<section id="about-sec" style="padding:90px 0 60px;background:#000;border-top:1px solid #0a0a0a">
+  <div style="text-align:center;margin-bottom:60px;padding:0 5%">
+    <h2 class="sec-title" style="color:#fff">ÜBER UNS</h2>
+    <p class="sec-sub" style="color:#444">LEXORD ENGINEERING · MADE IN GERMANY</p>
+  </div>
+  <div style="max-width:900px;margin:0 auto;padding:0 5%">
+
+    <div class="about-block">
+      <div class="about-img-wrap"><img src="Photoroom_20260422_120907.png" alt="Werkzeug" loading="lazy"></div>
+      <div class="about-num">01</div>
+      <div style="font-family:Orbitron;font-size:clamp(1rem,4vw,1.5rem);color:#fff;font-weight:900;letter-spacing:2px;line-height:1.3;margin-bottom:18px">DEIN WERKZEUG. DEIN VORTEIL.<br>DEIN STIL.</div>
+      <p style="font-size:14px;color:#888;line-height:1.85">Wir entwickeln Controller, die nicht nur gut aussehen, sondern dir echte Performance liefern. Hochwertige Komponenten, präzise Verarbeitung, individuelle Designs.</p>
+    </div>
+
+    <div class="about-block">
+      <div class="about-img-wrap"><img src="IMG_0448.jpeg" alt="Präzision" loading="lazy"></div>
+      <div class="about-num">02</div>
+      <div style="font-family:Orbitron;font-size:clamp(1rem,4vw,1.5rem);color:#fff;font-weight:900;letter-spacing:2px;line-height:1.3;margin-bottom:18px">PRÄZISION IN JEDEM DETAIL</div>
+      <p style="font-size:14px;color:#888;line-height:1.85">Jeder Controller entsteht in sorgfältiger Handarbeit. Mit modernster Technik veredeln wir jedes Bauteil — für maximale Performance und kompromisslose Qualität.</p>
+    </div>
+
+    <div class="about-block">
+      <div class="about-img-wrap"><img src="IMG_0449.jpeg" alt="Kontrolle" loading="lazy"></div>
+      <div class="about-num">03</div>
+      <div style="font-family:Orbitron;font-size:clamp(1rem,4vw,1.5rem);color:#fff;font-weight:900;letter-spacing:2px;line-height:1.3;margin-bottom:18px">MAXIMALE KONTROLLE</div>
+      <p style="font-size:14px;color:#888;line-height:1.85">Unsere Paddles geben dir schnelle Reaktionen ohne Umgreifen. Mehr Kontrolle, mehr Geschwindigkeit — genau dort, wo es zählt.</p>
+    </div>
+
+    <div class="about-block">
+      <div class="about-img-wrap tmr-hero"><img src="Photoroom_20260422_124958.png" alt="TMR Sticks" loading="lazy"></div>
+      <div class="about-num">04</div>
+      <div style="font-family:Orbitron;font-size:clamp(1rem,4vw,1.5rem);color:#fff;font-weight:900;letter-spacing:2px;line-height:1.3;margin-bottom:18px">TECHNIK, DIE DEN<br>UNTERSCHIED MACHT</div>
+      <p style="font-size:14px;color:#888;line-height:1.85">Jeder Controller wird intern modifiziert und präzise verlötet. TMR-Sticks in Handarbeit eingebaut — saubere Verarbeitung, zuverlässige Technik bis ins kleinste Detail.</p>
+    </div>
+
+    <div class="about-block">
+      <div class="about-img-wrap"><img src="IMG_0451.jpeg" alt="Umbau" loading="lazy"></div>
+      <div class="about-num">05</div>
+      <div style="font-family:Orbitron;font-size:clamp(1rem,4vw,1.5rem);color:#fff;font-weight:900;letter-spacing:2px;line-height:1.3;margin-bottom:18px">UMBAU MIT SYSTEM</div>
+      <p style="font-size:14px;color:#888;line-height:1.85">Wir öffnen, analysieren und optimieren jeden Controller Schritt für Schritt. Saubere Integration, präziser Einbau, durchdachte Technik.</p>
+    </div>
+
+    <div class="about-block">
+      <div class="about-img-wrap"><img src="IMG_0452.jpeg" alt="Trigger" loading="lazy"></div>
+      <div class="about-num">06</div>
+      <div style="font-family:Orbitron;font-size:clamp(1rem,4vw,1.5rem);color:#fff;font-weight:900;letter-spacing:2px;line-height:1.3;margin-bottom:18px">SCHNELLER AUSLÖSEN.<br>PRÄZISER REAGIEREN.</div>
+      <p style="font-size:14px;color:#888;line-height:1.85">Optimierte Trigger sorgen für kürzere Wege und schnellere Reaktionszeiten. Spürbar direkter Druckpunkt — wenn jede Millisekunde zählt.</p>
+    </div>
+
+    <div style="background:rgba(10,22,40,.8);border:1px solid #111;border-radius:18px;padding:35px;text-align:center;margin-top:30px">
+      <div style="font-family:Orbitron;font-size:10px;color:var(--neon);letter-spacing:3px;margin-bottom:14px">🇩🇪 LEON SCHULZ · GRÜNDER</div>
+      <p style="font-size:13px;color:#888;line-height:1.9;max-width:600px;margin:0 auto 20px">Hi, ich bin Leon — Gründer von LEXORD Engineering. Was als Leidenschaft für Gaming begann, ist heute ein professioneller Service für Custom Controller, Reparaturen und Upgrades. Jeder Controller wird von mir persönlich gebaut, getestet und verpackt.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:20px;justify-content:center">
+        <div><div style="font-family:Orbitron;font-size:20px;color:var(--neon);font-weight:900">91+</div><div style="font-family:Orbitron;font-size:7px;color:#555">BEWERTUNGEN</div></div>
+        <div><div style="font-family:Orbitron;font-size:20px;color:var(--neon);font-weight:900">4.9★</div><div style="font-family:Orbitron;font-size:7px;color:#555">STERNE</div></div>
+        <div><div style="font-family:Orbitron;font-size:20px;color:var(--neon);font-weight:900">24H</div><div style="font-family:Orbitron;font-size:7px;color:#555">VERSAND</div></div>
+        <div><div style="font-family:Orbitron;font-size:20px;color:var(--neon);font-weight:900">🇩🇪</div><div style="font-family:Orbitron;font-size:7px;color:#555">MADE IN DE</div></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -702,6 +1158,70 @@ header{position:fixed;top:30px;width:100%;z-index:9400;padding:11px 5%;display:f
   </div>
 </div>
 
+<!-- ORDER SUCCESS -->
+<div id="order-success-modal">
+  <div class="success-box">
+    <div class="check-circle">✓</div>
+    <div class="success-title">BESTELLUNG ERFOLGREICH</div>
+    <div class="success-sub">Vielen Dank für deine Bestellung!<br>Eine Bestätigung wurde an<br><strong id="success-email" style="color:var(--neon)"></strong> gesendet.</div>
+    <div style="font-family:Orbitron;font-size:9px;color:#333;letter-spacing:2px;margin-bottom:20px" id="success-order-nr"></div>
+    <button class="success-btn" onclick="closeOrderSuccess()">ZURÜCK ZUM SHOP</button>
+    <p style="margin-top:14px;font-size:9px;color:#444;font-family:Orbitron;letter-spacing:1.5px">Bestellung verfolgen unter <a onclick="closeOrderSuccess();openLogin()" style="color:var(--neon);cursor:pointer">MEIN KONTO</a></p>
+  </div>
+</div>
+
+<!-- REVIEW MODAL -->
+<div id="review-modal">
+  <div style="background:#050505;border:1px solid var(--neon);padding:40px;border-radius:18px;text-align:center;max-width:360px;width:100%">
+    <h3 style="font-family:Orbitron;font-size:12px;margin-bottom:20px;color:var(--neon);letter-spacing:3px">BEWERTUNG ABGEBEN</h3>
+    <a href="https://www.google.com/search?q=lexord.de+reviews" target="_blank" rel="noopener" style="display:block;padding:13px;margin-bottom:11px;border-radius:8px;color:#fff;font-family:Orbitron;font-size:9.5px;letter-spacing:1px;border:1px solid #4285F4">⭐ AUF GOOGLE</a>
+    <a href="https://de.trustpilot.com/review/lexord.de" target="_blank" rel="noopener" style="display:block;padding:13px;margin-bottom:11px;border-radius:8px;color:#fff;font-family:Orbitron;font-size:9.5px;letter-spacing:1px;border:1px solid var(--green)">⭐ AUF TRUSTPILOT</a>
+    <a href="https://www.ebay.de/usr/lexord-de" target="_blank" rel="noopener" style="display:block;padding:13px;margin-bottom:18px;border-radius:8px;color:#fff;font-family:Orbitron;font-size:9.5px;letter-spacing:1px;border:1px solid #e53238">⭐ AUF EBAY</a>
+    <button onclick="document.getElementById('review-modal').classList.remove('show')" style="font-size:9px;color:#444;cursor:pointer;font-family:Orbitron;background:none;border:none">← ZURÜCK</button>
+  </div>
+</div>
+
+<!-- MOBILE SEARCH -->
+<div id="mob-srch-ov">
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+    <input class="mob-srch-input" placeholder="Produkt suchen..." oninput="mobSearch(this.value)">
+    <button onclick="document.getElementById('mob-srch-ov').classList.remove('on')" style="font-size:24px;color:#555;cursor:pointer;background:none;border:none">×</button>
+  </div>
+  <div id="mob-srch-res"></div>
+</div>
+
+<!-- KI CHAT -->
+<button id="lxrd-chat-fab" onclick="toggleChat()" aria-label="Chat">
+  💬
+  <span id="lxrd-chat-pulse"></span>
+</button>
+<div id="lxrd-chat-panel">
+  <div class="lxc-head">
+    <div class="lxc-head-info">
+      <div class="lxc-head-avatar">⭐</div>
+      <div>
+        <div class="lxc-head-title">LEXORD KI</div>
+        <div class="lxc-head-sub"><span style="color:#00ff88">●</span> Online · Antwortet sofort</div>
+      </div>
+    </div>
+    <button class="lxc-x" onclick="toggleChat()">×</button>
+  </div>
+  <div class="lxc-messages" id="lxc-messages">
+    <div class="lxc-msg lxc-bot"><div class="lxc-msg-bubble">👋 Hi! Ich bin die <strong>LEXORD-KI</strong>. Frag mich alles zu Produkten, Reparaturen, Versand oder deiner Bestellung.</div></div>
+  </div>
+  <div class="lxc-quick" id="lxc-quick">
+    <button class="lxc-quick-btn" onclick="sendQuick('Welcher Controller passt zu mir?')">🎮 Welcher Controller?</button>
+    <button class="lxc-quick-btn" onclick="sendQuick('Was kostet eine Reparatur?')">🔧 Reparatur-Preis?</button>
+    <button class="lxc-quick-btn" onclick="sendQuick('Wie lange dauert der Versand?')">🚚 Versandzeit?</button>
+    <button class="lxc-quick-btn" onclick="sendQuick('Hast du Rabatte?')">🎁 Rabatte?</button>
+  </div>
+  <div class="lxc-input-row">
+    <input type="text" id="lxc-input" class="lxc-input" placeholder="Schreib eine Nachricht..." onkeydown="if(event.key==='Enter')sendChatMsg()">
+    <button class="lxc-send" onclick="sendChatMsg()">➤</button>
+  </div>
+  <div class="lxc-foot">Powered by LEXORD KI · Bei dringenden Fragen: <a href="tel:+4915204718720" style="color:var(--neon)">📞 0152 047 18720</a></div>
+</div>
+
 <!-- COOKIE -->
 <div id="cookie-banner">
   <div class="ck-text">Wir nutzen ausschließlich technisch notwendige Cookies (Warenkorb, Sprachwahl, Zahlungsabwicklung). <strong style="color:var(--neon)">Kein Tracking · Keine Werbung</strong>. Details: <a onclick="openLegal('datenschutz')" style="cursor:pointer">Datenschutz</a>.</div>
@@ -907,6 +1427,72 @@ function initSwiper(){
     slide.addEventListener('click',function(e){if(e.target.closest('.btn')||e.target.closest('a'))return;document.querySelectorAll('.mySwiper .swiper-slide.flipped').forEach(s=>{if(s!==slide)s.classList.remove('flipped');});slide.classList.toggle('flipped');});
   });
 }
+
+/* ============ TESTER (Gamepad API) ============ */
+function switchTesterTab(tab){document.querySelectorAll('.tester-tab').forEach((t,i)=>t.classList.toggle('active',['test','cal','drift'][i]===tab));document.querySelectorAll('.tester-panel').forEach(p=>p.classList.remove('active'));document.getElementById('tab-'+tab).classList.add('active');}
+let driftDataL=[],driftDataR=[];
+function tickGP(){if(!navigator.getGamepads){requestAnimationFrame(tickGP);return;}const gps=navigator.getGamepads();const st=document.getElementById('tester-status');if(!gps[0]){if(st){st.innerText='CONTROLLER ANSCHLIESSEN & TASTE DRÜCKEN…';st.classList.remove('on');}requestAnimationFrame(tickGP);return;}const gp=gps[0];if(st){st.innerText='✓ VERBUNDEN: '+gp.id.substring(0,45).toUpperCase();st.classList.add('on');}const[lx,ly,rx,ry]=gp.axes;const sl=document.getElementById('stick-l'),sr=document.getElementById('stick-r');if(sl){sl.style.left='calc(50% + '+lx*50+'%)';sl.style.top='calc(50% + '+ly*50+'%)';}if(sr){sr.style.left='calc(50% + '+rx*50+'%)';sr.style.top='calc(50% + '+ry*50+'%)';}const vl=document.getElementById('val-l'),vr=document.getElementById('val-r');if(vl)vl.innerText='X: '+lx.toFixed(2)+' | Y: '+ly.toFixed(2);if(vr)vr.innerText='X: '+rx.toFixed(2)+' | Y: '+ry.toFixed(2);const l2=gp.buttons[6]?.value||0,r2=gp.buttons[7]?.value||0;const fl2=document.getElementById('fill-l2'),fr2=document.getElementById('fill-r2');if(fl2)fl2.style.width=(l2*100)+'%';if(fr2)fr2.style.width=(r2*100)+'%';const vl2=document.getElementById('val-l2'),vr2=document.getElementById('val-r2');if(vl2)vl2.innerText=Math.round(l2*100)+'%';if(vr2)vr2.innerText=Math.round(r2*100)+'%';gp.buttons.forEach((b,i)=>{const el=document.getElementById('btn-'+i);if(el)b.pressed?el.classList.add('pressed'):el.classList.remove('pressed');});const dl=document.getElementById('cal-dot-l'),dr=document.getElementById('cal-dot-r');if(dl){dl.style.left='calc(50% + '+lx*45+'%)';dl.style.top='calc(50% + '+ly*45+'%)';}if(dr){dr.style.left='calc(50% + '+rx*45+'%)';dr.style.top='calc(50% + '+ry*45+'%)';}driftDataL.push({x:lx,y:ly});driftDataR.push({x:rx,y:ry});if(driftDataL.length>300)driftDataL.shift();if(driftDataR.length>300)driftDataR.shift();updateDriftDisplay(lx,ly,rx,ry);requestAnimationFrame(tickGP);}
+function updateDriftDisplay(lx,ly,rx,ry){const lD=Math.sqrt(lx*lx+ly*ly),rD=Math.sqrt(rx*rx+ry*ry);const dlv=document.getElementById('drift-l-val'),drv=document.getElementById('drift-r-val');if(dlv)dlv.innerText=lD.toFixed(4);if(drv)drv.innerText=rD.toFixed(4);const gs=d=>d<0.02?{txt:'✓ KEIN DRIFT',col:'#00b67a'}:d<0.08?{txt:'⚠ LEICHTER DRIFT',col:'#ffae00'}:{txt:'✗ STARKER DRIFT',col:'#ff4d4f'};const ls=gs(lD),rs=gs(rD);const dls=document.getElementById('drift-l-status'),drs=document.getElementById('drift-r-status');if(dls){dls.innerText=ls.txt;dls.style.color=ls.col;}if(drs){drs.innerText=rs.txt;drs.style.color=rs.col;}}
+let calStep=0;
+const calSteps=[{title:'SCHRITT 1: KALIBRIERUNG STARTEN',sub:'Controller anschließen und beginnen',btn:'STARTEN'},{title:'SCHRITT 2: CENTER-POSITION',sub:'Beide Sticks nicht berühren (3 Sek.)',btn:'WEITER →'},{title:'SCHRITT 3: VOLLKREIS L-STICK',sub:'Linken Stick langsam im Kreis drehen',btn:'WEITER →'},{title:'SCHRITT 4: VOLLKREIS R-STICK',sub:'Rechten Stick langsam im Kreis drehen',btn:'FERTIG'}];
+function calNext(){calStep=Math.min(calStep+1,3);updateCalUI();if(calStep===3){toast('✓ Kalibrierung abgeschlossen','ok');}}
+function resetCal(){calStep=0;updateCalUI();}
+function updateCalUI(){const s=calSteps[calStep];document.getElementById('cal-title').innerText=s.title;document.getElementById('cal-sub').innerText=s.sub;document.getElementById('cal-action-btn').innerText=s.btn;document.querySelectorAll('.cal-step').forEach((el,i)=>{el.classList.toggle('done',i<calStep);el.classList.toggle('active',i===calStep);});}
+tickGP();
+
+/* ============ REPAIR WIZARD ============ */
+let repStep=0,repDamage={key:'',label:'',price:''};
+function selectDamage(el,key,label,price){document.querySelectorAll('.rep-damage-opt').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');repDamage={key,label,price};document.getElementById('rep-price-est').style.display='flex';document.getElementById('rep-price-val').innerText=price;}
+function repNext(){if(repStep===0&&!repDamage.key){toast('Schadensart auswählen','err');return;}if(repStep===1){const f=document.getElementById('rep-fname').value,l=document.getElementById('rep-lname').value,e=document.getElementById('rep-email').value,a=document.getElementById('rep-addr').value,z=document.getElementById('rep-zip').value,c=document.getElementById('rep-city').value;if(!f||!l||!e||!a||!z||!c){toast('Pflichtfelder ausfüllen','err');return;}}if(repStep===2){if(!document.getElementById('rep-model').value||!document.getElementById('rep-desc').value){toast('Modell und Beschreibung ausfüllen','err');return;}buildRepSummary();}if(repStep===3){submitRepair();return;}document.getElementById('rp-'+repStep).classList.remove('active');repStep++;document.getElementById('rp-'+repStep).classList.add('active');updateRepSteps();}
+function repBack(){if(repStep===0)return;document.getElementById('rp-'+repStep).classList.remove('active');repStep--;document.getElementById('rp-'+repStep).classList.add('active');updateRepSteps();}
+function updateRepSteps(){document.querySelectorAll('.rep-step').forEach((el,i)=>{el.classList.toggle('active',i===repStep);el.classList.toggle('done',i<repStep);});}
+function buildRepSummary(){const fn=document.getElementById('rep-fname').value,ln=document.getElementById('rep-lname').value;const email=document.getElementById('rep-email').value,model=document.getElementById('rep-model').value;document.getElementById('rep-summary-content').innerHTML=`<div class="rep-summary-item"><span>SCHADEN</span><span>${esc(repDamage.label)}</span></div><div class="rep-summary-item"><span>KOSTEN</span><span style="color:var(--neon)">${esc(repDamage.price)}</span></div><div class="rep-summary-item"><span>KUNDE</span><span>${esc(fn+' '+ln)}</span></div><div class="rep-summary-item"><span>E-MAIL</span><span>${esc(email)}</span></div><div class="rep-summary-item"><span>MODELL</span><span>${esc(model)}</span></div>`;}
+async function submitRepair(){if(!document.getElementById('rep-agb').checked){toast('AGB akzeptieren','err');return;}const repNr='REP-'+Date.now().toString().slice(-7);const fn=document.getElementById('rep-fname').value,ln=document.getElementById('rep-lname').value;const email=document.getElementById('rep-email').value,model=document.getElementById('rep-model').value;const desc=document.getElementById('rep-desc').value;const phone=document.getElementById('rep-phone')?.value||'-';const addr=document.getElementById('rep-addr').value+', '+document.getElementById('rep-zip').value+' '+document.getElementById('rep-city').value;
+  try{await fetch(CF_WORKER_URL+'/api/repair',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({repNr,fname:fn,lname:ln,email,phone,addr:document.getElementById('rep-addr').value,zip:document.getElementById('rep-zip').value,city:document.getElementById('rep-city').value,model,damage:repDamage.label,damageKey:repDamage.key,estPrice:repDamage.price,desc,status:'received',created:new Date().toISOString()})});}catch(e){}
+  await ejsSend(email,fn,`🔧 Reparatur ${repNr} | LEXORD®`,`<p>Hallo ${esc(fn)},</p><p>deine Reparaturanfrage <strong>${repNr}</strong> ist eingegangen.</p><p>Schaden: ${esc(repDamage.label)} · Kosten: ${esc(repDamage.price)}</p><p>Sende deinen Controller an: <strong>Leon Schulz · An Der Domsühler Str. 2 · 19374 Domsühl</strong></p>`);
+  await ejsSend(ADMIN_EMAIL,'Admin',`[REPARATUR] ${repNr} · ${fn} ${ln} · ${repDamage.label}`,`<p><strong>${esc(fn+' '+ln)}</strong> (${esc(email)})</p><p>Schaden: <strong>${esc(repDamage.label)}</strong></p><p>Modell: ${esc(model)}</p><p>Adresse: ${esc(addr)}</p><blockquote>${esc(desc).replace(/\n/g,'<br>')}</blockquote>`);
+  document.querySelectorAll('.rep-panel').forEach(p=>p.classList.remove('active'));document.getElementById('rep-success').style.display='block';document.getElementById('rep-nr').innerText=repNr;document.querySelectorAll('.rep-step').forEach(el=>el.classList.add('done'));toast('✓ Reparatur gesendet!','ok');
+}
+
+/* ============ KI CHAT ============ */
+let _chatMsgs=[];
+let _chatSessionId=sessionStorage.getItem('lxrd_chat_session')||'lxrd-'+Date.now()+'-'+Math.random().toString(36).slice(2,8);
+sessionStorage.setItem('lxrd_chat_session',_chatSessionId);
+function toggleChat(){const p=document.getElementById('lxrd-chat-panel');const f=document.getElementById('lxrd-chat-fab');const isOpen=p.classList.toggle('open');f.classList.toggle('open',isOpen);if(isOpen){setTimeout(()=>document.getElementById('lxc-input').focus(),300);const pl=document.getElementById('lxrd-chat-pulse');if(pl)pl.style.display='none';}}
+function sendQuick(t){document.getElementById('lxc-input').value=t;sendChatMsg();}
+async function sendChatMsg(){const inp=document.getElementById('lxc-input');const txt=inp.value.trim();if(!txt)return;inp.value='';inp.disabled=true;appendChatMsg('user',txt);_chatMsgs.push({role:'user',content:txt});document.getElementById('lxc-quick').style.display='none';const m=document.getElementById('lxc-messages');const tEl=document.createElement('div');tEl.className='lxc-msg lxc-bot';tEl.innerHTML='<div class="lxc-typing"><span></span><span></span><span></span></div>';m.appendChild(tEl);m.scrollTop=m.scrollHeight;
+  try{let cE='';try{const c=JSON.parse(sessionStorage.getItem('lxrd_customer')||'{}');cE=c.email||'';}catch(e){}const r=await fetch(CF_WORKER_URL+'/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:_chatMsgs,sessionId:_chatSessionId,email:cE})});const d=await r.json();tEl.remove();const reply=d.reply||'Etwas ist schiefgelaufen.';appendChatMsg('bot',reply);_chatMsgs.push({role:'assistant',content:reply});}catch(e){tEl.remove();appendChatMsg('bot','Ups, gerade keine Verbindung. Schreib direkt an Kontakt@Lexord.de.');}inp.disabled=false;inp.focus();}
+function appendChatMsg(role,t){const m=document.getElementById('lxc-messages');const e=document.createElement('div');e.className='lxc-msg lxc-'+role;e.innerHTML='<div class="lxc-msg-bubble">'+esc(t).replace(/\n/g,'<br>')+'</div>';m.appendChild(e);m.scrollTop=m.scrollHeight;}
+
+/* ============ ORDER SUCCESS ============ */
+function showOrderSuccess(email,orderNr){document.getElementById('success-email').innerText=email||'deiner E-Mail';document.getElementById('success-order-nr').innerText='BESTELLNUMMER: '+orderNr;document.getElementById('order-success-modal').classList.add('show');closeCart();}
+function closeOrderSuccess(){document.getElementById('order-success-modal').classList.remove('show');updateCart();}
+
+/* ============ MOBILE SEARCH ============ */
+function mobSearch(v){const r=document.getElementById('mob-srch-res');if(v.length<2){r.innerHTML='';return;}const PR=[{name:'LXRD Performance',price:240,img:'Photoroom_20260305_123705.png'},{name:'LXRD Plus',price:180,img:'Photoroom_20260305_140346.png'},{name:'LXRD Basic',price:105,img:'Photoroom_20260402_014813.png'},{name:'LXRD Elite Pro',price:280,img:'Photoroom_20260306_112425.png'},{name:'Stickzange Pro',price:5,img:'Stickzange.PNG'}];const f=PR.filter(p=>p.name.toLowerCase().includes(v.toLowerCase()));r.innerHTML=f.map(p=>`<div onclick="addToCart('${p.name}',${p.price},'${p.img}');document.getElementById('mob-srch-ov').classList.remove('on')" style="background:#0c0c0c;padding:12px;margin-bottom:8px;border-radius:8px;border:1px solid #111;color:#ccc;cursor:pointer">${esc(p.name)} · <span style="color:var(--neon)">${p.price.toFixed(2)} €</span></div>`).join('')||'<p style="color:#444;text-align:center">Keine Ergebnisse</p>';}
+
+/* ============ RECENTLY VIEWED ============ */
+let recentlyViewed=[];
+function trackRecent(n,p,i){recentlyViewed=recentlyViewed.filter(r=>r.name!==n);recentlyViewed.unshift({name:n,price:p,img:i});if(recentlyViewed.length>5)recentlyViewed.pop();const sec=document.getElementById('recently'),grid=document.getElementById('rec-grid');if(!sec||!grid)return;sec.style.display=recentlyViewed.length?'block':'none';grid.innerHTML=recentlyViewed.map(r=>`<div class="rec-card" onclick="addToCart('${esc(r.name)}',${r.price},'${r.img}')"><img src="${r.img}" alt=""><div class="rec-name">${esc(r.name)}</div><div class="rec-price">${r.price.toFixed(2)} €</div></div>`).join('');}
+
+/* ============ CANVAS BACKGROUNDS ============ */
+(function(){const sc=document.getElementById('star-canvas');if(!sc)return;const sx=sc.getContext('2d');const rsz=()=>{sc.width=window.innerWidth;sc.height=window.innerHeight;};window.addEventListener('resize',rsz);rsz();const stars=[];for(let i=0;i<110;i++)stars.push({x:Math.random()*sc.width,y:Math.random()*sc.height,v:.05+Math.random()*.25,o:Math.random()*.8});function draw(){sx.clearRect(0,0,sc.width,sc.height);stars.forEach(s=>{s.y-=s.v;if(s.y<0)s.y=sc.height;sx.fillStyle='rgba(255,255,255,'+s.o+')';sx.fillRect(s.x,s.y,1,1);});requestAnimationFrame(draw);}draw();})();
+(function(){const pc=document.getElementById('particle-canvas');if(!pc)return;const px=pc.getContext('2d');const rsz=()=>{pc.width=window.innerWidth;pc.height=window.innerHeight;};window.addEventListener('resize',rsz);rsz();const pts=[];for(let i=0;i<70;i++)pts.push({x:Math.random()*pc.width,y:Math.random()*pc.height,vx:(Math.random()-.5)*.4,vy:-Math.random()*.5-.1,sz:Math.random()*2+.5,alpha:Math.random()*.4+.1,color:Math.random()>.55?'#bc13fe':'#00f2ff'});function draw(){px.clearRect(0,0,pc.width,pc.height);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.y<-10){p.y=pc.height+10;p.x=Math.random()*pc.width;}px.save();px.globalAlpha=p.alpha;px.fillStyle=p.color;px.shadowColor=p.color;px.shadowBlur=10;px.beginPath();px.arc(p.x,p.y,p.sz,0,Math.PI*2);px.fill();px.restore();});requestAnimationFrame(draw);}draw();})();
+(function(){const wc=document.getElementById('warp-canvas');if(!wc)return;const wx=wc.getContext('2d');const rw=()=>{wc.width=window.innerWidth;wc.height=window.innerHeight;};window.addEventListener('resize',rw);rw();const wpts=[];for(let i=0;i<400;i++)wpts.push({x:Math.random()*wc.width-wc.width/2,y:Math.random()*wc.height-wc.height/2,z:Math.random()*wc.width});let warpRunning=true;function aw(){if(!warpRunning)return;wx.fillStyle='rgba(0,0,0,.18)';wx.fillRect(0,0,wc.width,wc.height);wx.fillStyle='#00f2ff';wpts.forEach(s=>{s.z-=14;if(s.z<=0)s.z=wc.width;const ox=s.x/s.z*wc.width+wc.width/2,oy=s.y/s.z*wc.width+wc.height/2;const sz=Math.max(.5,(1-s.z/wc.width)*2.5);wx.fillRect(ox,oy,sz,sz);});requestAnimationFrame(aw);}aw();setTimeout(()=>{warpRunning=false;},3500);})();
+
+/* ============ LIGHTNING + ABOUT REVEAL ============ */
+function createLightning(){const bg=document.getElementById('lightning-bg');if(!bg)return;for(let i=0;i<10;i++){const el=document.createElement('div');el.className='lightning-line';el.style.cssText='left:'+(5+Math.random()*90)+'%;top:'+Math.random()*50+'%;height:'+(100+Math.random()*300)+'px;--dur:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*5+'s';bg.appendChild(el);}}
+createLightning();
+const aboutObs=new IntersectionObserver((entries)=>{entries.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in-view');aboutObs.unobserve(en.target);}});},{threshold:.15,rootMargin:'0px 0px -50px 0px'});
+document.querySelectorAll('.about-block').forEach(el=>aboutObs.observe(el));
+
+/* ============ INTRO KILL ============ */
+function killIntro(){const intro=document.getElementById('intro-overlay');if(!intro)return;intro.style.transition='opacity .8s ease';intro.style.opacity='0';setTimeout(()=>{intro.style.display='none';},800);}
+setTimeout(killIntro,2500);
+document.addEventListener('click',()=>{const intro=document.getElementById('intro-overlay');if(intro&&intro.style.display!=='none')setTimeout(killIntro,100);},true);
+
+/* ============ SCROLL TOP ============ */
+window.addEventListener('scroll',()=>{const el=document.getElementById('scroll-top');if(el)el.classList.toggle('vis',window.scrollY>400);});
 
 /* ============ INIT ============ */
 loadCart();updateCart();

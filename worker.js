@@ -121,8 +121,22 @@ async function test(){
       if (path === "/api/discount/check" && request.method === "POST") return await checkDiscountCode(request, env);
       if (path === "/api/discount/use" && request.method === "POST") return await useDiscountCode(request, env);
       if (path === "/api/newsletter/subscribe" && request.method === "POST") return await newsletterSubscribe(request, env);
+      if (path === "/api/newsletter/check" && request.method === "POST") return await newsletterCheck(request, env);
       if (path === "/api/admin/conversations" && request.method === "GET") return await adminConversations(request, env);
       if (path === "/api/admin/newsletter/send" && request.method === "POST") return await sendNewsletter(request, env);
+      if (path === "/api/admin/products" && request.method === "GET") return await adminListProducts(request, env);
+      if (path === "/api/admin/products" && request.method === "POST") return await adminCreateProduct(request, env);
+      if (path === "/api/products" && request.method === "GET") return await listProducts(request, env);
+      if (path === "/api/b2b/inquiry" && request.method === "POST") return await b2bInquiry(request, env);
+      if (path === "/api/b2b/login" && request.method === "POST") return await b2bLogin(request, env);
+      if (path.startsWith("/api/admin/order/") && path.endsWith("/cancel") && request.method === "POST") {
+        const orderNr = path.split("/")[4];
+        return await cancelOrder(request, env, orderNr);
+      }
+      if (path.startsWith("/api/admin/products/") && request.method === "DELETE") {
+        const slug = path.split("/").pop();
+        return await adminDeleteProduct(request, env, slug);
+      }
       if (path.startsWith("/api/admin/repair/") && request.method === "PATCH") {
         const repNr = path.split("/").pop();
         return await updateRepair(request, env, repNr);
@@ -664,13 +678,45 @@ async function newsletterSubscribe(request, env) {
   if (!env.LEXORD_DATA) return json({ success: false });
   const body = await request.json();
   const email = (body.email || "").trim().toLowerCase();
+  const fp = (body.fp || "").trim();
+  const ip = request.headers.get("CF-Connecting-IP") || "0.0.0.0";
   if (!email || !email.includes("@")) return json({ success: false, error: "Email ungueltig" });
+
+  // Block disposable
+  const domain = email.split("@")[1];
+  if (DISPOSABLE_DOMAINS.some(d => domain === d || domain.endsWith("." + d))) {
+    return json({ success: false, error: "Wegwerf-Email nicht erlaubt" });
+  }
+
+  // Block duplicates
+  const existing = await env.LEXORD_DATA.get("newsletter:" + email);
+  if (existing) return json({ success: false, error: "Bereits angemeldet" });
 
   await env.LEXORD_DATA.put("newsletter:" + email, JSON.stringify({
     email,
     subscribed: new Date().toISOString(),
-    active: true
+    active: true,
+    ip,
+    fp
   }));
+
+  // Track IP rate-limit
+  if (ip && ip !== "0.0.0.0") {
+    const ipKey = "nl_ip:" + ip;
+    const ipData = await env.LEXORD_DATA.get(ipKey);
+    const ipRec = ipData ? JSON.parse(ipData) : { count: 0, ts: Date.now() };
+    if (Date.now() - ipRec.ts > 24 * 3600 * 1000) {
+      ipRec.count = 0;
+      ipRec.ts = Date.now();
+    }
+    ipRec.count++;
+    await env.LEXORD_DATA.put(ipKey, JSON.stringify(ipRec), { expirationTtl: 30 * 24 * 3600 });
+  }
+
+  // Track fingerprint (30 days)
+  if (fp) {
+    await env.LEXORD_DATA.put("nl_fp:" + fp, email, { expirationTtl: 30 * 24 * 3600 });
+  }
 
   return json({ success: true });
 }
@@ -715,6 +761,229 @@ async function sendNewsletter(request, env) {
   }
 
   return json({ success: true, sent, failed, total: recipients.length });
+}
+
+// ============ NEWSLETTER ANTI-FAKE CHECK ============
+const DISPOSABLE_DOMAINS = [
+  "mailinator.com", "tempmail.com", "guerrillamail.com", "10minutemail.com",
+  "throwaway.email", "fakeinbox.com", "trashmail.com", "sharklasers.com",
+  "maildrop.cc", "yopmail.com", "tempmail.org", "getairmail.com",
+  "spamgourmet.com", "mintemail.com", "mailcatch.com", "moakt.com",
+  "tempr.email", "minuteinbox.com", "emailondeck.com", "fakemail.net"
+];
+
+async function newsletterCheck(request, env) {
+  if (!env.LEXORD_DATA) return json({ ok: false, reason: "db" });
+  const body = await request.json();
+  const email = (body.email || "").trim().toLowerCase();
+  const fp = (body.fp || "").trim();
+  const ip = request.headers.get("CF-Connecting-IP") || "0.0.0.0";
+
+  if (!email || !email.includes("@") || email.length < 6) {
+    return json({ ok: false, reason: "invalid", msg: "E-Mail-Adresse ungueltig" });
+  }
+  const domain = email.split("@")[1];
+  if (!domain || !domain.includes(".")) {
+    return json({ ok: false, reason: "invalid", msg: "Domain ungueltig" });
+  }
+  if (DISPOSABLE_DOMAINS.some(d => domain === d || domain.endsWith("." + d))) {
+    return json({ ok: false, reason: "disposable", msg: "Wegwerf-E-Mail-Adressen sind nicht erlaubt" });
+  }
+
+  // Check if already subscribed
+  const existing = await env.LEXORD_DATA.get("newsletter:" + email);
+  if (existing) {
+    return json({ ok: false, reason: "duplicate", msg: "Diese E-Mail ist bereits angemeldet" });
+  }
+
+  // Check IP rate-limit (max 3 different emails from same IP in 24h)
+  if (ip && ip !== "0.0.0.0") {
+    const ipKey = "nl_ip:" + ip;
+    const ipData = await env.LEXORD_DATA.get(ipKey);
+    const ipRec = ipData ? JSON.parse(ipData) : { count: 0, ts: Date.now() };
+    if (Date.now() - ipRec.ts > 24 * 3600 * 1000) {
+      ipRec.count = 0;
+      ipRec.ts = Date.now();
+    }
+    if (ipRec.count >= 3) {
+      return json({ ok: false, reason: "rate", msg: "Zu viele Anmeldungen von dieser IP (max. 3 / Tag)" });
+    }
+  }
+
+  // Check fingerprint dedup
+  if (fp) {
+    const fpKey = "nl_fp:" + fp;
+    const used = await env.LEXORD_DATA.get(fpKey);
+    if (used) {
+      return json({ ok: false, reason: "device", msg: "Dieses Geraet hat bereits einen Willkommens-Code erhalten" });
+    }
+  }
+
+  return json({ ok: true });
+}
+
+// ============ B2B ============
+async function b2bInquiry(request, env) {
+  if (!env.LEXORD_DATA) return json({ success: false, error: "DB nicht konfiguriert" });
+  const body = await request.json();
+  const required = ["company", "email", "name", "ustid"];
+  for (const f of required) {
+    if (!body[f]) return json({ success: false, error: "Feld fehlt: " + f });
+  }
+  const id = "B2B-" + Date.now().toString().slice(-7);
+  const record = {
+    id,
+    company: body.company,
+    email: body.email,
+    name: body.name,
+    phone: body.phone || "",
+    ustid: body.ustid,
+    address: body.address || "",
+    industry: body.industry || "",
+    volume: body.volume || "",
+    message: body.message || "",
+    status: "pending",
+    created: new Date().toISOString()
+  };
+  await env.LEXORD_DATA.put("b2b:" + id, JSON.stringify(record));
+
+  // Notify admin
+  if (env.BREVO_API_KEY) {
+    const fromE = (env.FROM_EMAIL || ADMIN_EMAIL).toLowerCase();
+    const html = "<h2>Neue B2B-Anfrage " + id + "</h2>" +
+      "<p><strong>Firma:</strong> " + escapeHtml(body.company) + "</p>" +
+      "<p><strong>USt-ID:</strong> " + escapeHtml(body.ustid) + "</p>" +
+      "<p><strong>Ansprechpartner:</strong> " + escapeHtml(body.name) + " (" + escapeHtml(body.email) + ")</p>" +
+      "<p><strong>Telefon:</strong> " + escapeHtml(body.phone || "-") + "</p>" +
+      "<p><strong>Branche:</strong> " + escapeHtml(body.industry || "-") + "</p>" +
+      "<p><strong>Bestellvolumen:</strong> " + escapeHtml(body.volume || "-") + "</p>" +
+      "<p><strong>Nachricht:</strong></p><blockquote>" + escapeHtml(body.message || "-") + "</blockquote>";
+    try {
+      await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "api-key": env.BREVO_API_KEY, "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          sender: { name: "LEXORD B2B", email: fromE },
+          to: [{ email: fromE, name: "LEXORD Admin" }],
+          replyTo: { email: body.email },
+          subject: "[B2B " + id + "] Neue Anfrage von " + body.company,
+          htmlContent: html
+        })
+      });
+      // Confirmation to customer
+      const custHtml = "<h2>Vielen Dank fuer Ihre B2B-Anfrage</h2>" +
+        "<p>Hallo " + escapeHtml(body.name) + ",</p>" +
+        "<p>wir haben Ihre Anfrage <strong>" + id + "</strong> erhalten und melden uns innerhalb von 24 Stunden mit einem individuellen Angebot.</p>" +
+        "<p>Bei dringenden Fragen: <a href=\"tel:+4915204718720\">0152 047 18720</a></p>" +
+        "<p>LEXORD Engineering &middot; Made in Germany</p>";
+      await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "api-key": env.BREVO_API_KEY, "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          sender: { name: "LEXORD Engineering", email: fromE },
+          to: [{ email: body.email, name: body.name }],
+          subject: "[" + id + "] B2B-Anfrage erhalten | LEXORD",
+          htmlContent: custHtml
+        })
+      });
+    } catch (e) { /* ignore */ }
+  }
+  return json({ success: true, id });
+}
+
+async function b2bLogin(request, env) {
+  // Stub: full B2B login system (with custom prices) coming in Phase 2.
+  // For now, accept any inquiry-based "B2B-XXXXXXX" id + email match.
+  if (!env.LEXORD_DATA) return json({ success: false, error: "DB" });
+  const body = await request.json();
+  const id = (body.id || "").toUpperCase().trim();
+  const email = (body.email || "").toLowerCase().trim();
+  if (!id.startsWith("B2B-") || !email) return json({ success: false, error: "Ungueltige B2B-Nummer" });
+  const raw = await env.LEXORD_DATA.get("b2b:" + id);
+  if (!raw) return json({ success: false, error: "Nicht gefunden" });
+  const rec = JSON.parse(raw);
+  if ((rec.email || "").toLowerCase() !== email) return json({ success: false, error: "E-Mail stimmt nicht" });
+  if (rec.status !== "approved") return json({ success: false, error: "B2B-Konto noch nicht freigeschaltet. Wir melden uns binnen 24h." });
+  const token = btoa("b2b:" + id + ":" + Date.now());
+  return json({ success: true, token, company: rec.company, discount: rec.discount || 10 });
+}
+
+// ============ ORDER CANCEL ============
+async function cancelOrder(request, env, orderNr) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ error: "KV not bound" }, 500);
+  const existing = await env.LEXORD_DATA.get("order:" + orderNr);
+  if (!existing) return json({ success: false, error: "Bestellung nicht gefunden" }, 404);
+  const order = JSON.parse(existing);
+  order.status = "cancelled";
+  order.cancelled = new Date().toISOString();
+  order.updated = new Date().toISOString();
+  await env.LEXORD_DATA.put("order:" + orderNr, JSON.stringify(order));
+
+  // Send cancellation email
+  if (order.email && env.BREVO_API_KEY) {
+    const fromE = (env.FROM_EMAIL || ADMIN_EMAIL).toLowerCase();
+    const html = "<!DOCTYPE html><html><body style=\"margin:0;padding:0;background:#f4f4f4;font-family:Arial,sans-serif\">" +
+      "<div style=\"max-width:600px;margin:30px auto;background:#fff;border-radius:10px;overflow:hidden\">" +
+      "<div style=\"background:#000;padding:24px;text-align:center\"><div style=\"font-size:20px;font-weight:900;color:#ff4d4f;letter-spacing:5px\">LEXORD&reg;</div></div>" +
+      "<div style=\"background:#ff4d4f;padding:14px;text-align:center;color:#fff;font-weight:bold;letter-spacing:2px\">BESTELLUNG STORNIERT</div>" +
+      "<div style=\"padding:28px;color:#333;font-size:14px;line-height:1.7\">" +
+      "<p>Hallo " + escapeHtml(order.name || "") + ",</p>" +
+      "<p>deine Bestellung <strong>" + escapeHtml(orderNr) + "</strong> wurde storniert.</p>" +
+      "<p>Eine Rueckerstattung in Hoehe von <strong>" + (order.total || 0).toFixed(2) + " EUR</strong> wird innerhalb von 1-3 Werktagen ueber die urspruengliche Zahlungsmethode (PayPal) ausgeloest.</p>" +
+      "<p>Bei Rueckfragen erreichst du uns unter <a href=\"mailto:Kontakt@Lexord.de\">Kontakt@Lexord.de</a> oder Tel. 0152 047 18720.</p>" +
+      "<p>Wir bedauern den Vorfall und hoffen, dich bald wieder bei LEXORD begruessen zu duerfen.</p>" +
+      "<p>Beste Gruesse,<br>Leon Schulz<br>LEXORD Engineering</p>" +
+      "</div></div></body></html>";
+    try {
+      await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "api-key": env.BREVO_API_KEY, "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          sender: { name: "LEXORD Engineering", email: fromE },
+          to: [{ email: order.email, name: order.name || "Kunde" }],
+          subject: "[STORNIERT] Bestellung " + orderNr + " | LEXORD",
+          htmlContent: html
+        })
+      });
+    } catch (e) { /* ignore */ }
+  }
+  return json({ success: true });
+}
+
+// ============ PRODUCTS ============
+async function listProducts(request, env) {
+  if (!env.LEXORD_DATA) return json({ products: [] });
+  const list = await env.LEXORD_DATA.list({ prefix: "product:" });
+  const products = [];
+  for (const k of list.keys) {
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if (raw) products.push(JSON.parse(raw));
+  }
+  return json({ products });
+}
+
+async function adminListProducts(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  return await listProducts(request, env);
+}
+
+async function adminCreateProduct(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ error: "KV not bound" }, 500);
+  const p = await request.json();
+  if (!p.slug || !p.name || !p.price) return json({ error: "slug/name/price required" }, 400);
+  p.created = p.created || new Date().toISOString();
+  p.updated = new Date().toISOString();
+  await env.LEXORD_DATA.put("product:" + p.slug, JSON.stringify(p));
+  return json({ success: true, slug: p.slug });
+}
+
+async function adminDeleteProduct(request, env, slug) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ error: "KV not bound" }, 500);
+  await env.LEXORD_DATA.delete("product:" + slug);
+  return json({ success: true });
 }
 
 async function adminConversations(request, env) {

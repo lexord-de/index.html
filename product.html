@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#000000">
+<title>Produkt | LEXORD®</title>
+<meta name="description" content="LEXORD Custom Controller — handgefertigt in Deutschland.">
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--neon:#00f2ff;--neon2:#bc13fe;--bg:#000;--green:#00b67a;--err:#ff4d4f}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif;overflow-x:hidden}
+header{position:fixed;top:0;width:100%;z-index:100;padding:14px 5%;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);border-bottom:1px solid #0d0d0d;display:flex;align-items:center;justify-content:space-between}
+.brand{font-family:'Orbitron';font-weight:900;font-size:1.1rem;letter-spacing:5px;color:#fff;text-decoration:none}
+.crumbs{font-family:'Orbitron';font-size:9px;color:#666;letter-spacing:1.5px}
+.crumbs a{color:var(--neon);text-decoration:none}
+.crumbs span{color:#333;margin:0 8px}
+
+.product-hero{padding:110px 5% 50px;display:grid;grid-template-columns:1fr 1fr;gap:60px;max-width:1280px;margin:0 auto;align-items:start}
+@media(max-width:880px){.product-hero{grid-template-columns:1fr;gap:30px;padding-top:90px}}
+
+.gallery{position:sticky;top:90px}
+@media(max-width:880px){.gallery{position:static}}
+.main-img-wrap{aspect-ratio:1/1;background:radial-gradient(ellipse,#0a0a0a,#000 70%);border:1px solid #131318;border-radius:16px;display:flex;align-items:center;justify-content:center;padding:30px;overflow:hidden;position:relative}
+.main-img{max-width:100%;max-height:100%;object-fit:contain;transition:transform .6s}
+.main-img-wrap:hover .main-img{transform:scale(1.04)}
+.thumbs{display:flex;gap:8px;margin-top:14px;overflow-x:auto;padding-bottom:6px}
+.thumb{aspect-ratio:1/1;width:72px;background:#0a0a0a;border:2px solid #131318;border-radius:8px;cursor:pointer;padding:6px;flex-shrink:0;transition:.2s}
+.thumb img{width:100%;height:100%;object-fit:contain}
+.thumb.active,.thumb:hover{border-color:var(--neon)}
+
+.info-col{padding-top:10px}
+.cat-tag{font-family:'Orbitron';font-size:9px;color:var(--neon);letter-spacing:3px;margin-bottom:14px;text-transform:uppercase}
+h1{font-family:'Orbitron';font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:900;letter-spacing:-1px;line-height:1.1;margin-bottom:16px}
+.rating-row{display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+.stars{color:#ffae00;font-size:16px;letter-spacing:2px}
+.rating-text{font-family:'Orbitron';font-size:9px;color:#888;letter-spacing:1px}
+.rating-text strong{color:#fff}
+
+.price-block{padding:22px;background:linear-gradient(180deg,#080808,#000);border:1px solid #131318;border-radius:14px;margin-bottom:22px}
+.price{font-family:'Orbitron';font-size:32px;color:var(--neon);font-weight:900;line-height:1}
+.price-vat{font-family:'Orbitron';font-size:9px;color:#555;letter-spacing:1.5px;margin-top:6px}
+.stock-row{display:flex;align-items:center;gap:14px;margin-top:16px;padding-top:16px;border-top:1px solid #131318;flex-wrap:wrap}
+.stock-badge{font-family:'Orbitron';font-size:9px;color:var(--green);letter-spacing:1.5px;display:flex;align-items:center;gap:7px}
+.stock-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:p 1.6s infinite}
+@keyframes p{50%{opacity:.4}}
+.delivery-info{font-family:'Orbitron';font-size:9px;color:#aaa;letter-spacing:1px}
+
+.feat-list{list-style:none;background:#070707;border:1px solid #131318;border-radius:12px;padding:22px;margin-bottom:22px}
+.feat-list li{padding:9px 0 9px 26px;position:relative;font-size:13px;color:#bbb;border-bottom:1px solid #0f0f0f;line-height:1.6}
+.feat-list li:last-child{border-bottom:none}
+.feat-list li::before{content:'✓';position:absolute;left:0;color:var(--neon);font-weight:900;font-size:14px}
+
+.btn-row{display:flex;gap:10px;margin-bottom:14px}
+.btn{flex:1;padding:16px;background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:11px;letter-spacing:2px;border-radius:10px;cursor:pointer;transition:.3s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,242,255,.35)}
+.btn.secondary{background:transparent;border:1px solid var(--neon);color:var(--neon)}
+.btn.secondary:hover{background:var(--neon);color:#000}
+.qty-row{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.qty-row label{font-family:'Orbitron';font-size:9px;color:#666;letter-spacing:2px}
+.qty-input{display:flex;align-items:center;border:1px solid #1a1a1a;border-radius:7px;overflow:hidden}
+.qty-input button{width:36px;height:38px;background:#0a0a0a;border:none;color:#fff;font-size:16px;cursor:pointer;transition:.2s}
+.qty-input button:hover{background:#131318;color:var(--neon)}
+.qty-input span{display:inline-block;width:48px;text-align:center;font-family:'Orbitron';font-size:12px;color:var(--neon)}
+
+.trust-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;padding:18px;background:#040404;border:1px solid #0f0f0f;border-radius:12px;margin-bottom:30px}
+.trust-item{text-align:center}
+.trust-item-ico{font-size:18px;margin-bottom:4px}
+.trust-item-lbl{font-family:'Orbitron';font-size:7px;color:#888;letter-spacing:1px;text-transform:uppercase}
+
+.tabs-section{max-width:1280px;margin:0 auto;padding:0 5% 80px}
+.tabs{display:flex;gap:0;border-bottom:1px solid #131318;margin-bottom:30px;flex-wrap:wrap}
+.tab-btn{background:none;border:none;color:#666;font-family:'Orbitron';font-size:10px;letter-spacing:2px;padding:14px 22px;cursor:pointer;transition:.2s;border-bottom:2px solid transparent;text-transform:uppercase}
+.tab-btn.active{color:var(--neon);border-bottom-color:var(--neon)}
+.tab-content{display:none;font-size:14px;color:#aaa;line-height:1.85;max-width:800px}
+.tab-content.active{display:block}
+.tab-content h3{font-family:'Orbitron';font-size:13px;color:#fff;letter-spacing:2px;margin:22px 0 12px}
+.tab-content h3:first-child{margin-top:0}
+.tab-content p{margin-bottom:14px}
+.tab-content ul{margin-left:20px;margin-bottom:14px}
+.tab-content li{padding:4px 0}
+.spec-table{width:100%;border-collapse:collapse;margin-top:12px;background:#070707;border:1px solid #131318;border-radius:10px;overflow:hidden}
+.spec-table tr{border-bottom:1px solid #0f0f0f}
+.spec-table tr:last-child{border-bottom:none}
+.spec-table td{padding:13px 18px;font-size:13px}
+.spec-table td:first-child{color:#666;font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;width:35%}
+.spec-table td:last-child{color:#ddd}
+
+.related{max-width:1280px;margin:0 auto;padding:0 5% 60px}
+.related h2{font-family:'Orbitron';font-size:14px;color:var(--neon);letter-spacing:3px;margin-bottom:24px}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.related-card{background:#080808;border:1px solid #131318;border-radius:10px;padding:14px;cursor:pointer;transition:.3s;text-align:center}
+.related-card:hover{border-color:var(--neon);transform:translateY(-3px)}
+.related-card img{width:100%;aspect-ratio:1/1;object-fit:contain;background:#0a0a0a;border-radius:8px;padding:10px}
+.related-card-name{font-family:'Orbitron';font-size:9px;color:#ccc;letter-spacing:1px;margin-top:10px}
+.related-card-price{font-family:'Orbitron';font-size:12px;color:var(--neon);font-weight:700;margin-top:5px}
+
+footer{padding:40px 5%;text-align:center;background:#040404;border-top:1px solid #0a0a0a;font-family:'Orbitron';font-size:9px;color:#444;letter-spacing:2px}
+footer a{color:var(--neon);text-decoration:none;margin:0 10px}
+.toast{position:fixed;bottom:30px;right:28px;background:#0c0c0c;border:1px solid var(--neon);border-left:3px solid var(--neon);padding:14px 20px;border-radius:8px;font-family:'Orbitron';font-size:9px;letter-spacing:1px;z-index:9999;animation:tIn .3s;color:#fff}
+@keyframes tIn{from{transform:translateX(60px);opacity:0}to{transform:translateX(0);opacity:1}}
+.error-state{padding:120px 20px;text-align:center;color:#666}
+.error-state h2{font-family:'Orbitron';color:var(--err);letter-spacing:3px;margin-bottom:14px}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="brand" href="/">LEXORD®</a>
+  <div class="crumbs">
+    <a href="/">Home</a><span>/</span><a href="collections.html">Produkte</a><span>/</span><span style="color:#666" id="crumb-name">…</span>
+  </div>
+</header>
+
+<div id="loading" style="padding:200px;text-align:center;color:#444;font-family:Orbitron;letter-spacing:3px">LADE PRODUKT…</div>
+
+<div id="content" style="display:none">
+
+<section class="product-hero">
+
+  <div class="gallery">
+    <div class="main-img-wrap">
+      <img id="main-img" class="main-img" alt="">
+    </div>
+    <div class="thumbs" id="thumbs"></div>
+  </div>
+
+  <div class="info-col">
+    <div class="cat-tag" id="cat-tag"></div>
+    <h1 id="title"></h1>
+    <div class="rating-row">
+      <span class="stars" id="stars">★★★★★</span>
+      <span class="rating-text"><strong id="rating-num">4.9</strong> · <span id="rating-cnt">42</span> Bewertungen</span>
+    </div>
+
+    <div class="price-block">
+      <div class="price" id="price">0,00 €</div>
+      <div class="price-vat">Endpreis · keine MwSt. (§ 19 UStG) · zzgl. Versand</div>
+      <div class="stock-row">
+        <div class="stock-badge"><span class="stock-dot"></span>AUF LAGER</div>
+        <div class="delivery-info">📦 Versand in 24h · Lieferung in 1–3 Werktagen (DE)</div>
+      </div>
+    </div>
+
+    <ul class="feat-list" id="feat-list"></ul>
+
+    <div class="qty-row">
+      <label>MENGE</label>
+      <div class="qty-input">
+        <button onclick="changeQty(-1)">−</button>
+        <span id="qty">1</span>
+        <button onclick="changeQty(1)">+</button>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" onclick="addToCart()">🛒 IN DEN WARENKORB</button>
+      <button class="btn secondary" onclick="buyNow()">⚡ JETZT KAUFEN</button>
+    </div>
+
+    <div class="trust-bar">
+      <div class="trust-item"><div class="trust-item-ico">🔒</div><div class="trust-item-lbl">SSL · DSGVO</div></div>
+      <div class="trust-item"><div class="trust-item-ico">🚚</div><div class="trust-item-lbl">24H VERSAND</div></div>
+      <div class="trust-item"><div class="trust-item-ico">🔄</div><div class="trust-item-lbl">14T RÜCKGABE</div></div>
+      <div class="trust-item"><div class="trust-item-ico">🛡️</div><div class="trust-item-lbl">24M GARANTIE</div></div>
+      <div class="trust-item"><div class="trust-item-ico">🇩🇪</div><div class="trust-item-lbl">MADE IN DE</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="tabs-section">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('desc',this)">📖 BESCHREIBUNG</button>
+    <button class="tab-btn" onclick="switchTab('spec',this)">📊 TECHNISCHE DATEN</button>
+    <button class="tab-btn" onclick="switchTab('ship',this)">🚚 VERSAND &amp; RÜCKGABE</button>
+    <button class="tab-btn" onclick="switchTab('rev',this)">⭐ BEWERTUNGEN</button>
+  </div>
+  <div class="tab-content active" id="tab-desc"></div>
+  <div class="tab-content" id="tab-spec"></div>
+  <div class="tab-content" id="tab-ship">
+    <h3>🚚 Versand</h3>
+    <p>Wir versenden alle Bestellungen <strong>spätestens am nächsten Werktag</strong> per DHL aus Domsühl (Deutschland). Versandkosten:</p>
+    <ul>
+      <li><strong>Deutschland:</strong> 6,99 € — kostenlos ab 50 €</li>
+      <li><strong>Österreich, Niederlande, Belgien, Polen u.a.:</strong> 14,49 €</li>
+      <li><strong>Frankreich, Italien, Spanien u.a.:</strong> 16,49 €</li>
+      <li><strong>Schweiz:</strong> 20,99 €</li>
+      <li><strong>UK / USA / Welt:</strong> 19,99 € – 24,99 €</li>
+    </ul>
+    <h3>🔄 Rückgabe</h3>
+    <p>Du hast <strong>14 Tage Widerrufsrecht</strong> ab Erhalt. Ausgenommen sind individuell konfigurierte Controller (§ 312g Abs. 2 Nr. 1 BGB). Rücksendekosten trägst du selbst.</p>
+    <h3>🛡️ Garantie</h3>
+    <p>Auf alle Produkte gilt die gesetzliche Gewährleistung von <strong>24 Monaten</strong>. Bei Defekten innerhalb dieser Zeit reparieren oder ersetzen wir kostenfrei.</p>
+  </div>
+  <div class="tab-content" id="tab-rev">
+    <h3>⭐ Was unsere Kunden sagen</h3>
+    <p>Über <strong>91+ Bewertungen mit Ø 4,9 von 5 Sternen</strong> auf Google, Trustpilot &amp; eBay.</p>
+    <ul>
+      <li>"Beste Scuf Alternative. Qualität ist Wahnsinn!" — Trustpilot ★★★★★</li>
+      <li>"Stickzange perfekt. 24h Versand top!" — Google ★★★★★</li>
+      <li>"Kein Stick-Drift mehr nach TMR-Umbau!" — Trustpilot ★★★★★</li>
+      <li>"Engineering auf höchstem Level. Super Kontakt." — eBay ★★★★★</li>
+    </ul>
+    <p style="margin-top:18px"><a href="https://de.trustpilot.com/review/lexord.de" target="_blank" rel="noopener" style="color:var(--neon);text-decoration:none;font-family:Orbitron;font-size:10px;letter-spacing:2px">→ ALLE BEWERTUNGEN AUF TRUSTPILOT</a></p>
+  </div>
+</section>
+
+<section class="related">
+  <h2>🎮 Das könnte dir auch gefallen</h2>
+  <div class="related-grid" id="related"></div>
+</section>
+
+</div>
+
+<div id="not-found" style="display:none" class="error-state">
+  <h2>PRODUKT NICHT GEFUNDEN</h2>
+  <p>Das angeforderte Produkt existiert nicht.</p>
+  <p style="margin-top:18px"><a href="collections.html" style="color:var(--neon);text-decoration:none;font-family:Orbitron;font-size:10px;letter-spacing:2px">← ZUR PRODUKTÜBERSICHT</a></p>
+</div>
+
+<footer>
+  © LEXORD® 2026 · Made in Germany ·
+  <a href="/">Shop</a> ·
+  <a href="collections.html">Alle Produkte</a> ·
+  <a href="b2b.html">B2B</a> ·
+  <a href="/#impressum">Impressum</a> ·
+  <a href="/#datenschutz">Datenschutz</a>
+</footer>
+
+<script>
+const PRODUCTS = {
+  'lxrd-elite-pro':{
+    name:'LXRD Elite Pro', cat:'Premium Controller', price:280, rating:4.9, reviews:8,
+    images:['Photoroom_20260306_112425.png','Photoroom_20260305_123705.png','Photoroom_20260305_140346.png'],
+    features:['TMR Pro Sticks (Premium · drift-resistant)','Clicky Trigger Pro mit 1mm Auslöseweg','Carbon-Look Premium-Gehäuse','4× programmierbare Back-Paddles V3','RGB-Beleuchtung mit App-Steuerung','Custom Gravur inklusive (Touchpad)','24M Hersteller-Garantie · Made in Germany'],
+    desc:`<h3>🎮 Das Flaggschiff aus dem Hause LEXORD</h3>
+<p>Der <strong>LXRD Elite Pro</strong> ist unsere absolute Spitzenklasse — entwickelt für professionelle Gamer, die keine Kompromisse eingehen. Jedes Detail wurde von Leon Schulz persönlich konzipiert und in präziser Handarbeit umgesetzt.</p>
+<h3>⚡ TMR Pro Sticks — die Drift-Killer</h3>
+<p>Statt der herkömmlichen Potentiometer setzen wir auf <strong>Tunnel-Magneto-Resistive Sensoren (TMR)</strong>. Diese arbeiten kontaktlos über Magnetfelder und sind damit praktisch verschleißfrei. Drift gehört der Vergangenheit an — auch nach Jahren intensivem Einsatz.</p>
+<h3>🎯 Clicky Trigger Pro</h3>
+<p>Unsere überarbeiteten Trigger bieten ein <strong>taktiles Mouse-Click-Feedback</strong> mit nur 1 mm Auslöseweg. Perfekt für Shooter wie Call of Duty, Apex Legends oder Fortnite, wo jede Millisekunde zählt.</p>
+<h3>🎨 Carbon-Look &amp; RGB</h3>
+<p>Das Gehäuse besitzt eine <strong>matte Carbon-Optik</strong>, die Fingerabdrücke vermeidet und einen sicheren Grip bietet. Die integrierte RGB-Beleuchtung lässt sich individuell konfigurieren — von dezent bis spektakulär.</p>
+<h3>✨ 4× Back-Paddles V3</h3>
+<p>Vier <strong>frei programmierbare Paddles</strong> auf der Rückseite ermöglichen Schritt, Sprung, Reload &amp; Crouch ohne dass dein Daumen den Stick verlässt. Profile speicherbar via USB-C Setup-App.</p>`,
+    spec:[
+      ['Modell','LEXORD Elite Pro · 2026 Edition'],
+      ['Basis','Sony PS5 DualSense'],
+      ['Stick-Technologie','TMR Pro (Tunnel-Magneto-Resistive)'],
+      ['Trigger','Clicky Pro · 1 mm Auslöseweg'],
+      ['Paddles','4 × programmierbar · Profile via App'],
+      ['Beleuchtung','Volle RGB · Audio-reaktiv'],
+      ['Gravur','Custom inklusive · Touchpad-Bereich'],
+      ['Verbindung','USB-C · Bluetooth 5.0'],
+      ['Akku','1560 mAh · 12 h Laufzeit'],
+      ['Kompatibilität','PS5 · PC (Windows · macOS · Linux)'],
+      ['Lieferzeit','3–5 Werktage Fertigung · 24h Versand'],
+      ['Garantie','24 Monate Gewährleistung + 12M Hersteller'],
+      ['Herkunft','100% Made in Germany · handgefertigt']
+    ]
+  },
+  'lxrd-performance':{
+    name:'LXRD Performance Black', cat:'Premium Controller', price:240, rating:4.9, reviews:42,
+    images:['Photoroom_20260305_123705.png','Photoroom_20260306_112425.png'],
+    features:['TMR Hall-Effect Sticks (drift-resistant)','Clicky Trigger / Mouse-Click','GRIP Gehäuse (Anti-Rutsch)','2× Paddle-System V2','DualSense Edge Alternative'],
+    desc:`<h3>🏆 Unser Bestseller mit 42+ Bewertungen</h3>
+<p>Der <strong>LXRD Performance Black</strong> ist die ideale Scuf-Alternative aus Deutschland — bis zu 50 % günstiger und mit überlegener Verarbeitung.</p>
+<h3>⚡ TMR Hall-Effect Sticks</h3>
+<p>Verabschiede dich von Stick-Drift: Unsere <strong>magnetischen TMR-Sticks</strong> nutzen keine mechanischen Kontakte und halten ein Leben lang.</p>
+<h3>🎯 Clicky Trigger</h3>
+<p>Verwandeln deine Trigger in <strong>Maus-Klicks</strong> — perfekt für FPS-Spiele.</p>
+<h3>🛡️ GRIP-Gehäuse &amp; 2× Paddles</h3>
+<p>Anti-Rutsch-Beschichtung an allen Kontaktflächen. Zwei Back-Paddles für Sprung &amp; Crouch.</p>`,
+    spec:[
+      ['Modell','LEXORD Performance · 2026'],
+      ['Basis','Sony PS5 DualSense'],
+      ['Stick-Technologie','TMR Hall-Effect'],
+      ['Trigger','Clicky · Mouse-Click'],
+      ['Paddles','2 × Standard'],
+      ['Gehäuse','GRIP Anti-Rutsch · matt'],
+      ['Verbindung','USB-C · Bluetooth 5.0'],
+      ['Akku','1560 mAh · 12 h'],
+      ['Garantie','24 Monate'],
+      ['Herkunft','Made in Germany']
+    ]
+  },
+  'lxrd-stealth':{
+    name:'LXRD Stealth Edition', cat:'Premium Controller', price:220, rating:4.8, reviews:5,
+    images:['Photoroom_20260501_094506.png','Photoroom_20260305_140346.png'],
+    features:['Hall-Effect Sticks','Stealth Matt-Finish','Soft-Touch Coating','2× Paddle-System V2','Smart Clicky Trigger','Limited Edition Verpackung'],
+    desc:`<h3>🌑 Limited Edition · Stealth Black</h3>
+<p>Der <strong>Stealth</strong> ist unsere nüchtern-eleganteste Edition — komplett mattschwarz, mit Soft-Touch-Beschichtung. Zeitloses Design für Gamer, die ein Statement ohne Schnörkel setzen wollen.</p>
+<h3>⚡ Hall-Effect Sticks</h3>
+<p>Magnetische Stick-Sensoren — kein Drift, präzise Bewegungen, lebenslange Haltbarkeit.</p>
+<h3>🎁 Limited Edition Verpackung</h3>
+<p>Exklusive Schwarz/Türkis-Box mit nummerierter Echtheits-Karte und Microfaser-Tuch.</p>`,
+    spec:[['Edition','Limited · nummeriert'],['Sticks','Hall-Effect'],['Trigger','Smart Clicky'],['Paddles','2× V2'],['Finish','Matt + Soft-Touch'],['Garantie','24 Monate']]
+  },
+  'lxrd-plus':{
+    name:'LXRD Plus Black', cat:'Premium Controller', price:180, rating:4.9, reviews:31,
+    images:['Photoroom_20260305_140346.png','Photoroom_20260306_112425.png'],
+    features:['Hall-Effect Sticks','Clicky Trigger','GRIP Gehäuse','2× Paddle-System V2'],
+    desc:`<h3>💪 Power-Paket zum fairen Preis</h3><p>Der <strong>LXRD Plus Black</strong> bietet alle wichtigen Pro-Features zum erschwinglichen Preis. Hall-Effect-Sticks gegen Drift, Clicky Trigger für FPS, GRIP-Gehäuse und 2 Paddles.</p>`,
+    spec:[['Sticks','Hall-Effect'],['Trigger','Clicky'],['Paddles','2× V2'],['Gehäuse','GRIP'],['Garantie','24 Monate']]
+  },
+  'lxrd-basic':{
+    name:'LXRD Basic Black', cat:'Premium Controller', price:105, rating:4.8, reviews:18,
+    images:['Photoroom_20260402_014813.png','Photoroom_20260402_014150.png'],
+    features:['2× Paddle-System','Standard Gehäuse','Perfekter Einstieg in die Welt der Custom-Controller'],
+    desc:`<h3>🎯 Der perfekte Einstieg</h3><p>Du willst die Vorteile von Back-Paddles ohne gleich tief in die Tasche zu greifen? Der <strong>LXRD Basic Black</strong> ist genau richtig.</p>`,
+    spec:[['Paddles','2× Standard'],['Gehäuse','Original'],['Garantie','24 Monate']]
+  },
+  'tmr-upgrade-kit':{
+    name:'TMR Stick Upgrade Kit', cat:'Upgrade-Kit', price:55, rating:4.9, reviews:23,
+    images:['Photoroom_20260305_123705.png'],
+    features:['2× TMR Stick Sensoren','Komplett-Set für DIY-Einbau','Anleitung &amp; Werkzeug-Hinweise','Lebenslange Haltbarkeit · kein Drift mehr','Kompatibel mit PS5 DualSense'],
+    desc:`<h3>🔧 Drift-Killer für DIY-Profis</h3><p>Mit unserem TMR-Upgrade-Kit machst du deinen vorhandenen DualSense Drift-frei. Magnetische TMR-Sticks halten ein Leben lang.</p><p><strong>⚠ Hinweis:</strong> Einbau erfordert Lötkenntnisse. Bei Unsicherheit nutze unseren <a href="/#repair-sec" style="color:var(--neon)">Reparatur-Service</a>.</p>`,
+    spec:[['Inhalt','2× TMR Sensoren'],['Kompatibilität','PS5 DualSense'],['Schwierigkeit','Fortgeschritten · Löten erforderlich']]
+  },
+  'paddle-system-v2':{
+    name:'Paddle System V2', cat:'Upgrade-Kit', price:40, rating:4.8, reviews:34,
+    images:['Photoroom_20260304_212902.png'],
+    features:['2× Back-Paddles','Frei programmierbar (jede Taste mappbar)','Magnetische Befestigung','Original-Look bleibt erhalten','PS5 DualSense kompatibel'],
+    desc:`<h3>🎮 Mehr Kontrolle ohne Umgreifen</h3><p>Mit zwei zusätzlichen Paddles auf der Rückseite kannst du Aktionen wie Springen, Crouchen oder Nachladen ausführen, ohne dass dein Daumen den Stick verlässt — entscheidender Vorteil in jedem Match.</p>`,
+    spec:[['Inhalt','2× Paddle V2 + Befestigung'],['Befestigung','Magnetisch'],['Programmierung','Frei mappbar']]
+  },
+  'hall-effect-kit':{
+    name:'Hall Effect Upgrade Kit', cat:'Upgrade-Kit', price:35, rating:4.9, reviews:29,
+    images:['Photoroom_20260305_140346.png'],
+    features:['2× Hall-Effect Stick-Sensoren','Drift-resistent','Magnetische Funktionsweise','Einfacher Tausch','PS5 / PS4 kompatibel'],
+    desc:`<h3>⚡ Drift adé</h3><p>Hall-Effect-Sensoren nutzen Magnete statt Schleifkontakten und sind dadurch praktisch unzerstörbar.</p>`,
+    spec:[['Inhalt','2× Hall-Effect Sticks'],['Kompatibilität','PS5 · PS4']]
+  },
+  'grip-housing':{
+    name:'GRIP Gehäuse Set', cat:'Gehäuse', price:28, rating:4.7, reviews:14,
+    images:['Photoroom_20260402_014813.png'],
+    features:['Anti-Rutsch Soft-Touch','Verbessertes Handling','PS5 DualSense komplett-Set','Schwarz matt'],
+    desc:`<h3>🛡️ Sicherer Halt für lange Sessions</h3><p>Soft-Touch-Beschichtung an allen kritischen Punkten verhindert Abrutschen — auch bei stundenlangen Marathon-Sessions.</p>`,
+    spec:[['Inhalt','Vorder- + Rückschale + Griffe'],['Finish','Matt · Soft-Touch']]
+  },
+  'clicky-trigger':{
+    name:'Clicky Trigger Kit', cat:'Upgrade-Kit', price:22, rating:4.8, reviews:19,
+    images:['Photoroom_20260304_212902.png'],
+    features:['2× Trigger-Module','Mouse-Click-Feedback','1 mm Auslöseweg','Perfekt für FPS'],
+    desc:`<h3>🎯 Schneller drücken, schneller treffen</h3><p>Verwandle deine Trigger in Maus-Klicks. Kürzerer Weg, taktiles Feedback — entscheidende Millisekunden.</p>`,
+    spec:[['Inhalt','2× Clicky Module'],['Auslöseweg','1 mm']]
+  },
+  'stickzange-pro':{
+    name:'Stickzange Pro', cat:'Werkzeug', price:5, rating:4.6, reviews:11,
+    images:['Stickzange.PNG'],
+    features:['Spezial-Werkzeug','Stick-Köpfe rückstandslos abziehen','Profi-Qualität'],
+    desc:`<h3>🔧 Das Werkzeug der Profis</h3><p>Mit unserer Stickzange ziehst du Stick-Caps rückstandslos und ohne Beschädigung ab — unverzichtbar für jeden DIY-Modder.</p>`,
+    spec:[['Material','ABS-Kunststoff'],['Anwendung','PS4 · PS5 · Xbox · Switch']]
+  }
+};
+
+let qty = 1;
+let currentProduct = null;
+
+function init(){
+  const slug = new URLSearchParams(window.location.search).get('p');
+  const p = PRODUCTS[slug];
+  document.getElementById('loading').style.display = 'none';
+  if (!p) {
+    document.getElementById('not-found').style.display = 'block';
+    document.title = 'Produkt nicht gefunden | LEXORD®';
+    return;
+  }
+  currentProduct = { slug, ...p };
+  document.title = p.name + ' | LEXORD®';
+  document.getElementById('content').style.display = 'block';
+  document.getElementById('crumb-name').textContent = p.name;
+  document.getElementById('cat-tag').textContent = p.cat;
+  document.getElementById('title').textContent = p.name;
+  document.getElementById('rating-num').textContent = p.rating;
+  document.getElementById('rating-cnt').textContent = p.reviews;
+  document.getElementById('price').textContent = p.price.toFixed(2).replace('.', ',') + ' €';
+  document.getElementById('stars').innerHTML = '★'.repeat(Math.round(p.rating)) + '☆'.repeat(5 - Math.round(p.rating));
+  document.getElementById('main-img').src = p.images[0];
+  document.getElementById('main-img').alt = p.name;
+  document.getElementById('thumbs').innerHTML = p.images.map((img, i) =>
+    `<div class="thumb ${i === 0 ? 'active' : ''}" onclick="setThumb(this, '${img}')"><img src="${img}" alt=""></div>`
+  ).join('');
+  document.getElementById('feat-list').innerHTML = p.features.map(f => `<li>${f}</li>`).join('');
+  document.getElementById('tab-desc').innerHTML = p.desc;
+  document.getElementById('tab-spec').innerHTML =
+    '<h3>📋 Technische Spezifikationen</h3><table class="spec-table"><tbody>' +
+    p.spec.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('') +
+    '</tbody></table>';
+  renderRelated(slug, p.cat);
+}
+
+function setThumb(el, img){
+  document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('main-img').src = img;
+}
+
+function switchTab(name, el){
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+function changeQty(d){
+  qty = Math.max(1, Math.min(99, qty + d));
+  document.getElementById('qty').textContent = qty;
+}
+
+function addToCart(){
+  if (!currentProduct) return;
+  try {
+    const stored = localStorage.getItem('lxrd_cart');
+    const cart = stored ? JSON.parse(stored) : [];
+    const existing = cart.find(i => i.name === currentProduct.name);
+    if (existing) existing.qty += qty;
+    else cart.push({ name: currentProduct.name, price: currentProduct.price, img: currentProduct.images[0], qty });
+    localStorage.setItem('lxrd_cart', JSON.stringify(cart));
+    showToast('✓ ' + qty + '× ' + currentProduct.name + ' im Warenkorb');
+  } catch (e) {
+    showToast('⚠ Fehler beim Hinzufügen');
+  }
+}
+
+function buyNow(){
+  addToCart();
+  setTimeout(() => location.href = '/?cart=open', 600);
+}
+
+function showToast(msg){
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(60px)'; t.style.transition = '.4s'; }, 2400);
+  setTimeout(() => t.remove(), 2900);
+}
+
+function renderRelated(currentSlug, cat){
+  const related = Object.entries(PRODUCTS)
+    .filter(([s, p]) => s !== currentSlug && p.cat === cat)
+    .slice(0, 4);
+  if (!related.length) return document.querySelector('.related').style.display = 'none';
+  document.getElementById('related').innerHTML = related.map(([s, p]) => `
+    <div class="related-card" onclick="location.href='product.html?p=${s}'">
+      <img src="${p.images[0]}" alt="${p.name}" loading="lazy">
+      <div class="related-card-name">${p.name}</div>
+      <div class="related-card-price">${p.price.toFixed(2)} €</div>
+    </div>
+  `).join('');
+}
+
+init();
+</script>
+</body>
+</html>

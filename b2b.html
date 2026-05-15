@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#000000">
+<title>LEXORD® B2B | Großhandel · Wiederverkäufer · Esports-Teams</title>
+<meta name="description" content="LEXORD B2B: Sonderkonditionen für Wiederverkäufer, Esports-Teams, Gaming-Cafés und Streaming-Studios. Custom PS5 Controller in Mengenrabatt. Made in Germany.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://lexord.de/b2b.html">
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--neon:#00f2ff;--neon2:#bc13fe;--bg:#000;--panel:#080808;--green:#00b67a;--err:#ff4d4f}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif;overflow-x:hidden}
+header{position:fixed;top:0;width:100%;z-index:100;padding:14px 5%;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);border-bottom:1px solid #0d0d0d;display:flex;align-items:center;justify-content:space-between}
+.brand{font-family:'Orbitron';font-weight:900;font-size:1.1rem;letter-spacing:5px;color:#fff;text-decoration:none}
+.brand .b2b-tag{color:var(--neon2);font-size:.65rem;letter-spacing:3px;margin-left:8px;border:1px solid var(--neon2);padding:2px 8px;border-radius:4px;vertical-align:middle}
+.back-link{font-family:'Orbitron';font-size:9px;color:#888;text-decoration:none;letter-spacing:2px;transition:.3s}
+.back-link:hover{color:var(--neon)}
+.hero-b2b{padding:140px 5% 60px;text-align:center;background:radial-gradient(ellipse at top,rgba(188,19,254,.08),transparent 60%)}
+.eyebrow{font-family:'Orbitron';font-size:9px;letter-spacing:5px;color:var(--neon2);margin-bottom:18px}
+h1{font-family:'Orbitron';font-size:clamp(2rem,7vw,4rem);font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:18px}
+h1 .accent{background:linear-gradient(90deg,var(--neon),var(--neon2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.lead{font-size:14px;color:#888;max-width:680px;margin:0 auto 35px;line-height:1.7}
+.benefits{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;max-width:1100px;margin:0 auto;padding:60px 5%}
+.benefit{background:#070707;border:1px solid #131318;border-radius:14px;padding:26px;transition:.3s}
+.benefit:hover{border-color:var(--neon2);transform:translateY(-4px);box-shadow:0 12px 40px rgba(188,19,254,.15)}
+.benefit-icon{font-size:32px;margin-bottom:14px}
+.benefit-title{font-family:'Orbitron';font-size:11px;color:var(--neon);letter-spacing:2px;margin-bottom:10px}
+.benefit-desc{font-size:12.5px;color:#999;line-height:1.7}
+.tier-section{padding:60px 5%;max-width:1000px;margin:0 auto}
+h2{font-family:'Orbitron';font-size:clamp(1rem,2.5vw,1.5rem);letter-spacing:5px;text-align:center;margin-bottom:10px}
+.sub{font-family:'Orbitron';font-size:9px;color:#444;letter-spacing:3px;text-align:center;margin-bottom:40px}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.tier{background:linear-gradient(180deg,#080808,#000);border:1px solid #131318;border-radius:16px;padding:32px;position:relative;transition:.3s}
+.tier:hover{border-color:var(--neon);transform:translateY(-3px)}
+.tier.featured{border-color:var(--neon2);box-shadow:0 12px 40px rgba(188,19,254,.15)}
+.tier.featured::before{content:'EMPFOHLEN';position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--neon2);color:#fff;font-family:'Orbitron';font-size:8px;padding:4px 12px;border-radius:4px;letter-spacing:2px;font-weight:900}
+.tier-name{font-family:'Orbitron';font-size:11px;color:var(--neon);letter-spacing:3px;margin-bottom:6px}
+.tier-vol{font-family:'Orbitron';font-size:9px;color:#555;letter-spacing:1.5px;margin-bottom:18px}
+.tier-disc{font-family:'Orbitron';font-size:42px;color:#fff;font-weight:900;line-height:1}
+.tier-disc small{font-size:18px;color:var(--neon);font-weight:400;display:block;margin-top:4px}
+.tier-list{margin-top:22px;font-size:12px;color:#999;line-height:2}
+.tier-list li{list-style:none;padding-left:20px;position:relative}
+.tier-list li::before{content:'✓';position:absolute;left:0;color:var(--neon)}
+.form-section{padding:60px 5%;max-width:680px;margin:0 auto}
+.form-box{background:#080808;border:1px solid #131318;border-radius:18px;padding:36px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.row{grid-template-columns:1fr}}
+.field{margin-bottom:16px}
+label{display:block;font-family:'Orbitron';font-size:8px;color:#666;letter-spacing:2px;margin-bottom:7px;text-transform:uppercase}
+label .req{color:var(--neon)}
+.input,select,textarea{width:100%;padding:13px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;font-family:'Inter';font-size:13px;border-radius:8px;outline:none;transition:.3s}
+.input:focus,select:focus,textarea:focus{border-color:var(--neon);background:rgba(0,242,255,.03)}
+textarea{height:110px;resize:vertical}
+.checkbox-row{display:flex;align-items:flex-start;gap:8px;margin:14px 0;font-size:11px;color:#666;cursor:pointer}
+.checkbox-row input{accent-color:var(--neon);margin-top:3px;flex-shrink:0;width:14px;height:14px}
+.checkbox-row a{color:var(--neon);text-decoration:none}
+.btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:11px;letter-spacing:2.5px;border-radius:8px;cursor:pointer;transition:.3s;margin-top:6px}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,242,255,.35)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.success{display:none;text-align:center;padding:50px 30px}
+.success.on{display:block}
+.success-icon{font-size:60px;margin-bottom:16px}
+.success-title{font-family:'Orbitron';font-size:16px;color:var(--neon);letter-spacing:3px;margin-bottom:14px}
+.success-msg{font-size:13px;color:#888;line-height:1.7}
+.success-id{display:inline-block;margin-top:14px;padding:8px 16px;background:#040404;border:1px dashed var(--neon);border-radius:6px;font-family:'Orbitron';font-size:11px;color:var(--neon);letter-spacing:2px}
+.err-msg{background:rgba(255,77,79,.08);border:1px solid rgba(255,77,79,.3);border-radius:7px;padding:11px 14px;color:#ff7779;font-family:'Orbitron';font-size:11px;margin-bottom:14px;display:none;letter-spacing:1px}
+.err-msg.on{display:block}
+footer{padding:40px 5%;text-align:center;background:#040404;border-top:1px solid #0a0a0a;font-family:'Orbitron';font-size:9px;color:#444;letter-spacing:2px}
+footer a{color:var(--neon);text-decoration:none;margin:0 10px}
+.contact-direct{padding:32px;background:rgba(0,242,255,.03);border:1px solid rgba(0,242,255,.15);border-radius:14px;margin:30px 0;text-align:center}
+.contact-direct h3{font-family:'Orbitron';font-size:11px;color:var(--neon);letter-spacing:3px;margin-bottom:12px}
+.contact-direct p{font-size:12px;color:#888;line-height:1.7}
+.contact-direct a{color:var(--neon);text-decoration:none;font-weight:600}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="/">LEXORD® <span class="b2b-tag">B2B</span></a>
+  <a href="/" class="back-link">← ZUM SHOP</a>
+</header>
+
+<section class="hero-b2b">
+  <div class="eyebrow">B2B · GROSSHANDEL · WIEDERVERKÄUFER</div>
+  <h1>Premium Custom Controller<br><span class="accent">für dein Business</span></h1>
+  <p class="lead">Sonderkonditionen für Wiederverkäufer, Esports-Teams, Gaming-Cafés, Streaming-Studios und Eventagenturen. Made in Germany — handgefertigt — kompromisslose Qualität.</p>
+</section>
+
+<section class="benefits">
+  <div class="benefit">
+    <div class="benefit-icon">💰</div>
+    <div class="benefit-title">MENGENRABATT</div>
+    <div class="benefit-desc">Bis zu <strong style="color:var(--neon)">25% Rabatt</strong> ab 25 Stück. Individuelle Staffeln nach Volumen.</div>
+  </div>
+  <div class="benefit">
+    <div class="benefit-icon">🎨</div>
+    <div class="benefit-title">CUSTOM BRANDING</div>
+    <div class="benefit-desc">Team-Logos, Sponsor-Designs, individuelle Farben &amp; Gravur auf jedem Controller.</div>
+  </div>
+  <div class="benefit">
+    <div class="benefit-icon">📦</div>
+    <div class="benefit-title">PRIORITY VERSAND</div>
+    <div class="benefit-desc">Dropshipping verfügbar. Direktversand an deine Kunden mit deinem Branding.</div>
+  </div>
+  <div class="benefit">
+    <div class="benefit-icon">📃</div>
+    <div class="benefit-title">REVERSE-CHARGE</div>
+    <div class="benefit-desc">EU-Lieferungen mit USt-ID Reverse-Charge §13b UStG. Saubere Buchhaltung.</div>
+  </div>
+  <div class="benefit">
+    <div class="benefit-icon">🛡️</div>
+    <div class="benefit-title">B2B-GARANTIE</div>
+    <div class="benefit-desc">24 Monate Gewährleistung + 12 Monate Hersteller-Garantie auf alle Komponenten.</div>
+  </div>
+  <div class="benefit">
+    <div class="benefit-icon">🇩🇪</div>
+    <div class="benefit-title">MADE IN GERMANY</div>
+    <div class="benefit-desc">100% Handarbeit aus Domsühl. Keine Sweatshops. Faire Produktion.</div>
+  </div>
+</section>
+
+<section class="tier-section">
+  <h2>STAFFELPREISE</h2>
+  <p class="sub">RICHTPREISE · INDIVIDUELL VERHANDELBAR</p>
+  <div class="tiers">
+    <div class="tier">
+      <div class="tier-name">STARTER</div>
+      <div class="tier-vol">5 – 10 Stück</div>
+      <div class="tier-disc">10%<small>Rabatt auf UVP</small></div>
+      <ul class="tier-list">
+        <li>Sammelversand</li>
+        <li>Standard-Versandkosten</li>
+        <li>14 Tage Zahlungsziel</li>
+      </ul>
+    </div>
+    <div class="tier featured">
+      <div class="tier-name">PROFESSIONAL</div>
+      <div class="tier-vol">11 – 25 Stück</div>
+      <div class="tier-disc">18%<small>Rabatt auf UVP</small></div>
+      <ul class="tier-list">
+        <li>Versand kostenfrei (DE)</li>
+        <li>Custom Branding optional</li>
+        <li>30 Tage Zahlungsziel</li>
+        <li>Persönlicher Account-Manager</li>
+      </ul>
+    </div>
+    <div class="tier">
+      <div class="tier-name">ENTERPRISE</div>
+      <div class="tier-vol">26+ Stück</div>
+      <div class="tier-disc">25%<small>Rabatt auf UVP</small></div>
+      <ul class="tier-list">
+        <li>Versand kostenfrei (EU)</li>
+        <li>Vollständiges Custom Branding</li>
+        <li>60 Tage Zahlungsziel</li>
+        <li>Dropshipping verfügbar</li>
+        <li>API-Zugang (auf Anfrage)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="form-section" id="form-section">
+  <h2>B2B-ANFRAGE</h2>
+  <p class="sub">UNVERBINDLICH · ANTWORT INNERHALB 24H</p>
+  <div class="form-box" id="form-box">
+    <div class="err-msg" id="err"></div>
+    <form id="b2b-form" onsubmit="submitB2B(event)">
+      <div class="row">
+        <div class="field">
+          <label>FIRMA <span class="req">*</span></label>
+          <input class="input" id="company" required maxlength="120">
+        </div>
+        <div class="field">
+          <label>USt-ID <span class="req">*</span></label>
+          <input class="input" id="ustid" placeholder="DE123456789" required maxlength="20">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>ANSPRECHPARTNER <span class="req">*</span></label>
+          <input class="input" id="name" required maxlength="80">
+        </div>
+        <div class="field">
+          <label>POSITION</label>
+          <input class="input" id="position" placeholder="z.B. Einkauf, Geschäftsführung" maxlength="80">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>E-MAIL <span class="req">*</span></label>
+          <input type="email" class="input" id="email" required maxlength="120">
+        </div>
+        <div class="field">
+          <label>TELEFON</label>
+          <input type="tel" class="input" id="phone" maxlength="40">
+        </div>
+      </div>
+      <div class="field">
+        <label>ANSCHRIFT</label>
+        <input class="input" id="address" placeholder="Straße · PLZ · Ort · Land" maxlength="200">
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>BRANCHE</label>
+          <select id="industry">
+            <option value="">— bitte wählen —</option>
+            <option>Wiederverkäufer / Reseller</option>
+            <option>Esports-Team / Pro-Gaming</option>
+            <option>Gaming-Café / LAN-Center</option>
+            <option>Streamer / Content Creator</option>
+            <option>Eventagentur / Promotion</option>
+            <option>Großhandel</option>
+            <option>Sonstiges</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>BESTELLVOLUMEN (geplant)</label>
+          <select id="volume">
+            <option value="">— bitte wählen —</option>
+            <option>5 – 10 Stück / Jahr</option>
+            <option>11 – 25 Stück / Jahr</option>
+            <option>26 – 50 Stück / Jahr</option>
+            <option>51 – 100 Stück / Jahr</option>
+            <option>100+ Stück / Jahr</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>NACHRICHT</label>
+        <textarea id="message" placeholder="Beschreibe kurz dein Vorhaben, deine Anforderungen oder gewünschte Produkte." maxlength="2000"></textarea>
+      </div>
+      <label class="checkbox-row">
+        <input type="checkbox" id="agb" required>
+        <span>Ich akzeptiere die <a href="/#agb">AGB</a> und die <a href="/#datenschutz">Datenschutzerklärung</a> für B2B-Anfragen. Speicherdauer 3 Jahre nach letztem Kontakt (Art. 6 Abs. 1 lit. b DSGVO).</span>
+      </label>
+      <button type="submit" class="btn" id="submit-btn">📨 ANFRAGE ABSENDEN</button>
+    </form>
+    <div class="success" id="success">
+      <div class="success-icon">✅</div>
+      <div class="success-title">ANFRAGE EINGEGANGEN</div>
+      <div class="success-msg">Vielen Dank! Wir melden uns innerhalb von <strong>24 Stunden</strong> mit einem individuellen Angebot bei dir.</div>
+      <div class="success-id" id="success-id"></div>
+    </div>
+  </div>
+
+  <div class="contact-direct">
+    <h3>📞 LIEBER PERSÖNLICH?</h3>
+    <p>Telefon: <a href="tel:+4915204718720">0152 047 18720</a> &nbsp;·&nbsp; E-Mail: <a href="mailto:b2b@lexord.de">b2b@lexord.de</a><br>Mo–Fr 9–18 Uhr · Antwort binnen 24 h</p>
+  </div>
+</section>
+
+<footer>
+  © LEXORD® 2026 · Made in Germany ·
+  <a href="/">Shop</a> ·
+  <a href="/#impressum">Impressum</a> ·
+  <a href="/#datenschutz">Datenschutz</a> ·
+  <a href="/#agb">AGB</a>
+</footer>
+
+<script>
+const CF_WORKER_URL = 'https://lexord-api.leonschulz1420.workers.dev';
+
+async function submitB2B(e){
+  e.preventDefault();
+  const btn = document.getElementById('submit-btn');
+  const err = document.getElementById('err');
+  err.classList.remove('on');
+  const data = {
+    company:  document.getElementById('company').value.trim(),
+    ustid:    document.getElementById('ustid').value.trim(),
+    name:     document.getElementById('name').value.trim(),
+    position: document.getElementById('position').value.trim(),
+    email:    document.getElementById('email').value.trim(),
+    phone:    document.getElementById('phone').value.trim(),
+    address:  document.getElementById('address').value.trim(),
+    industry: document.getElementById('industry').value,
+    volume:   document.getElementById('volume').value,
+    message:  document.getElementById('message').value.trim()
+  };
+  if (!data.company || !data.ustid || !data.name || !data.email) {
+    err.textContent = '⚠ Bitte Pflichtfelder ausfüllen';
+    err.classList.add('on');
+    return;
+  }
+  if (!/^[A-Z]{2}[0-9A-Z]{8,12}$/i.test(data.ustid.replace(/\s/g, ''))) {
+    err.textContent = '⚠ USt-ID Format ungültig (z.B. DE123456789)';
+    err.classList.add('on');
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = 'WIRD GESENDET …';
+  try {
+    const r = await fetch(CF_WORKER_URL + '/api/b2b/inquiry', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const d = await r.json();
+    if (d.success) {
+      document.getElementById('b2b-form').style.display = 'none';
+      document.getElementById('success').classList.add('on');
+      document.getElementById('success-id').textContent = 'Anfrage-Nr.: ' + d.id;
+    } else {
+      throw new Error(d.error || 'Unbekannter Fehler');
+    }
+  } catch (ex) {
+    err.textContent = '✗ ' + (ex.message || 'Fehler beim Senden — bitte später erneut versuchen oder direkt an b2b@lexord.de senden.');
+    err.classList.add('on');
+    btn.disabled = false;
+    btn.textContent = '📨 ANFRAGE ABSENDEN';
+  }
+}
+</script>
+</body>
+</html>

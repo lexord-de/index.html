@@ -1680,3 +1680,569 @@ main{position:relative;z-index:1}
 </main>
 
 <noscript><div style="position:fixed;top:0;left:0;right:0;background:#000;color:#00f2ff;padding:14px;text-align:center;font-family:sans-serif;z-index:9999999;border-bottom:1px solid #00f2ff">JavaScript ist deaktiviert. Bitte aktiviere JavaScript.</div></noscript>
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════
+   LEXORD® - CLOUDFLARE WORKER + EMAILJS FALLBACK
+═══════════════════════════════════════════════════ */
+const CF_WORKER_URL = 'https://lexord-api.leonschulz1420.workers.dev';
+const ADMIN_EMAIL = 'Kontakt@Lexord.de';
+const EJS_SVC = 'service_szcbwhs';
+const EJS_TPL = 'lexord_auto';
+
+function ensureEJS(cb){if(typeof emailjs!=='undefined')cb();else setTimeout(()=>ensureEJS(cb),300);}
+ensureEJS(()=>emailjs.init({publicKey:'mDh8p4g4NEdRDOAc3'}));
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+/* ═══ I18N — Sprach-Switcher DE/EN/FR ═══ */
+const I18N = {
+  de:{nav_home:'HOME',nav_konfig:'3D KONFIGURATOR',nav_shop:'PRODUKTE',nav_repair:'REPARATUR',nav_tester:'TESTER',nav_contact:'KONTAKT',nav_review:'BEWERTEN',nav_account:'👤 MEIN KONTO',nav_b2b:'🏢 B2B SHOP',cta_main:'🎮 JETZT KONFIGURIEREN',cta_sec:'SHOP ANSEHEN →',cur:'🇩🇪 DE'},
+  en:{nav_home:'HOME',nav_konfig:'3D CONFIGURATOR',nav_shop:'PRODUCTS',nav_repair:'REPAIR',nav_tester:'TESTER',nav_contact:'CONTACT',nav_review:'REVIEW US',nav_account:'👤 MY ACCOUNT',nav_b2b:'🏢 B2B SHOP',cta_main:'🎮 CONFIGURE NOW',cta_sec:'VIEW SHOP →',cur:'🇬🇧 EN'},
+  fr:{nav_home:'ACCUEIL',nav_konfig:'CONFIGURATEUR 3D',nav_shop:'PRODUITS',nav_repair:'RÉPARATION',nav_tester:'TESTEUR',nav_contact:'CONTACT',nav_review:'AVIS',nav_account:'👤 MON COMPTE',nav_b2b:'🏢 ESPACE B2B',cta_main:'🎮 CONFIGURER',cta_sec:'BOUTIQUE →',cur:'🇫🇷 FR'}
+};
+function toggleLangDrop(){document.getElementById('lang-drop').classList.toggle('open');}
+document.addEventListener('click',e=>{if(!e.target.closest('.lang-switcher'))document.getElementById('lang-drop')?.classList.remove('open');});
+function setLang(l){
+  localStorage.setItem('lxrd_lang',l);
+  document.documentElement.lang=l;
+  const t=I18N[l]||I18N.de;
+  const btn=document.getElementById('lang-btn-cur');if(btn)btn.textContent=t.cur;
+  document.querySelectorAll('.lang-item').forEach(it=>it.classList.toggle('active',it.getAttribute('data-lang')===l));
+  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');if(t[k])el.textContent=t[k];});
+  const drop=document.getElementById('lang-drop');if(drop)drop.classList.remove('open');
+  toast('🌍 '+t.cur,'ok');
+}
+
+/* ═══ E-MAIL: CLOUDFLARE PRIMÄR + EMAILJS FALLBACK ═══ */
+async function sendEmail(to,name,subject,html,replyTo){
+  try{
+    const r = await fetch(CF_WORKER_URL+'/api/send-email',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({to,name,subject,html,replyTo:replyTo||ADMIN_EMAIL})
+    });
+    if(r.ok){const d=await r.json();if(d.success)return{ok:true,via:'cloudflare'};}
+  }catch(e){console.warn('CF Worker nicht erreichbar, nutze EmailJS:',e);}
+  try{
+    await new Promise((res,rej)=>{ensureEJS(()=>{
+      emailjs.send(EJS_SVC,EJS_TPL,{
+        to_email:to,to_name:name||'Kunde',subject,
+        message_html:html,reply_to:replyTo||ADMIN_EMAIL,
+        from_name:'LEXORD Engineering'
+      }).then(res).catch(rej);
+    });});
+    return{ok:true,via:'emailjs'};
+  }catch(e){return{ok:false,err:String(e)};}
+}
+function ejsSend(to,name,subject,html,replyTo){return sendEmail(to,name,subject,html,replyTo);}
+
+function genDiscountCode(email){
+  const hash = (email || '').split('').reduce((a,c)=>((a<<5)-a)+c.charCodeAt(0),0);
+  const num = Math.abs(hash % 9999).toString().padStart(4,'0');
+  return 'LXRD' + num;
+}
+function prodImg(filename){return 'https://lexord.de/' + filename;}
+function germanyBanner(){
+  return `<table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="margin:0 0 24px"><tr><td style="padding:0;background:#000;border-radius:8px;overflow:hidden"><table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%"><tr><td height="6" bgcolor="#000000" style="background:#000000;line-height:6px;font-size:0">&nbsp;</td></tr><tr><td height="6" bgcolor="#dd0000" style="background:#dd0000;line-height:6px;font-size:0">&nbsp;</td></tr><tr><td height="6" bgcolor="#ffce00" style="background:#ffce00;line-height:6px;font-size:0">&nbsp;</td></tr></table><table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%"><tr><td style="padding:18px 22px;text-align:center"><div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;font-weight:600;letter-spacing:5px;color:#ffffff">MADE IN GERMANY</div></td></tr></table></td></tr></table>`;
+}
+function tplBase(opts){
+  const accent = opts.accentColor || '#00f2ff';
+  const preheader = opts.preheader || '';
+  const cta = opts.ctaButton ? `<tr><td align="center" style="padding:8px 36px 24px"><table border="0" cellspacing="0" cellpadding="0"><tr><td align="center" bgcolor="${accent}" style="border-radius:6px;background:${accent}"><a href="${opts.ctaUrl||'https://lexord.de'}" target="_blank" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;font-weight:600;color:#000000;text-decoration:none;padding:16px 36px;display:inline-block;letter-spacing:1.5px;border-radius:6px">${opts.ctaButton} →</a></td></tr></table></td></tr>` : '';
+  return `<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>LEXORD®</title></head><body style="margin:0;padding:0;background:#f4f4f6;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#1a1a1a"><div style="display:none;max-height:0;overflow:hidden;font-size:1px;line-height:1px;color:#f4f4f6">${preheader}</div><table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" bgcolor="#f4f4f6"><tr><td align="center" style="padding:32px 12px"><table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="width:600px;max-width:600px;background:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.06)" bgcolor="#ffffff"><tr><td bgcolor="#000000" style="background:#000000;background:radial-gradient(ellipse at top center,#001824 0%,#000000 70%);padding:46px 36px 36px;text-align:center" align="center"><div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:32px;font-weight:300;letter-spacing:16px;color:#ffffff;line-height:1">LEXORD<span style="color:${accent};font-weight:400">®</span></div><div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:5px;color:${accent};margin-top:14px;text-transform:uppercase;font-weight:600">Engineering · Made in Germany</div></td></tr><tr><td height="3" style="height:3px;line-height:3px;font-size:0;background:${accent}" bgcolor="${accent}">&nbsp;</td></tr><tr><td style="background:#f9f9fb;padding:24px 36px;text-align:center;border-bottom:1px solid #ececec"><div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;font-weight:600;letter-spacing:3px;color:#1a1a1a;text-transform:uppercase">${opts.headerTitle||'BENACHRICHTIGUNG'}</div>${opts.headerSubtitle?`<div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;color:#888;margin-top:5px;letter-spacing:1px">${opts.headerSubtitle}</div>`:''}</td></tr><tr><td bgcolor="#ffffff" style="padding:36px;background:#ffffff;color:#1a1a1a;font-size:14px;line-height:1.7">${opts.customerName?`<p style="font-size:16px;color:#1a1a1a;margin:0 0 22px"><strong>Hallo ${esc(opts.customerName)},</strong></p>`:''}${opts.body}</td></tr>${cta}${opts.germanyBanner?`<tr><td style="padding:0 36px 8px">${germanyBanner()}</td></tr>`:''}<tr><td bgcolor="#0a0a0a" style="background:#0a0a0a;padding:32px 36px 28px;text-align:center"><div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;font-weight:300;letter-spacing:8px;color:#ffffff;margin-bottom:12px">LEXORD<span style="color:${accent}">®</span></div><div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;color:#aaa;line-height:1.8">Leon Schulz · An Der Domsühler Str. 2 · 19374 Domsühl<br><a href="mailto:Kontakt@Lexord.de" style="color:${accent};text-decoration:none">Kontakt@Lexord.de</a> · <a href="tel:+4915204718720" style="color:${accent};text-decoration:none">0152 047 18720</a></div><div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;color:#555;margin-top:16px;line-height:1.7">Kleinunternehmer gem. § 19 UStG · keine MwSt. ausgewiesen</div></td></tr></table></td></tr></table></body></html>`;
+}
+function tplWrap(c,t,b){return tplBase({accentColor:c,headerTitle:t,body:b});}
+function tplOrderAdmin(name,email,nr,total,country){
+  return tplBase({accentColor:'#ff9500',headerTitle:'Neue Bestellung',preheader:`${nr} · ${name} · ${total.toFixed(2)} €`,
+    body:`<p><strong>${esc(name)}</strong> (<a href="mailto:${esc(email)}">${esc(email)}</a>)</p><p>Land: ${esc(country||'DE')}</p><p style="font-size:20px;color:#00b67a;font-weight:600">Gesamt: ${total.toFixed(2)} €</p>`,
+    ctaButton:'Admin-Panel öffnen',ctaUrl:'https://lexord.de/?admin=1'});
+}
+function tplRepair(name,nr,damage,model,price){
+  return tplBase({accentColor:'#00f2ff',headerTitle:'Reparaturanfrage eingegangen',headerSubtitle:'Wir melden uns binnen 24h',customerName:name,
+    body:`<p>vielen Dank für deine Reparaturanfrage <strong>${esc(nr)}</strong>.</p><p>Schaden: <strong>${esc(damage)}</strong><br>Modell: ${esc(model)}<br>Kosten: <strong style="color:#00a8b5">${esc(price)}</strong></p><div style="background:#fff8f0;border:1px solid #ffb347;border-left:4px solid #ff9500;border-radius:8px;padding:20px;margin-top:20px"><strong style="color:#ff9500">Versandanweisung:</strong><br>Sende deinen Controller sicher verpackt an:<br><strong>Leon Schulz · LEXORD Engineering · An Der Domsühler Str. 2 · 19374 Domsühl</strong><br><br>⚠ Lege Nr. <strong>${esc(nr)}</strong> bei.</div>`,
+    germanyBanner:true});
+}
+function tplRepairAdmin(name,email,phone,addr,nr,damage,model,price,desc){
+  return tplBase({accentColor:'#ff9500',headerTitle:'Neue Reparatur',preheader:`${nr} · ${damage}`,
+    body:`<p><strong>${esc(name)}</strong> · <a href="mailto:${esc(email)}">${esc(email)}</a> · ${esc(phone||'-')}</p><p>Adresse: ${esc(addr)}</p><p>Schaden: <strong>${esc(damage)}</strong> · Modell: ${esc(model)} · Kosten: ${esc(price)}</p><blockquote style="background:#fafafa;border-left:4px solid #00f2ff;padding:14px">${esc(desc).replace(/\n/g,'<br>')}</blockquote>`,
+    ctaButton:'Admin-Panel',ctaUrl:'https://lexord.de/?admin=1'});
+}
+function tplNewsletter(){
+  return tplBase({accentColor:'#00f2ff',headerTitle:'Willkommen bei LEXORD®',headerSubtitle:'10% Rabatt geschenkt',
+    body:`<p>Willkommen im exklusiven LEXORD-Inner-Circle.</p><table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="margin:18px 0"><tr><td align="center" style="padding:36px 24px;background:#1a1a1a;border-radius:10px"><div style="font-size:10px;color:#888;letter-spacing:3px;text-transform:uppercase;margin-bottom:18px">Dein persönlicher Rabattcode</div><div style="display:inline-block;background:#000;padding:24px 44px;border:2px dashed #00f2ff;border-radius:10px"><div style="font-size:30px;letter-spacing:8px;color:#00f2ff">WILLKOMMEN10</div></div><div style="font-size:12px;color:#fff;letter-spacing:2px;margin-top:18px">10% RABATT · NUR FÜR DICH</div></td></tr></table><p style="font-size:11px;color:#888">Code 30 Tage gültig, nicht kombinierbar.</p>`,
+    ctaButton:'Jetzt konfigurieren',ctaUrl:'https://lexord.de/konfigurator.html',germanyBanner:true});
+}
+function tplContactAdmin(name,email,subject,message){
+  return tplBase({accentColor:'#7c3aed',headerTitle:'Neue Kontaktanfrage',preheader:`${name}: ${subject}`,
+    body:`<p><strong>Von:</strong> ${esc(name)} (<a href="mailto:${esc(email)}">${esc(email)}</a>)</p><p><strong>Betreff:</strong> ${esc(subject)}</p><blockquote style="background:#fafafa;border-left:4px solid #7c3aed;padding:14px">${esc(message).replace(/\n/g,'<br>')}</blockquote>`,
+    ctaButton:'Antworten',ctaUrl:'mailto:'+email});
+}
+function tplContactCustomer(name){
+  return tplBase({accentColor:'#7c3aed',headerTitle:'Nachricht empfangen',headerSubtitle:'Antwort innerhalb 24h',customerName:name,
+    body:`<p>danke für deine Nachricht. Wir melden uns innerhalb von <strong>24 Stunden</strong>.</p><p>Falls eilig: Telefon <a href="tel:+4915204718720">0152 047 18720</a> · WhatsApp <a href="https://wa.me/4915204718720">Chat starten</a></p>`,
+    ctaButton:'Zur Website',ctaUrl:'https://lexord.de'});
+}
+
+/* ═══ DATENSPEICHERUNG IM CF WORKER ═══ */
+async function saveOrderToCF(data){try{const r=await fetch(CF_WORKER_URL+'/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});return r.ok;}catch(e){return false;}}
+async function saveRepairToCF(data){try{const r=await fetch(CF_WORKER_URL+'/api/repair',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});return r.ok;}catch(e){return false;}}
+
+/* ═══ KUNDEN-LOGIN ═══ */
+function openLogin(){document.getElementById('login-modal').classList.add('show');document.getElementById('lm-login-view').style.display='block';document.getElementById('lm-dash-view').classList.remove('active');}
+function closeLogin(){document.getElementById('login-modal').classList.remove('show');}
+async function doLogin(){
+  const email=document.getElementById('lm-email').value.trim();
+  const ordernr=document.getElementById('lm-ordernr').value.trim().toUpperCase();
+  const err=document.getElementById('lm-err');const btn=document.getElementById('lm-login-btn');
+  err.style.display='none';
+  if(!email||!email.includes('@')||!ordernr){err.textContent='⚠ Bitte E-Mail und Bestellnummer eingeben';err.style.display='block';return;}
+  btn.disabled=true;btn.textContent='LADE...';
+  try{
+    const r=await fetch(CF_WORKER_URL+'/api/customer/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,ordernr})});
+    if(!r.ok)throw new Error('Login fehlgeschlagen');
+    const data=await r.json();
+    if(!data.success)throw new Error(data.error||'Daten nicht gefunden');
+    sessionStorage.setItem('lxrd_customer',JSON.stringify({email,token:data.token||'guest'}));
+    document.getElementById('lm-login-view').style.display='none';
+    document.getElementById('lm-dash-view').classList.add('active');
+    document.getElementById('lm-greet-mail').textContent=email;
+    renderCustomerOrders(data.orders||[]);
+    renderCustomerRepairs(data.repairs||[]);
+  }catch(e){err.textContent='✗ '+(e.message||'E-Mail oder Nummer falsch.');err.style.display='block';}
+  btn.disabled=false;btn.textContent='EINLOGGEN →';
+}
+function doLogout(){sessionStorage.removeItem('lxrd_customer');document.getElementById('lm-login-view').style.display='block';document.getElementById('lm-dash-view').classList.remove('active');document.getElementById('lm-email').value='';document.getElementById('lm-ordernr').value='';}
+function switchLmTab(tab){document.querySelectorAll('#lm-dash-view .lm-tab').forEach((t,i)=>t.classList.toggle('active',['orders','repairs'][i]===tab));document.querySelectorAll('#lm-dash-view .lm-pane').forEach(p=>p.classList.remove('active'));document.getElementById('lm-pane-'+tab).classList.add('active');}
+
+function renderCustomerOrders(orders){
+  const c=document.getElementById('lm-pane-orders');
+  if(!orders.length){c.innerHTML='<div class="lm-empty"><div class="lm-empty-icon">📦</div><div class="lm-empty-txt">KEINE BESTELLUNGEN GEFUNDEN</div></div>';return;}
+  c.innerHTML=orders.map(o=>{
+    const stat=o.status||'paid';
+    const itemsHtml=(o.items||[]).map(i=>`<div>${esc(i.name)} × ${i.qty} - ${(i.price*i.qty).toFixed(2)} €</div>`).join('');
+    const stages=['paid','processing','shipped','delivered'];const idx=stages.indexOf(stat);
+    const tracker=stages.map((s,i)=>`<div class="lm-tr-step ${i<idx?'done':i===idx?'active':''}"><div class="lm-tr-dot">${i<idx?'✓':i+1}</div><div class="lm-tr-lbl">${['BEZAHLT','VERPACKEN','VERSAND','GELIEFERT'][i]}</div></div>`).join('');
+    const statTxt={paid:'BEZAHLT',processing:'IN BEARBEITUNG',shipped:'VERSENDET',delivered:'GELIEFERT',cancelled:'STORNIERT'}[stat]||stat.toUpperCase();
+    return `<div class="lm-order-card"><div class="lm-oc-head"><div><div class="lm-oc-nr">${esc(o.orderNr||o.id)}</div><div class="lm-oc-date">${new Date(o.created||Date.now()).toLocaleDateString('de-DE')}</div></div><span class="lm-oc-status ${stat}">${statTxt}</span></div><div class="lm-oc-items">${itemsHtml}</div><div class="lm-oc-foot"><div class="lm-oc-total">${(o.total||0).toFixed(2)} €</div>${o.tracking?`<a href="https://www.dhl.de/de/privatkunden/dhl-sendungsverfolgung.html?piececode=${esc(o.tracking)}" target="_blank" rel="noopener" class="lm-track">📍 SENDUNG VERFOLGEN</a>`:''}</div>${stat!=='cancelled'?`<div class="lm-tracker"><div class="lm-tracker-row">${tracker}</div></div>`:''}</div>`;
+  }).join('');
+}
+function renderCustomerRepairs(reps){
+  const c=document.getElementById('lm-pane-repairs');
+  if(!reps.length){c.innerHTML='<div class="lm-empty"><div class="lm-empty-icon">🔧</div><div class="lm-empty-txt">KEINE REPARATUREN</div></div>';return;}
+  c.innerHTML=reps.map(r=>{
+    const stat=r.status||'received';
+    const stages=['received','diagnosed','repaired','completed'];const idx=stages.indexOf(stat);
+    const tracker=stages.map((s,i)=>`<div class="lm-tr-step ${i<idx?'done':i===idx?'active':''}"><div class="lm-tr-dot">${i<idx?'✓':i+1}</div><div class="lm-tr-lbl">${['EINGANG','DIAGNOSE','REPARIERT','ZURÜCK'][i]}</div></div>`).join('');
+    const statTxt={received:'EINGEGANGEN',diagnosed:'DIAGNOSE',repaired:'REPARIERT',completed:'ABGESCHLOSSEN'}[stat]||stat.toUpperCase();
+    return `<div class="lm-order-card"><div class="lm-oc-head"><div><div class="lm-oc-nr">${esc(r.repNr||r.id)}</div><div class="lm-oc-date">${new Date(r.created||Date.now()).toLocaleDateString('de-DE')}</div></div><span class="lm-oc-status ${stat}">${statTxt}</span></div><div class="lm-oc-items"><strong>Schaden:</strong> ${esc(r.damage||'-')}<br><strong>Modell:</strong> ${esc(r.model||'-')}<br><strong>Geschätzt:</strong> ${esc(r.estPrice||'-')}</div><div class="lm-tracker"><div class="lm-tracker-row">${tracker}</div></div></div>`;
+  }).join('');
+}
+
+/* ═══ ADMIN-PANEL ═══ */
+function openAdmin(){document.getElementById('admin-modal').classList.add('show');document.getElementById('adm-login-view').style.display='block';document.getElementById('adm-dash-view').classList.remove('active');}
+function closeAdmin(){document.getElementById('admin-modal').classList.remove('show');}
+async function doAdminLogin(){
+  const pw=document.getElementById('adm-pw').value;const err=document.getElementById('adm-err');
+  err.style.display='none';
+  if(!pw){err.textContent='⚠ Passwort eingeben';err.style.display='block';return;}
+  try{
+    const r=await fetch(CF_WORKER_URL+'/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
+    if(!r.ok)throw new Error('Login fehlgeschlagen');
+    const data=await r.json();
+    if(!data.success)throw new Error(data.error||'Falsches Passwort');
+    sessionStorage.setItem('lxrd_admin_token',data.token);
+    document.getElementById('adm-login-view').style.display='none';
+    document.getElementById('adm-dash-view').classList.add('active');
+    loadAdminData(data.token);
+  }catch(e){err.textContent='✗ '+e.message;err.style.display='block';}
+}
+function doAdminLogout(){sessionStorage.removeItem('lxrd_admin_token');document.getElementById('adm-login-view').style.display='block';document.getElementById('adm-dash-view').classList.remove('active');document.getElementById('adm-pw').value='';}
+function switchAdmTab(tab){const tabs=['orders','repairs','customers','tax','products'];document.querySelectorAll('#adm-dash-view .lm-tab').forEach((t,i)=>t.classList.toggle('active',tabs[i]===tab));document.querySelectorAll('#adm-dash-view .lm-pane').forEach(p=>p.classList.remove('active'));document.getElementById('adm-pane-'+tab).classList.add('active');if(tab==='products')loadAdminProducts();}
+
+let _adminData={orders:[],repairs:[],customers:[]};
+async function loadAdminData(token){
+  try{
+    const r=await fetch(CF_WORKER_URL+'/api/admin/all',{headers:{'Authorization':'Bearer '+token}});
+    _adminData=await r.json();
+    renderAdminStats();renderAdminOrders();renderAdminRepairs();renderAdminCustomers();renderAdminTax();
+  }catch(e){toast('⚠ Daten laden fehlgeschlagen','err');}
+}
+function renderAdminStats(){
+  const o=_adminData.orders||[],r=_adminData.repairs||[],c=_adminData.customers||[];
+  const totalRev=o.reduce((s,x)=>s+(x.total||0),0);
+  const yearRev=o.filter(x=>new Date(x.created).getFullYear()===new Date().getFullYear()).reduce((s,x)=>s+(x.total||0),0);
+  document.getElementById('adm-stats').innerHTML=`<div class="adm-stat"><div class="adm-stat-num">${o.length}</div><div class="adm-stat-lbl">BESTELLUNGEN</div></div><div class="adm-stat"><div class="adm-stat-num">${r.length}</div><div class="adm-stat-lbl">REPARATUREN</div></div><div class="adm-stat"><div class="adm-stat-num">${c.length}</div><div class="adm-stat-lbl">KUNDEN</div></div><div class="adm-stat"><div class="adm-stat-num">${totalRev.toFixed(0)} €</div><div class="adm-stat-lbl">UMSATZ GES.</div></div><div class="adm-stat"><div class="adm-stat-num">${yearRev.toFixed(0)} €</div><div class="adm-stat-lbl">UMSATZ ${new Date().getFullYear()}</div></div>`;
+}
+function renderAdminOrders(){
+  const o=_adminData.orders||[];
+  document.getElementById('adm-pane-orders').innerHTML=`<div class="adm-toolbar"><button class="adm-tool-btn" onclick="loadAdminData(sessionStorage.getItem('lxrd_admin_token'))">↻ AKTUALISIEREN</button><button class="adm-tool-btn primary" onclick="exportOrdersCSV()">⬇ CSV EXPORT</button></div><div class="adm-table-wrap"><table class="adm-table"><thead><tr><th>NR</th><th>DATUM</th><th>KUNDE</th><th>BETRAG</th><th>LAND</th><th>STATUS</th><th>AKTION</th></tr></thead><tbody>${o.map(x=>`<tr><td><strong>${esc(x.orderNr||x.id)}</strong></td><td>${new Date(x.created).toLocaleDateString('de-DE')}</td><td>${esc(x.name||'-')}<br><small style="color:#555">${esc(x.email||'-')}</small></td><td style="color:var(--neon)">${(x.total||0).toFixed(2)} €</td><td>${esc(x.country||'DE')}</td><td><span class="col-status lm-oc-status ${x.status||'paid'}">${(x.status||'paid').toUpperCase()}</span></td><td><button class="adm-action-btn" onclick="openUpdateModal('order','${esc(x.orderNr||x.id)}','${x.status||'paid'}')">📦 STATUS</button><button class="adm-action-btn cancel" onclick="cancelOrder('${esc(x.orderNr||x.id)}')">✗ STORNO</button></td></tr>`).join('')||'<tr><td colspan="7" style="text-align:center;padding:30px;color:#444">Keine Bestellungen</td></tr>'}</tbody></table></div>`;
+}
+function renderAdminRepairs(){
+  const r=_adminData.repairs||[];
+  document.getElementById('adm-pane-repairs').innerHTML=`<div class="adm-toolbar"><button class="adm-tool-btn" onclick="loadAdminData(sessionStorage.getItem('lxrd_admin_token'))">↻ AKTUALISIEREN</button></div><div class="adm-table-wrap"><table class="adm-table"><thead><tr><th>REP-NR</th><th>DATUM</th><th>KUNDE</th><th>SCHADEN</th><th>MODELL</th><th>KOSTEN</th><th>STATUS</th><th>AKTION</th></tr></thead><tbody>${r.map(x=>`<tr><td><strong>${esc(x.repNr||x.id)}</strong></td><td>${new Date(x.created).toLocaleDateString('de-DE')}</td><td>${esc((x.fname||'')+' '+(x.lname||''))}<br><small style="color:#555">${esc(x.email||'')}</small></td><td>${esc(x.damage||'-')}</td><td>${esc(x.model||'-')}</td><td>${esc(x.estPrice||'-')}</td><td><span class="col-status lm-oc-status ${x.status||'received'}">${(x.status||'received').toUpperCase()}</span></td><td><button class="adm-action-btn" onclick="openUpdateModal('repair','${esc(x.repNr||x.id)}','${x.status||'received'}')">🔧 STATUS</button></td></tr>`).join('')||'<tr><td colspan="8" style="text-align:center;padding:30px;color:#444">Keine Reparaturen</td></tr>'}</tbody></table></div>`;
+}
+function renderAdminCustomers(){
+  const c=_adminData.customers||[];
+  document.getElementById('adm-pane-customers').innerHTML=`<div class="adm-table-wrap"><table class="adm-table"><thead><tr><th>E-MAIL</th><th>NAME</th><th>BESTELLUNGEN</th><th>UMSATZ</th><th>AKTIV?</th></tr></thead><tbody>${c.map(x=>{const isAct=x.lastActive&&(Date.now()-new Date(x.lastActive).getTime())<30*24*3600*1000;return `<tr><td><strong>${esc(x.email)}</strong></td><td>${esc(x.name||'-')}</td><td>${x.orderCount||0}</td><td style="color:var(--neon)">${(x.totalSpent||0).toFixed(2)} €</td><td><span class="col-status lm-oc-status ${isAct?'paid':'cancelled'}">${isAct?'AKTIV':'RUHEND'}</span></td></tr>`;}).join('')||'<tr><td colspan="5" style="text-align:center;padding:30px;color:#444">Keine Kunden</td></tr>'}</tbody></table></div>`;
+}
+function renderAdminTax(){
+  const o=_adminData.orders||[];const yr=new Date().getFullYear();
+  const yO=o.filter(x=>new Date(x.created).getFullYear()===yr);
+  const tR=yO.reduce((s,x)=>s+(x.total||0),0);const tS=yO.reduce((s,x)=>s+(x.shipping||0),0);const tN=tR-tS;
+  const months={};yO.forEach(x=>{const m=new Date(x.created).getMonth();months[m]=(months[m]||0)+(x.total||0);});
+  document.getElementById('adm-pane-tax').innerHTML=`<div class="adm-tax-info"><strong>💰 STEUERÜBERSICHT ${yr} · § 19 UStG (Kleinunternehmer)</strong><br>Keine MwSt. ausgewiesen. <strong>GoBD-konform</strong>. Grenze 2026: <strong>25.000 €</strong>.</div><div class="adm-stats"><div class="adm-stat"><div class="adm-stat-num">${tR.toFixed(2)} €</div><div class="adm-stat-lbl">UMSATZ ${yr}</div></div><div class="adm-stat"><div class="adm-stat-num">${tN.toFixed(2)} €</div><div class="adm-stat-lbl">NETTO (OHNE VERSAND)</div></div><div class="adm-stat"><div class="adm-stat-num">${tS.toFixed(2)} €</div><div class="adm-stat-lbl">VERSANDKOSTEN</div></div><div class="adm-stat"><div class="adm-stat-num">${yO.length}</div><div class="adm-stat-lbl">RECHNUNGEN ${yr}</div></div><div class="adm-stat" style="border-color:${tR>22000?'rgba(255,77,79,.4)':'rgba(0,182,122,.4)'}"><div class="adm-stat-num" style="color:${tR>22000?'var(--err)':'var(--green)'}">${(25000-tR).toFixed(0)} €</div><div class="adm-stat-lbl">${tR>22000?'GRENZE ÜBERSCHRITTEN':'BIS 25T€ GRENZE'}</div></div></div><div class="adm-toolbar" style="margin-top:18px"><button class="adm-tool-btn primary" onclick="exportTaxCSV(${yr})">⬇ GoBD-CSV ${yr}</button><button class="adm-tool-btn" onclick="exportTaxCSV(${yr-1})">⬇ ${yr-1}</button><button class="adm-tool-btn" onclick="window.print()">📄 DRUCKVERSION</button></div><h3 style="font-family:'Orbitron';font-size:10px;color:var(--neon);letter-spacing:2px;margin:24px 0 12px">MONATSÜBERSICHT ${yr}</h3><div class="adm-table-wrap"><table class="adm-table"><thead><tr><th>MONAT</th><th>UMSATZ</th><th>%</th></tr></thead><tbody>${['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'].map((m,i)=>{const v=months[i]||0;const pct=tR?(v/tR*100).toFixed(1):0;return`<tr><td><strong>${m}</strong></td><td style="color:var(--neon)">${v.toFixed(2)} €</td><td>${pct}%</td></tr>`;}).join('')}</tbody></table></div>`;
+}
+function exportTaxCSV(year){
+  const o=(_adminData.orders||[]).filter(x=>new Date(x.created).getFullYear()===year);
+  const head='Datum;Rechnungsnummer;Kunde;E-Mail;Land;Netto (=Brutto §19 UStG);Versandkosten;Gesamtbetrag;Zahlungsart;Status\n';
+  const rows=o.map(x=>{const d=new Date(x.created).toLocaleDateString('de-DE');const net=((x.total||0)-(x.shipping||0)).toFixed(2);return [d,x.orderNr||x.id,(x.name||'').replace(/;/g,','),x.email||'',x.country||'DE',net.replace('.',','),(x.shipping||0).toFixed(2).replace('.',','),(x.total||0).toFixed(2).replace('.',','),x.payment||'PayPal',x.status||'paid'].join(';');}).join('\n');
+  const totalRow='\n;;;;;;'+o.reduce((s,x)=>s+(x.shipping||0),0).toFixed(2).replace('.',',')+';'+o.reduce((s,x)=>s+(x.total||0),0).toFixed(2).replace('.',',')+';GESAMT;';
+  const csv='﻿'+head+rows+totalRow+'\n\n;;;;;;;;Erstellt am;'+new Date().toLocaleString('de-DE')+'\n;;;;;;;;Kleinunternehmer;§ 19 UStG\n;;;;;;;;LEXORD Engineering;Leon Schulz';
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`LEXORD_Steuer_${year}.csv`;a.click();URL.revokeObjectURL(url);
+  toast('✓ CSV exportiert','ok');
+}
+function exportOrdersCSV(){exportTaxCSV(new Date().getFullYear());}
+
+/* ═══ ADMIN UPDATE MODAL (Status + Tracking + Storno) ═══ */
+const _orderStatuses=[{key:'paid',ico:'💳',lbl:'Bezahlt'},{key:'processing',ico:'⚙️',lbl:'In Bearbeitung'},{key:'shipped',ico:'📦',lbl:'Versendet'},{key:'delivered',ico:'✅',lbl:'Geliefert'}];
+const _repairStatuses=[{key:'received',ico:'📥',lbl:'Eingegangen'},{key:'diagnosed',ico:'🔍',lbl:'Diagnose fertig'},{key:'repaired',ico:'🔧',lbl:'Repariert'},{key:'completed',ico:'✅',lbl:'Versendet'}];
+let _adminSelectedStatus='';
+function openUpdateModal(type,nr,currentStatus){
+  document.getElementById('adm-up-type').value=type;
+  document.getElementById('adm-up-nr').value=nr;
+  document.getElementById('adm-up-tracking').value='';
+  document.getElementById('adm-up-price').value='';
+  document.getElementById('adm-up-note').value='';
+  _adminSelectedStatus=currentStatus||'';
+  if(type==='order'){
+    document.getElementById('adm-up-title').innerHTML='📦 Bestellung '+nr+' aktualisieren';
+    document.getElementById('adm-up-sub').innerText='Status setzen · Tracking eintragen · Kunde wird per Email informiert';
+    document.getElementById('adm-up-tracking-grp').style.display='block';
+    document.getElementById('adm-up-price-grp').style.display='none';
+    renderStatusOptions(_orderStatuses,currentStatus);
+  }else{
+    document.getElementById('adm-up-title').innerHTML='🔧 Reparatur '+nr+' aktualisieren';
+    document.getElementById('adm-up-sub').innerText='Status setzen · Notiz hinzufügen · Kunde wird per Email informiert';
+    document.getElementById('adm-up-tracking-grp').style.display='block';
+    document.getElementById('adm-up-price-grp').style.display='block';
+    renderStatusOptions(_repairStatuses,currentStatus);
+  }
+  document.getElementById('adm-update-modal').classList.add('show');
+}
+function renderStatusOptions(statuses,current){document.getElementById('adm-up-statuses').innerHTML=statuses.map(s=>`<div class="adm-up-status-opt ${s.key===current?'sel':''}" onclick="selectAdminStatus('${s.key}',this)"><div class="ico">${s.ico}</div><div class="lbl">${s.lbl}</div></div>`).join('');}
+function selectAdminStatus(key,el){document.querySelectorAll('.adm-up-status-opt').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');_adminSelectedStatus=key;}
+function closeUpdateModal(){document.getElementById('adm-update-modal').classList.remove('show');}
+async function saveUpdate(){
+  const type=document.getElementById('adm-up-type').value;
+  const nr=document.getElementById('adm-up-nr').value;
+  const status=_adminSelectedStatus;
+  const tracking=document.getElementById('adm-up-tracking').value.trim();
+  const finalPrice=document.getElementById('adm-up-price').value.trim();
+  const note=document.getElementById('adm-up-note').value.trim();
+  if(!status){toast('Bitte Status auswählen','err');return;}
+  const tk=sessionStorage.getItem('lxrd_admin_token');
+  const endpoint=type==='order'?'/api/admin/order/':'/api/admin/repair/';
+  const payload={status};if(tracking)payload.tracking=tracking;if(finalPrice)payload.finalPrice=finalPrice;if(note)payload.note=note;
+  try{
+    const r=await fetch(CF_WORKER_URL+endpoint+encodeURIComponent(nr),{method:'PATCH',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},body:JSON.stringify(payload)});
+    const d=await r.json();
+    if(d.success){toast('✓ Aktualisiert · Email an Kunde gesendet','ok');closeUpdateModal();loadAdminData(tk);}
+    else toast('Fehler: '+(d.error||'unbekannt'),'err');
+  }catch(e){toast('Fehler beim Aktualisieren','err');}
+}
+async function cancelOrder(nr){
+  if(!confirm('Bestellung '+nr+' wirklich stornieren? Kunde wird per Email informiert und erhält Rückerstattung.'))return;
+  const tk=sessionStorage.getItem('lxrd_admin_token');
+  try{
+    const r=await fetch(CF_WORKER_URL+'/api/admin/order/'+encodeURIComponent(nr)+'/cancel',{method:'POST',headers:{'Authorization':'Bearer '+tk}});
+    const d=await r.json();
+    if(d.success){toast('✓ Storniert · Email gesendet','ok');loadAdminData(tk);}
+    else toast('Fehler: '+(d.error||''),'err');
+  }catch(e){toast('Fehler beim Stornieren','err');}
+}
+
+/* ═══ PRODUKT-UPLOAD (NEU) ═══ */
+const TMPLS={
+  premium:{cat:'Controller',short:'Premium Custom PS5 Controller mit Hall Effect Sticks',feat:'TMR Hall-Effect Sticks (drift-frei)\nClicky Trigger / Mouse-Click\nGRIP Gehäuse (Anti-Rutsch)\n2× Paddle System V2\n24 Monate Garantie · Made in Germany',desc:'<h3>🎮 Premium Custom Controller</h3><p>Handgefertigt in Deutschland mit modernster Stick-Technologie.</p>'},
+  upgrade:{cat:'Upgrade-Kits',short:'Professionelles Upgrade-Kit für PS5 DualSense',feat:'Komplett-Set inkl. Anleitung\nKompatibel mit PS5 DualSense\nLebenslange Haltbarkeit',desc:'<h3>🔧 DIY Upgrade-Kit</h3><p>Verbessere deinen Controller selbst. Einbau erfordert Lötkenntnisse.</p>'},
+  werkzeug:{cat:'Werkzeug',short:'Profi-Werkzeug für Controller-Reparatur',feat:'Hochwertige Verarbeitung\nUniversal einsetzbar',desc:'<h3>🔧 Profi-Werkzeug</h3><p>Unverzichtbar für DIY-Modder.</p>'},
+  repair:{cat:'Reparatur',short:'Professioneller Controller-Reparatur-Service',feat:'Diagnose &amp; Reparatur durch Profi\n6 Monate Garantie inklusive\nReparaturzeit 3–5 Werktage',desc:'<h3>🛠️ Made-in-Germany Reparatur</h3><p>Sende deinen Controller an unsere Werkstatt.</p>'}
+};
+function openProdUp(){document.getElementById('prod-up-modal').classList.add('show');}
+function closeProdUp(){document.getElementById('prod-up-modal').classList.remove('show');}
+function loadProdTmpl(k){const t=TMPLS[k];if(!t)return;document.getElementById('pu-cat').value=t.cat;document.getElementById('pu-short').value=t.short;document.getElementById('pu-feat').value=t.feat;document.getElementById('pu-desc').value=t.desc;toast('✓ Vorlage geladen','ok');}
+async function saveProduct(){
+  const p={slug:document.getElementById('pu-slug').value.trim().toLowerCase(),name:document.getElementById('pu-name').value.trim(),category:document.getElementById('pu-cat').value,price:parseFloat(document.getElementById('pu-price').value)||0,stock:document.getElementById('pu-stock').value,image:document.getElementById('pu-img').value.trim(),shortDesc:document.getElementById('pu-short').value.trim(),features:document.getElementById('pu-feat').value.split('\n').filter(l=>l.trim()),longDesc:document.getElementById('pu-desc').value};
+  if(!p.slug||!p.name||!p.price){toast('Slug, Name, Preis erforderlich','err');return;}
+  try{const tk=sessionStorage.getItem('lxrd_admin_token');const r=await fetch(CF_WORKER_URL+'/api/admin/products',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},body:JSON.stringify(p)});const d=await r.json();if(d.success){toast('✓ Produkt gespeichert','ok');closeProdUp();loadAdminProducts();}else toast('Fehler: '+(d.error||''),'err');}catch(e){toast('Fehler','err');}
+}
+async function loadAdminProducts(){
+  try{const tk=sessionStorage.getItem('lxrd_admin_token');const r=await fetch(CF_WORKER_URL+'/api/admin/products',{headers:{'Authorization':'Bearer '+tk}});const d=await r.json();
+    const pane=document.getElementById('adm-pane-products');
+    pane.innerHTML=`<div class="adm-toolbar"><button class="adm-tool-btn primary" onclick="openProdUp()">+ NEUES PRODUKT</button><button class="adm-tool-btn" onclick="loadAdminProducts()">↻ AKTUALISIEREN</button></div>`+((d.products||[]).length?`<div class="adm-table-wrap"><table class="adm-table"><thead><tr><th>SLUG</th><th>NAME</th><th>KAT.</th><th>PREIS</th><th>LAGER</th></tr></thead><tbody>${d.products.map(p=>`<tr><td><strong>${esc(p.slug)}</strong></td><td>${esc(p.name)}</td><td>${esc(p.category||'-')}</td><td style="color:var(--neon)">${(p.price||0).toFixed(2)} €</td><td>${esc(p.stock||'-')}</td></tr>`).join('')}</tbody></table></div>`:'<div style="text-align:center;padding:40px;color:#444">Noch keine Produkte. Klicke "NEUES PRODUKT".</div>');
+  }catch(e){}
+}
+
+/* ═══ KONSTANTEN + CART ═══ */
+const EU_ZONE1=['AT','BE','NL','LU','PL','CZ','SK','HU','SI'];
+const EU_ZONE2=['FR','IT','ES','SE','DK','FI','GR','PT','RO','BG','HR','EE','LV','LT','CY','MT','IE'];
+function getShipping(land,sub){if(land==='DE')return sub>=50?0:6.99;if(EU_ZONE1.includes(land))return 14.49;if(EU_ZONE2.includes(land)||land==='EU_OTHER')return 16.49;if(land==='CH')return 20.99;if(land==='GB')return 19.99;if(land==='US')return 24.99;return 22.49;}
+
+const DISCOUNT_CODES={'WILLKOMMEN10':{type:'percent',value:10,label:'10% Newsletter-Rabatt'},'LEXORD15':{type:'percent',value:15,label:'15% Treue-Rabatt'},'REPAIR5':{type:'fixed',value:5,label:'5€ Reparatur-Rabatt'},'SOMMER2026':{type:'percent',value:20,label:'20% Sommer-Deal'}};
+let activeDiscount=null,cart=[],recentlyViewed=[];
+function calcDiscount(s){if(!activeDiscount)return 0;return activeDiscount.type==='percent'?s*activeDiscount.value/100:Math.min(activeDiscount.value,s);}
+async function applyDiscount(){
+  const code=document.getElementById('discount-code').value.trim().toUpperCase();
+  const ok=document.getElementById('discount-ok'),err=document.getElementById('discount-err');
+  ok.style.display='none';err.style.display='none';
+  if(!code){err.innerText='BITTE CODE EINGEBEN';err.style.display='block';return;}
+  const d=DISCOUNT_CODES[code];const isPersonal=/^LXRD\d{4}$/.test(code);
+  if(!d && !isPersonal){err.innerText='✗ UNGÜLTIGER RABATTCODE';err.style.display='block';activeDiscount=null;updateCart();return;}
+  let custEmail='';try{const c=JSON.parse(sessionStorage.getItem('lxrd_customer')||'{}');custEmail=c.email||'';}catch(e){}
+  if(custEmail){try{const r=await fetch(CF_WORKER_URL+'/api/discount/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,email:custEmail})});const cd=await r.json();if(cd.alreadyUsed){err.innerText='✗ Dieser Code wurde bereits eingelöst';err.style.display='block';activeDiscount=null;updateCart();return;}}catch(e){}}
+  if(isPersonal)activeDiscount={type:'percent',value:15,label:'15% Treue-Rabatt',code};
+  else activeDiscount={...d,code};
+  ok.innerText='✓ '+activeDiscount.label+' AKTIVIERT';ok.style.display='block';
+  toast('✓ Rabattcode '+code+' aktiviert!','ok');updateCart();
+}
+
+const PRODUCTS=[{name:'LXRD Performance Black',price:240,img:'Photoroom_20260305_123705.png',cat:'Controller'},{name:'LXRD Plus Black',price:180,img:'Photoroom_20260305_140346.png',cat:'Controller'},{name:'LXRD Basic Black',price:105,img:'Photoroom_20260402_014813.png',cat:'Controller'},{name:'LXRD Elite Pro',price:280,img:'Photoroom_20260306_112425.png',cat:'Controller'},{name:'LXRD Stealth Edition',price:220,img:'Photoroom_20260501_094506.png',cat:'Controller'},{name:'Stickzange Pro',price:5,img:'Stickzange.PNG',cat:'Werkzeug'},{name:'Paddle System V2',price:40,img:'Photoroom_20260304_212902.png',cat:'Zubehör'},{name:'TMR Stick Upgrade Kit',price:55,img:'Photoroom_20260305_123705.png',cat:'Zubehör'},{name:'Hall Effect Upgrade Kit',price:35,img:'Photoroom_20260305_140346.png',cat:'Zubehör'},{name:'GRIP Gehäuse Set',price:28,img:'Photoroom_20260402_014813.png',cat:'Zubehör'},{name:'Clicky Trigger Kit',price:22,img:'Photoroom_20260304_212902.png',cat:'Zubehör'}];
+
+function deskSearch(v){const d=document.getElementById('srch-drop');if(v.length<2){d.style.display='none';return;}const f=PRODUCTS.filter(p=>p.name.toLowerCase().includes(v.toLowerCase())||p.cat.toLowerCase().includes(v.toLowerCase()));if(!f.length){d.innerHTML='<div class="srch-empty">KEINE ERGEBNISSE</div>';d.style.display='block';return;}d.innerHTML=f.map(p=>`<div class="srch-item" onclick="handleSrch('${esc(p.name)}',${p.price},'${p.img}')"><img src="${p.img}" alt=""><span class="srch-item-name">${esc(p.name)}</span><span class="srch-item-price">${p.price.toFixed(2)} €</span></div>`).join('');d.style.display='block';}
+function handleSrch(n,p,i){addToCart(n,p,i);document.getElementById('desk-srch').value='';document.getElementById('srch-drop').style.display='none';}
+function mobSearch(v){const r=document.getElementById('mob-srch-res');if(v.length<2){r.innerHTML='';return;}const f=PRODUCTS.filter(p=>p.name.toLowerCase().includes(v.toLowerCase()));r.innerHTML=f.map(p=>`<div class="srch-item" onclick="addToCart('${esc(p.name)}',${p.price},'${p.img}');document.getElementById('mob-srch-ov').classList.remove('on')" style="background:#0c0c0c;border-radius:8px;margin-bottom:8px;border:1px solid #111"><img src="${p.img}" alt=""><span class="srch-item-name">${esc(p.name)}</span><span class="srch-item-price">${p.price.toFixed(2)} €</span></div>`).join('')||'<div class="srch-empty">KEINE ERGEBNISSE</div>';}
+document.addEventListener('click',e=>{if(!e.target.closest('.srch-wrap'))document.getElementById('srch-drop').style.display='none';});
+
+function loadCart(){try{const s=localStorage.getItem('lxrd_cart');if(s)cart=JSON.parse(s);}catch(e){cart=[];}}
+function saveCart(){try{localStorage.setItem('lxrd_cart',JSON.stringify(cart));}catch(e){}}
+function toggleCart(){document.getElementById('cart-drawer').classList.toggle('open');document.querySelector('.c-overlay').style.display='block';}
+function closeCart(){document.getElementById('cart-drawer').classList.remove('open');document.querySelector('.c-overlay').style.display='none';}
+function openCart(){document.getElementById('cart-drawer').classList.add('open');document.querySelector('.c-overlay').style.display='block';}
+function toggleMenu(){document.getElementById('full-nav').classList.toggle('active');}
+function addToCart(name,price,img){const ex=cart.find(i=>i.name===name);if(ex)ex.qty++;else cart.push({name,price,img,qty:1});updateCart();if(!document.getElementById('cart-drawer').classList.contains('open'))openCart();toast('✓ '+name+' hinzugefügt','ok');trackRecent(name,price,img);}
+function remFromCart(i){cart.splice(i,1);updateCart();}
+function changeQty(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);updateCart();}
+
+function updateCart(){
+  saveCart();const body=document.getElementById('cart-body');const land=document.getElementById('land-sel')?.value||'DE';
+  const sub=cart.reduce((a,i)=>a+i.price*i.qty,0);const disc=calcDiscount(sub);const discSub=sub-disc;const shipNum=getShipping(land,discSub);const total=discSub+shipNum;const totalItems=cart.reduce((a,i)=>a+i.qty,0);
+  if(!cart.length){body.innerHTML='<div class="c-empty"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><p>WARENKORB LEER</p></div>';}
+  else{body.innerHTML=cart.map((it,i)=>`<div class="c-item"><img src="${it.img}" alt="${esc(it.name)}"><div class="c-item-info"><h4>${esc(it.name)}</h4><p style="color:var(--neon);font-size:10.5px;font-family:'Orbitron';margin:3px 0">${(it.price*it.qty).toFixed(2)} €</p><div class="c-qty"><div class="qty-b" onclick="changeQty(${i},-1)">−</div><span class="qty-n">${it.qty}</span><div class="qty-b" onclick="changeQty(${i},1)">+</div><span onclick="remFromCart(${i})" style="font-size:7.5px;color:#333;cursor:pointer;font-family:'Orbitron';margin-left:5px">ENTF.</span></div></div></div>`).join('');}
+  if(land==='DE'){document.getElementById('ship-fill').style.width=Math.min((sub/50)*100,100)+'%';document.getElementById('ship-lbl').innerText=sub>=50?'✓ KOSTENLOSER VERSAND FREIGESCHALTET':'NOCH '+(50-sub).toFixed(2)+' € BIS KOSTENLOSER VERSAND';}
+  else{document.getElementById('ship-fill').style.width='0%';document.getElementById('ship-lbl').innerText='VERSANDKOSTEN NACH LIEFERLAND';}
+  document.getElementById('c-sub').innerText=sub.toFixed(2).replace('.',',')+' €';
+  const dRow=document.getElementById('discount-row');
+  if(disc>0){dRow.style.display='flex';document.getElementById('discount-label').innerText=activeDiscount.label;document.getElementById('c-discount').innerText='-'+disc.toFixed(2).replace('.',',')+' €';}
+  else{dRow.style.display='none';}
+  document.getElementById('c-ship').innerText=shipNum===0?'Kostenlos':shipNum.toFixed(2).replace('.',',')+' €';
+  document.getElementById('c-total').innerText=total.toFixed(2).replace('.',',')+' €';
+  document.getElementById('cart-count').innerText=totalItems;
+  document.getElementById('cart-hd-count').innerText='('+totalItems+')';
+  renderPP(discSub,shipNum,land);
+}
+
+function renderPP(sub,ship,land){
+  const c=document.getElementById('pp-btn-cont');c.innerHTML='';
+  if(sub<=0||typeof paypal==='undefined')return;
+  try{paypal.Buttons({style:{layout:'vertical',color:'gold',shape:'rect',label:'paypal',height:42,tagline:false},
+    onClick:(d,a)=>{if(!document.getElementById('cart-agb').checked){toast('Bitte AGB & Widerruf akzeptieren','err');return a.reject();}},
+    createOrder:(d,a)=>a.order.create({purchase_units:[{description:'LEXORD Bestellung',amount:{currency_code:'EUR',value:(sub+ship).toFixed(2),breakdown:{item_total:{currency_code:'EUR',value:sub.toFixed(2)},shipping:{currency_code:'EUR',value:ship.toFixed(2)}}},items:cart.map(i=>({name:i.name.substring(0,127),quantity:String(i.qty),unit_amount:{currency_code:'EUR',value:i.price.toFixed(2)},category:'PHYSICAL_GOODS'}))}],application_context:{shipping_preference:'NO_SHIPPING',user_action:'PAY_NOW',brand_name:'LEXORD Engineering'}}),
+    onApprove:(d,a)=>a.order.capture().then(det=>{const email=det.payer?.email_address||'';const fn=det.payer?.name?.given_name||'Kunde';const ln=det.payer?.name?.surname||'';const orderNr='LXRD-'+Date.now().toString().slice(-7);processOrder(email,orderNr,fn,ln,det);showOrderSuccess(email,orderNr);}),
+    onCancel:()=>toast('Zahlung abgebrochen','err'),
+    onError:(err)=>{console.error('PayPal:',err);toast('PayPal Fehler. Erneut versuchen.','err');}
+  }).render('#pp-btn-cont').catch(e=>console.warn('PayPal render:',e));}catch(e){console.warn('PayPal:',e);}
+}
+
+async function processOrder(email,orderNr,fn,ln,paypalDet){
+  const sub=cart.reduce((a,i)=>a+i.price*i.qty,0);const disc=calcDiscount(sub);const land=document.getElementById('land-sel')?.value||'DE';const ship=getShipping(land,sub-disc);const total=sub-disc+ship;const name=(fn+' '+ln).trim();
+  await saveOrderToCF({orderNr,email,name,items:cart.map(i=>({name:i.name,price:i.price,qty:i.qty})),subtotal:sub,discount:disc,shipping:ship,total,country:land,payment:'PayPal',paypal_id:paypalDet?.id||'',status:'paid',created:new Date().toISOString()});
+  const itemList=cart.map(i=>`<tr><td style="padding:6px 0;border-bottom:1px solid #eee">${esc(i.name)}</td><td style="text-align:center;border-bottom:1px solid #eee">${i.qty}×</td><td style="text-align:right;border-bottom:1px solid #eee">${(i.price*i.qty).toFixed(2)} €</td></tr>`).join('');
+  await ejsSend(email,name,`✅ Bestellbestätigung ${orderNr} | LEXORD®`,tplWrap('#00f2ff','✅ BESTELLUNG BESTÄTIGT',`<p>Hallo <strong>${esc(name)}</strong>,</p><p>vielen Dank für deine Bestellung! Versand in 1-3 Werktagen per DHL.</p><div style="background:#f9f9f9;border-radius:8px;padding:18px;margin:18px 0;border-left:4px solid #00f2ff"><div style="font-size:12px;color:#888;margin-bottom:10px">BESTELLNUMMER: <strong>${orderNr}</strong></div><table style="width:100%;font-size:13px;border-collapse:collapse"><tr style="font-weight:bold;border-bottom:2px solid #ddd"><td style="padding:6px 0">Artikel</td><td style="text-align:center">Menge</td><td style="text-align:right">Preis</td></tr>${itemList}</table><div style="margin-top:12px;font-size:13px;color:#555">${disc>0?`<div>Rabatt: <span style="color:#009900">-${disc.toFixed(2)} €</span></div>`:''}<div>Versand: ${ship===0?'Kostenlos':ship.toFixed(2)+' €'}</div><div style="font-weight:bold;font-size:15px;margin-top:8px;padding-top:8px;border-top:2px solid #ddd">GESAMT: <span style="color:#009900">${total.toFixed(2)} €</span></div></div><div style="font-size:11px;color:#999;margin-top:8px">Kleinunternehmer gem. § 19 UStG - keine MwSt. ausgewiesen</div></div><p style="font-size:13px"><strong>📍 Status verfolgen:</strong> Auf <a href="https://lexord.de" style="color:#00a8b5">lexord.de</a> oben rechts auf "LOGIN" klicken.</p>`),ADMIN_EMAIL);
+  await ejsSend(ADMIN_EMAIL,'LEXORD Admin',`[BESTELLUNG] ${orderNr} · ${name} · ${total.toFixed(2)} €`,tplOrderAdmin(name,email,orderNr,total,land),email);
+  if(activeDiscount && activeDiscount.code && email){try{await fetch(CF_WORKER_URL+'/api/discount/use',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:activeDiscount.code,email})});}catch(e){}}
+  cart=[];activeDiscount=null;saveCart();
+}
+
+/* ═══ NEWSLETTER ANTI-FAKE (NEU) ═══ */
+function fpHash(){return btoa(navigator.userAgent+screen.width+screen.height+navigator.language).slice(0,32);}
+async function subscribeEmail(){
+  const email=document.getElementById('em-email').value.trim().toLowerCase();
+  if(!email||!email.includes('@')){toast('Bitte gültige E-Mail eingeben','err');return;}
+  // Client-side Disposable-Block
+  if(/@(mailinator|tempmail|guerrillamail|10minutemail|throwaway|fakeinbox|trashmail|sharklasers|maildrop|yopmail|tempr|getairmail|spamgourmet|mintemail|moakt)\./i.test(email)){toast('⚠ Wegwerf-E-Mail nicht erlaubt','err');return;}
+  const fp=fpHash();
+  // Server-side Anti-Fake-Check
+  try{
+    const r=await fetch(CF_WORKER_URL+'/api/newsletter/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,fp})});
+    const d=await r.json();
+    if(!d.ok){const m={disposable:'Wegwerf-E-Mail nicht erlaubt',duplicate:'Diese E-Mail ist bereits angemeldet',device:'Dieses Gerät hat bereits einen Willkommens-Code erhalten',rate:'Zu viele Anmeldungen von dieser IP (max. 3/Tag)',invalid:'E-Mail-Adresse ungültig'};toast('⚠ '+(m[d.reason]||d.msg||'Anmeldung nicht möglich'),'err');return;}
+  }catch(e){/* offline OK — fallback auf alten Pfad */}
+  try{await fetch(CF_WORKER_URL+'/api/newsletter/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,fp})});}catch(e){}
+  document.getElementById('em-success').style.display='block';
+  document.getElementById('em-email').value='';
+  toast('✓ Angemeldet! Code kommt per Email','ok');
+  ejsSend(email,'Neuer Abonnent','🎁 Dein 10% Rabattcode | LEXORD®',tplNewsletter(),ADMIN_EMAIL);
+}
+
+function sendContact(e){e.preventDefault();const btn=document.getElementById('send-btn');btn.innerText='SENDE…';btn.disabled=true;const name=document.getElementById('cf-name').value;const email=document.getElementById('cf-email').value;const subject=document.getElementById('cf-subject').value||'Kontaktanfrage';const message=document.getElementById('cf-message').value;ejsSend(ADMIN_EMAIL,'LEXORD Admin',`[KONTAKT] ${esc(name)} - ${esc(subject)}`,tplContactAdmin(name,email,subject,message),email);ejsSend(email,name,'✅ Nachricht erhalten | LEXORD®',tplContactCustomer(name),ADMIN_EMAIL);setTimeout(()=>{document.getElementById('contact-form').style.display='none';document.getElementById('contact-success').style.display='block';btn.innerText='NACHRICHT SENDEN';btn.disabled=false;},800);}
+
+/* ═══ LEXORD KI CHAT ═══ */
+let _chatMessages=[];
+let _chatSessionId=sessionStorage.getItem('lxrd_chat_session')||'lxrd-'+Date.now()+'-'+Math.random().toString(36).slice(2,8);
+sessionStorage.setItem('lxrd_chat_session',_chatSessionId);
+function toggleChat(){const p=document.getElementById('lxrd-chat-panel');const f=document.getElementById('lxrd-chat-fab');const isOpen=p.classList.toggle('open');f.classList.toggle('open',isOpen);if(isOpen){setTimeout(()=>document.getElementById('lxc-input').focus(),300);const pulse=document.getElementById('lxrd-chat-pulse');if(pulse)pulse.style.display='none';}}
+function sendQuick(t){document.getElementById('lxc-input').value=t;sendChatMsg();}
+async function sendChatMsg(){const inp=document.getElementById('lxc-input');const text=inp.value.trim();if(!text)return;inp.value='';inp.disabled=true;appendChatMsg('user',text);_chatMessages.push({role:'user',content:text});document.getElementById('lxc-quick').style.display='none';
+  const m=document.getElementById('lxc-messages');const t=document.createElement('div');t.className='lxc-msg lxc-bot';t.innerHTML='<div class="lxc-typing"><span></span><span></span><span></span></div>';m.appendChild(t);m.scrollTop=m.scrollHeight;
+  try{let cE='';try{const c=JSON.parse(sessionStorage.getItem('lxrd_customer')||'{}');cE=c.email||'';}catch(e){}const r=await fetch(CF_WORKER_URL+'/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:_chatMessages,sessionId:_chatSessionId,email:cE})});const d=await r.json();t.remove();const reply=d.reply||'Entschuldige, etwas ist schiefgelaufen. Schreib gerne an Kontakt@Lexord.de!';appendChatMsg('bot',reply);_chatMessages.push({role:'assistant',content:reply});}catch(e){t.remove();appendChatMsg('bot','Ups, gerade keine Verbindung. Schreib direkt an Kontakt@Lexord.de oder ruf an: 0152 047 18720');}
+  inp.disabled=false;inp.focus();
+}
+function appendChatMsg(role,text){const m=document.getElementById('lxc-messages');const el=document.createElement('div');el.className='lxc-msg lxc-'+role;el.innerHTML='<div class="lxc-msg-bubble">'+esc(text).replace(/\n/g,'<br>')+'</div>';m.appendChild(el);m.scrollTop=m.scrollHeight;}
+
+/* ═══ TESTER + KALIBRIERUNG ═══ */
+function switchTab(tab){document.querySelectorAll('.tester-tab').forEach((t,i)=>t.classList.toggle('active',['test','cal','drift'][i]===tab));document.querySelectorAll('.tester-panel').forEach(p=>p.classList.remove('active'));document.getElementById('tab-'+tab).classList.add('active');}
+let driftDataL=[],driftDataR=[];
+function tickGP(){if(!navigator.getGamepads){requestAnimationFrame(tickGP);return;}const gps=navigator.getGamepads();const st=document.getElementById('tester-status');if(!gps[0]){if(st){st.innerText='CONTROLLER ANSCHLIESSEN & TASTE DRÜCKEN…';st.classList.remove('on');}requestAnimationFrame(tickGP);return;}const gp=gps[0];if(st){st.innerText='✓ VERBUNDEN: '+gp.id.substring(0,45).toUpperCase();st.classList.add('on');}const[lx,ly,rx,ry]=gp.axes;const sl=document.getElementById('stick-l'),sr=document.getElementById('stick-r');if(sl){sl.style.left='calc(50% + '+lx*50+'%)';sl.style.top='calc(50% + '+ly*50+'%)';}if(sr){sr.style.left='calc(50% + '+rx*50+'%)';sr.style.top='calc(50% + '+ry*50+'%)';}const vl=document.getElementById('val-l'),vr=document.getElementById('val-r');if(vl)vl.innerText='X: '+lx.toFixed(4)+' | Y: '+ly.toFixed(4);if(vr)vr.innerText='X: '+rx.toFixed(4)+' | Y: '+ry.toFixed(4);const l2=gp.buttons[6]?.value||0,r2=gp.buttons[7]?.value||0;const fl2=document.getElementById('fill-l2'),fr2=document.getElementById('fill-r2');if(fl2)fl2.style.width=(l2*100)+'%';if(fr2)fr2.style.width=(r2*100)+'%';const vl2=document.getElementById('val-l2'),vr2=document.getElementById('val-r2');if(vl2)vl2.innerText=Math.round(l2*100)+'%';if(vr2)vr2.innerText=Math.round(r2*100)+'%';gp.buttons.forEach((b,i)=>{const el=document.getElementById('btn-'+i);if(el)b.pressed?el.classList.add('pressed'):el.classList.remove('pressed');});updateCalibrationDisplay(lx,ly,rx,ry);driftDataL.push({x:lx,y:ly});driftDataR.push({x:rx,y:ry});if(driftDataL.length>300)driftDataL.shift();if(driftDataR.length>300)driftDataR.shift();updateDriftDisplay(lx,ly,rx,ry);requestAnimationFrame(tickGP);}
+tickGP();
+let calStep=0,calRunning=false;
+let calData={lMin:{x:0,y:0},lMax:{x:0,y:0},rMin:{x:0,y:0},rMax:{x:0,y:0},lCenter:{x:0,y:0},rCenter:{x:0,y:0}};
+const calSteps=[{title:'SCHRITT 1: KALIBRIERUNG STARTEN',sub:'Controller anschließen und Kalibrierung beginnen',btn:'KALIBRIERUNG STARTEN'},{title:'SCHRITT 2: CENTER-POSITION',sub:'Beide Sticks in der Mitte lassen - nicht berühren (3 Sek.)',btn:'WEITER →'},{title:'SCHRITT 3: VOLLKREIS L-STICK',sub:'Linken Stick langsam im Kreis bis zum Rand drehen',btn:'WEITER →'},{title:'SCHRITT 4: VOLLKREIS R-STICK',sub:'Rechten Stick langsam im Kreis bis zum Rand drehen',btn:'WEITER →'},{title:'✓ KALIBRIERUNG ABGESCHLOSSEN',sub:'Ergebnisse werden angezeigt',btn:'↺ NEU STARTEN'}];
+let calLTrailCtx,calRTrailCtx;
+window.addEventListener('load',()=>{const cl=document.getElementById('cal-trail-l'),cr=document.getElementById('cal-trail-r');if(cl)calLTrailCtx=cl.getContext('2d');if(cr)calRTrailCtx=cr.getContext('2d');});
+function updateCalibrationDisplay(lx,ly,rx,ry){const dl=document.getElementById('cal-dot-l'),dr=document.getElementById('cal-dot-r');if(dl){dl.style.left='calc(50% + '+lx*45+'%)';dl.style.top='calc(50% + '+ly*45+'%)';}if(dr){dr.style.left='calc(50% + '+rx*45+'%)';dr.style.top='calc(50% + '+ry*45+'%)';}const vl=document.getElementById('cal-val-l'),vr=document.getElementById('cal-val-r');if(vl)vl.innerText='X: '+lx.toFixed(3)+' | Y: '+ly.toFixed(3);if(vr)vr.innerText='X: '+rx.toFixed(3)+' | Y: '+ry.toFixed(3);if(calRunning&&(calStep===2||calStep===3)){const ctx=calStep===2?calLTrailCtx:calRTrailCtx;const x=calStep===2?lx:rx;const y=calStep===2?ly:ry;if(ctx){ctx.beginPath();ctx.arc(100+x*90,100+y*90,2,0,Math.PI*2);ctx.fillStyle='rgba(0,242,255,0.3)';ctx.fill();}if(calStep===2){calData.lMax.x=Math.max(calData.lMax.x,Math.abs(lx));calData.lMax.y=Math.max(calData.lMax.y,Math.abs(ly));}else{calData.rMax.x=Math.max(calData.rMax.x,Math.abs(rx));calData.rMax.y=Math.max(calData.rMax.y,Math.abs(ry));}}}
+function calNextStep(){const gps=navigator.getGamepads();if(!gps[0]&&calStep===0){toast('Controller anschließen!','err');return;}if(calStep===0){calRunning=true;if(calLTrailCtx)calLTrailCtx.clearRect(0,0,200,200);if(calRTrailCtx)calRTrailCtx.clearRect(0,0,200,200);}if(calStep===1){const gp=navigator.getGamepads()[0];if(gp){calData.lCenter={x:gp.axes[0],y:gp.axes[1]};calData.rCenter={x:gp.axes[2],y:gp.axes[3]};}}calStep=Math.min(calStep+1,4);updateCalUI();if(calStep===4){calRunning=false;showCalResults();}}
+function resetCalibration(){calStep=0;calRunning=false;calData={lMin:{x:0,y:0},lMax:{x:0,y:0},rMin:{x:0,y:0},rMax:{x:0,y:0},lCenter:{x:0,y:0},rCenter:{x:0,y:0}};if(calLTrailCtx)calLTrailCtx.clearRect(0,0,200,200);if(calRTrailCtx)calRTrailCtx.clearRect(0,0,200,200);document.getElementById('cal-results').style.display='none';document.getElementById('cal-rawdata').style.display='none';updateCalUI();}
+function updateCalUI(){const s=calSteps[calStep];document.getElementById('cal-title').innerText=s.title;document.getElementById('cal-sub').innerText=s.sub;document.getElementById('cal-action-btn').innerText=s.btn;document.querySelectorAll('.cal-step').forEach((el,i)=>{el.classList.toggle('done',i<calStep);el.classList.toggle('active',i===calStep);});}
+function showCalResults(){const lDead=Math.sqrt(calData.lCenter.x**2+calData.lCenter.y**2);const rDead=Math.sqrt(calData.rCenter.x**2+calData.rCenter.y**2);const lMax=Math.sqrt(calData.lMax.x**2+calData.lMax.y**2)||1;const rMax=Math.sqrt(calData.rMax.x**2+calData.rMax.y**2)||1;document.getElementById('res-l-dead').innerText=lDead.toFixed(4);document.getElementById('res-r-dead').innerText=rDead.toFixed(4);document.getElementById('res-l-max').innerText=lMax.toFixed(4);document.getElementById('res-r-max').innerText=rMax.toFixed(4);document.getElementById('cal-results').style.display='grid';document.getElementById('cal-rawdata').style.display='block';document.getElementById('cal-rawdata').innerText='L-Deadzone: '+lDead.toFixed(4)+' | R-Deadzone: '+rDead.toFixed(4);if(lDead>0.1||rDead>0.1)toast('⚠ Drift erkannt!','err');else toast('✓ Stick gesund','ok');}
+function updateDriftDisplay(lx,ly,rx,ry){const lD=Math.sqrt(lx**2+ly**2),rD=Math.sqrt(rx**2+ry**2);const dlv=document.getElementById('drift-l-val'),drv=document.getElementById('drift-r-val');if(dlv)dlv.innerText=lD.toFixed(4);if(drv)drv.innerText=rD.toFixed(4);const gs=d=>{if(d<0.02)return{txt:'✓ KEIN DRIFT',col:'var(--green)'};if(d<0.08)return{txt:'⚠ LEICHTER DRIFT',col:'#ffae00'};return{txt:'✗ STARKER DRIFT',col:'#ff4d4f'};};const ls=gs(lD),rs=gs(rD);const dls=document.getElementById('drift-l-status'),drs=document.getElementById('drift-r-status');const dlb=document.getElementById('drift-l-bar'),drb=document.getElementById('drift-r-bar');if(dls){dls.innerText=ls.txt;dls.style.color=ls.col;}if(drs){drs.innerText=rs.txt;drs.style.color=rs.col;}if(dlb){dlb.style.width=Math.min(lD*500,100)+'%';dlb.style.background=ls.col;}if(drb){drb.style.width=Math.min(rD*500,100)+'%';drb.style.background=rs.col;}}
+
+/* ═══ REPARATUR WIZARD ═══ */
+let repStep=0,repDamage={key:'',label:'',price:''};
+function selectDamage(el,key,label,price){document.querySelectorAll('.rep-damage-opt').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');repDamage={key,label,price};document.getElementById('rep-price-est').style.display='flex';document.getElementById('rep-price-val').innerText=price;}
+function repNext(){if(repStep===0&&!repDamage.key){toast('Schadensart auswählen','err');return;}if(repStep===1){const f=document.getElementById('rep-fname').value,l=document.getElementById('rep-lname').value,e=document.getElementById('rep-email').value,a=document.getElementById('rep-addr').value,z=document.getElementById('rep-zip').value,c=document.getElementById('rep-city').value;if(!f||!l||!e||!a||!z||!c){toast('Pflichtfelder ausfüllen','err');return;}}if(repStep===2){if(!document.getElementById('rep-model').value||!document.getElementById('rep-desc').value){toast('Modell und Beschreibung ausfüllen','err');return;}buildRepairSummary();}if(repStep===3){submitRepair();return;}document.getElementById('rp-'+repStep).classList.remove('active');repStep++;document.getElementById('rp-'+repStep).classList.add('active');updateRepairSteps();}
+function repBack(){if(repStep===0)return;document.getElementById('rp-'+repStep).classList.remove('active');repStep--;document.getElementById('rp-'+repStep).classList.add('active');updateRepairSteps();}
+function updateRepairSteps(){document.querySelectorAll('.rep-step').forEach((el,i)=>{el.classList.toggle('active',i===repStep);el.classList.toggle('done',i<repStep);});}
+function buildRepairSummary(){const fn=document.getElementById('rep-fname').value,ln=document.getElementById('rep-lname').value;const email=document.getElementById('rep-email').value,model=document.getElementById('rep-model').value;const warranty=document.getElementById('rep-warranty').value;document.getElementById('rep-summary-content').innerHTML=`<div class="rep-summary-item"><span>SCHADEN</span><span>${repDamage.label}</span></div><div class="rep-summary-item"><span>GESCHÄTZTE KOSTEN</span><span style="color:var(--neon)">${repDamage.price}</span></div><div class="rep-summary-item"><span>KUNDE</span><span>${esc(fn+' '+ln)}</span></div><div class="rep-summary-item"><span>E-MAIL</span><span>${esc(email)}</span></div><div class="rep-summary-item"><span>CONTROLLER</span><span>${esc(model)}</span></div><div class="rep-summary-item"><span>GARANTIE</span><span>${warranty} Monate</span></div>`;}
+async function submitRepair(){if(!document.getElementById('rep-agb').checked){toast('AGB akzeptieren','err');return;}const repNr='REP-'+Date.now().toString().slice(-7);const fn=document.getElementById('rep-fname').value,ln=document.getElementById('rep-lname').value;const email=document.getElementById('rep-email').value,model=document.getElementById('rep-model').value;const desc=document.getElementById('rep-desc').value,since=document.getElementById('rep-since').value;const warranty=document.getElementById('rep-warranty').value;const phone=document.getElementById('rep-phone')?.value||'-';const addr=document.getElementById('rep-addr').value+', '+document.getElementById('rep-zip').value+' '+document.getElementById('rep-city').value;const name=fn+' '+ln;
+  await saveRepairToCF({repNr,fname:fn,lname:ln,email,phone,addr:document.getElementById('rep-addr').value,zip:document.getElementById('rep-zip').value,city:document.getElementById('rep-city').value,model,serial:document.getElementById('rep-serial').value,damage:repDamage.label,damageKey:repDamage.key,estPrice:repDamage.price,desc,since,warranty,status:'received',created:new Date().toISOString()});
+  await ejsSend(email,fn,`🔧 Reparaturanfrage ${repNr} | LEXORD®`,tplRepair(fn,repNr,repDamage.label,model,repDamage.price),ADMIN_EMAIL);
+  await ejsSend(ADMIN_EMAIL,'LEXORD Admin',`[REPARATUR] ${repNr} · ${name} · ${repDamage.label}`,tplRepairAdmin(name,email,phone,addr,repNr,repDamage.label,model,repDamage.price,desc),email);
+  document.querySelectorAll('.rep-panel').forEach(p=>p.classList.remove('active'));document.getElementById('rep-success').style.display='block';document.getElementById('rep-nr').innerText=repNr;document.querySelectorAll('.rep-step').forEach(el=>el.classList.add('done'));toast('✓ Reparaturanfrage gesendet!','ok');
+}
+
+function showOrderSuccess(email,orderNr){document.getElementById('success-email').innerText=email||'deiner E-Mail';document.getElementById('success-order-nr').innerText='BESTELLNUMMER: '+orderNr;document.getElementById('order-success-modal').style.display='flex';closeCart();}
+function closeOrderSuccess(){document.getElementById('order-success-modal').style.display='none';updateCart();}
+
+function createLightning(){const bg=document.getElementById('lightning-bg');if(!bg)return;for(let i=0;i<12;i++){const el=document.createElement('div');el.className='lightning-line';el.style.cssText='left:'+(5+Math.random()*90)+'%;top:'+Math.random()*50+'%;height:'+(100+Math.random()*300)+'px;--dur:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*5+'s';bg.appendChild(el);}}
+createLightning();
+
+function trackRecent(n,p,i){recentlyViewed=recentlyViewed.filter(r=>r.name!==n);recentlyViewed.unshift({name:n,price:p,img:i});if(recentlyViewed.length>5)recentlyViewed.pop();const sec=document.getElementById('recently'),grid=document.getElementById('rec-grid');if(!sec||!grid)return;sec.style.display=recentlyViewed.length?'block':'none';grid.innerHTML=recentlyViewed.map(r=>`<div class="rec-card" onclick="addToCart('${esc(r.name)}',${r.price},'${r.img}')"><img src="${r.img}" alt="${esc(r.name)}"><div class="rec-name">${esc(r.name)}</div><div class="rec-price">${r.price.toFixed(2)} €</div></div>`).join('');}
+function toggleWish(btn,name){btn.classList.toggle('on');toast(btn.classList.contains('on')?'♥ '+name+' zur Wunschliste':name+' entfernt','ok');}
+function showCookieBanner(){if(localStorage.getItem('ck'))return;const b=document.getElementById('cookie-banner');if(!b)return;b.style.display='flex';setTimeout(()=>b.classList.add('show'),50);}
+function ckAccept(){localStorage.setItem('ck','1');document.getElementById('cookie-banner').style.display='none';}
+function ckReject(){localStorage.setItem('ck','0');document.getElementById('cookie-banner').style.display='none';}
+function openLegal(id){const el=document.getElementById(id);if(el){el.classList.add('open');el.scrollIntoView({behavior:'smooth',block:'center'});}}
+function toast(msg,type){type=type||'ok';const t=document.createElement('div');t.className='toast '+type;t.innerText=msg;document.getElementById('toasts').appendChild(t);setTimeout(()=>{t.style.cssText='opacity:0;transform:translateX(60px);transition:.4s';setTimeout(()=>t.remove(),400);},3000);}
+function setDelivery(){let d=new Date();d.setDate(d.getDate()+3);while(d.getDay()===0||d.getDay()===6)d.setDate(d.getDate()+1);const s=d.toLocaleDateString('de-DE',{day:'2-digit',month:'long'});document.querySelectorAll('.delivery-date').forEach(el=>el.innerText=s);}
+setDelivery();
+
+/* ═══ SWIPER mit Page Indicator + Nav-Buttons (NEU) ═══ */
+function initSwiper(){
+  if(typeof Swiper==='undefined'){setTimeout(initSwiper,300);return;}
+  try{
+    new Swiper('.mySwiper',{
+      effect:'coverflow',grabCursor:true,centeredSlides:true,slidesPerView:'auto',loop:true,
+      coverflowEffect:{rotate:14,stretch:0,depth:110,modifier:1,slideShadows:false},
+      pagination:{el:'.swiper-pagination',clickable:true},
+      navigation:{nextEl:'.swiper-nav-next',prevEl:'.swiper-nav-prev'},
+      on:{slideChange:function(){const cur=this.realIndex+1;const el=document.getElementById('swiper-cur');if(el)el.textContent=cur;}}
+    });
+  }catch(e){console.warn('Swiper:',e);}
+}
+setTimeout(initSwiper,400);
+
+/* Mobile Tap-zum-Drehen */
+document.querySelectorAll('.mySwiper .swiper-slide').forEach(slide=>{
+  slide.addEventListener('click',function(e){
+    if(e.target.closest('.btn'))return;
+    document.querySelectorAll('.mySwiper .swiper-slide.flipped').forEach(s=>{if(s!==slide)s.classList.remove('flipped');});
+    slide.classList.toggle('flipped');
+  });
+});
+window.addEventListener('scroll',()=>{const el=document.getElementById('scroll-top');if(el)el.classList.toggle('vis',window.scrollY>400);});
+
+/* ═══ CANVAS BACKGROUNDS ═══ */
+(function(){const sc=document.getElementById('star-canvas');if(!sc)return;const sx=sc.getContext('2d');const rsz=()=>{sc.width=window.innerWidth;sc.height=window.innerHeight;};window.addEventListener('resize',rsz);rsz();const stars=[];for(let i=0;i<110;i++)stars.push({x:Math.random()*sc.width,y:Math.random()*sc.height,v:.05+Math.random()*.25,o:Math.random()*.8});function draw(){sx.clearRect(0,0,sc.width,sc.height);stars.forEach(s=>{s.y-=s.v;if(s.y<0)s.y=sc.height;sx.fillStyle='rgba(255,255,255,'+s.o+')';sx.fillRect(s.x,s.y,1,1);});requestAnimationFrame(draw);}draw();})();
+(function(){const pc=document.getElementById('particle-canvas');if(!pc)return;const px=pc.getContext('2d');const rsz=()=>{pc.width=window.innerWidth;pc.height=window.innerHeight;};window.addEventListener('resize',rsz);rsz();const pts=[];for(let i=0;i<90;i++){pts.push({x:Math.random()*pc.width,y:Math.random()*pc.height,vx:(Math.random()-.5)*.4,vy:-Math.random()*.5-.1,sz:Math.random()*2+.5,alpha:Math.random()*.4+.1,color:Math.random()>.55?'#bc13fe':'#00f2ff'});}function draw(){px.clearRect(0,0,pc.width,pc.height);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.y<-10){p.y=pc.height+10;p.x=Math.random()*pc.width;}if(p.x<-10)p.x=pc.width+10;if(p.x>pc.width+10)p.x=-10;px.save();px.globalAlpha=p.alpha;px.fillStyle=p.color;px.shadowColor=p.color;px.shadowBlur=10;px.beginPath();px.arc(p.x,p.y,p.sz,0,Math.PI*2);px.fill();px.restore();});requestAnimationFrame(draw);}draw();})();
+(function(){const wc=document.getElementById('warp-canvas');if(!wc)return;const wx=wc.getContext('2d');const rw=()=>{wc.width=window.innerWidth;wc.height=window.innerHeight;};window.addEventListener('resize',rw);rw();const wpts=[];for(let i=0;i<600;i++)wpts.push({x:Math.random()*wc.width-wc.width/2,y:Math.random()*wc.height-wc.height/2,z:Math.random()*wc.width});let warpRunning=true;function aw(){if(!warpRunning)return;wx.fillStyle='rgba(0,0,0,.18)';wx.fillRect(0,0,wc.width,wc.height);wx.fillStyle='#00f2ff';wpts.forEach(s=>{s.z-=14;if(s.z<=0)s.z=wc.width;const ox=s.x/s.z*wc.width+wc.width/2,oy=s.y/s.z*wc.width+wc.height/2;const sz=Math.max(.5,(1-s.z/wc.width)*2.5);wx.fillRect(ox,oy,sz,sz);});requestAnimationFrame(aw);}aw();setTimeout(()=>{warpRunning=false;},3500);})();
+
+/* SCROLL REVEAL + ABOUT-BLOCK ANIMATION */
+const revObs=new IntersectionObserver((entries)=>{entries.forEach(en=>{if(en.isIntersecting){en.target.style.transition='opacity .9s ease, transform .9s ease';en.target.style.opacity='1';en.target.style.transform='translateY(0)';revObs.unobserve(en.target);}});},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+const aboutObs=new IntersectionObserver((entries)=>{entries.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in-view');aboutObs.unobserve(en.target);}});},{threshold:.15,rootMargin:'0px 0px -50px 0px'});
+document.querySelectorAll('.about-block').forEach(el=>aboutObs.observe(el));
+
+/* INTRO KILLEN */
+function killIntro(){const intro=document.getElementById('intro-overlay');if(!intro)return;intro.style.transition='opacity .8s ease';intro.style.opacity='0';setTimeout(()=>{intro.style.display='none';intro.style.visibility='hidden';},800);}
+setTimeout(killIntro,2500);setTimeout(killIntro,3600);
+document.addEventListener('click',()=>{const intro=document.getElementById('intro-overlay');if(intro&&intro.style.display!=='none')setTimeout(killIntro,100);},true);
+
+/* INIT */
+loadCart();updateCart();
+setTimeout(showCookieBanner,3000);
+setTimeout(()=>setLang(localStorage.getItem('lxrd_lang')||'de'),100);
+if(window.location.hash==='#cart-open'){setTimeout(()=>{try{openCart();}catch(e){}},800);history.replaceState(null,'',window.location.pathname);}
+const _urlParams=new URLSearchParams(window.location.search);
+if(_urlParams.get('admin')==='1'){setTimeout(openAdmin,500);}
+if(_urlParams.get('login')==='1'){setTimeout(()=>{openLogin();const nr=_urlParams.get('nr');if(nr){document.getElementById('lm-ordernr').value=nr;document.getElementById('lm-email').focus();}},600);}
+if(_urlParams.get('cart')==='open'){setTimeout(()=>{try{const stored=localStorage.getItem('lxrd_cart');if(stored){cart=JSON.parse(stored);updateCart();}const drawer=document.getElementById('cart-drawer');if(drawer){drawer.classList.add('open');document.body.style.overflow='hidden';}if(window.history&&window.history.replaceState){window.history.replaceState({},'',window.location.pathname);}}catch(e){}},400);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLogin();closeAdmin();closeCart();closeUpdateModal();closeProdUp();}});
+</script>
+
+<!-- ADMIN UPDATE MODAL (Status + Tracking + Storno) -->
+<div id="adm-update-modal" role="dialog">
+  <div class="adm-update-box">
+    <div class="adm-up-title" id="adm-up-title">📦 Bestellung aktualisieren</div>
+    <div class="adm-up-sub" id="adm-up-sub">Status setzen · Tracking eintragen · Kunde wird automatisch benachrichtigt</div>
+    <input type="hidden" id="adm-up-type" value="order">
+    <input type="hidden" id="adm-up-nr" value="">
+    <div class="adm-up-grp"><label class="adm-up-lbl">NEUER STATUS</label><div class="adm-up-status-grid" id="adm-up-statuses"></div></div>
+    <div class="adm-up-grp" id="adm-up-tracking-grp"><label class="adm-up-lbl">DHL TRACKING-NUMMER (optional)</label><input type="text" class="adm-up-input" id="adm-up-tracking" placeholder="z.B. 00340434292135100138" autocomplete="off"></div>
+    <div class="adm-up-grp" id="adm-up-price-grp" style="display:none"><label class="adm-up-lbl">FINALER PREIS NACH DIAGNOSE (optional)</label><input type="text" class="adm-up-input" id="adm-up-price" placeholder="z.B. 35 EUR"></div>
+    <div class="adm-up-grp"><label class="adm-up-lbl">NOTIZ AN KUNDE (optional, wird in Email gesendet)</label><textarea class="adm-up-textarea" id="adm-up-note" placeholder="z.B. Voraussichtliche Lieferung am ..."></textarea></div>
+    <div class="adm-up-btns"><button class="adm-up-cancel" onclick="closeUpdateModal()">ABBRECHEN</button><button class="adm-up-save" onclick="saveUpdate()">SPEICHERN &amp; EMAIL SENDEN →</button></div>
+  </div>
+</div>
+
+<!-- PRODUKT-UPLOAD MODAL (NEU) -->
+<div id="prod-up-modal" role="dialog">
+  <div class="adm-update-box">
+    <div class="adm-up-title">🛒 Neues Produkt</div>
+    <div class="adm-up-sub">Vorlage wählen oder manuell eintragen — wird im Admin-Panel &amp; collections.html geladen</div>
+    <div class="pu-tmpl">
+      <button onclick="loadProdTmpl('premium')">🎮 Premium Controller</button>
+      <button onclick="loadProdTmpl('upgrade')">⚡ Upgrade-Kit</button>
+      <button onclick="loadProdTmpl('werkzeug')">🔧 Werkzeug</button>
+      <button onclick="loadProdTmpl('repair')">🛠️ Reparatur-Service</button>
+    </div>
+    <div class="pu-row">
+      <div class="adm-up-grp"><label class="adm-up-lbl">SLUG (URL)</label><input type="text" class="adm-up-input" id="pu-slug" placeholder="z.B. lxrd-neuer"></div>
+      <div class="adm-up-grp"><label class="adm-up-lbl">KATEGORIE</label><select class="adm-up-select" id="pu-cat"><option>Controller</option><option>Upgrade-Kits</option><option>Gehäuse</option><option>Werkzeug</option><option>Reparatur</option><option>Sonstiges</option></select></div>
+    </div>
+    <div class="adm-up-grp"><label class="adm-up-lbl">PRODUKT-NAME</label><input type="text" class="adm-up-input" id="pu-name"></div>
+    <div class="pu-row">
+      <div class="adm-up-grp"><label class="adm-up-lbl">PREIS €</label><input type="number" class="adm-up-input" id="pu-price" step="0.01"></div>
+      <div class="adm-up-grp"><label class="adm-up-lbl">LAGER</label><select class="adm-up-select" id="pu-stock"><option value="in">Auf Lager</option><option value="out">Ausverkauft</option><option value="pre">Vorbestellung</option></select></div>
+    </div>
+    <div class="adm-up-grp"><label class="adm-up-lbl">BILD URL / DATEINAME</label><input type="text" class="adm-up-input" id="pu-img" placeholder="z.B. Photoroom_xxx.png"></div>
+    <div class="adm-up-grp"><label class="adm-up-lbl">KURZBESCHREIBUNG</label><input type="text" class="adm-up-input" id="pu-short"></div>
+    <div class="adm-up-grp"><label class="adm-up-lbl">FEATURES (eines pro Zeile)</label><textarea class="adm-up-textarea" id="pu-feat" style="min-height:100px"></textarea></div>
+    <div class="adm-up-grp"><label class="adm-up-lbl">LANGE BESCHREIBUNG (HTML erlaubt)</label><textarea class="adm-up-textarea" id="pu-desc" style="min-height:120px"></textarea></div>
+    <div class="adm-up-btns"><button class="adm-up-cancel" onclick="closeProdUp()">ABBRECHEN</button><button class="adm-up-save" onclick="saveProduct()">💾 PRODUKT SPEICHERN</button></div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -128,7 +128,9 @@ async function test(){
       if (path === "/api/admin/products" && request.method === "POST") return await adminCreateProduct(request, env);
       if (path === "/api/products" && request.method === "GET") return await listProducts(request, env);
       if (path === "/api/b2b/inquiry" && request.method === "POST") return await b2bInquiry(request, env);
+      if (path === "/api/b2b/register" && request.method === "POST") return await b2bRegister(request, env);
       if (path === "/api/b2b/login" && request.method === "POST") return await b2bLogin(request, env);
+      if (path === "/api/b2b/contact" && request.method === "POST") return await b2bContact(request, env);
       if (path.startsWith("/api/admin/order/") && path.endsWith("/cancel") && request.method === "POST") {
         const orderNr = path.split("/")[4];
         return await cancelOrder(request, env, orderNr);
@@ -891,21 +893,182 @@ async function b2bInquiry(request, env) {
   return json({ success: true, id });
 }
 
-async function b2bLogin(request, env) {
-  // Stub: full B2B login system (with custom prices) coming in Phase 2.
-  // For now, accept any inquiry-based "B2B-XXXXXXX" id + email match.
-  if (!env.LEXORD_DATA) return json({ success: false, error: "DB" });
+async function b2bRegister(request, env) {
+  if (!env.LEXORD_DATA) return json({ success: false, error: "DB nicht konfiguriert" }, 500);
   const body = await request.json();
-  const id = (body.id || "").toUpperCase().trim();
+  const required = ["company", "ustid", "name", "email", "password", "phone", "address"];
+  for (const f of required) {
+    if (!body[f]) return json({ success: false, error: "Feld fehlt: " + f }, 400);
+  }
+  const email = body.email.toLowerCase().trim();
+  if (!email.includes("@")) return json({ success: false, error: "E-Mail ungueltig" }, 400);
+  const ustidNorm = body.ustid.replace(/\s/g, "").toUpperCase();
+  if (!/^[A-Z]{2}[0-9A-Z]{8,12}$/.test(ustidNorm)) return json({ success: false, error: "USt-ID Format ungueltig" }, 400);
+  if (body.password.length < 8) return json({ success: false, error: "Passwort min. 8 Zeichen" }, 400);
+
+  // Bereits registriert?
+  const existing = await env.LEXORD_DATA.get("b2b_account:" + email);
+  if (existing) return json({ success: false, error: "Diese E-Mail ist bereits registriert" }, 409);
+
+  const id = "B2B-" + Date.now().toString().slice(-7);
+  // Passwort als simpler Hash (in Produktion: bcrypt - hier minimal-stub)
+  const pwHash = btoa(body.password + ":" + (env.JWT_SECRET || "lxrd"));
+  const record = {
+    id,
+    email,
+    company: body.company,
+    ustid: ustidNorm,
+    name: body.name,
+    position: body.position || "",
+    phone: body.phone,
+    address: body.address,
+    industry: body.industry || "",
+    volume: body.volume || "",
+    message: body.message || "",
+    pwHash,
+    status: "pending",
+    discount: 0,
+    tier: "starter",
+    created: new Date().toISOString()
+  };
+  await env.LEXORD_DATA.put("b2b_account:" + email, JSON.stringify(record));
+  await env.LEXORD_DATA.put("b2b:" + id, JSON.stringify({ ...record, pwHash: undefined }));
+
+  // Admin + Customer notification
+  if (env.BREVO_API_KEY) {
+    const fromE = (env.FROM_EMAIL || ADMIN_EMAIL).toLowerCase();
+    const adminHtml = "<h2>Neue B2B-Registrierung " + id + "</h2>" +
+      "<p><strong>Firma:</strong> " + escapeHtml(body.company) + "</p>" +
+      "<p><strong>USt-ID:</strong> " + escapeHtml(ustidNorm) + "</p>" +
+      "<p><strong>Ansprechpartner:</strong> " + escapeHtml(body.name) + " (" + escapeHtml(email) + ")</p>" +
+      "<p><strong>Telefon:</strong> " + escapeHtml(body.phone) + "</p>" +
+      "<p><strong>Anschrift:</strong> " + escapeHtml(body.address) + "</p>" +
+      "<p><strong>Branche:</strong> " + escapeHtml(body.industry || "-") + "</p>" +
+      "<p><strong>Volumen:</strong> " + escapeHtml(body.volume || "-") + "</p>" +
+      (body.message ? "<p><strong>Nachricht:</strong></p><blockquote>" + escapeHtml(body.message) + "</blockquote>" : "") +
+      "<p>Im Admin-Panel auf <strong>approved</strong> setzen, damit der Kunde sich einloggen kann.</p>";
+    try {
+      await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "api-key": env.BREVO_API_KEY, "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          sender: { name: "LEXORD B2B", email: fromE },
+          to: [{ email: fromE, name: "LEXORD Admin" }],
+          replyTo: { email: email },
+          subject: "[B2B " + id + "] Neue Registrierung von " + body.company,
+          htmlContent: adminHtml
+        })
+      });
+
+      const custHtml = "<h2>Willkommen bei LEXORD B2B</h2>" +
+        "<p>Hallo " + escapeHtml(body.name) + ",</p>" +
+        "<p>vielen Dank fuer Ihre Registrierung. Ihre B2B-Anfrage <strong>" + id + "</strong> ist eingegangen.</p>" +
+        "<p><strong>Naechste Schritte:</strong></p>" +
+        "<ol><li>Wir pruefen Ihre Angaben (USt-ID, Firma) innerhalb von 24 Stunden</li>" +
+        "<li>Nach Pruefung erhalten Sie eine Freischaltungs-E-Mail</li>" +
+        "<li>Anschliessend koennen Sie sich mit E-Mail + Passwort einloggen und unsere B2B-Konditionen einsehen</li></ol>" +
+        "<p>Bei dringenden Fragen: <a href=\"mailto:Kontakt@Lexord.de\">Kontakt@Lexord.de</a> oder Tel. +49 152 047 18720</p>" +
+        "<p>Beste Gruesse,<br>Leon Schulz<br>LEXORD Engineering</p>";
+      await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "api-key": env.BREVO_API_KEY, "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          sender: { name: "LEXORD Engineering", email: fromE },
+          to: [{ email: email, name: body.name }],
+          subject: "[" + id + "] B2B-Registrierung eingegangen | LEXORD",
+          htmlContent: custHtml
+        })
+      });
+    } catch (e) { /* ignore */ }
+  }
+  return json({ success: true, id, status: "pending" });
+}
+
+async function b2bContact(request, env) {
+  const body = await request.json();
+  if (!body.email || !body.message || !body.template) return json({ success: false, error: "Felder fehlen" }, 400);
+
+  const templates = {
+    anfrage:   { subject: "Angebotsanfrage", icon: "💼" },
+    bestellung:{ subject: "Bestellanfrage", icon: "📦" },
+    reklamation:{ subject: "Reklamation", icon: "⚠️" },
+    individuell:{ subject: "Individuelles Branding/Custom", icon: "🎨" },
+    sonstiges: { subject: "Sonstige Anfrage", icon: "💬" }
+  };
+  const tpl = templates[body.template] || templates.sonstiges;
+
+  if (env.BREVO_API_KEY) {
+    const fromE = (env.FROM_EMAIL || ADMIN_EMAIL).toLowerCase();
+    const adminHtml = "<h2>" + tpl.icon + " B2B-" + escapeHtml(tpl.subject) + "</h2>" +
+      "<table style=\"font-family:Arial;font-size:13px;border-collapse:collapse\">" +
+      "<tr><td style=\"padding:6px 12px;color:#888\">Firma</td><td style=\"padding:6px 12px;font-weight:bold\">" + escapeHtml(body.company || "-") + "</td></tr>" +
+      "<tr><td style=\"padding:6px 12px;color:#888\">B2B-ID</td><td style=\"padding:6px 12px\">" + escapeHtml(body.b2bId || "-") + "</td></tr>" +
+      "<tr><td style=\"padding:6px 12px;color:#888\">Kunde</td><td style=\"padding:6px 12px;font-weight:bold\">" + escapeHtml(body.name || "-") + "</td></tr>" +
+      "<tr><td style=\"padding:6px 12px;color:#888\">E-Mail</td><td style=\"padding:6px 12px\"><a href=\"mailto:" + escapeHtml(body.email) + "\">" + escapeHtml(body.email) + "</a></td></tr>" +
+      "<tr><td style=\"padding:6px 12px;color:#888\">Telefon</td><td style=\"padding:6px 12px\">" + escapeHtml(body.phone || "-") + "</td></tr>" +
+      "</table>" +
+      "<h3 style=\"color:#00f2ff;margin-top:18px\">Nachricht:</h3>" +
+      "<blockquote style=\"background:#f5f5f5;padding:14px;border-left:4px solid #00f2ff;font-family:Arial;font-size:13px\">" + escapeHtml(body.message).replace(/\n/g, "<br>") + "</blockquote>";
+
+    const custHtml = "<h2>" + tpl.icon + " Ihre B2B-Anfrage</h2>" +
+      "<p>Hallo " + escapeHtml(body.name || "Kunde") + ",</p>" +
+      "<p>wir haben Ihre <strong>" + escapeHtml(tpl.subject) + "</strong> erhalten und melden uns innerhalb von <strong>24 Stunden</strong> mit einer ausfuehrlichen Antwort.</p>" +
+      "<p><strong>Ihre Nachricht:</strong></p>" +
+      "<blockquote style=\"background:#f5f5f5;padding:14px;border-left:4px solid #00f2ff;font-family:Arial;font-size:13px\">" + escapeHtml(body.message).replace(/\n/g, "<br>") + "</blockquote>" +
+      "<p>Bei dringenden Fragen erreichen Sie uns unter Tel. +49 152 047 18720 (Mo-Fr 9-18 Uhr).</p>" +
+      "<p>Beste Gruesse,<br>Leon Schulz<br>LEXORD Engineering B2B</p>";
+
+    try {
+      await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "api-key": env.BREVO_API_KEY, "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          sender: { name: "LEXORD B2B", email: fromE },
+          to: [{ email: fromE, name: "LEXORD Admin" }],
+          replyTo: { email: body.email },
+          subject: "[B2B " + tpl.subject + "] " + (body.company || body.name),
+          htmlContent: adminHtml
+        })
+      });
+      await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "api-key": env.BREVO_API_KEY, "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          sender: { name: "LEXORD Engineering", email: fromE },
+          to: [{ email: body.email, name: body.name || body.email }],
+          subject: "[Eingegangen] " + tpl.subject + " | LEXORD",
+          htmlContent: custHtml
+        })
+      });
+    } catch (e) { /* ignore */ }
+  }
+  return json({ success: true });
+}
+
+async function b2bLogin(request, env) {
+  if (!env.LEXORD_DATA) return json({ success: false, error: "DB nicht konfiguriert" }, 500);
+  const body = await request.json();
   const email = (body.email || "").toLowerCase().trim();
-  if (!id.startsWith("B2B-") || !email) return json({ success: false, error: "Ungueltige B2B-Nummer" });
-  const raw = await env.LEXORD_DATA.get("b2b:" + id);
-  if (!raw) return json({ success: false, error: "Nicht gefunden" });
+  const password = body.password || "";
+  if (!email || !password) return json({ success: false, error: "E-Mail und Passwort erforderlich" }, 400);
+  const raw = await env.LEXORD_DATA.get("b2b_account:" + email);
+  if (!raw) return json({ success: false, error: "Konto nicht gefunden" }, 404);
   const rec = JSON.parse(raw);
-  if ((rec.email || "").toLowerCase() !== email) return json({ success: false, error: "E-Mail stimmt nicht" });
-  if (rec.status !== "approved") return json({ success: false, error: "B2B-Konto noch nicht freigeschaltet. Wir melden uns binnen 24h." });
-  const token = btoa("b2b:" + id + ":" + Date.now());
-  return json({ success: true, token, company: rec.company, discount: rec.discount || 10 });
+  const pwHash = btoa(password + ":" + (env.JWT_SECRET || "lxrd"));
+  if (rec.pwHash !== pwHash) return json({ success: false, error: "Passwort falsch" }, 401);
+  if (rec.status === "pending") return json({ success: false, error: "Konto wird gerade geprueft. Wir melden uns binnen 24h.", pending: true }, 403);
+  if (rec.status === "rejected") return json({ success: false, error: "Konto abgelehnt. Bei Fragen: Kontakt@Lexord.de" }, 403);
+  const token = btoa("b2b:" + rec.id + ":" + Date.now());
+  return json({
+    success: true,
+    token,
+    company: rec.company,
+    name: rec.name,
+    email: rec.email,
+    id: rec.id,
+    discount: rec.discount || 10,
+    tier: rec.tier || "starter"
+  });
 }
 
 // ============ ORDER CANCEL ============

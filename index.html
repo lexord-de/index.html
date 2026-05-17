@@ -36,7 +36,6 @@
 <!-- EmailJS – einziges Email-System, kein Setup nötig -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>(function(){if(typeof emailjs!=='undefined'){emailjs.init({publicKey:'mDh8p4g4NEdRDOAc3'});}})();</script>
-<script data-goatcounter="https://lexord.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <style>
 :root{
   --neon:#00f2ff;--neon2:#bc13fe;--neon-dim:rgba(0,242,255,0.12);
@@ -234,8 +233,18 @@ header{position:fixed;top:30px;width:100%;z-index:9400;padding:11px 5%;display:f
 @keyframes lightningFlash{0%,90%,100%{opacity:0}92%,96%{opacity:.6}94%{opacity:0}}
 .cfg-launcher-wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
 @media(max-width:800px){.cfg-launcher-wrap{grid-template-columns:1fr;gap:30px;text-align:center}}
-.cfg-launcher-visual{position:relative;display:flex;align-items:center;justify-content:center}
+.cfg-launcher-visual{position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px}
 .cfg-launcher-img{width:100%;max-width:440px;animation:floatY 5s ease-in-out infinite;filter:drop-shadow(0 30px 60px rgba(0,242,255,.25)) drop-shadow(0 15px 30px rgba(188,19,254,.12))}
+.cfg-carousel{position:relative;width:100%;max-width:440px;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}
+.cfg-carousel .cfg-ci{position:absolute;inset:0;width:100%;height:100%;max-width:100%;object-fit:contain;opacity:0;transform:scale(.85) rotate(-8deg);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform 1.4s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+.cfg-carousel .cfg-ci.active{opacity:1;transform:scale(1) rotate(0);animation:floatY 5s ease-in-out infinite}
+.cfg-carousel .cfg-ci.prev{opacity:0;transform:scale(.85) rotate(-12deg) translateX(-30px)}
+.cfg-carousel-name{font-family:'Orbitron';font-size:11px;letter-spacing:4px;color:var(--neon);text-align:center;text-shadow:0 0 14px rgba(0,242,255,.5);min-height:14px;transition:opacity .3s}
+.cfg-carousel-dots{display:flex;gap:8px;justify-content:center}
+.cfg-cd{width:9px;height:9px;border-radius:50%;background:#1a1a1a;cursor:pointer;transition:.3s;border:none;padding:0}
+.cfg-cd.active{background:var(--neon);width:28px;border-radius:5px;box-shadow:0 0 10px var(--neon)}
+.cfg-cd:hover{background:#444}
+.cfg-cd.active:hover{background:var(--neon)}
 .cfg-launcher-glow{position:absolute;width:80%;height:80%;background:radial-gradient(circle,rgba(0,242,255,.15) 0%,rgba(188,19,254,.06) 40%,transparent 70%);filter:blur(40px);pointer-events:none}
 .cfg-launcher-content{display:flex;flex-direction:column;gap:28px}
 .cfg-feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -738,7 +747,7 @@ main{position:relative;z-index:1}
   <canvas id="warp-canvas"></canvas>
   <div class="intro-content">
     <div class="intro-logo">
-      <span class="intro-letter" style="--i:0">L</span><span class="intro-letter" style="--i:1">E</span><span class="intro-letter" style="--i:2">X</span><span class="intro-letter" style="--i:3">O</span><span class="intro-letter" style="--i:4">R</span><span class="intro-letter" style="--i:5">D</span><span class="intro-letter intro-dot" style="--i:6">.</span><span class="intro-letter" style="--i:7">D</span><span class="intro-letter" style="--i:8">E</span>
+      <span class="intro-letter" style="--i:0">L</span><span class="intro-letter" style="--i:1">E</span><span class="intro-letter" style="--i:2">X</span><span class="intro-letter" style="--i:3">O</span><span class="intro-letter" style="--i:4">R</span><span class="intro-letter" style="--i:5">D</span>
     </div>
     <div class="intro-tagline">BEYOND LIMITS</div>
     <div class="intro-line"></div>
@@ -1036,7 +1045,16 @@ main{position:relative;z-index:1}
   <div class="cfg-launcher-wrap">
     <div class="cfg-launcher-visual">
       <div class="cfg-launcher-glow"></div>
-      <img src="Photoroom_20260501_094506.png" alt="PS5 Custom Controller" class="cfg-launcher-img" onerror="this.style.opacity='0'">
+      <div class="cfg-carousel" id="cfg-carousel">
+        <img src="Photoroom_20260501_094506.png" alt="LXRD Stealth Edition" class="cfg-launcher-img cfg-ci active" data-name="STEALTH EDITION">
+        <img src="Photoroom_20260305_123705.png" alt="LXRD Performance Black" class="cfg-launcher-img cfg-ci" data-name="PERFORMANCE BLACK">
+        <img src="Photoroom_20260306_112425.png" alt="LXRD Elite Pro" class="cfg-launcher-img cfg-ci" data-name="ELITE PRO">
+        <img src="Photoroom_20260305_140346.png" alt="LXRD Plus Black" class="cfg-launcher-img cfg-ci" data-name="PLUS BLACK">
+        <img src="Photoroom_20260402_014813.png" alt="LXRD Basic Black" class="cfg-launcher-img cfg-ci" data-name="BASIC BLACK">
+        <img src="Photoroom_20260306_112804.png" alt="LXRD Custom" class="cfg-launcher-img cfg-ci" data-name="CUSTOM BUILD">
+      </div>
+      <div class="cfg-carousel-name" id="cfg-carousel-name">STEALTH EDITION</div>
+      <div class="cfg-carousel-dots" id="cfg-carousel-dots"></div>
     </div>
     <div class="cfg-launcher-content">
       <div class="cfg-feat-grid">
@@ -1704,6 +1722,104 @@ const I18N = {
 };
 function toggleLangDrop(){document.getElementById('lang-drop').classList.toggle('open');}
 document.addEventListener('click',e=>{if(!e.target.closest('.lang-switcher'))document.getElementById('lang-drop')?.classList.remove('open');});
+/* ═══ FULL-WEBSITE-ÜBERSETZUNG · DE→EN/FR Wörterbuch ═══ */
+const TRANS={
+en:{
+  'HOME':'HOME','3D KONFIGURATOR':'3D CONFIGURATOR','PRODUKTE':'PRODUCTS','REPARATUR':'REPAIR','TESTER':'TESTER','KONTAKT':'CONTACT','BEWERTEN':'REVIEW US','MEIN KONTO':'MY ACCOUNT','B2B SHOP':'B2B SHOP','LOGIN':'LOGIN','WARENKORB':'CART','SUCHE':'SEARCH',
+  'BEYOND':'BEYOND','LIMITS':'LIMITS','JETZT KONFIGURIEREN':'CONFIGURE NOW','SHOP ANSEHEN':'VIEW SHOP','SHOP ANSEHEN →':'VIEW SHOP →','🎮 JETZT KONFIGURIEREN':'🎮 CONFIGURE NOW','SHOP ANSEHEN →':'VIEW SHOP →',
+  'BEWERTUNGEN':'REVIEWS','STERNE':'STARS','VERSAND':'SHIPPING','HANDARBEIT':'HANDMADE','24H':'24H','100%':'100%',
+  'HALL EFFECT':'HALL EFFECT','TMR STICKS':'TMR STICKS','CLICKY TRIGGER':'CLICKY TRIGGER','PADDLE SYSTEM':'PADDLE SYSTEM','INDIVIDUELL':'CUSTOM','MADE IN GERMANY':'MADE IN GERMANY',
+  'Magnetische Sticks — kein Drift, lebenslange Präzision':'Magnetic sticks — no drift, lifetime precision',
+  'Tunnel-Magneto-Resistenz für maximale Genauigkeit':'Tunnel magneto-resistance for maximum accuracy',
+  'Mouse-Click-Feel — 1mm Auslöseweg, instant response':'Mouse-click feel — 1mm trigger travel, instant response',
+  '2× oder 4× Back-Paddles, frei programmierbar':'2× or 4× back paddles, fully programmable',
+  'Jedes Teil einzeln konfigurierbar im Konfigurator':'Every part individually configurable',
+  'Handgefertigt in Germany — direkt vom Hersteller':'Handcrafted in Germany — direct from the manufacturer',
+  'BAUE DEINEN PERFEKTEN CONTROLLER':'BUILD YOUR PERFECT CONTROLLER',
+  '100+ FARBEN · GRAVUR · HALL EFFECT · TMR · PADDLES · MADE IN GERMANY':'100+ COLORS · ENGRAVING · HALL EFFECT · TMR · PADDLES · MADE IN GERMANY',
+  '🎮 PROFESSIONAL KONFIGURATOR':'🎮 PROFESSIONAL CONFIGURATOR',
+  '100+ FARBEN':'100+ COLORS','GRAVUR':'ENGRAVING','PADDLES & CLICKY':'PADDLES & CLICKY','HALL EFFECT & TMR':'HALL EFFECT & TMR',
+  'KONFIGURATOR STARTEN':'START CONFIGURATOR','🎮 KONFIGURATOR STARTEN':'🎮 START CONFIGURATOR',
+  'WERKTAGE FERTIGUNG':'WORKING DAYS','PREMIUM CONTROLLER':'PREMIUM CONTROLLERS','HOVER ZUM DREHEN · ALLE SOFORT VERFÜGBAR':'HOVER TO FLIP · ALL IN STOCK','BESTSELLER':'BESTSELLER','BELIEBT':'POPULAR','EINSTIEG':'ENTRY','NEU':'NEW','LIMITED':'LIMITED','AUF LAGER':'IN STOCK','IN DEN WARENKORB':'ADD TO CART','JETZT KAUFEN':'BUY NOW','ENTHÄLT':'INCLUDES',
+  'ZUBEHÖR & TEILE':'ACCESSORIES & PARTS','EINZELTEILE · UPGRADES · WERKZEUG':'PARTS · UPGRADES · TOOLS',
+  'STICKZANGE PRO':'STICK PULLER PRO','PADDLE SYSTEM V2':'PADDLE SYSTEM V2','TMR STICK UPGRADE KIT':'TMR STICK UPGRADE KIT','HALL EFFECT UPGRADE KIT':'HALL EFFECT UPGRADE KIT','GRIP GEHÄUSE SET':'GRIP HOUSING SET','CLICKY TRIGGER KIT':'CLICKY TRIGGER KIT','Premium Versand':'Premium Shipping','Ankunft:':'Arrival:',
+  'ZULETZT ANGESEHEN':'RECENTLY VIEWED',
+  'BLEIB AUF DEM LAUFENDEN':'STAY UPDATED','EXKLUSIVE DEALS · NEU ANKÜNFTE · 10% RABATT AUF ERSTE BESTELLUNG':'EXCLUSIVE DEALS · NEW ARRIVALS · 10% OFF FIRST ORDER','ABONNIEREN →':'SUBSCRIBE →','10% AUF ERSTE BESTELLUNG':'10% OFF FIRST ORDER','FRÜHER ZUGANG ZU DROPS':'EARLY ACCESS TO DROPS','EXKLUSIVE ANGEBOTE':'EXCLUSIVE OFFERS',
+  'KONTAKT':'CONTACT','WIR ANTWORTEN INNERHALB VON 24H':'WE REPLY WITHIN 24H','NAME':'NAME','E-MAIL':'EMAIL','BETREFF (Bestellung / Frage / Rückgabe)':'SUBJECT (Order / Question / Return)','NACHRICHT':'MESSAGE','NACHRICHT SENDEN':'SEND MESSAGE','DIREKTKONTAKT':'DIRECT CONTACT',
+  'CONTROLLER TESTER':'CONTROLLER TESTER','PROFESSIONAL CALIBRATION SUITE · KOSTENLOS':'PROFESSIONAL CALIBRATION SUITE · FREE','🎮 CONTROLLER TEST':'🎮 CONTROLLER TEST','🎯 STICK KALIBRIERUNG':'🎯 STICK CALIBRATION','📊 DRIFT ANALYSE':'📊 DRIFT ANALYSIS','LEFT STICK (L3)':'LEFT STICK (L3)','RIGHT STICK (R3)':'RIGHT STICK (R3)','L2 TRIGGER':'L2 TRIGGER','R2 TRIGGER':'R2 TRIGGER',
+  'CONTROLLER REPARATUR':'CONTROLLER REPAIR','PROFESSIONELL · GÜNSTIG · SCHNELL · MADE IN GERMANY':'PROFESSIONAL · AFFORDABLE · FAST · MADE IN GERMANY','SCHADEN':'DAMAGE','AUSWÄHLEN':'SELECT','DEINE':'YOUR','DATEN':'DETAILS','INFOS':'INFO','ZUSAMMEN-':'SUMMARY','FASSUNG':'','WEITER →':'NEXT →','← ZURÜCK':'← BACK','ZUSAMMENFASSUNG':'SUMMARY','REPARATUR ANFRAGEN':'REQUEST REPAIR','🔧 REPARATUR ANFRAGEN':'🔧 REQUEST REPAIR','STICK-DRIFT':'STICK DRIFT','TRIGGER DEFEKT':'TRIGGER BROKEN','TASTE DEFEKT':'BUTTON BROKEN','USB-C DEFEKT':'USB-C BROKEN','GEHÄUSE / OPTIK':'HOUSING / DESIGN','VIBRATION / AKKU':'VIBRATION / BATTERY','UPGRADE / UMBAU':'UPGRADE / MOD','SONSTIGES':'OTHER',
+  'ÜBER UNS':'ABOUT US','LEXORD ENGINEERING · MADE IN GERMANY':'LEXORD ENGINEERING · MADE IN GERMANY','LEON SCHULZ · GRÜNDER':'LEON SCHULZ · FOUNDER','MEIN KONTO':'MY ACCOUNT','IMPRESSUM':'LEGAL','AGB':'TERMS','DATENSCHUTZ':'PRIVACY','WIDERRUF':'WITHDRAWAL','KONFIGURATOR':'CONFIGURATOR','FAQ':'FAQ','ALL RIGHTS RESERVED':'ALL RIGHTS RESERVED',
+  'AKZEPTIEREN':'ACCEPT','NUR NOTWENDIGE':'ESSENTIAL ONLY','EINLOGGEN →':'LOG IN →','ALLE PRODUKTE':'ALL PRODUCTS','ALLE PRODUKTE ANSEHEN →':'VIEW ALL PRODUCTS →','→ ALLE PRODUKTE ANSEHEN':'→ VIEW ALL PRODUCTS','GESAMT':'TOTAL','Zwischensumme':'Subtotal','Rabatt':'Discount','Versand (DHL)':'Shipping (DHL)','Kostenlos':'Free','LIEFERLAND':'COUNTRY','RABATTCODE EINGEBEN':'ENTER DISCOUNT CODE','EINLÖSEN':'REDEEM','ZAHLUNGSART WÄHLEN':'SELECT PAYMENT','Gesamtpreis inkl. Versand · Keine MwSt. § 19 UStG':'Total incl. shipping · No VAT § 19 UStG'
+},
+fr:{
+  'HOME':'ACCUEIL','3D KONFIGURATOR':'CONFIGURATEUR 3D','PRODUKTE':'PRODUITS','REPARATUR':'RÉPARATION','TESTER':'TESTEUR','KONTAKT':'CONTACT','BEWERTEN':'AVIS','MEIN KONTO':'MON COMPTE','B2B SHOP':'ESPACE B2B','LOGIN':'CONNEXION','WARENKORB':'PANIER','SUCHE':'RECHERCHE',
+  'BEYOND':'BEYOND','LIMITS':'LIMITS','🎮 JETZT KONFIGURIEREN':'🎮 CONFIGURER','SHOP ANSEHEN →':'BOUTIQUE →',
+  'BEWERTUNGEN':'AVIS','STERNE':'ÉTOILES','VERSAND':'EXPÉDITION','HANDARBEIT':'FAIT MAIN',
+  'HALL EFFECT':'HALL EFFECT','TMR STICKS':'STICKS TMR','CLICKY TRIGGER':'GÂCHETTES CLICK','PADDLE SYSTEM':'SYSTÈME PADDLE','INDIVIDUELL':'PERSONNALISÉ','MADE IN GERMANY':'MADE IN GERMANY',
+  'Magnetische Sticks — kein Drift, lebenslange Präzision':'Sticks magnétiques — sans drift, précision à vie',
+  'Tunnel-Magneto-Resistenz für maximale Genauigkeit':'Magnéto-résistance tunnel pour précision maximale',
+  'Mouse-Click-Feel — 1mm Auslöseweg, instant response':'Clic souris — 1mm de course, réponse instantanée',
+  '2× oder 4× Back-Paddles, frei programmierbar':'2× ou 4× paddles arrière, programmables',
+  'Jedes Teil einzeln konfigurierbar im Konfigurator':'Chaque pièce configurable individuellement',
+  'Handgefertigt in Germany — direkt vom Hersteller':'Fait main en Allemagne — direct du fabricant',
+  'BAUE DEINEN PERFEKTEN CONTROLLER':'CRÉE TON CONTROLLER PARFAIT',
+  '100+ FARBEN · GRAVUR · HALL EFFECT · TMR · PADDLES · MADE IN GERMANY':'100+ COULEURS · GRAVURE · HALL EFFECT · TMR · PADDLES · MADE IN GERMANY',
+  '🎮 PROFESSIONAL KONFIGURATOR':'🎮 CONFIGURATEUR PRO','100+ FARBEN':'100+ COULEURS','GRAVUR':'GRAVURE','🎮 KONFIGURATOR STARTEN':'🎮 LANCER LE CONFIGURATEUR',
+  'WERKTAGE FERTIGUNG':'JOURS OUVRÉS','PREMIUM CONTROLLER':'CONTROLLERS PREMIUM','HOVER ZUM DREHEN · ALLE SOFORT VERFÜGBAR':'SURVOL POUR RETOURNER · TOUS DISPONIBLES','BELIEBT':'POPULAIRE','EINSTIEG':'DÉBUTANT','NEU':'NOUVEAU','LIMITED':'LIMITÉE','AUF LAGER':'EN STOCK','IN DEN WARENKORB':'AJOUTER AU PANIER','JETZT KAUFEN':'ACHETER','ENTHÄLT':'INCLUS',
+  'ZUBEHÖR & TEILE':'ACCESSOIRES & PIÈCES','EINZELTEILE · UPGRADES · WERKZEUG':'PIÈCES · UPGRADES · OUTILS','Premium Versand':'Livraison Premium','Ankunft:':'Arrivée :',
+  'ZULETZT ANGESEHEN':'RÉCEMMENT VUS',
+  'BLEIB AUF DEM LAUFENDEN':'RESTE INFORMÉ','EXKLUSIVE DEALS · NEU ANKÜNFTE · 10% RABATT AUF ERSTE BESTELLUNG':'OFFRES EXCLUSIVES · NOUVEAUTÉS · 10% SUR 1ÈRE COMMANDE','ABONNIEREN →':'S\'ABONNER →','10% AUF ERSTE BESTELLUNG':'10% SUR 1ÈRE COMMANDE','FRÜHER ZUGANG ZU DROPS':'ACCÈS ANTICIPÉ','EXKLUSIVE ANGEBOTE':'OFFRES EXCLUSIVES',
+  'WIR ANTWORTEN INNERHALB VON 24H':'RÉPONSE SOUS 24H','NAME':'NOM','BETREFF (Bestellung / Frage / Rückgabe)':'OBJET (Commande / Question / Retour)','NACHRICHT':'MESSAGE','NACHRICHT SENDEN':'ENVOYER','DIREKTKONTAKT':'CONTACT DIRECT',
+  'CONTROLLER TESTER':'TESTEUR CONTROLLER','PROFESSIONAL CALIBRATION SUITE · KOSTENLOS':'SUITE DE CALIBRATION PRO · GRATUIT','🎯 STICK KALIBRIERUNG':'🎯 CALIBRATION STICK','📊 DRIFT ANALYSE':'📊 ANALYSE DRIFT',
+  'CONTROLLER REPARATUR':'RÉPARATION','PROFESSIONELL · GÜNSTIG · SCHNELL · MADE IN GERMANY':'PRO · ABORDABLE · RAPIDE · MADE IN GERMANY','WEITER →':'SUIVANT →','← ZURÜCK':'← RETOUR','ZUSAMMENFASSUNG':'RÉSUMÉ','🔧 REPARATUR ANFRAGEN':'🔧 DEMANDE RÉPARATION','STICK-DRIFT':'DRIFT STICK','TRIGGER DEFEKT':'GÂCHETTE HS','TASTE DEFEKT':'BOUTON HS','USB-C DEFEKT':'USB-C HS','GEHÄUSE / OPTIK':'COQUE / DESIGN','VIBRATION / AKKU':'VIBRATION / BATTERIE','UPGRADE / UMBAU':'UPGRADE','SONSTIGES':'AUTRE',
+  'ÜBER UNS':'À PROPOS','LEON SCHULZ · GRÜNDER':'LEON SCHULZ · FONDATEUR','IMPRESSUM':'MENTIONS LÉGALES','AGB':'CGV','DATENSCHUTZ':'CONFIDENTIALITÉ','WIDERRUF':'RÉTRACTATION','KONFIGURATOR':'CONFIGURATEUR',
+  'AKZEPTIEREN':'ACCEPTER','NUR NOTWENDIGE':'STRICT NÉCESSAIRE','EINLOGGEN →':'CONNEXION →','ALLE PRODUKTE':'TOUS LES PRODUITS','GESAMT':'TOTAL','Zwischensumme':'Sous-total','Rabatt':'Remise','Versand (DHL)':'Expédition (DHL)','Kostenlos':'Gratuit','LIEFERLAND':'PAYS','RABATTCODE EINGEBEN':'CODE PROMO','EINLÖSEN':'APPLIQUER','ZAHLUNGSART WÄHLEN':'PAIEMENT'
+}
+};
+
+/* TreeWalker - sammelt Text-Nodes für Übersetzung */
+function _collectTextNodes(){
+  const nodes=[];
+  const skip=new Set(['SCRIPT','STYLE','NOSCRIPT','INPUT','TEXTAREA','SELECT','OPTION','CANVAS']);
+  const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{
+    acceptNode(n){
+      if(!n.nodeValue||!n.nodeValue.trim())return NodeFilter.FILTER_REJECT;
+      let p=n.parentElement;
+      while(p){if(skip.has(p.tagName)||p.classList.contains('no-i18n'))return NodeFilter.FILTER_REJECT;p=p.parentElement;}
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  let n;while(n=w.nextNode())nodes.push(n);
+  return nodes;
+}
+
+function _translateAll(lang){
+  const dict=TRANS[lang]||{};
+  _collectTextNodes().forEach(n=>{
+    const orig=n._lxrdOrig||(n._lxrdOrig=n.nodeValue);
+    if(lang==='de'){n.nodeValue=orig;return;}
+    const key=orig.trim();
+    if(dict[key]){n.nodeValue=n.nodeValue.replace(key,dict[key]);return;}
+    // Fallback: zerlege Whitespace-separated tokens
+    const tokens=key.split(/(\s+|[·•—–\-,.:;!?()/\\|])/);
+    if(tokens.length>1){
+      let changed=false;
+      const out=tokens.map(tok=>{const tt=tok.trim();if(tt&&dict[tt]){changed=true;return tok.replace(tt,dict[tt]);}return tok;});
+      if(changed)n.nodeValue=n.nodeValue.replace(key,out.join(''));
+    }
+  });
+  // Inputs: placeholders
+  document.querySelectorAll('input[placeholder],textarea[placeholder]').forEach(el=>{
+    const o=el._lxrdPh||(el._lxrdPh=el.placeholder);
+    if(lang==='de'){el.placeholder=o;}else if(dict[o]){el.placeholder=dict[o];}
+  });
+  // Aria-labels
+  document.querySelectorAll('[aria-label]').forEach(el=>{
+    const o=el._lxrdAria||(el._lxrdAria=el.getAttribute('aria-label'));
+    if(lang==='de'){el.setAttribute('aria-label',o);}else if(dict[o]){el.setAttribute('aria-label',dict[o]);}
+  });
+}
+
 function setLang(l){
   localStorage.setItem('lxrd_lang',l);
   document.documentElement.lang=l;
@@ -1711,6 +1827,8 @@ function setLang(l){
   const btn=document.getElementById('lang-btn-cur');if(btn)btn.textContent=t.cur;
   document.querySelectorAll('.lang-item').forEach(it=>it.classList.toggle('active',it.getAttribute('data-lang')===l));
   document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');if(t[k])el.textContent=t[k];});
+  // Vollständige Website-Übersetzung
+  try{_translateAll(l);}catch(e){console.warn('Translation:',e);}
   const drop=document.getElementById('lang-drop');if(drop)drop.classList.remove('open');
   toast('🌍 '+t.cur,'ok');
 }
@@ -2136,6 +2254,33 @@ function showOrderSuccess(email,orderNr){document.getElementById('success-email'
 function closeOrderSuccess(){document.getElementById('order-success-modal').style.display='none';updateCart();}
 
 function createLightning(){const bg=document.getElementById('lightning-bg');if(!bg)return;for(let i=0;i<12;i++){const el=document.createElement('div');el.className='lightning-line';el.style.cssText='left:'+(5+Math.random()*90)+'%;top:'+Math.random()*50+'%;height:'+(100+Math.random()*300)+'px;--dur:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*5+'s';bg.appendChild(el);}}
+
+/* ═══ KONFIGURATOR-CAROUSEL (auto-rotate) ═══ */
+(function initCfgCarousel(){
+  const car=document.getElementById('cfg-carousel');
+  if(!car)return;
+  const imgs=car.querySelectorAll('.cfg-ci');
+  const dotsWrap=document.getElementById('cfg-carousel-dots');
+  const nameEl=document.getElementById('cfg-carousel-name');
+  if(!imgs.length||!dotsWrap)return;
+  let idx=0,timer=null,paused=false;
+  // Build dots
+  dotsWrap.innerHTML=Array.from(imgs).map((_,i)=>`<button class="cfg-cd${i===0?' active':''}" data-i="${i}" aria-label="Bild ${i+1}"></button>`).join('');
+  const dots=dotsWrap.querySelectorAll('.cfg-cd');
+  function go(n){
+    idx=(n+imgs.length)%imgs.length;
+    imgs.forEach((im,i)=>im.classList.toggle('active',i===idx));
+    dots.forEach((d,i)=>d.classList.toggle('active',i===idx));
+    if(nameEl){const nm=imgs[idx].getAttribute('data-name')||'';nameEl.style.opacity=0;setTimeout(()=>{nameEl.textContent=nm;nameEl.style.opacity=1;},250);}
+  }
+  function start(){clearInterval(timer);timer=setInterval(()=>{if(!paused)go(idx+1);},3500);}
+  dots.forEach(d=>d.addEventListener('click',()=>{go(parseInt(d.dataset.i));start();}));
+  car.addEventListener('mouseenter',()=>paused=true);
+  car.addEventListener('mouseleave',()=>paused=false);
+  // Pause when tab hidden
+  document.addEventListener('visibilitychange',()=>paused=document.hidden);
+  start();
+})();
 createLightning();
 
 function trackRecent(n,p,i){recentlyViewed=recentlyViewed.filter(r=>r.name!==n);recentlyViewed.unshift({name:n,price:p,img:i});if(recentlyViewed.length>5)recentlyViewed.pop();const sec=document.getElementById('recently'),grid=document.getElementById('rec-grid');if(!sec||!grid)return;sec.style.display=recentlyViewed.length?'block':'none';grid.innerHTML=recentlyViewed.map(r=>`<div class="rec-card" onclick="addToCart('${esc(r.name)}',${r.price},'${r.img}')"><img src="${r.img}" alt="${esc(r.name)}"><div class="rec-name">${esc(r.name)}</div><div class="rec-price">${r.price.toFixed(2)} €</div></div>`).join('');}

@@ -50,6 +50,100 @@ h1 .accent{background:linear-gradient(90deg,var(--neon),var(--neon2),var(--neon)
 
 /* PREVIEW */
 .preview-wrap{position:sticky;top:80px;background:linear-gradient(180deg,#070707 0%,#000 100%);border:1px solid #131318;border-radius:18px;padding:24px;overflow:hidden}
+
+/* ════ NEW: BUILD TOOLBAR ════ */
+.build-toolbar{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;justify-content:center}
+.bt-btn{padding:9px 14px;background:#0a0a0a;border:1px solid #1a1a1a;color:#aaa;font-family:'Orbitron';font-size:8.5px;letter-spacing:1.5px;border-radius:7px;cursor:pointer;transition:.25s;display:flex;align-items:center;gap:6px}
+.bt-btn:hover{border-color:var(--neon);color:var(--neon);transform:translateY(-1px)}
+.bt-btn.surprise{background:linear-gradient(135deg,rgba(0,242,255,.08),rgba(188,19,254,.08));border-color:rgba(0,242,255,.3);color:var(--neon)}
+.bt-btn.surprise:hover{background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;border-color:var(--neon)}
+.bt-btn .ico{font-size:13px}
+
+/* Build name input */
+.build-name-row{display:flex;gap:8px;align-items:center;margin-bottom:14px}
+.build-name-input{flex:1;padding:9px 12px;background:#040404;border:1px solid #1a1a1a;color:#fff;font-family:'Orbitron';font-size:10px;letter-spacing:1.5px;border-radius:7px;outline:none;text-transform:uppercase}
+.build-name-input:focus{border-color:var(--neon)}
+.build-name-input::placeholder{color:#444;letter-spacing:1px}
+
+/* Progress ring */
+.progress-ring-wrap{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#0a0a0a;border:1px solid #131318;border-radius:8px;font-family:'Orbitron';font-size:8.5px;color:#888;letter-spacing:1.5px}
+.progress-ring-wrap .pct{color:var(--neon);font-weight:900;font-size:11px}
+
+/* PRICE DRAWER (right slide-out) */
+#price-drawer{position:fixed;top:0;right:-380px;width:340px;height:100vh;background:linear-gradient(180deg,#050505,#000);border-left:1px solid var(--neon);z-index:300;transition:right .4s cubic-bezier(.2,.8,.2,1);overflow-y:auto;padding:80px 24px 90px;box-shadow:-20px 0 50px rgba(0,0,0,.95)}
+#price-drawer.open{right:0}
+#price-drawer .pd-head{font-family:Orbitron;font-size:13px;color:var(--neon);letter-spacing:3px;margin-bottom:6px}
+#price-drawer .pd-sub{font-family:Orbitron;font-size:8.5px;color:#555;letter-spacing:2px;margin-bottom:24px}
+#price-drawer .pd-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #0f0f0f;font-size:12px;color:#aaa;align-items:flex-start;gap:10px}
+#price-drawer .pd-row:last-child{border-bottom:none}
+#price-drawer .pd-row .lbl{font-family:Orbitron;font-size:8px;color:#666;letter-spacing:1.2px;margin-bottom:3px;text-transform:uppercase}
+#price-drawer .pd-row .val{color:#ddd;font-size:11.5px}
+#price-drawer .pd-row .price{font-family:Orbitron;font-size:11px;color:var(--neon);white-space:nowrap;font-weight:700}
+#price-drawer .pd-row .price.zero{color:#444}
+#price-drawer .pd-total{display:flex;justify-content:space-between;padding:18px 0 14px;margin-top:10px;border-top:2px solid #1a1a1a;font-family:Orbitron;font-size:11px;color:#fff;letter-spacing:1.5px}
+#price-drawer .pd-total .big{font-size:22px;color:var(--neon);font-weight:900}
+#price-drawer .close{position:absolute;top:18px;right:18px;width:32px;height:32px;border:1px solid #1a1a1a;background:#0a0a0a;color:#888;border-radius:50%;cursor:pointer;font-size:18px}
+#price-drawer .close:hover{border-color:var(--err);color:var(--err)}
+.drawer-toggle{position:fixed;right:20px;bottom:90px;width:54px;height:54px;background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;border:none;border-radius:50%;cursor:pointer;z-index:200;display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-size:9px;font-weight:900;letter-spacing:.5px;box-shadow:0 8px 24px rgba(0,242,255,.35);flex-direction:column;line-height:1}
+.drawer-toggle:hover{transform:scale(1.08)}
+.drawer-toggle .ico{font-size:18px;margin-bottom:1px}
+@media(max-width:640px){.drawer-toggle{right:14px;bottom:86px;width:48px;height:48px}#price-drawer{width:88%}}
+
+/* MINI-MAP */
+.mini-map{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:14px;padding:10px;background:#040404;border:1px solid #131318;border-radius:9px}
+.mm-dot{aspect-ratio:1/1;border-radius:50%;border:1.5px solid #1a1a1a}
+.mm-lbl{font-family:Orbitron;font-size:7px;color:#444;letter-spacing:1px;text-align:center;margin-top:5px;text-transform:uppercase}
+
+/* Pattern overlay options */
+.pattern-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;margin-bottom:14px}
+.pattern-opt{aspect-ratio:1.4/1;border-radius:8px;cursor:pointer;border:2px solid #1a1a1a;position:relative;overflow:hidden;transition:.25s}
+.pattern-opt:hover{transform:scale(1.04);border-color:#555}
+.pattern-opt.sel{border-color:var(--neon);box-shadow:0 0 12px rgba(0,242,255,.4)}
+.pattern-opt.sel::after{content:'✓';position:absolute;top:4px;right:6px;color:var(--neon);font-weight:900;font-size:14px;text-shadow:0 0 4px #000}
+.pattern-opt .lbl{position:absolute;bottom:3px;left:5px;font-family:Orbitron;font-size:7px;color:#fff;letter-spacing:.5px;text-shadow:0 0 4px #000;text-transform:uppercase}
+
+/* Finish toggle (matte/glossy) */
+.finish-toggle{display:flex;gap:6px;margin-top:10px}
+.ft-btn{flex:1;padding:9px;background:#0a0a0a;border:1px solid #131318;color:#666;font-family:Orbitron;font-size:8.5px;letter-spacing:1.2px;border-radius:6px;cursor:pointer}
+.ft-btn.sel{border-color:var(--neon);color:var(--neon);background:rgba(0,242,255,.05)}
+
+/* BUNDLE SUGGESTIONS */
+.bundle-sec{max-width:1300px;margin:30px auto 0;padding:30px 5%}
+.bundle-head{font-family:Orbitron;font-size:13px;color:#fff;font-weight:900;letter-spacing:2.5px;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.bundle-head .ico{font-size:20px}
+.bundle-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.bundle-card{background:#080808;border:1px solid #131318;border-radius:13px;padding:18px;cursor:pointer;transition:.3s}
+.bundle-card:hover{border-color:var(--neon);transform:translateY(-3px)}
+.bundle-card .b-name{font-family:Orbitron;font-size:10px;color:var(--neon);letter-spacing:2px;margin-bottom:9px}
+.bundle-card .b-desc{font-size:11px;color:#888;line-height:1.6;margin-bottom:11px}
+.bundle-card .b-row{display:flex;justify-content:space-between;align-items:center}
+.bundle-card .b-old{font-family:Orbitron;font-size:9px;color:#444;text-decoration:line-through}
+.bundle-card .b-new{font-family:Orbitron;font-size:14px;color:var(--neon);font-weight:900}
+.bundle-card .b-save{font-family:Orbitron;font-size:7.5px;color:var(--green);letter-spacing:1px;margin-top:3px}
+
+/* Drag hint */
+.drag-hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-family:Orbitron;font-size:8px;color:var(--neon);letter-spacing:2px;background:rgba(0,0,0,.7);padding:6px 12px;border-radius:18px;border:1px solid rgba(0,242,255,.3);pointer-events:none;animation:dragHint 3s ease-in-out infinite;z-index:8;backdrop-filter:blur(6px)}
+@keyframes dragHint{0%,100%{opacity:.5;transform:translateX(-50%) translateY(0)}50%{opacity:1;transform:translateX(-50%) translateY(-3px)}}
+
+/* Save/load builds modal */
+#builds-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:400;display:none;align-items:center;justify-content:center;backdrop-filter:blur(15px);padding:20px}
+#builds-modal.show{display:flex}
+.bm-box{background:#080808;border:1px solid var(--neon);border-radius:18px;max-width:520px;width:100%;padding:32px;max-height:80vh;overflow-y:auto}
+.bm-head{font-family:Orbitron;font-size:14px;color:var(--neon);letter-spacing:3px;margin-bottom:18px}
+.bm-list{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.bm-item{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#0a0a0a;border:1px solid #131318;border-radius:9px;cursor:pointer;transition:.25s}
+.bm-item:hover{border-color:var(--neon)}
+.bm-item .info{flex:1}
+.bm-item .n{font-family:Orbitron;font-size:10px;color:#fff;letter-spacing:1px;margin-bottom:3px}
+.bm-item .d{font-family:Orbitron;font-size:7.5px;color:#555;letter-spacing:1.2px}
+.bm-item .price{font-family:Orbitron;font-size:13px;color:var(--neon);font-weight:900;margin-right:14px}
+.bm-item .del{padding:6px 10px;background:transparent;border:1px solid #2a2a2a;color:#666;font-family:Orbitron;font-size:7px;letter-spacing:1px;border-radius:5px;cursor:pointer}
+.bm-item .del:hover{border-color:var(--err);color:var(--err)}
+.bm-empty{text-align:center;padding:30px;color:#444;font-family:Orbitron;font-size:10px;letter-spacing:2px}
+.bm-actions{display:flex;gap:10px}
+.bm-actions button{flex:1;padding:13px;font-family:Orbitron;font-size:9.5px;letter-spacing:1.5px;border-radius:8px;cursor:pointer;font-weight:900;border:none}
+.bm-cancel{background:transparent;border:1px solid #2a2a2a!important;color:#888}
+.bm-save{background:var(--neon);color:#000}
 @media(max-width:980px){.preview-wrap{position:relative;top:0}}
 
 .view-toggle{display:flex;gap:6px;margin-bottom:16px;justify-content:center}
@@ -408,6 +502,23 @@ footer a{color:var(--neon);margin:0 10px}
 
   <!-- LIVE PREVIEW -->
   <div class="preview-wrap">
+
+    <div class="build-name-row">
+      <input type="text" id="build-name" class="build-name-input" placeholder="MEIN BUILD-NAME (OPTIONAL)" maxlength="32" oninput="updateBuildName()">
+      <div class="progress-ring-wrap">
+        <span class="pct" id="build-pct">0%</span>
+        <span>FERTIG</span>
+      </div>
+    </div>
+
+    <div class="build-toolbar">
+      <button class="bt-btn surprise" onclick="surpriseMe()"><span class="ico">🎲</span>SURPRISE ME</button>
+      <button class="bt-btn" onclick="openBuildsModal('save')"><span class="ico">💾</span>SPEICHERN</button>
+      <button class="bt-btn" onclick="openBuildsModal('load')"><span class="ico">📁</span>LADEN</button>
+      <button class="bt-btn" onclick="shareBuild()"><span class="ico">🔗</span>TEILEN</button>
+      <button class="bt-btn" onclick="downloadBuildImage()"><span class="ico">📸</span>BILD</button>
+    </div>
+
     <div class="view-toggle">
       <button class="vt-btn sel" id="vt-front" onclick="setView('front')">🎮 VORDERSEITE</button>
       <button class="vt-btn" id="vt-back" onclick="setView('back')">🛡️ RÜCKSEITE</button>
@@ -433,6 +544,9 @@ footer a{color:var(--neon);margin:0 10px}
       <button class="sc-btn" onclick="rotateOnce()">↻ DREHEN</button>
       <button class="sc-btn" onclick="screenshot()">📸 BILD SPEICHERN</button>
     </div>
+
+    <div class="mini-map" id="mini-map"></div>
+    <div class="mm-lbl">FARB-ÜBERSICHT</div>
 
     <div class="preview-info">
       <div class="pv-left">
@@ -664,6 +778,35 @@ footer a{color:var(--neon);margin:0 10px}
         <button class="btn-next" onclick="nextStep()" id="btn-next">WEITER →</button>
         <button class="btn-next btn-cart" onclick="addToCart()" id="btn-cart" style="display:none">🛒 IN DEN WARENKORB</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- BUNDLE SUGGESTIONS -->
+<section class="bundle-sec">
+  <div class="bundle-head"><span class="ico">🎁</span>SPAR-PAKETE · UPGRADE-BUNDLES</div>
+  <div class="bundle-grid" id="bundle-grid"></div>
+</section>
+
+<!-- PRICE DRAWER -->
+<button class="drawer-toggle" onclick="togglePriceDrawer()" id="drawer-toggle"><span class="ico">💰</span><span id="dt-price">70€</span></button>
+<div id="price-drawer">
+  <button class="close" onclick="togglePriceDrawer()">×</button>
+  <div class="pd-head">💎 PREIS-AUFSCHLÜSSELUNG</div>
+  <div class="pd-sub">JEDES UPGRADE TRANSPARENT</div>
+  <div id="pd-list"></div>
+  <div class="pd-total"><span>GESAMT</span><span class="big" id="pd-total">70,00 €</span></div>
+  <p style="font-size:10.5px;color:#555;line-height:1.7;margin-top:14px">Kleinunternehmer §19 UStG · keine MwSt. · zzgl. Versand (DE 6,99€ · kostenlos ab 50€)</p>
+</div>
+
+<!-- BUILDS MODAL -->
+<div id="builds-modal">
+  <div class="bm-box">
+    <div class="bm-head" id="bm-head">💾 BUILDS</div>
+    <div class="bm-list" id="bm-list"></div>
+    <div class="bm-actions">
+      <button class="bm-cancel" onclick="closeBuildsModal()">SCHLIESSEN</button>
+      <button class="bm-save" id="bm-save-btn" onclick="doSaveBuild()">💾 AKTUELLEN BUILD SPEICHERN</button>
     </div>
   </div>
 </div>
@@ -1125,8 +1268,344 @@ const styleEl = document.createElement('style');
 styleEl.textContent = '@keyframes rg{to{background-position:200%}}';
 document.head.appendChild(styleEl);
 
+/* ═══════════════════════════════════════
+   NEW: BUILD NAME · PROGRESS · MINI-MAP
+═══════════════════════════════════════ */
+function updateBuildName(){const n=document.getElementById('build-name').value.trim();state.buildName=n;if(n){document.getElementById('pv-name').textContent='LXRD '+n.toUpperCase();}else{document.getElementById('pv-name').textContent='LXRD CUSTOM EDITION';}}
+
+function updateProgress(){
+  // Count customizations beyond defaults
+  const defaults = {front:0, back:0, buttons:1, dpad:2, sticks:0, triggers:0, led:0};
+  let touched = 0;
+  let total = 12; // 6 colors + LED + 5 hardware groups
+  PARTS.forEach(p=>{if(state[p]!==defaults[p]||state.customColors[p])touched++;});
+  if(state.led!==0) touched++;
+  if(state.hw_stick!=='standard') touched++;
+  if(state.hw_trigger!=='standard') touched++;
+  if(state.hw_paddles>0) touched++;
+  if(state.hw_grip!=='standard') touched++;
+  if(state.engr_enabled||state.sticker>0) touched++;
+  const pct = Math.round((touched/total)*100);
+  const el = document.getElementById('build-pct');
+  if(el) el.textContent = pct+'%';
+}
+
+function updateMiniMap(){
+  const mm = document.getElementById('mini-map');
+  if(!mm) return;
+  mm.innerHTML = PARTS.map(part=>{
+    const c = state.customColors[part]?{hex:state.customColors[part]}:COLORS[state[part]];
+    let bg = c.hex;
+    if(c.special==='chrome') bg = 'linear-gradient(135deg,#fff,#888,#fff)';
+    if(c.special==='holo') bg = 'linear-gradient(135deg,#ff00ff,#00ffff,#ffff00)';
+    if(c.special==='galaxy') bg = 'radial-gradient(circle at 30% 30%,#7b3bff,#1e0a3a)';
+    if(c.special==='camo') bg = 'radial-gradient(circle at 30% 40%,#5a6b3a 30%,#2a3a1a 60%)';
+    return `<div class="mm-dot" style="background:${bg}" title="${PART_LABELS[part]}: ${c.name||c.hex}"></div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════
+   NEW: SURPRISE ME (Random Build)
+═══════════════════════════════════════ */
+function surpriseMe(){
+  PARTS.forEach(part=>{
+    const idx = Math.floor(Math.random()*COLORS.length);
+    state[part] = idx;
+    delete state.customColors[part];
+    applyToLayer(part, COLORS[idx]);
+    buildColorGrid(part);
+    document.getElementById('name-'+part).textContent = COLORS[idx].name.toUpperCase();
+  });
+  // Random LED
+  state.led = Math.floor(Math.random()*LED_COLORS.length);
+  pickLED(state.led);
+  // Random some hardware (50% chance each)
+  if(Math.random()>.5){const o=['hall','tmr'][Math.floor(Math.random()*2)];setHw('stick',o,o==='hall'?35:55);}
+  else setHw('stick','standard',0);
+  if(Math.random()>.6) setHw('trigger','clicky',22);else setHw('trigger','standard',0);
+  if(Math.random()>.5){const p=[2,4][Math.floor(Math.random()*2)];setHw('paddles',p,p===2?40:65);}
+  else setHw('paddles',0,0);
+  if(Math.random()>.6) setHw('grip','grip',28);else setHw('grip','standard',0);
+  document.getElementById('pv-name').textContent = 'LXRD '+['ALPHA','OMEGA','PHANTOM','NOVA','PULSE','REBEL','SHADOW','NEON','APEX','VORTEX'][Math.floor(Math.random()*10)];
+  updateAll();
+  toast('🎲 Zufalls-Build erstellt!');
+}
+
+/* ═══════════════════════════════════════
+   NEW: SAVE / LOAD / DELETE BUILDS
+═══════════════════════════════════════ */
+function getSavedBuilds(){try{return JSON.parse(localStorage.getItem('lxrd_builds')||'[]');}catch(e){return [];}}
+function setSavedBuilds(b){try{localStorage.setItem('lxrd_builds',JSON.stringify(b));}catch(e){}}
+
+function openBuildsModal(mode){
+  const m = document.getElementById('builds-modal');
+  const head = document.getElementById('bm-head');
+  const saveBtn = document.getElementById('bm-save-btn');
+  if(mode==='save'){head.textContent='💾 BUILD SPEICHERN';saveBtn.style.display='block';}
+  else{head.textContent='📁 GESPEICHERTE BUILDS';saveBtn.style.display='none';}
+  renderBuilds();
+  m.classList.add('show');
+}
+function closeBuildsModal(){document.getElementById('builds-modal').classList.remove('show');}
+
+function renderBuilds(){
+  const list = getSavedBuilds();
+  const el = document.getElementById('bm-list');
+  if(!list.length){el.innerHTML='<div class="bm-empty">NOCH KEINE BUILDS GESPEICHERT</div>';return;}
+  el.innerHTML = list.map((b,i)=>`<div class="bm-item" onclick="loadBuild(${i})"><div class="info"><div class="n">${esc(b.name||'Unbenannter Build')}</div><div class="d">${new Date(b.created).toLocaleDateString('de-DE')} · ${b.price.toFixed(2).replace('.',',')}€</div></div><div class="price">${b.price.toFixed(2).replace('.',',')}€</div><button class="del" onclick="event.stopPropagation();deleteBuild(${i})">×</button></div>`).join('');
+}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function doSaveBuild(){
+  const list = getSavedBuilds();
+  const name = state.buildName || ('Build #'+(list.length+1));
+  list.unshift({name,state:JSON.parse(JSON.stringify(state)),price:calcPrice(),created:new Date().toISOString()});
+  if(list.length>10) list.pop();
+  setSavedBuilds(list);
+  renderBuilds();
+  toast('✓ Build "'+name+'" gespeichert');
+}
+function loadBuild(i){
+  const list = getSavedBuilds();
+  if(!list[i]) return;
+  state = JSON.parse(JSON.stringify(list[i].state));
+  PARTS.forEach(part=>{
+    if(state.customColors[part]) applyToLayer(part,{hex:state.customColors[part]});
+    else applyToLayer(part, COLORS[state[part]]);
+    buildColorGrid(part);
+    const n=document.getElementById('name-'+part);if(n)n.textContent=COLORS[state[part]].name.toUpperCase();
+  });
+  pickLED(state.led);
+  setHw('stick',state.hw_stick,state.hw_stick_price);
+  setHw('trigger',state.hw_trigger,state.hw_trigger_price);
+  setHw('paddles',state.hw_paddles,state.hw_paddles_price);
+  setHw('grip',state.hw_grip,state.hw_grip_price);
+  document.getElementById('build-name').value = state.buildName||'';
+  if(state.engr_text){document.getElementById('engr-text').value=state.engr_text;updateEngraving();}
+  closeBuildsModal();
+  updateAll();
+  toast('✓ Build "'+list[i].name+'" geladen');
+}
+function deleteBuild(i){
+  if(!confirm('Build wirklich löschen?'))return;
+  const list = getSavedBuilds();
+  list.splice(i,1);
+  setSavedBuilds(list);
+  renderBuilds();
+}
+
+/* ═══════════════════════════════════════
+   NEW: SHARE via URL HASH
+═══════════════════════════════════════ */
+function shareBuild(){
+  try{
+    const compact = {
+      f:state.front,b:state.back,bt:state.buttons,d:state.dpad,s:state.sticks,t:state.triggers,
+      l:state.led,
+      hs:state.hw_stick,ht:state.hw_trigger,hp:state.hw_paddles,hg:state.hw_grip,
+      e:state.engr_enabled?1:0,et:state.engr_text,ef:state.engr_font,
+      sk:state.sticker,n:state.buildName||''
+    };
+    const hash = btoa(JSON.stringify(compact));
+    const url = location.origin+location.pathname+'#cfg='+hash;
+    if(navigator.share){navigator.share({title:'Mein LEXORD Custom Build',text:'Schau dir mein Custom Controller-Build an',url}).catch(()=>{copyToClip(url);});}
+    else copyToClip(url);
+  }catch(e){toast('⚠ Teilen fehlgeschlagen','err');}
+}
+function copyToClip(url){
+  if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>toast('🔗 Link kopiert!','ok')).catch(()=>fallback(url));}
+  else fallback(url);
+  function fallback(u){prompt('Link kopieren:',u);}
+}
+function loadFromHash(){
+  try{
+    const h = location.hash;
+    if(!h.startsWith('#cfg=')) return false;
+    const data = JSON.parse(atob(h.slice(5)));
+    state.front=data.f;state.back=data.b;state.buttons=data.bt;state.dpad=data.d;state.sticks=data.s;state.triggers=data.t;
+    state.led=data.l;
+    if(data.hs)setHw('stick',data.hs,data.hs==='hall'?35:(data.hs==='tmr'?55:0));
+    if(data.ht)setHw('trigger',data.ht,data.ht==='clicky'?22:0);
+    if(data.hp!==undefined)setHw('paddles',data.hp,data.hp===2?40:(data.hp===4?65:0));
+    if(data.hg)setHw('grip',data.hg,data.hg==='grip'?28:0);
+    if(data.n){state.buildName=data.n;document.getElementById('build-name').value=data.n;updateBuildName();}
+    if(data.et){state.engr_text=data.et;state.engr_font=data.ef||'orbitron';document.getElementById('engr-text').value=data.et;}
+    if(data.e){state.engr_enabled=false;toggleEngraving();}
+    state.sticker=data.sk||0;
+    PARTS.forEach(part=>{applyToLayer(part,COLORS[state[part]]);buildColorGrid(part);const n=document.getElementById('name-'+part);if(n)n.textContent=COLORS[state[part]].name.toUpperCase();});
+    pickLED(state.led);
+    toast('🔗 Build aus Link geladen!');
+    history.replaceState(null,'',location.pathname);
+    return true;
+  }catch(e){return false;}
+}
+
+/* ═══════════════════════════════════════
+   NEW: DOWNLOAD BUILD IMAGE
+═══════════════════════════════════════ */
+function downloadBuildImage(){
+  // Capture preview-stage as canvas using html-to-image alternative: simple SVG approach
+  try{
+    const stage = document.querySelector('.preview-stage');
+    const w = stage.offsetWidth, h = stage.offsetHeight;
+    const canvas = document.createElement('canvas');
+    canvas.width = w*2; canvas.height = h*2;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(2,2);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0,0,w,h);
+    // Draw colors as a strip representation
+    const cols = PARTS.map(p=>state.customColors[p]||COLORS[state[p]].hex);
+    cols.forEach((c,i)=>{
+      ctx.fillStyle = c;
+      ctx.fillRect(w*.1+i*(w*.13),h*.4,w*.11,h*.2);
+    });
+    ctx.fillStyle = '#00f2ff';
+    ctx.font = 'bold 14px Orbitron,sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('LEXORD® '+(state.buildName||'CUSTOM').toUpperCase(),w/2,h*.15);
+    ctx.font = '11px sans-serif';
+    ctx.fillStyle = '#fff';
+    ctx.fillText(calcPrice().toFixed(2).replace('.',',')+' €',w/2,h*.85);
+    ctx.fillStyle = '#888';
+    ctx.font = '9px sans-serif';
+    ctx.fillText('Built on lexord.de/konfigurator',w/2,h*.92);
+    canvas.toBlob(blob=>{
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'LEXORD_'+(state.buildName||'CustomBuild').replace(/\W+/g,'_')+'.png';
+      a.click();
+      setTimeout(()=>URL.revokeObjectURL(a.href),500);
+      toast('📸 Bild heruntergeladen!');
+    });
+  }catch(e){toast('Screenshot fehlgeschlagen','err');}
+}
+
+/* ═══════════════════════════════════════
+   NEW: PRICE DRAWER
+═══════════════════════════════════════ */
+function togglePriceDrawer(){document.getElementById('price-drawer').classList.toggle('open');}
+function updatePriceDrawer(){
+  const rows = [];
+  rows.push({lbl:'BASIS CONTROLLER',val:'PS5 DualSense Custom',price:70});
+  PARTS.forEach(part=>{
+    const c = state.customColors[part]?{name:'Custom '+state.customColors[part],special:false}:COLORS[state[part]];
+    const isSpecial = COLORS[state[part]]?.special;
+    rows.push({lbl:PART_LABELS[part],val:c.name,price:isSpecial?8:0});
+  });
+  rows.push({lbl:'LED LIGHTBAR',val:LED_COLORS[state.led].name,price:0});
+  if(state.hw_stick!=='standard') rows.push({lbl:'STICK-UPGRADE',val:state.hw_stick==='hall'?'Hall Effect':'TMR Pro',price:state.hw_stick_price});
+  if(state.hw_trigger==='clicky') rows.push({lbl:'CLICKY TRIGGER',val:'Mouse-Click 1mm',price:22});
+  if(state.hw_paddles>0) rows.push({lbl:'BACK-PADDLES',val:state.hw_paddles+'× Paddle',price:state.hw_paddles_price});
+  if(state.hw_grip==='grip') rows.push({lbl:'GRIP COATING',val:'Anti-Rutsch Soft-Touch',price:28});
+  if(state.hw_rumble==='strong') rows.push({lbl:'STRONG RUMBLE+',val:'30% stärker',price:18});
+  if(state.hw_led_rgb) rows.push({lbl:'RGB-MODUL',val:'16 Mio. Farben',price:25});
+  if(state.hw_warranty>24) rows.push({lbl:'GARANTIE',val:'+12 Monate erweitert',price:29});
+  if(state.engr_enabled) rows.push({lbl:'GRAVUR',val:state.engr_text||'LEXORD',price:15});
+  if(state.sticker>0) rows.push({lbl:'STICKER',val:STICKERS[state.sticker].name,price:12});
+
+  document.getElementById('pd-list').innerHTML = rows.map(r=>`<div class="pd-row"><div><div class="lbl">${r.lbl}</div><div class="val">${r.val}</div></div><div class="price ${r.price===0?'zero':''}">${r.price>0?'+'+r.price.toFixed(2).replace('.',',')+' €':'inkl.'}</div></div>`).join('');
+  document.getElementById('pd-total').textContent = calcPrice().toFixed(2).replace('.',',')+' €';
+  document.getElementById('dt-price').textContent = Math.round(calcPrice())+'€';
+}
+
+/* ═══════════════════════════════════════
+   NEW: BUNDLE SUGGESTIONS
+═══════════════════════════════════════ */
+function renderBundles(){
+  const bundles = [
+    {name:'PRO GAMER BUNDLE',desc:'Hall-Effect Sticks + Clicky Trigger + 2× Paddles · perfekt für FPS',adds:{stick:'hall',trigger:'clicky',paddles:2},save:18},
+    {name:'ELITE PERFORMANCE',desc:'TMR Pro + Clicky Trigger Pro + 4× Paddles + GRIP · maximale Präzision',adds:{stick:'tmr',trigger:'clicky',paddles:4,grip:'grip'},save:32},
+    {name:'STREAMER EDITION',desc:'RGB-Modul + Custom Gravur + GRIP-Coating · zeig dein Style',adds:{led_rgb:true,engr:true,grip:'grip'},save:24},
+    {name:'COLLECTOR EDITION',desc:'Premium-Sticker + +12 Monate Garantie + Strong Rumble+',adds:{rumble:'strong',warranty:36,sticker:true},save:14}
+  ];
+  document.getElementById('bundle-grid').innerHTML = bundles.map((b,i)=>{
+    const orig = Object.values(b.adds).reduce((s,v)=>{
+      if(v==='hall')return s+35;if(v==='tmr')return s+55;if(v==='clicky')return s+22;
+      if(v===2)return s+40;if(v===4)return s+65;if(v==='grip')return s+28;
+      if(v===true)return s+(b.adds.led_rgb===true?25:(b.adds.engr===true?15:12));
+      if(v==='strong')return s+18;if(v===36)return s+29;return s;
+    },0);
+    const newP = orig-b.save;
+    return `<div class="bundle-card" onclick="applyBundle(${i})">
+      <div class="b-name">⚡ ${b.name}</div>
+      <div class="b-desc">${b.desc}</div>
+      <div class="b-row">
+        <div><div class="b-old">${orig.toFixed(0)} €</div><div class="b-save">−${b.save} € SPAREN</div></div>
+        <div class="b-new">+${newP.toFixed(0)} €</div>
+      </div>
+    </div>`;
+  }).join('');
+  window._BUNDLES = bundles;
+}
+function applyBundle(i){
+  const b = window._BUNDLES[i];if(!b)return;
+  if(b.adds.stick==='hall')setHw('stick','hall',35);
+  if(b.adds.stick==='tmr')setHw('stick','tmr',55);
+  if(b.adds.trigger==='clicky')setHw('trigger','clicky',22);
+  if(b.adds.paddles===2)setHw('paddles',2,40);
+  if(b.adds.paddles===4)setHw('paddles',4,65);
+  if(b.adds.grip==='grip')setHw('grip','grip',28);
+  if(b.adds.rumble==='strong')setHw('rumble','strong',18);
+  if(b.adds.led_rgb)setHw('led_rgb',true,25);
+  if(b.adds.warranty===36)setHw('warranty',36,29);
+  if(b.adds.engr&&!state.engr_enabled)toggleEngraving();
+  if(b.adds.sticker&&state.sticker===0){state.sticker=1;document.getElementById('name-sticker').textContent=STICKERS[1].name.toUpperCase();buildStickerGrid();}
+  updateAll();
+  toast('✨ Bundle "'+b.name+'" angewendet!');
+}
+
+/* ═══════════════════════════════════════
+   NEW: DRAG-TO-ROTATE
+═══════════════════════════════════════ */
+(function(){
+  const stack = document.getElementById('preview-stack');
+  if(!stack) return;
+  let dragging = false, startX = 0, baseRot = 0, currentRot = 0;
+  stack.style.cursor = 'grab';
+  function down(e){
+    if(autoSpin) return;
+    dragging = true; stack.style.cursor='grabbing';
+    startX = (e.touches?e.touches[0].clientX:e.clientX);
+    stack.style.animation = 'none';
+    stack.style.transition = 'none';
+  }
+  function move(e){
+    if(!dragging) return;
+    const x = (e.touches?e.touches[0].clientX:e.clientX);
+    currentRot = baseRot + (x-startX)*0.5;
+    stack.style.transform = `rotateY(${currentRot}deg)`;
+  }
+  function up(){
+    if(!dragging) return;
+    dragging = false; stack.style.cursor='grab';
+    baseRot = currentRot;
+    stack.style.transition = 'transform 1s cubic-bezier(.4,0,.2,1)';
+    // Auto-snap to 0 / 180
+    const norm = ((baseRot%360)+360)%360;
+    const target = norm<90||norm>270 ? 0 : 180;
+    setTimeout(()=>{stack.style.transform=`rotateY(${target}deg)`;baseRot=target;currentView=target===180?'back':'front';document.querySelectorAll('.vt-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('vt-'+currentView).classList.add('sel');},50);
+    setTimeout(()=>{stack.style.animation='floatY 5s ease-in-out infinite';},1100);
+  }
+  stack.addEventListener('mousedown',down);
+  document.addEventListener('mousemove',move);
+  document.addEventListener('mouseup',up);
+  stack.addEventListener('touchstart',down,{passive:true});
+  document.addEventListener('touchmove',move,{passive:true});
+  document.addEventListener('touchend',up);
+})();
+
+/* Wrap updateAll to also refresh new widgets */
+const _origUpdateAll = updateAll;
+updateAll = function(){
+  _origUpdateAll();
+  try{updateMiniMap();updateProgress();updatePriceDrawer();}catch(e){}
+};
+
 /* INIT */
 PARTS.forEach(part=>{buildColorGrid(part);applyToLayer(part, COLORS[state[part]]);});
+state.buildName = state.buildName||'';
+renderBundles();
+loadFromHash();
 buildLEDGrid();
 buildStickerGrid();
 pickLED(0);

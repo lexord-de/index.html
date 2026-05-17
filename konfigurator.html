@@ -473,6 +473,130 @@ footer a{color:var(--neon);margin:0 10px}
   .pc-btn{min-height:42px}
   .step-tab{min-height:50px}
   .preset-btn{min-height:34px}
+  .bt-btn{min-height:42px}
+  .pattern-opt{min-height:50px}
+  .ft-btn{min-height:42px}
+}
+
+/* ════════ RESPONSIVE FÜR NEUE FEATURES ════════ */
+
+/* Tablet (≤1100px): Drawer schmaler */
+@media(max-width:1100px){
+  #price-drawer{width:320px}
+  .drawer-toggle{right:18px}
+}
+
+/* Tablet portrait (≤980px) */
+@media(max-width:980px){
+  .build-toolbar{justify-content:flex-start;overflow-x:auto;padding-bottom:4px;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
+  .build-toolbar::-webkit-scrollbar{height:0}
+  .bt-btn{flex-shrink:0}
+  .bundle-sec{padding:24px 4%}
+  .bundle-head{font-size:12px;letter-spacing:2px}
+  .bundle-grid{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+  .bundle-card{padding:16px}
+  .bm-box{padding:26px;max-height:85vh}
+  #price-drawer{width:300px;padding:75px 20px 80px}
+}
+
+/* Mobile (≤640px) */
+@media(max-width:640px){
+  /* Build name + progress row */
+  .build-name-row{flex-direction:column;gap:6px;align-items:stretch;margin-bottom:10px}
+  .build-name-input{font-size:9.5px;padding:9px 11px;letter-spacing:1.2px}
+  .progress-ring-wrap{padding:8px 11px;justify-content:center;font-size:8px;letter-spacing:1.2px}
+  .progress-ring-wrap .pct{font-size:10px}
+
+  /* Build toolbar — kleiner */
+  .build-toolbar{gap:5px;margin-bottom:10px}
+  .bt-btn{padding:8px 11px;font-size:7.5px;letter-spacing:1.2px;gap:4px;border-radius:6px}
+  .bt-btn .ico{font-size:12px}
+
+  /* Mini-map kompakter */
+  .mini-map{grid-template-columns:repeat(6,1fr);gap:3px;padding:7px;margin-top:11px}
+  .mm-lbl{font-size:6.5px;margin-top:4px}
+
+  /* Price drawer Mobile */
+  #price-drawer{width:92%;padding:70px 18px 80px}
+  #price-drawer .pd-head{font-size:11.5px;letter-spacing:2.5px}
+  #price-drawer .pd-sub{font-size:7.5px;letter-spacing:1.5px;margin-bottom:18px}
+  #price-drawer .pd-row{padding:9px 0;font-size:11px;gap:8px}
+  #price-drawer .pd-row .lbl{font-size:7px;letter-spacing:1px}
+  #price-drawer .pd-row .val{font-size:10.5px}
+  #price-drawer .pd-row .price{font-size:10px}
+  #price-drawer .pd-total{font-size:10px}
+  #price-drawer .pd-total .big{font-size:18px}
+
+  /* Drawer toggle */
+  .drawer-toggle{right:14px;bottom:84px;width:46px;height:46px}
+  .drawer-toggle .ico{font-size:15px}
+  .drawer-toggle #dt-price{font-size:8px}
+
+  /* Bundles Mobile */
+  .bundle-sec{padding:20px 4%;margin-top:24px}
+  .bundle-head{font-size:11px;letter-spacing:1.8px;margin-bottom:14px;gap:7px}
+  .bundle-head .ico{font-size:17px}
+  .bundle-grid{grid-template-columns:1fr;gap:10px}
+  .bundle-card{padding:15px}
+  .bundle-card .b-name{font-size:9.5px;letter-spacing:1.5px;margin-bottom:7px}
+  .bundle-card .b-desc{font-size:10.5px;line-height:1.55;margin-bottom:9px}
+  .bundle-card .b-new{font-size:13px}
+  .bundle-card .b-old{font-size:8.5px}
+  .bundle-card .b-save{font-size:7px}
+
+  /* Patterns + Finish-Toggle */
+  .pattern-grid{grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+  .pattern-opt .lbl{font-size:6.5px}
+  .finish-toggle{gap:5px}
+  .ft-btn{padding:8px;font-size:8px}
+
+  /* Builds-Modal */
+  .bm-box{padding:22px 18px;max-height:88vh}
+  .bm-head{font-size:12px;letter-spacing:2.5px;margin-bottom:14px}
+  .bm-item{padding:11px 13px}
+  .bm-item .n{font-size:9.5px}
+  .bm-item .d{font-size:7px}
+  .bm-item .price{font-size:11px;margin-right:10px}
+  .bm-item .del{padding:5px 8px;font-size:6.5px}
+  .bm-empty{padding:24px;font-size:9px;letter-spacing:1.5px}
+  .bm-actions{gap:8px;flex-direction:column}
+  .bm-actions button{padding:12px;font-size:9px;letter-spacing:1.2px}
+  .bm-cancel{order:2}
+  .bm-save{order:1}
+
+  /* Drag-Hint */
+  .drag-hint{font-size:7px;padding:5px 10px;letter-spacing:1.5px}
+}
+
+/* Sehr klein (≤380px) — iPhone SE etc. */
+@media(max-width:380px){
+  .build-toolbar{gap:4px}
+  .bt-btn{padding:7px 9px;font-size:7px;letter-spacing:.8px}
+  .bt-btn .ico{font-size:11px}
+  .bundle-card .b-name{font-size:9px}
+  .bundle-card .b-desc{font-size:10px}
+  #price-drawer{width:96%;padding:65px 14px 75px}
+  #price-drawer .pd-head{font-size:11px;letter-spacing:2px}
+  #price-drawer .pd-total .big{font-size:16px}
+  .drawer-toggle{width:42px;height:42px;bottom:76px;right:10px}
+  .drawer-toggle .ico{font-size:13px}
+  .drawer-toggle #dt-price{font-size:7px}
+  .mini-map{grid-template-columns:repeat(3,1fr);gap:5px}
+  .pattern-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+/* Landscape Mobile — Drawer Vollbild verhindern */
+@media(max-height:600px) and (orientation:landscape){
+  #price-drawer{padding-top:60px;padding-bottom:30px}
+  .bm-box{max-height:90vh}
+  .build-name-row{flex-direction:row}
+}
+
+/* Extra Wide (≥1500px) — bisschen mehr Atem */
+@media(min-width:1500px){
+  .kfg-layout{max-width:1600px}
+  .preview-stack{max-width:580px}
+  #price-drawer{width:400px}
 }
 </style>
 </head>

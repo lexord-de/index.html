@@ -774,22 +774,6 @@ footer a{color:var(--neon);margin:0 10px}
         <div class="color-grid" id="grid-triggers"></div>
       </div>
 
-      <!-- STEP 6 LED -->
-      <div class="step" data-step="6">
-        <div class="step-h">LED LIGHTBAR</div>
-        <div class="step-sub">DAS LEUCHT-BAND AM TOUCHPAD</div>
-        <div class="help-tip">💡 <strong>Hinweis:</strong> Original PS5 DualSense LED — wir können die Farb-Akzente durch farbige Lichtleiter anpassen</div>
-        <div class="color-name">FARBE: <strong id="name-led">BLAU PS5</strong></div>
-        <div class="led-grid" id="grid-led"></div>
-        <div class="hw-opt" id="hw-led-rgb" onclick="setHw('led_rgb', !state.hw_led_rgb, state.hw_led_rgb?0:25)" style="margin-top:18px">
-          <div class="left">
-            <div class="title">🌈 RGB-ZUSATZMODUL</div>
-            <div class="desc">16 Mio. Farben · App-Steuerung · Audio-reaktiv</div>
-          </div>
-          <div class="price" id="led-rgb-price">+25 €</div>
-        </div>
-      </div>
-
       <!-- STEP 7 HW -->
       <div class="step" data-step="7">
         <div class="step-h">PERFORMANCE-UPGRADES</div>
@@ -819,42 +803,6 @@ footer a{color:var(--neon);margin:0 10px}
         <div style="font-family:Orbitron;font-size:9px;color:var(--neon);letter-spacing:2px;margin:24px 0 10px">🔊 RUMBLE-MODUL</div>
         <div class="hw-opt sel" onclick="setHw('rumble','standard',0)" id="hw-rumble-standard"><div class="left"><div class="title">STANDARD RUMBLE</div><div class="desc">Original Vibration + Haptic Feedback</div></div><div class="price free">INKL.</div></div>
         <div class="hw-opt" onclick="setHw('rumble','strong',18)" id="hw-rumble-strong"><div class="left"><div class="title">💥 STRONG RUMBLE+</div><div class="desc">Verstärkte Motoren · 30% stärker</div></div><div class="price">+18 €</div></div>
-      </div>
-
-      <!-- STEP 8 GRAVUR -->
-      <div class="step" data-step="8">
-        <div class="step-h">CUSTOM GRAVUR</div>
-        <div class="step-sub">DEIN NAME, TEAM ODER LOGO AUFS TOUCHPAD</div>
-
-        <input type="text" class="engr-input" id="engr-text" placeholder="DEIN TEXT (MAX. 18 Z.)" maxlength="18" oninput="updateEngraving()">
-        <div class="engr-counter"><span id="engr-len">0</span>/18</div>
-
-        <div style="font-family:Orbitron;font-size:8.5px;color:#666;letter-spacing:1.5px;margin:18px 0 8px">SCHRIFTART</div>
-        <div class="engr-fonts">
-          <div class="font-opt f1 sel" data-font="orbitron" onclick="setFont('orbitron',this)">TECH</div>
-          <div class="font-opt f2" data-font="serif" onclick="setFont('serif',this)">Classic</div>
-          <div class="font-opt f3" data-font="mono" onclick="setFont('mono',this)">MONO</div>
-          <div class="font-opt f4" data-font="script" onclick="setFont('script',this)">Style</div>
-        </div>
-
-        <div class="hw-opt" id="hw-engr-toggle" style="margin-top:18px" onclick="toggleEngraving()">
-          <div class="left">
-            <div class="title">✨ GRAVUR HINZUFÜGEN</div>
-            <div class="desc">Lasergravur · präzise · dauerhaft auf Touchpad</div>
-          </div>
-          <div class="price">+15 €</div>
-        </div>
-
-        <div class="engr-preview" id="engr-preview" style="display:none">LEXORD</div>
-      </div>
-
-      <!-- STEP 9 STICKER -->
-      <div class="step" data-step="9">
-        <div class="step-h">STICKER / DECAL</div>
-        <div class="step-sub">EINMALIGER STICKER AUF DEM CONTROLLER</div>
-        <div class="help-tip">💡 Stickers werden auf das Touchpad oder unter den Tasten platziert · +12 €</div>
-        <div class="color-name">STICKER: <strong id="name-sticker">KEINER</strong></div>
-        <div class="sticker-grid" id="grid-sticker"></div>
       </div>
 
       <!-- STEP 10 SUMMARY -->
@@ -1001,13 +949,7 @@ const LED_COLORS = [
   {name:'Pink',hex:'#ff2db4'},{name:'Rot',hex:'#e60012'},{name:'Orange',hex:'#ff6a00'},
   {name:'Gelb',hex:'#ffd400'},{name:'Grün',hex:'#9fff00'},{name:'Weiss',hex:'#ffffff'},
   {name:'Lila',hex:'#7b3bff'},{name:'Gold',hex:'#d4af37'},{name:'Aus',hex:'#000000'}
-];
 
-const STICKERS = [
-  {name:'Keiner',ico:'∅'},{name:'Stern',ico:'⭐'},{name:'Flamme',ico:'🔥'},{name:'Blitz',ico:'⚡'},
-  {name:'Krone',ico:'👑'},{name:'Schädel',ico:'💀'},{name:'Herz',ico:'❤️'},{name:'Game',ico:'🎮'},
-  {name:'Drache',ico:'🐉'},{name:'Schild',ico:'🛡️'},{name:'Auge',ico:'👁️'},{name:'Stern⭐',ico:'✨'}
-];
 
 const PRESETS = {
   stealth: {front:0, back:0, buttons:1, dpad:2, sticks:0, triggers:0, led:0, name:'STEALTH BLACK'},

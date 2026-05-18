@@ -1163,10 +1163,89 @@ const PRODUCT_DETAILS = {
 
 let detailQty = 1, currentDetailSlug = null;
 
+/* Auto-build product details for products WITHOUT static entry
+   (z.B. neu vom Admin hochgeladene Produkte via Worker-API) */
+function buildAutoDetails(p){
+  // Bilder: nutze img, img2, img3 oder fallback
+  const imgs = [];
+  if(p.img) imgs.push(p.img);
+  if(p.img2 && p.img2 !== p.img) imgs.push(p.img2);
+  if(p.img3 && p.img3 !== p.img) imgs.push(p.img3);
+  if(p.images && Array.isArray(p.images)){
+    p.images.forEach(i=>{if(i && !imgs.includes(i)) imgs.push(i);});
+  }
+  if(imgs.length===0) imgs.push('IMG_7023.png');
+  while(imgs.length<3) imgs.push(imgs[0]);
+
+  // Features: aus Admin-Form oder Standard-Set
+  let features = [];
+  if(Array.isArray(p.features) && p.features.length>0 && typeof p.features[0]==='string'){
+    features = p.features.slice();
+  } else if(p.featuresList){
+    features = String(p.featuresList).split('\n').filter(l=>l.trim());
+  }
+  if(features.length===0){
+    features = [
+      'Premium Qualität · Made in Germany',
+      'Handgefertigt in Domsühl',
+      '24 Monate gesetzliche Gewährleistung',
+      '14 Tage Widerrufsrecht',
+      '24h Versand · DHL'
+    ];
+  }
+
+  // Specs: aus stored object oder generiert
+  let specs = [];
+  if(Array.isArray(p.specs)){
+    specs = p.specs.slice();
+  } else if(p.specs && typeof p.specs === 'object'){
+    specs = Object.entries(p.specs);
+  }
+  if(specs.length===0){
+    specs = [
+      ['Kategorie', p.cat || p.category || 'Custom Controller'],
+      ['Hersteller', 'LEXORD Engineering'],
+      ['Made in', 'Germany · Domsühl'],
+      ['Lieferzeit', '24h Versand · 1–3 Werktage'],
+      ['Garantie', '24 Monate Gewährleistung'],
+      ['Zahlung', 'PayPal · Karte · Apple Pay · Klarna']
+    ];
+  }
+
+  // Long Description: aus longDesc (HTML) oder shortDesc/desc
+  let longDesc = '';
+  if(p.longDesc && p.longDesc.length>10){
+    longDesc = p.longDesc;
+  } else {
+    longDesc = '<h3>' + esc(p.name) + '</h3>'
+      + '<p>' + esc(p.desc || p.shortDesc || '') + '</p>'
+      + '<h3>✓ Was du bekommst</h3>'
+      + '<p>Hochwertige Verarbeitung · 100% Made in Germany · Versand binnen 24h.</p>'
+      + '<h3>🔒 Kauf bei LEXORD</h3>'
+      + '<ul><li>Käuferschutz via PayPal</li>'
+      + '<li>SSL · DSGVO-konform</li>'
+      + '<li>Persönlicher Service · Antwort binnen 24h</li>'
+      + '<li>Hergestellt von Leon Schulz · LEXORD Engineering</li></ul>';
+  }
+
+  return {
+    desc: p.desc || p.shortDesc || p.name,
+    images: imgs,
+    features: features,
+    specs: specs,
+    longDesc: longDesc
+  };
+}
+
 function openProductDetail(slug){
   const p = PRODUCTS.find(x=>x.slug===slug);
-  const d = PRODUCT_DETAILS[slug];
-  if(!p || !d) return;
+  if(!p) return;
+  // Auto-build details if not in static dictionary (z.B. neue Admin-Produkte)
+  let d = PRODUCT_DETAILS[slug];
+  if(!d){
+    d = buildAutoDetails(p);
+    PRODUCT_DETAILS[slug] = d;
+  }
   currentDetailSlug = slug;
   detailQty = 1;
 
@@ -1429,13 +1508,60 @@ if(urlP.get('cat') && ['Controller','Upgrade-Kits','Gehäuse','Werkzeug'].includ
     const d = await r.json();
     if(d.products && d.products.length){
       d.products.forEach(p=>{
+        // Add to product list
         if(!PRODUCTS.find(x=>x.slug===p.slug)){
-          PRODUCTS.push({slug:p.slug,name:p.name,cat:p.category||'Sonstiges',price:p.price||0,oldPrice:0,rating:p.rating||4.8,reviews:p.reviews||1,badge:p.badge||'',badgeType:p.badgeType||'',img:p.image||'IMG_7023.png',img2:p.image||'IMG_7023.png',stock:p.stock||'in',features:[],variants:[p.color||'#0a0a0a'],color:p.color||'#0a0a0a',desc:p.shortDesc||'',created:p.created||new Date().toISOString(),bestseller:false});
+          PRODUCTS.push({
+            slug: p.slug,
+            name: p.name,
+            cat: p.category || 'Sonstiges',
+            price: p.price || 0,
+            oldPrice: p.oldPrice || 0,
+            rating: p.rating || 4.8,
+            reviews: p.reviews || 1,
+            badge: p.badge || '',
+            badgeType: p.badgeType || '',
+            img: p.image || p.img || 'IMG_7023.png',
+            img2: p.image2 || p.img2 || p.image || 'IMG_7023.png',
+            stock: p.stock || 'in',
+            features: Array.isArray(p.features)?p.features:[],
+            variants: [p.color || '#0a0a0a'],
+            color: p.color || '#0a0a0a',
+            desc: p.shortDesc || p.desc || '',
+            shortDesc: p.shortDesc || '',
+            longDesc: p.longDesc || '',
+            specs: p.specs || null,
+            created: p.created || new Date().toISOString(),
+            bestseller: !!p.bestseller
+          });
+        }
+        // Auto-generate PRODUCT_DETAILS entry (für Detail-Overlay)
+        if(!PRODUCT_DETAILS[p.slug]){
+          PRODUCT_DETAILS[p.slug] = buildAutoDetails({
+            slug: p.slug,
+            name: p.name,
+            cat: p.category || 'Sonstiges',
+            img: p.image || p.img,
+            img2: p.image2 || p.img2,
+            img3: p.image3 || p.img3,
+            images: p.images,
+            features: p.features,
+            specs: p.specs,
+            longDesc: p.longDesc,
+            shortDesc: p.shortDesc,
+            desc: p.shortDesc || p.desc
+          });
         }
       });
-      render();renderFeaturedHero();renderBestsellerStrip();
+      render();
+      renderFeaturedHero();
+      renderBestsellerStrip();
+      // Re-check URL hash in case the deep-linked product just got loaded
+      const m = location.hash.match(/^#p=([\w-]+)$/);
+      if(m && PRODUCTS.find(x=>x.slug===m[1]) && !currentDetailSlug){
+        setTimeout(()=>openProductDetail(m[1]),100);
+      }
     }
-  }catch(e){}
+  }catch(e){console.warn('Custom-Produkte konnten nicht geladen werden:',e);}
 })();
 
 renderFeaturedHero();

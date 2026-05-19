@@ -323,11 +323,7 @@ header{position:fixed;top:0;width:100%;z-index:100;padding:13px 5%;background:rg
 .nl-perks span{display:flex;align-items:center;gap:4px}
 
 /* COMPARE BAR */
-.compare-bar{position:fixed;bottom:-100px;left:50%;transform:translateX(-50%);background:#0a0a0a;border:1px solid var(--neon);border-radius:14px;padding:14px 22px;display:flex;gap:14px;align-items:center;z-index:90;transition:bottom .4s cubic-bezier(.2,.8,.2,1);box-shadow:0 14px 40px rgba(0,242,255,.25)}
-.compare-bar.show{bottom:24px}
-.cmp-count{font-family:'Orbitron';font-size:11px;color:var(--neon);letter-spacing:2px}
-.cmp-btn{padding:10px 20px;background:var(--neon);color:#000;border:none;font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;border-radius:7px;cursor:pointer;font-weight:900}
-.cmp-btn.clear{background:transparent;border:1px solid #2a2a2a;color:#888}
+/* COMPARE BAR (entfernt) */
 
 /* QUICK VIEW */
 #quick-view{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:300;display:none;align-items:center;justify-content:center;backdrop-filter:blur(15px);padding:20px}
@@ -721,11 +717,6 @@ footer a{color:var(--neon);margin:0 10px}
   <div class="rv-track" id="rv-track"></div>
 </div>
 
-<div class="compare-bar" id="compare-bar">
-  <div class="cmp-count">VERGLEICH: <span id="cmp-count">0</span>/3</div>
-  <button class="cmp-btn" onclick="openCompare()">VERGLEICHEN</button>
-  <button class="cmp-btn clear" onclick="clearCompare()">↺ LEEREN</button>
-</div>
 
 <!-- Inline Product-Detail Overlay -->
 <div id="pd-overlay"></div>
@@ -798,7 +789,6 @@ const REVIEWS_INLINE = [
 ];
 
 let state = {cat:'Alle', minPrice:null, maxPrice:null, colors:[], feats:[], stockOnly:true, saleOnly:false, newOnly:false, rating:0, sort:'featured', view:'grid', page:1, perPage:12};
-let compareIds = [];
 let quickViewProduct = null;
 let featuredIdx = 0;
 let featuredTimer = null;
@@ -970,7 +960,6 @@ function renderGrid(){
 function productCard(p){
   const stars = '★'.repeat(Math.round(p.rating))+'☆'.repeat(5-Math.round(p.rating));
   const onWish = (JSON.parse(localStorage.getItem('lxrd_wish')||'[]')).includes(p.slug);
-  const inCmp = compareIds.includes(p.slug);
   const stockClass = p.stock==='low'?'low':'';
   const stockTxt = p.stock==='low'?'WENIG VORRÄTIG':'AUF LAGER';
   const variantHtml = p.variants.length>1?
@@ -983,7 +972,6 @@ function productCard(p){
         <div class="product-actions">
           <button class="pa-btn wish ${onWish?'on':''}" onclick="event.stopPropagation();toggleWish('${p.slug}')" title="Wishlist"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
           <button class="pa-btn" onclick="event.stopPropagation();openQV('${p.slug}')" title="Quick View"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
-          <button class="pa-btn ${inCmp?'on':''}" onclick="event.stopPropagation();toggleCompare('${p.slug}')" title="Vergleichen"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5h12l-3-3M9 19h12l-3 3M5 9h12l-3 3M5 15h12l-3-3"/></svg></button>
         </div>
         <img src="${p.img}" alt="${p.name}" class="product-img main" loading="lazy">
         <img src="${p.img2}" alt="" class="product-img alt" loading="lazy">
@@ -1078,7 +1066,7 @@ document.getElementById('hdr-search-input').addEventListener('input',e=>{
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('mobile-overlay').classList.toggle('show');}
 function closeSidebarMobile(){if(window.innerWidth<=1000){document.getElementById('sidebar').classList.remove('open');document.getElementById('mobile-overlay').classList.remove('show');}}
 
-function goToProduct(slug){trackRecent(slug);openProductDetail(slug);}
+function goToProduct(slug){trackRecent(slug);location.href=slug+'.html';}
 
 /* ════════ FULL PRODUCT DETAIL OVERLAY (inline) ════════ */
 const PRODUCT_DETAILS = {
@@ -1436,15 +1424,6 @@ function showWishlist(){
   toast('♥ Wunschliste angezeigt');
 }
 
-function toggleCompare(slug){
-  if(compareIds.includes(slug))compareIds=compareIds.filter(s=>s!==slug);
-  else{if(compareIds.length>=3){toast('⚠ Max. 3 Produkte vergleichen','err');return;}compareIds.push(slug);}
-  document.getElementById('cmp-count').textContent = compareIds.length;
-  document.getElementById('compare-bar').classList.toggle('show', compareIds.length>0);
-  renderGrid();
-}
-function clearCompare(){compareIds=[];document.getElementById('compare-bar').classList.remove('show');renderGrid();toast('Vergleich geleert');}
-function openCompare(){if(compareIds.length<2){toast('Min. 2 Produkte wählen','err');return;}const names=compareIds.map(s=>PRODUCTS.find(p=>p.slug===s).name).join(' vs. ');toast('Vergleich: '+names);}
 
 function openQV(slug){
   const p = PRODUCTS.find(x=>x.slug===slug);if(!p) return;

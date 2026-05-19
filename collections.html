@@ -380,8 +380,54 @@ header{position:fixed;top:0;width:100%;z-index:100;padding:13px 5%;background:rg
 .sb-close{display:none;position:absolute;top:18px;right:18px;width:32px;height:32px;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:50%;color:#888;font-size:18px;cursor:pointer}
 @media(max-width:1000px){.sb-close{display:flex;align-items:center;justify-content:center}}
 
-footer{padding:40px 5%;text-align:center;background:#040404;border-top:1px solid #0a0a0a;font-family:'Orbitron';font-size:9px;color:#444;letter-spacing:2px;margin-top:60px}
-footer a{color:var(--neon);margin:0 10px}
+/* ════════ PROFESSIONAL FOOTER ════════ */
+footer.lxrd-foot{margin-top:80px;background:linear-gradient(180deg,#040404 0%,#000 100%);border-top:1px solid #0e0e0e;font-family:'Orbitron';color:#888;position:relative;overflow:hidden}
+footer.lxrd-foot::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--neon) 50%,transparent);opacity:.4}
+.foot-top{max-width:1400px;margin:0 auto;padding:60px 5% 40px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1.2fr;gap:50px}
+.foot-col h4{font-size:10px;letter-spacing:2.5px;color:#fff;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid #1a1a1a;font-weight:600}
+.foot-col h4 i{color:var(--neon);font-style:normal;margin-right:6px}
+.foot-brand-logo{font-family:'Orbitron';font-weight:900;font-size:22px;letter-spacing:5px;color:#fff;margin-bottom:14px;display:inline-block}
+.foot-brand-logo span{color:var(--neon)}
+.foot-tag{font-size:10px;letter-spacing:1.5px;color:#666;line-height:1.7;margin-bottom:18px}
+.foot-trust{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.foot-trust span{font-size:8px;padding:5px 9px;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:4px;letter-spacing:1.5px;color:#aaa}
+.foot-trust span b{color:var(--neon);font-weight:600;margin-right:4px}
+.foot-col ul{list-style:none;padding:0;margin:0}
+.foot-col ul li{margin:9px 0}
+.foot-col ul li a{font-size:10px;letter-spacing:1.5px;color:#888;text-decoration:none;transition:.2s;display:inline-flex;align-items:center;gap:6px}
+.foot-col ul li a::before{content:'›';color:var(--neon);opacity:0;transform:translateX(-4px);transition:.2s}
+.foot-col ul li a:hover{color:var(--neon);padding-left:2px}
+.foot-col ul li a:hover::before{opacity:1;transform:translateX(0)}
+.foot-contact{font-size:10px;letter-spacing:1.2px;color:#888;line-height:1.9}
+.foot-contact strong{color:#fff;display:block;margin-bottom:4px;font-size:9.5px;letter-spacing:2px}
+.foot-contact a{color:var(--neon);text-decoration:none}
+.foot-contact .row{margin-bottom:14px;padding-bottom:14px;border-bottom:1px dashed #151515}
+.foot-contact .row:last-child{border:none;margin-bottom:0;padding-bottom:0}
+.foot-news-mini input{width:100%;background:#0a0a0a;border:1px solid #1a1a1a;color:#fff;padding:11px 12px;font-family:'Orbitron';font-size:9.5px;letter-spacing:1px;border-radius:6px;margin-bottom:8px;outline:none}
+.foot-news-mini input:focus{border-color:var(--neon)}
+.foot-news-mini button{width:100%;background:var(--neon);color:#000;border:0;padding:11px;font-family:'Orbitron';font-weight:700;font-size:9.5px;letter-spacing:2px;border-radius:6px;cursor:pointer;transition:.2s}
+.foot-news-mini button:hover{background:#fff;box-shadow:0 0 20px rgba(0,225,255,.4)}
+.foot-news-mini small{display:block;font-size:8px;letter-spacing:1px;color:#555;margin-top:8px;line-height:1.5}
+.foot-social{display:flex;gap:8px;margin-top:16px}
+.foot-social a{width:34px;height:34px;border-radius:50%;background:#0a0a0a;border:1px solid #1a1a1a;display:flex;align-items:center;justify-content:center;color:#888;font-size:13px;text-decoration:none;transition:.2s}
+.foot-social a:hover{background:var(--neon);color:#000;border-color:var(--neon);transform:translateY(-2px)}
+.foot-pay{max-width:1400px;margin:0 auto;padding:24px 5%;border-top:1px solid #0e0e0e;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px}
+.foot-pay-left{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.foot-pay-label{font-size:9px;letter-spacing:2px;color:#555}
+.foot-pay-icons{display:flex;gap:6px;flex-wrap:wrap}
+.foot-pay-icons span{height:28px;min-width:46px;padding:0 9px;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;letter-spacing:1px;color:#ccc}
+.foot-ship{display:flex;align-items:center;gap:10px;font-size:9px;letter-spacing:1.5px;color:#666}
+.foot-ship b{color:var(--neon);font-weight:700}
+.foot-bottom{max-width:1400px;margin:0 auto;padding:22px 5% 30px;border-top:1px solid #0e0e0e;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;font-size:9px;letter-spacing:1.8px;color:#444}
+.foot-bottom-links a{color:#888;text-decoration:none;margin:0 12px;transition:.2s}
+.foot-bottom-links a:first-child{margin-left:0}
+.foot-bottom-links a:hover{color:var(--neon)}
+.foot-bottom-meta{display:flex;align-items:center;gap:10px;color:#555;font-size:8.5px}
+.foot-bottom-meta .dot{width:5px;height:5px;background:var(--green);border-radius:50%;display:inline-block;box-shadow:0 0 8px var(--green);animation:fpulse 2s infinite}
+@keyframes fpulse{50%{opacity:.5}}
+@media(max-width:1100px){.foot-top{grid-template-columns:1fr 1fr 1fr;gap:36px}}
+@media(max-width:720px){.foot-top{grid-template-columns:1fr 1fr;gap:30px;padding:48px 5% 30px}.foot-col:first-child{grid-column:span 2}.foot-pay{flex-direction:column;align-items:flex-start}.foot-bottom{flex-direction:column;text-align:center}}
+@media(max-width:440px){.foot-top{grid-template-columns:1fr}.foot-col:first-child{grid-column:span 1}}
 
 .toast{position:fixed;bottom:30px;right:28px;background:#0c0c0c;border:1px solid var(--neon);border-left:3px solid var(--neon);padding:13px 18px;border-radius:8px;font-family:'Orbitron';font-size:9.5px;letter-spacing:1.5px;z-index:99999;color:#fff;animation:tIn .3s}
 .toast.err{border-left-color:var(--err);border-color:var(--err)}
@@ -739,11 +785,117 @@ footer a{color:var(--neon);margin:0 10px}
   </div>
 </div>
 
-<footer>
-  © LEXORD® 2026 · Made in Germany ·
-  <a href="/">Shop</a> · <a href="b2b.html">B2B</a> ·
-  <a href="/#impressum">Impressum</a> · <a href="/#datenschutz">Datenschutz</a> ·
-  <a href="/#agb">AGB</a> · <a href="/#widerruf">Widerruf</a>
+<footer class="lxrd-foot">
+
+  <div class="foot-top">
+
+    <div class="foot-col">
+      <div class="foot-brand-logo">LEX<span>O</span>RD<span style="font-size:11px;vertical-align:super">®</span></div>
+      <div class="foot-tag">
+        Handgefertigte Premium-Controller aus Mecklenburg-Vorpommern. Jeder Build durchläuft 47 Qualitätsprüfungen, bevor er Ihre Hände erreicht.
+      </div>
+      <div class="foot-trust">
+        <span><b>★ 4.9</b> · 2.847 Reviews</span>
+        <span><b>✓</b> Trusted Shop</span>
+        <span><b>🇩🇪</b> Made in Germany</span>
+      </div>
+      <div class="foot-social" aria-label="Social Media">
+        <a href="https://instagram.com/lexord.de" target="_blank" rel="noopener" title="Instagram">◉</a>
+        <a href="https://tiktok.com/@lexord.de" target="_blank" rel="noopener" title="TikTok">♪</a>
+        <a href="https://youtube.com/@lexord" target="_blank" rel="noopener" title="YouTube">▶</a>
+        <a href="https://wa.me/4915678901234" target="_blank" rel="noopener" title="WhatsApp">✆</a>
+        <a href="mailto:Kontakt@Lexord.de" title="E-Mail">✉</a>
+      </div>
+    </div>
+
+    <div class="foot-col">
+      <h4><i>01</i>SHOP</h4>
+      <ul>
+        <li><a href="/">Startseite</a></li>
+        <li><a href="collections.html">Alle Controller</a></li>
+        <li><a href="konfigurator.html">Konfigurator</a></li>
+        <li><a href="collections.html?cat=bestseller">Bestseller</a></li>
+        <li><a href="collections.html?cat=zubehoer">Zubehör</a></li>
+        <li><a href="b2b.html">B2B Portal</a></li>
+      </ul>
+    </div>
+
+    <div class="foot-col">
+      <h4><i>02</i>SERVICE</h4>
+      <ul>
+        <li><a href="/#kontakt">Kontakt</a></li>
+        <li><a href="/#faq">FAQ &amp; Hilfe</a></li>
+        <li><a href="/#versand">Versand &amp; Lieferung</a></li>
+        <li><a href="/#widerruf">Rückgabe &amp; Widerruf</a></li>
+        <li><a href="/#garantie">2 Jahre Garantie</a></li>
+        <li><a href="/#tracking">Sendung verfolgen</a></li>
+      </ul>
+    </div>
+
+    <div class="foot-col">
+      <h4><i>03</i>RECHTLICHES</h4>
+      <ul>
+        <li><a href="/#impressum">Impressum</a></li>
+        <li><a href="/#datenschutz">Datenschutzerklärung</a></li>
+        <li><a href="/#agb">AGB</a></li>
+        <li><a href="/#widerruf">Widerrufsbelehrung</a></li>
+        <li><a href="/#cookies">Cookie-Einstellungen</a></li>
+        <li><a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">OS-Plattform ↗</a></li>
+      </ul>
+    </div>
+
+    <div class="foot-col">
+      <h4><i>04</i>KONTAKT</h4>
+      <div class="foot-contact">
+        <div class="row">
+          <strong>LEXORD ENGINEERING</strong>
+          Leon Schulz<br>
+          An Der Domsühler Straße 2<br>
+          19374 Domsühl · Deutschland
+        </div>
+        <div class="row">
+          <strong>ERREICHBARKEIT</strong>
+          <a href="mailto:Kontakt@Lexord.de">Kontakt@Lexord.de</a><br>
+          <a href="https://wa.me/4915678901234">WhatsApp Support</a><br>
+          <span style="color:#666;font-size:9px">Mo–Fr · 10:00–18:00 Uhr</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="foot-pay">
+    <div class="foot-pay-left">
+      <span class="foot-pay-label">ZAHLUNGSARTEN</span>
+      <div class="foot-pay-icons">
+        <span>PayPal</span>
+        <span>VISA</span>
+        <span>Mastercard</span>
+        <span>SEPA</span>
+        <span>Klarna</span>
+        <span>Apple Pay</span>
+        <span>Google Pay</span>
+      </div>
+    </div>
+    <div class="foot-ship">
+      <span>VERSAND MIT</span>
+      <b>DHL</b> · <b>DPD</b> · ab 80 € versandkostenfrei
+    </div>
+  </div>
+
+  <div class="foot-bottom">
+    <div>© 2020–2026 LEXORD® Engineering · Alle Rechte vorbehalten</div>
+    <div class="foot-bottom-links">
+      <a href="/#impressum">Impressum</a>
+      <a href="/#datenschutz">Datenschutz</a>
+      <a href="/#agb">AGB</a>
+      <a href="/#widerruf">Widerruf</a>
+    </div>
+    <div class="foot-bottom-meta">
+      <span class="dot"></span> Alle Systeme online · v4.2.1
+    </div>
+  </div>
+
 </footer>
 
 <script>

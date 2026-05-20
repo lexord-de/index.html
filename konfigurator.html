@@ -157,25 +157,52 @@ h1 .accent{background:linear-gradient(90deg,var(--neon),var(--neon2),var(--neon)
 .vt-btn.sel{background:rgba(0,242,255,.08);border-color:var(--neon);color:var(--neon)}
 .vt-btn:hover{border-color:#2a2a2a}
 
-.preview-stage{aspect-ratio:1/0.88;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:14px;background:radial-gradient(ellipse at center,#0a0a0a 0%,#000 80%);perspective:1500px}
-.preview-stage::before{content:'';position:absolute;width:60%;height:60%;background:radial-gradient(circle,rgba(0,242,255,.18) 0%,transparent 70%);filter:blur(40px);pointer-events:none;z-index:0;animation:glowPulse 4s ease-in-out infinite}
-@keyframes glowPulse{50%{opacity:.5;transform:scale(1.1)}}
+.preview-stage{aspect-ratio:1/0.95;position:relative;display:block;overflow:hidden;border-radius:14px;background:radial-gradient(ellipse at 50% 60%,#0c0c0c 0%,#000 75%)}
+.preview-stage::before{content:'';position:absolute;width:70%;height:55%;left:15%;top:25%;background:radial-gradient(circle,rgba(0,242,255,.14) 0%,transparent 70%);filter:blur(50px);pointer-events:none;z-index:0;animation:glowPulse 4s ease-in-out infinite}
+@keyframes glowPulse{50%{opacity:.55;transform:scale(1.08)}}
 
-.preview-stack{position:relative;width:96%;max-width:580px;aspect-ratio:1/1;z-index:1;animation:floatY 5s ease-in-out infinite;transition:none}
-@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+/* Bitros-Style Dual-View Stack */
+.preview-stack{position:absolute;inset:0;z-index:1;animation:floatY 5.5s ease-in-out infinite}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 
-.preview-layer{position:absolute;inset:0;width:100%;height:100%;background-size:contain;background-repeat:no-repeat;background-position:center;-webkit-mask-size:contain;-webkit-mask-repeat:no-repeat;-webkit-mask-position:center;mask-size:contain;mask-repeat:no-repeat;mask-position:center;transition:background-color .5s cubic-bezier(.4,0,.2,1),filter .4s,opacity .55s cubic-bezier(.2,.8,.2,1)}
-.preview-base{background-size:contain;background-repeat:no-repeat;background-position:center;filter:drop-shadow(0 18px 32px rgba(0,0,0,.6)) drop-shadow(0 0 40px rgba(0,242,255,.12));transition:opacity .55s cubic-bezier(.2,.8,.2,1)}
-.preview-base-front{background-image:url('Photoroom_20260501_094506.png');z-index:0}
-.preview-base-back{background-image:url('Photoroom_20260501_090821.png');z-index:0;opacity:0}
-/* Front-spezifische Masken (Buttons, D-Pad, Sticks, Trigger, Frontshell) */
-.face-front{opacity:1;transition:opacity .55s cubic-bezier(.2,.8,.2,1)}
-.face-back{opacity:0;pointer-events:none;transition:opacity .55s cubic-bezier(.2,.8,.2,1)}
-/* Wenn show-back aktiv ist: Front aus, Back an */
-.preview-stack.show-back .preview-base-front{opacity:0}
-.preview-stack.show-back .preview-base-back{opacity:1}
-.preview-stack.show-back .face-front{opacity:0;pointer-events:none}
-.preview-stack.show-back .face-back{opacity:1;pointer-events:auto}
+/* CONTROLLER-UNIT: Container fuer Bild + alle Masken */
+.ctrl-unit{position:absolute;background-size:contain;background-repeat:no-repeat;background-position:center;transition:transform .7s cubic-bezier(.4,0,.2,1),opacity .55s,filter .4s;filter:drop-shadow(0 20px 30px rgba(0,0,0,.6))}
+.ctrl-img{position:absolute;inset:0;background-size:contain;background-repeat:no-repeat;background-position:center}
+.base-front{background-image:url('Photoroom_20260501_094506.png')}
+.base-back{background-image:url('Photoroom_20260501_090821.png')}
+.ctrl-layer{position:absolute;inset:0;background-size:contain;background-repeat:no-repeat;background-position:center;-webkit-mask-size:contain;-webkit-mask-repeat:no-repeat;-webkit-mask-position:center;mask-size:contain;mask-repeat:no-repeat;mask-position:center;transition:background-color .5s cubic-bezier(.4,0,.2,1),filter .4s,opacity .4s}
+/* Layout: bitros-Style — Front gross unten links, Back klein oben rechts */
+.unit-front{width:72%;height:72%;left:2%;bottom:2%;z-index:2}
+.unit-back{width:55%;height:55%;right:2%;top:2%;z-index:1;filter:drop-shadow(0 14px 22px rgba(0,0,0,.55))}
+/* View-Modi steuern Sichtbarkeit + Groesse */
+.preview-stack.view-front .unit-front{width:88%;height:88%;left:6%;bottom:4%;z-index:2}
+.preview-stack.view-front .unit-back{opacity:0;transform:translateX(20%) scale(.6)}
+.preview-stack.view-back  .unit-back{width:88%;height:88%;right:6%;top:4%;z-index:2}
+.preview-stack.view-back  .unit-front{opacity:0;transform:translateX(-20%) scale(.6)}
+.preview-stack.view-both  .unit-front{opacity:1}
+.preview-stack.view-both  .unit-back{opacity:1}
+/* Highlight beim Hover ueber Unit */
+.ctrl-unit:hover{filter:drop-shadow(0 22px 34px rgba(0,0,0,.7)) drop-shadow(0 0 22px rgba(0,242,255,.25))}
+
+/* === HOTSPOTS (Annotations-Linien wie bei bitros) === */
+.hotspot{position:absolute;display:none;align-items:center;gap:0;pointer-events:none;z-index:10;opacity:0;transition:opacity .35s ease}
+.hotspot.show{display:flex;opacity:1}
+.hs-line{display:block;width:42px;height:1px;background:linear-gradient(90deg,rgba(0,242,255,.7),rgba(255,255,255,.25));position:relative;flex-shrink:0}
+.hs-line::before{content:'';position:absolute;left:0;top:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:#00f2ff;box-shadow:0 0 8px #00f2ff}
+.hs-lbl{font-family:'Inter','Segoe UI',sans-serif;font-size:9.5px;color:#e8e8e8;background:rgba(8,8,8,.92);padding:6px 9px;border:1px solid rgba(0,242,255,.35);border-radius:6px;backdrop-filter:blur(6px);line-height:1.35;white-space:nowrap;letter-spacing:.2px}
+.hs-lbl strong{color:#fff;font-weight:700;font-size:10px;display:block;margin-bottom:1px}
+/* Front-Hotspots — Magnetic Sticks unten links, FrontButtons oben rechts */
+.hs-sticks{left:-2%;bottom:18%;flex-direction:row-reverse}
+.hs-sticks .hs-line{background:linear-gradient(-90deg,rgba(0,242,255,.7),rgba(255,255,255,.25))}
+.hs-sticks .hs-line::before{left:auto;right:0;transform:translate(50%,-50%)}
+.hs-frontbtn{right:-2%;top:14%;flex-direction:row-reverse}
+.hs-frontbtn .hs-lbl{order:2}
+/* Back-Hotspot — Paddles links oben */
+.hs-paddles{left:-2%;top:14%}
+.unit-back .hotspot{font-size:8.5px}
+.unit-back .hs-lbl{font-size:8.5px;padding:5px 7px}
+.unit-back .hs-line{width:32px}
+@keyframes hsBlink{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.05);filter:brightness(1.4) drop-shadow(0 0 8px #00f2ff)}}
 
 /* LED LIGHTBAR — animiert */
 .led-bar{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);width:34%;height:4px;border-radius:4px;background:var(--led-color,#3aa3ff);box-shadow:0 0 14px var(--led-color,#3aa3ff),0 0 28px var(--led-color,#3aa3ff);opacity:.9;z-index:5;animation:ledBreathe 2.5s ease-in-out infinite}
@@ -319,23 +346,52 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
 .foot-bottom-meta a{color:var(--neon);text-decoration:none}
 @media(max-width:680px){.foot-top{grid-template-columns:1fr 1fr;gap:28px}.foot-col:first-child{grid-column:span 2}.foot-bottom{flex-direction:column;text-align:center}}
 
-/* ═════ PADDLE-VISUALISIERUNG (Backshell-View) ═════ */
+/* ═════ PADDLE-VISUALISIERUNG (auf Backshell-Unit) ═════ */
 .paddle-overlay{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .5s cubic-bezier(.2,.8,.2,1);z-index:6}
-.preview-stack.show-back .paddle-overlay.active{opacity:1}
-.paddle{position:absolute;width:14%;height:34%;background:linear-gradient(180deg,#1a1a1a 0%,#0a0a0a 100%);border:1px solid #2a2a2a;border-radius:18px/40px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 6px 16px rgba(0,0,0,.7),0 0 0 1px rgba(0,242,255,.15);transform:translateY(40px);opacity:0;transition:transform .55s cubic-bezier(.2,1.4,.3,1),opacity .4s;backface-visibility:hidden}
-.paddle::after{content:'';position:absolute;top:8%;left:12%;right:12%;height:24%;background:linear-gradient(180deg,rgba(255,255,255,.06),transparent);border-radius:14px;pointer-events:none}
-.paddle-overlay.active .paddle{opacity:.9;transform:translateY(0)}
+.paddle-overlay.active{opacity:1}
+.paddle{position:absolute;width:12%;height:30%;background:linear-gradient(180deg,#262626 0%,#0a0a0a 100%);border:1px solid #3a3a3a;border-radius:18px/40px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 6px 14px rgba(0,0,0,.8);transform:translateY(40px);opacity:0;transition:transform .55s cubic-bezier(.2,1.4,.3,1),opacity .4s;display:flex;align-items:center;justify-content:center}
+.paddle::after{content:'';position:absolute;top:8%;left:12%;right:12%;height:22%;background:linear-gradient(180deg,rgba(255,255,255,.08),transparent);border-radius:14px;pointer-events:none}
+.paddle-overlay.prog .paddle{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 6px 14px rgba(0,0,0,.8),0 0 0 1px rgba(0,242,255,.4),0 0 18px rgba(0,242,255,.25)}
+.paddle-ico{width:50%;height:40%;display:flex;align-items:center;justify-content:center;opacity:.88}
+.paddle-ico svg{width:100%;height:100%}
+.paddle-overlay.active .paddle{opacity:.92;transform:translateY(0)}
 .paddle-overlay.active .paddle.p1{transition-delay:0ms}
 .paddle-overlay.active .paddle.p2{transition-delay:80ms}
 .paddle-overlay.active .paddle.p3{transition-delay:160ms}
 .paddle-overlay.active .paddle.p4{transition-delay:240ms}
-/* Position der 4 Paddles auf der Backshell (relativ zum mask-backshell) */
-.paddle.p1{top:36%;left:22%}
-.paddle.p2{top:36%;right:22%}
-.paddle.p3{top:58%;left:30%}
-.paddle.p4{top:58%;right:30%}
+/* Position der 4 Paddles auf der Backshell (an die echte Photoroom-Position angepasst) */
+.paddle.p1{top:30%;left:20%}
+.paddle.p2{top:30%;right:20%}
+.paddle.p3{top:54%;left:28%}
+.paddle.p4{top:54%;right:28%}
 .paddle-overlay.count-2 .paddle.p3,.paddle-overlay.count-2 .paddle.p4{display:none}
 .paddle-overlay.count-0{opacity:0!important}
+
+/* ═════ FRONT-BUTTON OVERLAY (2× FrontButtons fuer 6er/4er+Front Pakete) ═════ */
+.frontbtn-overlay{position:absolute;inset:0;pointer-events:none;z-index:6;opacity:0;transition:opacity .4s}
+.frontbtn-overlay.active{opacity:1}
+.fb{position:absolute;width:4.5%;height:5%;background:linear-gradient(180deg,#1a1a1a,#0a0a0a);border:1px solid rgba(0,242,255,.5);border-radius:50%;box-shadow:0 0 10px rgba(0,242,255,.55),inset 0 1px 0 rgba(255,255,255,.1);transform:scale(0);transition:transform .55s cubic-bezier(.2,1.4,.3,1)}
+.frontbtn-overlay.active .fb{transform:scale(1)}
+.frontbtn-overlay.active .fb.fb1{transition-delay:320ms}
+.frontbtn-overlay.active .fb.fb2{transition-delay:400ms}
+/* FrontButtons sitzen oberhalb der Schulter-Bumper auf der Frontseite */
+.fb1{top:18%;left:23%}
+.fb2{top:18%;right:23%}
+
+/* ═════ PADDLE-CARD-GRID (10 Optionen wie bitros) ═════ */
+.paddle-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px}
+.pp-card{background:#0a0a0a;border:1.5px solid #1a1a1a;border-radius:10px;padding:10px 6px;text-align:center;cursor:pointer;transition:.25s;display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;overflow:hidden}
+.pp-card:hover{border-color:#3a3a3a;transform:translateY(-2px)}
+.pp-card.sel{border-color:var(--neon);background:rgba(0,242,255,.06);box-shadow:0 0 14px rgba(0,242,255,.18)}
+.pp-card.sel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--neon),transparent)}
+.pp-ico{width:50px;height:30px;display:flex;align-items:center;justify-content:center;margin-bottom:2px}
+.pp-ico svg{width:100%;height:100%}
+.pp-lbl{font-family:'Orbitron';font-size:7.5px;color:#bbb;letter-spacing:.5px;line-height:1.25;min-height:18px;display:flex;align-items:center}
+.pp-card.sel .pp-lbl{color:#fff}
+.pp-price{font-family:'Orbitron';font-size:8px;color:var(--neon);font-weight:700;letter-spacing:.5px}
+@media(max-width:1200px){.paddle-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:680px){.paddle-grid{grid-template-columns:repeat(3,1fr);gap:6px}.pp-card{padding:8px 4px}.pp-ico{width:42px;height:26px}.pp-lbl{font-size:7px}}
+@media(max-width:420px){.paddle-grid{grid-template-columns:repeat(2,1fr)}}
 
 /* ═════ PART-HIGHLIGHT (welcher Teil wird gerade konfiguriert) ═════ */
 .preview-layer.highlight{animation:partGlow 2.4s ease-in-out infinite;z-index:5}
@@ -686,56 +742,56 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
 
 <div class="kfg-layout">
 
-  <!-- LIVE PREVIEW -->
+  <!-- LIVE PREVIEW (Bitros-Style: Front + Back gleichzeitig sichtbar) -->
   <div class="preview-wrap">
 
-    <div class="build-name-row">
-      <input type="text" id="build-name" class="build-name-input" placeholder="MEIN BUILD-NAME (OPTIONAL)" maxlength="32" oninput="updateBuildName()">
-      <div class="progress-ring-wrap">
-        <span class="pct" id="build-pct">0%</span>
-        <span>FERTIG</span>
-      </div>
-    </div>
-
-    <div class="build-toolbar">
-      <button class="bt-btn surprise" onclick="surpriseMe()"><span class="ico">🎲</span>SURPRISE ME</button>
-      <button class="bt-btn" onclick="openBuildsModal('save')"><span class="ico">💾</span>SPEICHERN</button>
-      <button class="bt-btn" onclick="openBuildsModal('load')"><span class="ico">📁</span>LADEN</button>
-    </div>
-
     <div class="view-toggle">
-      <button class="vt-btn sel" id="vt-front" onclick="setView('front')">🎮 VORDERSEITE</button>
+      <button class="vt-btn sel" id="vt-both" onclick="setView('both')">⚌ BEIDE</button>
+      <button class="vt-btn" id="vt-front" onclick="setView('front')">🎮 VORDERSEITE</button>
       <button class="vt-btn" id="vt-back" onclick="setView('back')">🛡️ RÜCKSEITE</button>
     </div>
 
     <div class="preview-stage" id="preview-stage">
       <div class="preview-stack" id="preview-stack">
-        <!-- Echte PS5 Controller-Fotos: Front + Back -->
-        <div class="preview-layer preview-base preview-base-front"></div>
-        <div class="preview-layer preview-base preview-base-back"></div>
-        <!-- Front-Tinten -->
-        <div class="preview-layer face-front" id="layer-frontshell" style="-webkit-mask-image:url('mask-frontshell.PNG');mask-image:url('mask-frontshell.PNG');background-color:#0a0a0a;mix-blend-mode:multiply"></div>
-        <div class="preview-layer face-front" id="layer-buttons" style="-webkit-mask-image:url('mask-buttons.PNG');mask-image:url('mask-buttons.PNG');background-color:#ffffff;mix-blend-mode:screen"></div>
-        <div class="preview-layer face-front" id="layer-dpad" style="-webkit-mask-image:url('mask-dpad.PNG');mask-image:url('mask-dpad.PNG');background-color:#cccccc;mix-blend-mode:screen"></div>
-        <div class="preview-layer face-front" id="layer-sticks" style="-webkit-mask-image:url('mask-stickcap.PNG');mask-image:url('mask-stickcap.PNG');background-color:#222222;mix-blend-mode:multiply"></div>
-        <div class="preview-layer face-front" id="layer-triggers" style="-webkit-mask-image:url('mask-triggercolor.PNG');mask-image:url('mask-triggercolor.PNG');background-color:#0a0a0a;mix-blend-mode:multiply"></div>
-        <!-- Back-Tinten -->
-        <div class="preview-layer face-back" id="layer-backshell" style="-webkit-mask-image:url('mask-backshell.PNG');mask-image:url('mask-backshell.PNG');background-color:#0a0a0a;mix-blend-mode:multiply"></div>
-        <div class="paddle-overlay face-back" id="paddle-overlay" aria-hidden="true">
-          <div class="paddle p1"></div>
-          <div class="paddle p2"></div>
-          <div class="paddle p3"></div>
-          <div class="paddle p4"></div>
+
+        <!-- FRONT-UNIT (Hauptcontroller links unten) -->
+        <div class="ctrl-unit unit-front" id="unit-front">
+          <div class="ctrl-img base-front"></div>
+          <div class="ctrl-layer" id="layer-frontshell" style="-webkit-mask-image:url('mask-frontshell.PNG');mask-image:url('mask-frontshell.PNG');background-color:#0a0a0a;mix-blend-mode:multiply"></div>
+          <div class="ctrl-layer" id="layer-buttons" style="-webkit-mask-image:url('mask-buttons.PNG');mask-image:url('mask-buttons.PNG');background-color:#ffffff;mix-blend-mode:screen"></div>
+          <div class="ctrl-layer" id="layer-dpad" style="-webkit-mask-image:url('mask-dpad.PNG');mask-image:url('mask-dpad.PNG');background-color:#cccccc;mix-blend-mode:screen"></div>
+          <div class="ctrl-layer" id="layer-sticks" style="-webkit-mask-image:url('mask-stickcap.PNG');mask-image:url('mask-stickcap.PNG');background-color:#222222;mix-blend-mode:multiply"></div>
+          <div class="ctrl-layer" id="layer-triggers" style="-webkit-mask-image:url('mask-triggercolor.PNG');mask-image:url('mask-triggercolor.PNG');background-color:#0a0a0a;mix-blend-mode:multiply"></div>
+          <!-- Front-Hotspots: Magnetic Sticks + FrontButtons -->
+          <div class="hotspot hs-sticks show" id="hs-sticks"><span class="hs-line"></span><span class="hs-lbl"><strong>Magnetic Sticks</strong><br>Anti-Stickdrift · Hall Effect</span></div>
+          <div class="hotspot hs-frontbtn" id="hs-frontbtn"><span class="hs-line"></span><span class="hs-lbl"><strong>FrontButtons</strong><br>2× programmable Buttons</span></div>
+          <!-- Front-Front-Buttons-Visualisierung -->
+          <div class="frontbtn-overlay" id="frontbtn-overlay" aria-hidden="true">
+            <span class="fb fb1"></span><span class="fb fb2"></span>
+          </div>
+          <!-- LED + Gravur auf Front -->
+          <div class="led-bar" id="led-bar"></div>
+          <div class="engraving-overlay" id="engr-display"></div>
         </div>
-        <!-- Front-Overlays (LED, Gravur) -->
-        <div class="led-bar face-front" id="led-bar"></div>
-        <div class="engraving-overlay face-front" id="engr-display"></div>
+
+        <!-- BACK-UNIT (kleinerer Controller rechts oben) -->
+        <div class="ctrl-unit unit-back" id="unit-back">
+          <div class="ctrl-img base-back"></div>
+          <div class="ctrl-layer" id="layer-backshell" style="-webkit-mask-image:url('mask-backshell.PNG');mask-image:url('mask-backshell.PNG');background-color:#0a0a0a;mix-blend-mode:multiply"></div>
+          <!-- Paddle-Overlay sitzt auf der Backshell -->
+          <div class="paddle-overlay" id="paddle-overlay" aria-hidden="true">
+            <div class="paddle p1"><span class="paddle-ico"></span></div>
+            <div class="paddle p2"><span class="paddle-ico"></span></div>
+            <div class="paddle p3"><span class="paddle-ico"></span></div>
+            <div class="paddle p4"><span class="paddle-ico"></span></div>
+          </div>
+          <!-- Back-Hotspot: Paddles -->
+          <div class="hotspot hs-paddles" id="hs-paddles"><span class="hs-line"></span><span class="hs-lbl"><strong>Programmable Paddles</strong><br><span id="hs-paddle-desc">Action+Cross+L3/R3</span></span></div>
+        </div>
+
       </div>
       <div class="preview-shadow"></div>
     </div>
-
-    <div class="mini-map" id="mini-map"></div>
-    <div class="mm-lbl">FARB-ÜBERSICHT</div>
 
     <div class="preview-info">
       <div class="pv-left">
@@ -748,17 +804,8 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
       </div>
     </div>
 
-    <div class="preset-row">
-      <button class="preset-btn active" onclick="applyPreset('stealth',event)">🌑 STEALTH</button>
-      <button class="preset-btn" onclick="applyPreset('arctic',event)">❄️ ARCTIC</button>
-      <button class="preset-btn" onclick="applyPreset('neon',event)">⚡ NEON</button>
-      <button class="preset-btn" onclick="applyPreset('royal',event)">👑 ROYAL</button>
-      <button class="preset-btn" onclick="applyPreset('fire',event)">🔥 FIRE</button>
-      <button class="preset-btn" onclick="applyPreset('chrome',event)">💎 CHROME</button>
-      <button class="preset-btn" onclick="applyPreset('galaxy',event)">🌌 GALAXY</button>
-      <button class="preset-btn" onclick="applyPreset('camo',event)">🌿 CAMO</button>
-    </div>
   </div>
+
 
   <!-- CONFIGURATOR -->
   <div class="cfg-panel">
@@ -785,12 +832,6 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
         <div class="help-tip">💡 Tipp: <strong>Special-Colors</strong> (gelber Punkt) = +8 € Aufpreis</div>
         <div class="color-name">FARBE: <strong id="name-front">SCHWARZ MATT</strong></div>
         <div class="color-grid" id="grid-front"></div>
-        <div style="font-family:Orbitron;font-size:8.5px;color:#666;letter-spacing:1.5px;margin:12px 0 6px">EIGENE FARBE (HEX-CODE)</div>
-        <div class="custom-color-row">
-          <input type="color" id="cc-front" value="#0a0a0a" onchange="applyCustomColor('front',this.value)">
-          <input type="text" id="cc-front-hex" placeholder="#000000" oninput="applyCustomColor('front',this.value)">
-          <button onclick="applyCustomColor('front',document.getElementById('cc-front-hex').value||document.getElementById('cc-front').value)">SET</button>
-        </div>
       </div>
 
       <!-- STEP 1 BACK -->
@@ -863,13 +904,9 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
         <div class="hw-opt sel" onclick="setHw('trigger','standard',0)" id="hw-trigger-standard"><div class="left"><div class="title">STANDARD TRIGGER</div><div class="desc">Original DualSense mit Adaptive Trigger</div></div><div class="price free">INKL.</div></div>
         <div class="hw-opt" onclick="setHw('trigger','clicky',22)" id="hw-trigger-clicky"><div class="left"><div class="title">⚡ CLICKY TRIGGER</div><div class="desc">Mouse-Click-Feel · 1 mm Auslöseweg · perfekt für FPS</div></div><div class="price">+22 €</div></div>
 
-        <div style="font-family:Orbitron;font-size:9px;color:var(--neon);letter-spacing:2px;margin:24px 0 10px">🎮 BACK-PADDLES</div>
-        <div class="paddle-count">
-          <div class="pc-btn sel" onclick="setHw('paddles',0,0)" id="pc-0">KEINE</div>
-          <div class="pc-btn" onclick="setHw('paddles',2,40)" id="pc-2">2× +40 €</div>
-          <div class="pc-btn" onclick="setHw('paddles',4,65)" id="pc-4">4× +65 €</div>
-        </div>
-        <p style="font-size:10.5px;color:#666;margin-top:8px;line-height:1.6">Frei programmierbar — schnellere Reaktionen ohne Umgreifen.</p>
+        <div style="font-family:Orbitron;font-size:9px;color:var(--neon);letter-spacing:2px;margin:24px 0 10px">🎮 BACK-PADDLES &amp; FRONTBUTTONS</div>
+        <div class="paddle-grid" id="paddle-grid"></div>
+        <p style="font-size:10.5px;color:#666;margin-top:10px;line-height:1.6">Frei programmierbar — schnellere Reaktionen ohne Umgreifen. <strong style="color:#888">Ares</strong> = Pfeil · <strong style="color:#888">Scull</strong> = Totenkopf · <strong style="color:#888">Chip</strong> = programmierbar.</p>
 
         <div style="font-family:Orbitron;font-size:9px;color:var(--neon);letter-spacing:2px;margin:24px 0 10px">🛡️ GRIP-GEHÄUSE</div>
         <div class="hw-opt sel" onclick="setHw('grip','standard',0)" id="hw-grip-standard"><div class="left"><div class="title">STANDARD GEHÄUSE</div><div class="desc">Original DualSense Oberfläche</div></div><div class="price free">INKL.</div></div>
@@ -1131,7 +1168,7 @@ let state = {
 let currentStep = 0;
 const TOTAL_STEPS = 11;
 let autoSpin = false;
-let currentView = 'front';
+let currentView = 'both';
 
 /* COLOR GRID */
 function buildColorGrid(part){
@@ -1266,15 +1303,88 @@ function highlightPart(part){
   _highlightTimer=setTimeout(()=>el.classList.remove('highlight'),3200);
 }
 
-/* === Paddle-Overlay aktualisieren === */
+/* === Hotspot-Highlight beim Step-Wechsel === */
+function flashHotspot(step){
+  /* Step 4 = Sticks, Step 7 = HW (Paddles/FrontButtons) */
+  const map = {4:'hs-sticks', 7:'hs-paddles'};
+  const id = map[step]; if(!id) return;
+  const hs = document.getElementById(id); if(!hs) return;
+  hs.classList.add('show');
+  hs.style.animation='hsBlink 1.6s ease-in-out 2';
+  setTimeout(()=>{hs.style.animation='';},3400);
+}
+
+/* === PADDLE-KATALOG (bitros-Style) === */
+const PADDLE_TYPES = [
+  {id:0,  label:'ohne',                       price:0,  count:0, fb:0, ico:'X',           prog:false},
+  {id:1,  label:'2× Ares X/O',                price:29, count:2, fb:0, ico:'ares',        prog:false},
+  {id:2,  label:'2× Scull X/O',               price:29, count:2, fb:0, ico:'scull',       prog:false},
+  {id:3,  label:'2× Ares programm.',          price:39, count:2, fb:0, ico:'ares-prog',   prog:true},
+  {id:4,  label:'2× Scull programm.',         price:39, count:2, fb:0, ico:'scull-prog',  prog:true},
+  {id:5,  label:'4× Ares + Frontbutt.',       price:59, count:4, fb:2, ico:'ares',        prog:false},
+  {id:6,  label:'4× Scull + Frontbutt.',      price:59, count:4, fb:2, ico:'scull',       prog:false},
+  {id:7,  label:'4× standart',                price:39, count:4, fb:0, ico:'plain',       prog:false},
+  {id:8,  label:'4× programm.',               price:49, count:4, fb:0, ico:'plain-prog',  prog:true},
+  {id:9,  label:'6× 2× Front + 4× programm.', price:79, count:4, fb:2, ico:'plain-prog',  prog:true}
+];
+function paddleSvg(kind){
+  if(kind==='ares')       return '<svg viewBox="0 0 24 24"><path d="M12 3 L20 12 L14 12 L14 21 L10 21 L10 12 L4 12 Z" fill="#fff"/></svg>';
+  if(kind==='scull')      return '<svg viewBox="0 0 24 24"><path d="M12 3c-4 0-7 3-7 7v3l-1 3 2 1v3h3v-2h6v2h3v-3l2-1-1-3v-3c0-4-3-7-7-7zm-3 8a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm6 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z" fill="#fff"/></svg>';
+  if(kind==='ares-prog')  return '<svg viewBox="0 0 24 24"><path d="M12 3 L20 12 L14 12 L14 21 L10 21 L10 12 L4 12 Z" fill="#fff"/><rect x="6" y="16" width="12" height="4" fill="#00f2ff" stroke="#000" stroke-width=".5"/></svg>';
+  if(kind==='scull-prog') return '<svg viewBox="0 0 24 24"><path d="M12 3c-4 0-7 3-7 7v3l-1 3 2 1v3h3v-2h6v2h3v-3l2-1-1-3v-3c0-4-3-7-7-7zm-3 8a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm6 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z" fill="#fff"/><rect x="6" y="20" width="12" height="3" fill="#00f2ff"/></svg>';
+  if(kind==='plain-prog') return '<svg viewBox="0 0 24 24"><rect x="6" y="18" width="12" height="4" fill="#00f2ff"/></svg>';
+  if(kind==='plain')      return '';
+  return '<text x="12" y="17" text-anchor="middle" fill="#ff4d4f" font-family="Orbitron" font-weight="900" font-size="16">×</text>';
+}
+function paddleCardSvg(kind){
+  const inner = paddleSvg(kind);
+  return `<svg viewBox="0 0 60 36" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8 8 Q4 10 4 18 Q4 26 12 30 Q22 33 30 30 Q38 33 48 30 Q56 26 56 18 Q56 10 52 8 Q46 6 30 6 Q14 6 8 8 Z" fill="#1a1a1a" stroke="#3a3a3a" stroke-width="1"/>
+    ${kind==='X' ? '<text x="30" y="24" text-anchor="middle" fill="#ff4d4f" font-family="Arial" font-weight="900" font-size="22">×</text>' : ''}
+    <g transform="translate(20 8) scale(.83)">${kind!=='X'?inner:''}</g>
+  </svg>`;
+}
+function buildPaddleGrid(){
+  const g=document.getElementById('paddle-grid');if(!g)return;
+  g.innerHTML = PADDLE_TYPES.map(t=>{
+    const sel=state.hw_paddles===t.id?'sel':'';
+    const priceTxt = t.price===0?'inkl.':'+'+t.price.toFixed(2).replace('.',',')+' €';
+    return `<div class="pp-card ${sel}" id="pp-${t.id}" onclick="pickPaddle(${t.id})">
+      <div class="pp-ico">${paddleCardSvg(t.ico)}</div>
+      <div class="pp-lbl">${t.label}</div>
+      <div class="pp-price">${priceTxt}</div>
+    </div>`;
+  }).join('');
+}
+function pickPaddle(id){
+  const t = PADDLE_TYPES.find(x=>x.id===id); if(!t) return;
+  state.hw_paddles = t.id;
+  state.hw_paddles_price = t.price;
+  state.hw_paddles_meta = {count:t.count, fb:t.fb, ico:t.ico, prog:t.prog, label:t.label};
+  buildPaddleGrid();
+  updatePaddleOverlay();
+  updateAll();
+  if(t.count>0) setView('back');
+  toast('🎮 '+t.label+' '+(t.price?('+'+t.price+' €'):''));
+}
+
+/* === Paddle-Overlay auf der Backshell aktualisieren === */
 function updatePaddleOverlay(){
   const ov=document.getElementById('paddle-overlay');if(!ov)return;
-  const n=state.hw_paddles||0;
-  ov.classList.remove('count-0','count-2','count-4','active');
-  if(n>0){ov.classList.add('active','count-'+n);}else{ov.classList.add('count-0');}
-  /* Paddles nur sichtbar wenn Rueckseite gezeigt wird */
-  const stack=document.getElementById('preview-stack');
-  if(stack){stack.classList.toggle('show-back',currentView==='back');}
+  const meta = state.hw_paddles_meta || {count:0, fb:0, ico:'X', prog:false};
+  const n = meta.count||0;
+  ov.classList.remove('count-0','count-2','count-4','active','prog');
+  if(n>0){ov.classList.add('active','count-'+n);if(meta.prog)ov.classList.add('prog');}else{ov.classList.add('count-0');}
+  /* Icons in jedes Paddle */
+  ov.querySelectorAll('.paddle-ico').forEach(ic=>{ic.innerHTML = n>0 ? paddleSvg(meta.ico) : '';});
+
+  /* FrontButtons-Visualisierung */
+  const fb=document.getElementById('frontbtn-overlay');if(fb)fb.classList.toggle('active', meta.fb>0);
+
+  /* Hotspots aktualisieren */
+  const hsP=document.getElementById('hs-paddles');if(hsP)hsP.classList.toggle('show', n>0);
+  const hsF=document.getElementById('hs-frontbtn');if(hsF)hsF.classList.toggle('show', meta.fb>0);
+  const desc=document.getElementById('hs-paddle-desc');if(desc)desc.textContent = meta.label||'';
 }
 
 /* PRESETS */
@@ -1295,7 +1405,7 @@ function applyPreset(key, ev){
 function setHw(group, value, price){
   if(group==='stick'){state.hw_stick=value;state.hw_stick_price=price;document.querySelectorAll('[id^="hw-stick-"]').forEach(el=>el.classList.remove('sel'));document.getElementById('hw-stick-'+value).classList.add('sel');}
   if(group==='trigger'){state.hw_trigger=value;state.hw_trigger_price=price;document.querySelectorAll('[id^="hw-trigger-"]').forEach(el=>el.classList.remove('sel'));document.getElementById('hw-trigger-'+value).classList.add('sel');}
-  if(group==='paddles'){state.hw_paddles=value;state.hw_paddles_price=price;document.querySelectorAll('.pc-btn').forEach(el=>el.classList.remove('sel'));document.getElementById('pc-'+value).classList.add('sel');if(value>0){currentView='back';if(typeof updateViewState==='function')updateViewState();}updatePaddleOverlay();}
+  if(group==='paddles'){pickPaddle(value);return;}
   if(group==='grip'){state.hw_grip=value;state.hw_grip_price=price;document.querySelectorAll('[id^="hw-grip-"]').forEach(el=>el.classList.remove('sel'));document.getElementById('hw-grip-'+value).classList.add('sel');}
   if(group==='rumble'){state.hw_rumble=value;state.hw_rumble_price=price;document.querySelectorAll('[id^="hw-rumble-"]').forEach(el=>el.classList.remove('sel'));document.getElementById('hw-rumble-'+value).classList.add('sel');}
   if(group==='led_rgb'){state.hw_led_rgb=value;state.hw_led_rgb_price=price;const el=document.getElementById('hw-led-rgb');if(el)el.classList.toggle('sel',!!value);}
@@ -1399,9 +1509,12 @@ function goToStep(s){
   document.getElementById('btn-next').style.display = currentStep===TOTAL_STEPS-1?'none':'block';
   document.getElementById('btn-cart').style.display = currentStep===TOTAL_STEPS-1?'block':'none';
   document.querySelector('.cfg-content').scrollTop = 0;
-  // Auto-flip preview when entering BACK step
-  if(currentStep===1){setView('back');}
-  else if(currentStep===0){setView('front');}
+  // Auto-View beim Step-Wechsel
+  if(currentStep===1){setView('back');}                 // Backshell
+  else if(currentStep===7){setView('both');}             // Hardware/Paddles
+  else if(currentStep>=0 && currentStep<=6){setView('front');} // Front/Buttons/D-Pad/Sticks/Trigger/LED
+  // Hotspot-Highlight passend zum Step
+  flashHotspot(currentStep);
   updateProgress();
 }
 function nextStep(){goToStep(currentStep+1);}
@@ -1411,7 +1524,8 @@ function prevStep(){goToStep(currentStep-1);}
 function setView(v){
   currentView = v;
   const stack = document.getElementById('preview-stack');if(!stack)return;
-  stack.classList.toggle('show-back', v==='back');
+  stack.classList.remove('view-front','view-back','view-both');
+  stack.classList.add('view-'+v);
   document.querySelectorAll('.vt-btn').forEach(b=>b.classList.remove('sel'));
   const vb=document.getElementById('vt-'+v);if(vb)vb.classList.add('sel');
   updatePaddleOverlay();
@@ -1507,7 +1621,7 @@ document.head.appendChild(styleEl);
 /* ═══════════════════════════════════════
    NEW: BUILD NAME · PROGRESS · MINI-MAP
 ═══════════════════════════════════════ */
-function updateBuildName(){const n=document.getElementById('build-name').value.trim();state.buildName=n;if(n){document.getElementById('pv-name').textContent='LXRD '+n.toUpperCase();}else{document.getElementById('pv-name').textContent='LXRD CUSTOM EDITION';}}
+function updateBuildName(){const inp=document.getElementById('build-name');if(!inp)return;const n=inp.value.trim();state.buildName=n;const pv=document.getElementById('pv-name');if(pv)pv.textContent=n?'LXRD '+n.toUpperCase():'LXRD CUSTOM EDITION';}
 
 function updateProgress(){
   // Count customizations beyond defaults
@@ -1615,7 +1729,7 @@ function loadBuild(i){
   setHw('trigger',state.hw_trigger,state.hw_trigger_price);
   setHw('paddles',state.hw_paddles,state.hw_paddles_price);
   setHw('grip',state.hw_grip,state.hw_grip_price);
-  document.getElementById('build-name').value = state.buildName||'';
+  const bn=document.getElementById('build-name');if(bn)bn.value=state.buildName||'';
   if(state.engr_text){document.getElementById('engr-text').value=state.engr_text;updateEngraving();}
   closeBuildsModal();
   updateAll();
@@ -1663,7 +1777,7 @@ function loadFromHash(){
     if(data.ht)setHw('trigger',data.ht,data.ht==='clicky'?22:0);
     if(data.hp!==undefined)setHw('paddles',data.hp,data.hp===2?40:(data.hp===4?65:0));
     if(data.hg)setHw('grip',data.hg,data.hg==='grip'?28:0);
-    if(data.n){state.buildName=data.n;document.getElementById('build-name').value=data.n;updateBuildName();}
+    if(data.n){state.buildName=data.n;const bn=document.getElementById('build-name');if(bn)bn.value=data.n;updateBuildName();}
     if(data.et){state.engr_text=data.et;state.engr_font=data.ef||'orbitron';document.getElementById('engr-text').value=data.et;}
     if(data.e){state.engr_enabled=false;toggleEngraving();}
     state.sticker=data.sk||0;
@@ -1841,7 +1955,9 @@ updateAll = function(){
 PARTS.forEach(part=>{buildColorGrid(part);applyToLayer(part, COLORS[state[part]]);});
 state.buildName = state.buildName||'';
 renderBundles();
+buildPaddleGrid();
 updatePaddleOverlay();
+setView('both');
 loadFromHash();
 buildLEDGrid();
 buildStickerGrid();

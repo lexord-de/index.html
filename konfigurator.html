@@ -161,14 +161,21 @@ h1 .accent{background:linear-gradient(90deg,var(--neon),var(--neon2),var(--neon)
 .preview-stage::before{content:'';position:absolute;width:60%;height:60%;background:radial-gradient(circle,rgba(0,242,255,.18) 0%,transparent 70%);filter:blur(40px);pointer-events:none;z-index:0;animation:glowPulse 4s ease-in-out infinite}
 @keyframes glowPulse{50%{opacity:.5;transform:scale(1.1)}}
 
-.preview-stack{position:relative;width:92%;max-width:540px;aspect-ratio:1/1;z-index:1;animation:floatY 5s ease-in-out infinite;transform-style:preserve-3d;transition:transform 1s cubic-bezier(.4,0,.2,1)}
-@keyframes floatY{0%,100%{transform:translateY(0) rotateY(0)}50%{transform:translateY(-12px) rotateY(0)}}
-.preview-stack.flipped{animation:none;transform:rotateY(180deg)}
-.preview-stack.spin{animation:spinY 8s linear infinite}
-@keyframes spinY{0%{transform:rotateY(0)}100%{transform:rotateY(360deg)}}
+.preview-stack{position:relative;width:96%;max-width:580px;aspect-ratio:1/1;z-index:1;animation:floatY 5s ease-in-out infinite;transition:none}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 
-.preview-layer{position:absolute;inset:0;width:100%;height:100%;background-size:contain;background-repeat:no-repeat;background-position:center;-webkit-mask-size:contain;-webkit-mask-repeat:no-repeat;-webkit-mask-position:center;mask-size:contain;mask-repeat:no-repeat;mask-position:center;transition:background-color .5s cubic-bezier(.4,0,.2,1),filter .4s,opacity .4s;backface-visibility:hidden}
-.preview-base{background-image:url('IMG_7023.png');background-size:contain;background-repeat:no-repeat;background-position:center;filter:drop-shadow(0 0 30px rgba(0,242,255,.15))}
+.preview-layer{position:absolute;inset:0;width:100%;height:100%;background-size:contain;background-repeat:no-repeat;background-position:center;-webkit-mask-size:contain;-webkit-mask-repeat:no-repeat;-webkit-mask-position:center;mask-size:contain;mask-repeat:no-repeat;mask-position:center;transition:background-color .5s cubic-bezier(.4,0,.2,1),filter .4s,opacity .55s cubic-bezier(.2,.8,.2,1)}
+.preview-base{background-size:contain;background-repeat:no-repeat;background-position:center;filter:drop-shadow(0 18px 32px rgba(0,0,0,.6)) drop-shadow(0 0 40px rgba(0,242,255,.12));transition:opacity .55s cubic-bezier(.2,.8,.2,1)}
+.preview-base-front{background-image:url('Photoroom_20260501_094506.png');z-index:0}
+.preview-base-back{background-image:url('Photoroom_20260501_090821.png');z-index:0;opacity:0}
+/* Front-spezifische Masken (Buttons, D-Pad, Sticks, Trigger, Frontshell) */
+.face-front{opacity:1;transition:opacity .55s cubic-bezier(.2,.8,.2,1)}
+.face-back{opacity:0;pointer-events:none;transition:opacity .55s cubic-bezier(.2,.8,.2,1)}
+/* Wenn show-back aktiv ist: Front aus, Back an */
+.preview-stack.show-back .preview-base-front{opacity:0}
+.preview-stack.show-back .preview-base-back{opacity:1}
+.preview-stack.show-back .face-front{opacity:0;pointer-events:none}
+.preview-stack.show-back .face-back{opacity:1;pointer-events:auto}
 
 /* LED LIGHTBAR — animiert */
 .led-bar{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);width:34%;height:4px;border-radius:4px;background:var(--led-color,#3aa3ff);box-shadow:0 0 14px var(--led-color,#3aa3ff),0 0 28px var(--led-color,#3aa3ff);opacity:.9;z-index:5;animation:ledBreathe 2.5s ease-in-out infinite}
@@ -179,7 +186,7 @@ h1 .accent{background:linear-gradient(90deg,var(--neon),var(--neon2),var(--neon)
 .engraving-overlay.on{opacity:.92;animation:engrGlow 2s ease-in-out infinite}
 @keyframes engrGlow{50%{text-shadow:0 0 12px var(--neon),0 0 24px var(--neon),0 0 36px var(--neon)}}
 
-.preview-shadow{position:absolute;bottom:6%;left:15%;right:15%;height:32px;background:radial-gradient(ellipse,rgba(0,242,255,.45) 0%,transparent 70%);filter:blur(22px);z-index:0;animation:shadowPulse 5s ease-in-out infinite}
+.preview-shadow{position:absolute;bottom:5%;left:18%;right:18%;height:28px;background:radial-gradient(ellipse,rgba(0,242,255,.22) 0%,rgba(0,0,0,.55) 35%,transparent 75%);filter:blur(22px);z-index:0;animation:shadowPulse 5s ease-in-out infinite}
 @keyframes shadowPulse{50%{opacity:.5;transform:scaleX(.92)}}
 
 .preview-info{margin-top:18px;padding-top:18px;border-top:1px solid #131318;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}
@@ -694,8 +701,6 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
       <button class="bt-btn surprise" onclick="surpriseMe()"><span class="ico">🎲</span>SURPRISE ME</button>
       <button class="bt-btn" onclick="openBuildsModal('save')"><span class="ico">💾</span>SPEICHERN</button>
       <button class="bt-btn" onclick="openBuildsModal('load')"><span class="ico">📁</span>LADEN</button>
-      <button class="bt-btn" onclick="shareBuild()"><span class="ico">🔗</span>TEILEN</button>
-      <button class="bt-btn" onclick="downloadBuildImage()"><span class="ico">📸</span>BILD</button>
     </div>
 
     <div class="view-toggle">
@@ -705,29 +710,28 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
 
     <div class="preview-stage" id="preview-stage">
       <div class="preview-stack" id="preview-stack">
-        <div class="preview-layer preview-base"></div>
-        <div class="preview-layer" id="layer-frontshell" style="-webkit-mask-image:url('mask-frontshell.PNG');mask-image:url('mask-frontshell.PNG');background-color:#0a0a0a"></div>
-        <div class="preview-layer" id="layer-backshell" style="-webkit-mask-image:url('mask-backshell.PNG');mask-image:url('mask-backshell.PNG');background-color:#0a0a0a;opacity:.85"></div>
-        <div class="preview-layer" id="layer-buttons" style="-webkit-mask-image:url('mask-buttons.PNG');mask-image:url('mask-buttons.PNG');background-color:#ffffff;mix-blend-mode:screen"></div>
-        <div class="preview-layer" id="layer-dpad" style="-webkit-mask-image:url('mask-dpad.PNG');mask-image:url('mask-dpad.PNG');background-color:#cccccc;mix-blend-mode:screen"></div>
-        <div class="preview-layer" id="layer-sticks" style="-webkit-mask-image:url('mask-stickcap.PNG');mask-image:url('mask-stickcap.PNG');background-color:#222222"></div>
-        <div class="preview-layer" id="layer-triggers" style="-webkit-mask-image:url('mask-triggercolor.PNG');mask-image:url('mask-triggercolor.PNG');background-color:#0a0a0a"></div>
-        <div class="paddle-overlay" id="paddle-overlay" aria-hidden="true">
+        <!-- Echte PS5 Controller-Fotos: Front + Back -->
+        <div class="preview-layer preview-base preview-base-front"></div>
+        <div class="preview-layer preview-base preview-base-back"></div>
+        <!-- Front-Tinten -->
+        <div class="preview-layer face-front" id="layer-frontshell" style="-webkit-mask-image:url('mask-frontshell.PNG');mask-image:url('mask-frontshell.PNG');background-color:#0a0a0a;mix-blend-mode:multiply"></div>
+        <div class="preview-layer face-front" id="layer-buttons" style="-webkit-mask-image:url('mask-buttons.PNG');mask-image:url('mask-buttons.PNG');background-color:#ffffff;mix-blend-mode:screen"></div>
+        <div class="preview-layer face-front" id="layer-dpad" style="-webkit-mask-image:url('mask-dpad.PNG');mask-image:url('mask-dpad.PNG');background-color:#cccccc;mix-blend-mode:screen"></div>
+        <div class="preview-layer face-front" id="layer-sticks" style="-webkit-mask-image:url('mask-stickcap.PNG');mask-image:url('mask-stickcap.PNG');background-color:#222222;mix-blend-mode:multiply"></div>
+        <div class="preview-layer face-front" id="layer-triggers" style="-webkit-mask-image:url('mask-triggercolor.PNG');mask-image:url('mask-triggercolor.PNG');background-color:#0a0a0a;mix-blend-mode:multiply"></div>
+        <!-- Back-Tinten -->
+        <div class="preview-layer face-back" id="layer-backshell" style="-webkit-mask-image:url('mask-backshell.PNG');mask-image:url('mask-backshell.PNG');background-color:#0a0a0a;mix-blend-mode:multiply"></div>
+        <div class="paddle-overlay face-back" id="paddle-overlay" aria-hidden="true">
           <div class="paddle p1"></div>
           <div class="paddle p2"></div>
           <div class="paddle p3"></div>
           <div class="paddle p4"></div>
         </div>
-        <div class="led-bar" id="led-bar"></div>
-        <div class="engraving-overlay" id="engr-display"></div>
+        <!-- Front-Overlays (LED, Gravur) -->
+        <div class="led-bar face-front" id="led-bar"></div>
+        <div class="engraving-overlay face-front" id="engr-display"></div>
       </div>
       <div class="preview-shadow"></div>
-    </div>
-
-    <div class="stage-controls">
-      <button class="sc-btn" id="sc-spin" onclick="toggleSpin()">🔄 AUTO-DREHEN</button>
-      <button class="sc-btn" onclick="rotateOnce()">↻ DREHEN</button>
-      <button class="sc-btn" onclick="screenshot()">📸 BILD SPEICHERN</button>
     </div>
 
     <div class="mini-map" id="mini-map"></div>
@@ -1406,40 +1410,13 @@ function prevStep(){goToStep(currentStep-1);}
 /* VIEW */
 function setView(v){
   currentView = v;
-  const stack = document.getElementById('preview-stack');
-  if(v==='back'){stack.classList.add('flipped');}else{stack.classList.remove('flipped');}
+  const stack = document.getElementById('preview-stack');if(!stack)return;
+  stack.classList.toggle('show-back', v==='back');
   document.querySelectorAll('.vt-btn').forEach(b=>b.classList.remove('sel'));
   const vb=document.getElementById('vt-'+v);if(vb)vb.classList.add('sel');
   updatePaddleOverlay();
 }
-function toggleSpin(){
-  autoSpin = !autoSpin;
-  const stack = document.getElementById('preview-stack');
-  const btn = document.getElementById('sc-spin');
-  if(autoSpin){stack.classList.add('spin');stack.classList.remove('flipped');btn.classList.add('on');btn.textContent='⏸ STOP DREHEN';}
-  else{stack.classList.remove('spin');btn.classList.remove('on');btn.textContent='🔄 AUTO-DREHEN';}
-}
-function rotateOnce(){
-  const stack = document.getElementById('preview-stack');
-  stack.classList.remove('spin');autoSpin=false;
-  const btn=document.getElementById('sc-spin');btn.classList.remove('on');btn.textContent='🔄 AUTO-DREHEN';
-  stack.classList.toggle('flipped');
-  currentView = stack.classList.contains('flipped')?'back':'front';
-  document.querySelectorAll('.vt-btn').forEach(b=>b.classList.remove('sel'));
-  const vb=document.getElementById('vt-'+currentView);if(vb)vb.classList.add('sel');
-  updatePaddleOverlay();
-}
-function updateViewState(){
-  const stack = document.getElementById('preview-stack');if(!stack)return;
-  if(currentView==='back'){stack.classList.add('flipped');stack.classList.remove('spin');autoSpin=false;}
-  else stack.classList.remove('flipped');
-  document.querySelectorAll('.vt-btn').forEach(b=>b.classList.remove('sel'));
-  const vb=document.getElementById('vt-'+currentView);if(vb)vb.classList.add('sel');
-  updatePaddleOverlay();
-}
-function screenshot(){
-  toast('📸 Screenshot-Funktion: bitte mit Geräte-Screenshot speichern');
-}
+function updateViewState(){setView(currentView);}
 
 /* CART */
 function addToCart(){
@@ -1877,7 +1854,7 @@ document.addEventListener('keydown',e=>{
   if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
   if(e.key==='ArrowRight')nextStep();
   if(e.key==='ArrowLeft')prevStep();
-  if(e.key===' '){e.preventDefault();rotateOnce();}
+  if(e.key===' '){e.preventDefault();setView(currentView==='front'?'back':'front');}
 });
 </script>
 

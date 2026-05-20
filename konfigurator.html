@@ -171,9 +171,9 @@ h1 .accent{background:linear-gradient(90deg,var(--neon),var(--neon2),var(--neon)
 .base-front{background-image:url('Photoroom_20260501_094506.png')}
 .base-back{background-image:url('Photoroom_20260501_090821.png')}
 .ctrl-layer{position:absolute;inset:0;background-size:contain;background-repeat:no-repeat;background-position:center;-webkit-mask-size:contain;-webkit-mask-repeat:no-repeat;-webkit-mask-position:center;mask-size:contain;mask-repeat:no-repeat;mask-position:center;transition:background-color .5s cubic-bezier(.4,0,.2,1),filter .4s,opacity .4s}
-/* Layout: bitros-Style — Front gross unten links, Back klein oben rechts */
-.unit-front{width:72%;height:72%;left:2%;bottom:2%;z-index:2}
-.unit-back{width:55%;height:55%;right:2%;top:2%;z-index:1;filter:drop-shadow(0 14px 22px rgba(0,0,0,.55))}
+/* Layout: bitros-Style — Front kompakt unten links, Back kleiner oben rechts (Platz fuer Labels) */
+.unit-front{width:58%;height:58%;left:5%;bottom:5%;z-index:2}
+.unit-back{width:42%;height:42%;right:5%;top:5%;z-index:1;filter:drop-shadow(0 14px 22px rgba(0,0,0,.55))}
 /* View-Modi steuern Sichtbarkeit + Groesse */
 .preview-stack.view-front .unit-front{width:88%;height:88%;left:6%;bottom:4%;z-index:2}
 .preview-stack.view-front .unit-back{opacity:0;transform:translateX(20%) scale(.6)}
@@ -184,17 +184,69 @@ h1 .accent{background:linear-gradient(90deg,var(--neon),var(--neon2),var(--neon)
 /* Highlight beim Hover ueber Unit */
 .ctrl-unit:hover{filter:drop-shadow(0 22px 34px rgba(0,0,0,.7)) drop-shadow(0 0 22px rgba(0,242,255,.25))}
 
-/* === HOTSPOTS (Annotations-Linien wie bei bitros) === */
-.hotspot{position:absolute;display:none;align-items:center;gap:0;pointer-events:none;z-index:10;opacity:0;transition:opacity .35s ease}
-.hotspot.show{display:flex;opacity:1}
-.hs-line{display:block;width:28px;height:1px;background:linear-gradient(90deg,rgba(0,242,255,.85),rgba(0,242,255,.2));position:relative;flex-shrink:0}
-.hs-line::before{content:'';position:absolute;left:0;top:50%;transform:translate(-50%,-50%);width:7px;height:7px;border-radius:50%;background:#00f2ff;box-shadow:0 0 8px #00f2ff,0 0 0 2px rgba(0,242,255,.18);animation:hsDot 2.4s ease-in-out infinite}
-@keyframes hsDot{0%,100%{box-shadow:0 0 8px #00f2ff,0 0 0 2px rgba(0,242,255,.18)}50%{box-shadow:0 0 14px #00f2ff,0 0 0 5px rgba(0,242,255,.08)}}
-/* Label: transparent, kein Beton-Hintergrund, Text dezent mit Glow */
-.hs-lbl{font-family:'Inter','Segoe UI',sans-serif;font-size:9px;color:rgba(255,255,255,.85);background:rgba(4,4,4,.32);padding:4px 7px;border:1px solid rgba(0,242,255,.28);border-radius:5px;backdrop-filter:blur(4px);line-height:1.3;white-space:nowrap;letter-spacing:.2px;text-shadow:0 0 6px rgba(0,0,0,.85)}
-.hs-lbl strong{color:#fff;font-weight:600;font-size:9.5px;display:block;margin-bottom:1px}
+/* === HOTSPOT-LAYER (Stage-relative Positionierung — Labels in Rand-Zonen, Linien zum Bauteil) === */
+.hotspot-layer{position:absolute;inset:0;pointer-events:none;z-index:8}
+.preview-stack.view-front .hotspot-layer .hs2[data-anchor="paddles"],
+.preview-stack.view-front .hotspot-layer .hs2[data-anchor="grip"]{display:none}
+.preview-stack.view-back .hotspot-layer .hs2:not([data-anchor="paddles"]):not([data-anchor="grip"]){display:none}
+.hs2{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;transition:opacity .4s ease;pointer-events:none}
+.hs2.show{opacity:1}
+.hs2-dot{position:absolute;width:9px;height:9px;border-radius:50%;background:#00f2ff;box-shadow:0 0 10px #00f2ff,0 0 0 3px rgba(0,242,255,.18);transform:translate(-50%,-50%);animation:hsDot 2.4s ease-in-out infinite}
+.hs2-dot::after{content:'';position:absolute;inset:-12px;border:1px solid rgba(0,242,255,.35);border-radius:50%;animation:dotRing 2.4s ease-in-out infinite}
+@keyframes hsDot{0%,100%{box-shadow:0 0 10px #00f2ff,0 0 0 3px rgba(0,242,255,.18)}50%{box-shadow:0 0 16px #00f2ff,0 0 0 6px rgba(0,242,255,.06)}}
+@keyframes dotRing{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.35);opacity:0}}
 
-/* === HOTSPOTS direkt am Bauteil — Dot sitzt AUF dem Teil, Label daneben === */
+/* Label: float in Rand-Zonen, sehr transparent, kompakt */
+.hs2-label{position:absolute;font-family:'Inter','Segoe UI',sans-serif;font-size:8.5px;font-weight:600;color:rgba(255,255,255,.92);background:rgba(0,0,0,.42);padding:4px 8px;border:1px solid rgba(0,242,255,.45);border-radius:14px;backdrop-filter:blur(6px);white-space:nowrap;letter-spacing:.3px;text-shadow:0 0 6px rgba(0,0,0,.95);max-width:140px;text-align:center;line-height:1.25}
+.hs2-label::before{content:'';position:absolute;width:36px;height:1px;background:linear-gradient(90deg,rgba(0,242,255,.65),rgba(0,242,255,.05));top:50%}
+.hs2-label.line-right::before{right:-36px;background:linear-gradient(90deg,rgba(0,242,255,.65),rgba(0,242,255,.05))}
+.hs2-label.line-left::before{left:-36px;background:linear-gradient(-90deg,rgba(0,242,255,.65),rgba(0,242,255,.05))}
+.hs2-label.line-down::before{display:none}.hs2-label.line-down::after{content:'';position:absolute;width:1px;height:30px;background:linear-gradient(180deg,rgba(0,242,255,.65),rgba(0,242,255,.05));bottom:-30px;left:50%}
+.hs2-label.line-up::before{display:none}.hs2-label.line-up::after{content:'';position:absolute;width:1px;height:30px;background:linear-gradient(0deg,rgba(0,242,255,.65),rgba(0,242,255,.05));top:-30px;left:50%}
+
+/* === Positions-Berechnung ===
+   Front-Unit ist bei left:5% bottom:5% mit 58% Breite x 58% Hoehe.
+   D.h. Stage-Koordinaten: unit-front belegt left:5% bis 63%, top:37% bis 95%.
+   Bauteil-Positionen (Stage-relativ):
+     Trigger L2: top:38% left:18%
+     Akku:       top:38% left:32%
+     Touchpad:   top:50% left:33%
+     Mittel:     top:64% left:33%
+     LED:        top:58% left:32%   (entfernt)
+     Sticks:     top:73% left:34%
+     FrontBtn:   top:43% left:14%
+     Rumble:     top:80% left:48%
+   Back-Unit: right:5% top:5%, 42% Breite x 42% Hoehe -> stage left:53-95%, top:5-47%
+     Paddles:    top:18% left:62%
+     Grip:       top:30% left:88%
+*/
+/* DOT positions */
+.hs2[data-anchor="trigger"]  .hs2-dot{top:38%;left:18%}
+.hs2[data-anchor="akku"]     .hs2-dot{top:38%;left:32%}
+.hs2[data-anchor="touchpad"] .hs2-dot{top:50%;left:33%}
+.hs2[data-anchor="mittel"]   .hs2-dot{top:64%;left:33%}
+.hs2[data-anchor="sticks"]   .hs2-dot{top:73%;left:34%}
+.hs2[data-anchor="frontbtn"] .hs2-dot{top:43%;left:14%}
+.hs2[data-anchor="rumble"]   .hs2-dot{top:80%;left:48%}
+.hs2[data-anchor="paddles"]  .hs2-dot{top:18%;left:62%}
+.hs2[data-anchor="grip"]     .hs2-dot{top:30%;left:88%}
+
+/* LABEL positions — alle in Rand-Zonen (links/rechts/oben), nie auf dem Controller */
+.hs2[data-anchor="trigger"]  .hs2-label{top:8%;left:2%}
+.hs2[data-anchor="akku"]     .hs2-label{top:8%;left:30%}
+.hs2[data-anchor="touchpad"] .hs2-label{top:20%;left:30%}
+.hs2[data-anchor="frontbtn"] .hs2-label{top:30%;left:0%}
+.hs2[data-anchor="sticks"]   .hs2-label{top:92%;left:2%}
+.hs2[data-anchor="rumble"]   .hs2-label{top:92%;left:30%}
+.hs2[data-anchor="mittel"]   .hs2-label{top:62%;left:0%}
+.hs2[data-anchor="paddles"]  .hs2-label{top:50%;left:55%}
+.hs2[data-anchor="grip"]     .hs2-label{top:50%;left:80%}
+
+/* === STICK-CAPS (CSS-positionierte Kreise — funktionieren immer) === */
+.stickcap{position:absolute;width:13.5%;aspect-ratio:1/1;border-radius:50%;background:#222;box-shadow:inset 0 -2px 4px rgba(0,0,0,.5),inset 0 2px 3px rgba(255,255,255,.12),0 2px 4px rgba(0,0,0,.4);transition:background-color .5s cubic-bezier(.4,0,.2,1),box-shadow .4s;z-index:3;pointer-events:none;mix-blend-mode:normal}
+.stickcap::before{content:'';position:absolute;inset:18%;border-radius:50%;background:radial-gradient(circle at 50% 35%,rgba(255,255,255,.15) 0%,transparent 55%),#0008;box-shadow:inset 0 0 0 1px rgba(0,0,0,.4)}
+.stickcap-l{top:60%;left:24%}
+.stickcap-r{top:60%;left:62.5%}
 /* Front-Unit Bauteil-Positionen (relativ zum unit-front):
    L1/R1 Bumper:  top:18%, links 25% / rechts 25%
    L2/R2 Trigger: top:5%,  links 32% / rechts 32%
@@ -205,34 +257,7 @@ h1 .accent{background:linear-gradient(90deg,var(--neon),var(--neon2),var(--neon)
    Rechter Stick: top:60%, rechts 30%
    Akku (Top):    top:3%,  mitte 50%
 */
-.hs-sticks  {top:62%;left:46%;flex-direction:row-reverse}  /* Dot zwischen Sticks, Label nach links */
-.hs-frontbtn{top:18%;left:31%;flex-direction:row-reverse}  /* Dot auf L1, Label nach links */
-.hs-trigger {top:5%;left:34%}                              /* Dot auf L2, Label nach rechts */
-.hs-akku    {top:4%;left:50%}                              /* Dot oben, Label nach rechts */
-.hs-touchpad{top:25%;left:50%}                             /* Dot auf Touchpad, Label nach rechts */
-.hs-mittel  {top:50%;left:50%}                             /* Dot auf PS-Logo, Label nach rechts */
-.hs-led     {top:38%;left:65%}                             /* Dot rechts neben LED, Label nach rechts */
-.hs-rumble  {top:75%;left:80%}                             /* Dot rechter Griff, Label nach rechts */
-/* row-reverse: Linie + Dot links vom Label (Label sitzt rechts vom Bauteil-Punkt — falsch! anders) */
-/* Bei row-reverse zeigt Linie nach links: Dot ist links vom Label */
-.hs-sticks .hs-line,.hs-frontbtn .hs-line{background:linear-gradient(-90deg,rgba(0,242,255,.85),rgba(0,242,255,.2))}
-.hs-sticks .hs-line::before,.hs-frontbtn .hs-line::before{left:auto;right:0;transform:translate(50%,-50%)}
-
-/* Back-Hotspots (relativ zum unit-back) — Paddle-Position: top:30-54%, Grips: aussen */
-.hs-paddles{top:32%;left:22%}     /* Dot bei oberem linken Paddle */
-.hs-grip   {top:55%;left:50%;flex-direction:row-reverse}    /* Dot in Backshell-Mitte */
-.hs-grip .hs-line{background:linear-gradient(-90deg,rgba(0,242,255,.85),rgba(0,242,255,.2))}
-.hs-grip .hs-line::before{left:auto;right:0;transform:translate(50%,-50%)}
-.unit-back .hotspot{font-size:8px}
-.unit-back .hs-lbl{font-size:8px;padding:3px 6px}
-.unit-back .hs-line{width:22px}
-
 @keyframes hsBlink{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.06);filter:brightness(1.4) drop-shadow(0 0 8px #00f2ff)}}
-/* Slide-In wenn Hotspot show wird */
-.hotspot{transform:translateX(-8px)}
-.hs-frontbtn,.hs-trigger,.hs-mittel,.hs-led,.hs-grip{transform:translateX(8px)}
-.hotspot.show{transform:translateX(0)}
-.hotspot{transition:opacity .4s ease,transform .4s ease}
 
 /* LED LIGHTBAR — animiert */
 .led-bar{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);width:34%;height:4px;border-radius:4px;background:var(--led-color,#3aa3ff);box-shadow:0 0 14px var(--led-color,#3aa3ff),0 0 28px var(--led-color,#3aa3ff);opacity:.9;z-index:5;animation:ledBreathe 2.5s ease-in-out infinite}
@@ -778,7 +803,7 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
 <section class="kfg-hero">
   <div class="kfg-eyebrow">🎮 PROFESSIONAL CONTROLLER BUILDER · LIVE PREVIEW</div>
   <h1>Baue deinen <span class="accent">perfekten Controller</span></h1>
-  <p class="kfg-lead">30+ Farben pro Bauteil · LED Lightbar · Gravur &amp; Sticker · Hall Effect/TMR Sticks · Clicky Trigger · Paddles. Alles Made in Germany.</p>
+  <p class="kfg-lead">30+ Farben pro Bauteil · Hall Effect/TMR Sticks · Clicky Trigger · Paddles · Power-Akku. Alles Made in Germany.</p>
 </section>
 
 <div class="kfg-layout">
@@ -795,6 +820,21 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
     <div class="preview-stage" id="preview-stage">
       <div class="preview-stack" id="preview-stack">
 
+        <!-- HOTSPOT-LAYER: liegt UEBER beiden Units, Labels sitzen in den Rand-Zonen -->
+        <div class="hotspot-layer" id="hotspot-layer">
+          <!-- Front-Bauteile (Anker = Punkt auf dem Bauteil, Label in Rand-Zone) -->
+          <div class="hs2" data-anchor="trigger"><div class="hs2-dot"></div><div class="hs2-label" id="lbl-trigger"></div></div>
+          <div class="hs2" data-anchor="akku"><div class="hs2-dot"></div><div class="hs2-label" id="lbl-akku"></div></div>
+          <div class="hs2" data-anchor="touchpad"><div class="hs2-dot"></div><div class="hs2-label" id="lbl-touchpad"></div></div>
+          <div class="hs2" data-anchor="mittel"><div class="hs2-dot"></div><div class="hs2-label" id="lbl-mittel"></div></div>
+          <div class="hs2" data-anchor="sticks"><div class="hs2-dot"></div><div class="hs2-label" id="lbl-sticks"></div></div>
+          <div class="hs2" data-anchor="rumble"><div class="hs2-dot"></div><div class="hs2-label" id="lbl-rumble"></div></div>
+          <div class="hs2" data-anchor="frontbtn"><div class="hs2-dot"></div><div class="hs2-label" id="lbl-frontbtn"></div></div>
+          <!-- Back-Bauteile -->
+          <div class="hs2" data-anchor="paddles"><div class="hs2-dot"></div><div class="hs2-label" id="lbl-paddles"></div></div>
+          <div class="hs2" data-anchor="grip"><div class="hs2-dot"></div><div class="hs2-label" id="lbl-grip"></div></div>
+        </div>
+
         <!-- FRONT-UNIT (Hauptcontroller links unten) -->
         <div class="ctrl-unit unit-front" id="unit-front">
           <div class="ctrl-img base-front"></div>
@@ -802,26 +842,17 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
           <div class="ctrl-layer" id="layer-buttons" style="-webkit-mask-image:url('mask-buttons.PNG');mask-image:url('mask-buttons.PNG');background-color:#ffffff;mix-blend-mode:screen"></div>
           <div class="ctrl-layer" id="layer-dpad" style="-webkit-mask-image:url('mask-dpad.PNG');mask-image:url('mask-dpad.PNG');background-color:#cccccc;mix-blend-mode:screen"></div>
           <div class="ctrl-layer" id="layer-sticks" style="-webkit-mask-image:url('mask-stickcap.PNG');mask-image:url('mask-stickcap.PNG');background-color:#222222;mix-blend-mode:multiply"></div>
+          <!-- Stick-Cap-Overlay (CSS-Kreise direkt auf Stick-Positionen — funktioniert garantiert) -->
+          <div class="stickcap stickcap-l" id="stickcap-l"></div>
+          <div class="stickcap stickcap-r" id="stickcap-r"></div>
           <div class="ctrl-layer" id="layer-triggers" style="-webkit-mask-image:url('mask-triggercolor.PNG');mask-image:url('mask-triggercolor.PNG');background-color:#0a0a0a;mix-blend-mode:multiply"></div>
           <!-- Touchpad & Mittelstuck als positionierte Overlays (keine Masken noetig) -->
           <div class="layer-touchpad" id="layer-touchpad"></div>
           <div class="layer-mittelstueck" id="layer-mittelstueck"></div>
-          <!-- Front-Hotspots: Sticks, Trigger, Akku, FrontButtons, Touchpad, Mittelstueck, Rumble, LED, Gravur -->
-          <div class="hotspot hs-sticks" id="hs-sticks"><span class="hs-line"></span><span class="hs-lbl"><strong id="hs-sticks-title">Analog Sticks</strong><br><span id="hs-sticks-desc">PS5 DualSense Original</span></span></div>
-          <div class="hotspot hs-frontbtn" id="hs-frontbtn"><span class="hs-line"></span><span class="hs-lbl"><strong>FrontButtons</strong><br>2× programmable Buttons</span></div>
-          <div class="hotspot hs-trigger" id="hs-trigger"><span class="hs-line"></span><span class="hs-lbl"><strong id="hs-trigger-title">Clicky Trigger</strong><br><span id="hs-trigger-desc">1 mm Auslöseweg · FPS-ready</span></span></div>
-          <div class="hotspot hs-akku" id="hs-akku"><span class="hs-line"></span><span class="hs-lbl"><strong id="hs-akku-title">Power-Akku 2200</strong><br><span id="hs-akku-desc">bis 12 h Laufzeit</span></span></div>
-          <div class="hotspot hs-touchpad" id="hs-touchpad"><span class="hs-line"></span><span class="hs-lbl"><strong>Touchpad Custom</strong><br><span id="hs-touchpad-desc">Custom-Farbe</span></span></div>
-          <div class="hotspot hs-mittel" id="hs-mittel"><span class="hs-line"></span><span class="hs-lbl"><strong>Mittelstück</strong><br><span id="hs-mittel-desc">PS-Logo-Bereich</span></span></div>
-          <div class="hotspot hs-rumble" id="hs-rumble"><span class="hs-line"></span><span class="hs-lbl"><strong>Strong Rumble+</strong><br>30 % stärkere Motoren</span></div>
-          <div class="hotspot hs-led" id="hs-led"><span class="hs-line"></span><span class="hs-lbl"><strong>LED Lightbar</strong><br><span id="hs-led-desc">Farb-Akzent</span></span></div>
           <!-- Front-Front-Buttons-Visualisierung -->
           <div class="frontbtn-overlay" id="frontbtn-overlay" aria-hidden="true">
             <span class="fb fb1"></span><span class="fb fb2"></span>
           </div>
-          <!-- LED + Gravur auf Front -->
-          <div class="led-bar" id="led-bar"></div>
-          <div class="engraving-overlay" id="engr-display"></div>
         </div>
 
         <!-- BACK-UNIT (kleinerer Controller rechts oben) -->
@@ -835,9 +866,6 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
             <div class="paddle p3"><span class="paddle-ico"></span></div>
             <div class="paddle p4"><span class="paddle-ico"></span></div>
           </div>
-          <!-- Back-Hotspots: Paddles, Grip-Coating -->
-          <div class="hotspot hs-paddles" id="hs-paddles"><span class="hs-line"></span><span class="hs-lbl"><strong>Programmable Paddles</strong><br><span id="hs-paddle-desc">Action+Cross+L3/R3</span></span></div>
-          <div class="hotspot hs-grip" id="hs-grip"><span class="hs-line"></span><span class="hs-lbl"><strong>Grip Coating</strong><br>Anti-Rutsch Soft-Touch</span></div>
         </div>
 
       </div>
@@ -867,11 +895,8 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
       <button class="step-tab" data-step="3" onclick="goToStep(3)"><span class="ico">🎯</span>D-PAD</button>
       <button class="step-tab" data-step="4" onclick="goToStep(4)"><span class="ico">🕹️</span>STICKS</button>
       <button class="step-tab" data-step="5" onclick="goToStep(5)"><span class="ico">⚡</span>TRIG</button>
-      <button class="step-tab" data-step="6" onclick="goToStep(6)"><span class="ico">💡</span>LED</button>
-      <button class="step-tab" data-step="7" onclick="goToStep(7)"><span class="ico">⚙️</span>HW</button>
-      <button class="step-tab" data-step="8" onclick="goToStep(8)"><span class="ico">✨</span>GRAVUR</button>
-      <button class="step-tab" data-step="9" onclick="goToStep(9)"><span class="ico">🎨</span>STICKER</button>
-      <button class="step-tab" data-step="10" onclick="goToStep(10)"><span class="ico">✓</span>FERTIG</button>
+      <button class="step-tab" data-step="6" onclick="goToStep(6)"><span class="ico">⚙️</span>HW</button>
+      <button class="step-tab" data-step="7" onclick="goToStep(7)"><span class="ico">✓</span>FERTIG</button>
     </div>
 
     <div class="cfg-content">
@@ -925,24 +950,8 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
         <div class="color-grid" id="grid-triggers"></div>
       </div>
 
-      <!-- STEP 6 LED -->
+      <!-- STEP 6 HW (LED entfernt) -->
       <div class="step" data-step="6">
-        <div class="step-h">LED LIGHTBAR</div>
-        <div class="step-sub">DAS LEUCHT-BAND AM TOUCHPAD</div>
-        <div class="help-tip">💡 <strong>Hinweis:</strong> Original PS5 DualSense LED — wir können die Farb-Akzente durch farbige Lichtleiter anpassen</div>
-        <div class="color-name">FARBE: <strong id="name-led">BLAU PS5</strong></div>
-        <div class="led-grid" id="grid-led"></div>
-        <div class="hw-opt" id="hw-led-rgb" onclick="setHw('led_rgb', !state.hw_led_rgb, state.hw_led_rgb?0:25)" style="margin-top:18px">
-          <div class="left">
-            <div class="title">🌈 RGB-ZUSATZMODUL</div>
-            <div class="desc">16 Mio. Farben · App-Steuerung · Audio-reaktiv</div>
-          </div>
-          <div class="price" id="led-rgb-price">+25 €</div>
-        </div>
-      </div>
-
-      <!-- STEP 7 HW -->
-      <div class="step" data-step="7">
         <div class="step-h">PERFORMANCE-UPGRADES</div>
         <div class="step-sub">DRIFT-FREIE STICKS · CLICKY · PADDLES · GRIP</div>
 
@@ -981,44 +990,8 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
         <div class="color-grid" id="grid-mittelstueck"></div>
       </div>
 
-      <!-- STEP 8 GRAVUR -->
-      <div class="step" data-step="8">
-        <div class="step-h">CUSTOM GRAVUR</div>
-        <div class="step-sub">DEIN NAME, TEAM ODER LOGO AUFS TOUCHPAD</div>
-
-        <input type="text" class="engr-input" id="engr-text" placeholder="DEIN TEXT (MAX. 18 Z.)" maxlength="18" oninput="updateEngraving()">
-        <div class="engr-counter"><span id="engr-len">0</span>/18</div>
-
-        <div style="font-family:Orbitron;font-size:8.5px;color:#666;letter-spacing:1.5px;margin:18px 0 8px">SCHRIFTART</div>
-        <div class="engr-fonts">
-          <div class="font-opt f1 sel" data-font="orbitron" onclick="setFont('orbitron',this)">TECH</div>
-          <div class="font-opt f2" data-font="serif" onclick="setFont('serif',this)">Classic</div>
-          <div class="font-opt f3" data-font="mono" onclick="setFont('mono',this)">MONO</div>
-          <div class="font-opt f4" data-font="script" onclick="setFont('script',this)">Style</div>
-        </div>
-
-        <div class="hw-opt" id="hw-engr-toggle" style="margin-top:18px" onclick="toggleEngraving()">
-          <div class="left">
-            <div class="title">✨ GRAVUR HINZUFÜGEN</div>
-            <div class="desc">Lasergravur · präzise · dauerhaft auf Touchpad</div>
-          </div>
-          <div class="price">+15 €</div>
-        </div>
-
-        <div class="engr-preview" id="engr-preview" style="display:none">LEXORD</div>
-      </div>
-
-      <!-- STEP 9 STICKER -->
-      <div class="step" data-step="9">
-        <div class="step-h">STICKER / DECAL</div>
-        <div class="step-sub">EINMALIGER STICKER AUF DEM CONTROLLER</div>
-        <div class="help-tip">💡 Stickers werden auf das Touchpad oder unter den Tasten platziert · +12 €</div>
-        <div class="color-name">STICKER: <strong id="name-sticker">KEINER</strong></div>
-        <div class="sticker-grid" id="grid-sticker"></div>
-      </div>
-
-      <!-- STEP 10 SUMMARY -->
-      <div class="step" data-step="10">
+      <!-- STEP 7 SUMMARY (Gravur + Sticker entfernt) -->
+      <div class="step" data-step="7">
         <div class="step-h">DEINE KONFIGURATION</div>
         <div class="step-sub">PRÜFE ALLES BEVOR DU IN DEN WARENKORB LEGST</div>
 
@@ -1029,7 +1002,6 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
           <div class="summary-row"><span>D-PAD</span><span><span class="col-dot" id="sum-dpad-dot"></span><span id="sum-dpad">Grau</span></span></div>
           <div class="summary-row"><span>STICK-CAPS</span><span><span class="col-dot" id="sum-sticks-dot"></span><span id="sum-sticks">Schwarz</span></span></div>
           <div class="summary-row"><span>TRIGGER</span><span><span class="col-dot" id="sum-triggers-dot"></span><span id="sum-triggers">Schwarz</span></span></div>
-          <div class="summary-row"><span>LED LIGHTBAR</span><span><span class="col-dot" id="sum-led-dot"></span><span id="sum-led">Blau PS5</span></span></div>
         </div>
 
         <div class="summary-block">
@@ -1039,8 +1011,6 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
           <div class="summary-row"><span>GEHÄUSE</span><span id="sum-grip">Standard</span></div>
           <div class="summary-row"><span>RUMBLE</span><span id="sum-rumble">Standard</span></div>
           <div class="summary-row"><span>RGB-MODUL</span><span id="sum-rgb">Aus</span></div>
-          <div class="summary-row"><span>GRAVUR</span><span id="sum-engr">Keine</span></div>
-          <div class="summary-row"><span>STICKER</span><span id="sum-sticker">Keiner</span></div>
         </div>
 
         <div style="font-family:Orbitron;font-size:8.5px;color:#555;letter-spacing:1.5px;margin:16px 0 8px">GARANTIE-VERLÄNGERUNG</div>
@@ -1232,7 +1202,7 @@ let state = {
 };
 
 let currentStep = 0;
-const TOTAL_STEPS = 11;
+const TOTAL_STEPS = 8;
 let autoSpin = false;
 let currentView = 'both';
 
@@ -1285,9 +1255,12 @@ function pickColor(part, idx, ev){
   /* Auto-Flip auf passende Seite */
   if(part==='back'&&currentView!=='back'){setView('back');}
   if((part==='front'||part==='touchpad'||part==='mittelstueck')&&currentView==='back'){setView('front');}
-  /* Hotspot zur ausgewaehlten Part anzeigen + blinken */
-  const partHs={sticks:'hs-sticks',triggers:'hs-trigger',touchpad:'hs-touchpad',mittelstueck:'hs-mittel'};
-  if(partHs[part]){const hs=document.getElementById(partHs[part]);if(hs){hs.classList.add('show');hs.style.animation='hsBlink 1.4s ease-in-out 2';setTimeout(()=>hs.style.animation='',3200);}}
+  /* Hotspot zur ausgewaehlten Part anzeigen + Dot blinken */
+  const partAnchor={sticks:'sticks',triggers:'trigger',touchpad:'touchpad',mittelstueck:'mittel'};
+  if(partAnchor[part]){
+    const dot=document.querySelector('.hs2[data-anchor="'+partAnchor[part]+'"] .hs2-dot');
+    if(dot){dot.style.animation='hsBlink 1.4s ease-in-out 2,hsDot 2.4s ease-in-out infinite';setTimeout(()=>dot.style.animation='hsDot 2.4s ease-in-out infinite',3200);}
+  }
   toast('✓ '+PART_LABELS[part]+': '+c.name);
 }
 
@@ -1309,16 +1282,12 @@ function pickLED(idx){
   const c = LED_COLORS[idx];
   const bar = document.getElementById('led-bar');
   if(bar){bar.style.setProperty('--led-color',c.hex);bar.style.opacity=c.hex==='#000000'?'0':'.9';}
-  document.getElementById('name-led').textContent = c.name.toUpperCase();
-  buildLEDGrid();
-  updateAll();
+  const lbl=document.getElementById('name-led');if(lbl)lbl.textContent = c.name.toUpperCase();
 }
 
 function pickSticker(idx){
   state.sticker = idx;
-  document.getElementById('name-sticker').textContent = STICKERS[idx].name.toUpperCase();
-  buildStickerGrid();
-  updateAll();
+  const lbl=document.getElementById('name-sticker');if(lbl)lbl.textContent = STICKERS[idx].name.toUpperCase();
 }
 
 function applyToLayer(part, color){
@@ -1332,6 +1301,12 @@ function applyToLayer(part, color){
   if(part==='touchpad' || part==='mittelstueck'){
     const idx = state[part];
     el.classList.toggle('on', idx!==0);
+  }
+  /* Stick-Caps: zusaetzlich zur Maske die CSS-Kreise einfaerben (Maske allein passt nicht immer) */
+  if(part==='sticks'){
+    const l=document.getElementById('stickcap-l'), r=document.getElementById('stickcap-r');
+    if(l)l.style.backgroundColor = color.hex;
+    if(r)r.style.backgroundColor = color.hex;
   }
   if(color.special==='carbon'){
     el.style.background = `repeating-linear-gradient(45deg,${color.hex},${color.hex} 3px,#222 3px,#222 6px)`;
@@ -1380,87 +1355,78 @@ function highlightPart(part){
 
 /* === Hotspot-Highlight beim Step-Wechsel === */
 function flashHotspot(step){
-  /* Mapping Step -> Hotspot-IDs (welche bei Step-Wechsel aufblinken sollen) */
+  /* Step -> hs2-Anker die aufblinken (Step-Numbering nach LED-/Gravur-/Sticker-Entfernung) */
   const map = {
-    0:['hs-touchpad','hs-led'],   // Front-Schale (zeigt Touchpad/LED-Lokalitaeten)
-    1:['hs-grip'],                 // Back-Schale -> Grip-Hinweis
-    2:['hs-frontbtn'],             // Buttons
-    3:[],                          // D-Pad
-    4:['hs-sticks'],               // Sticks
-    5:['hs-trigger'],              // Trigger
-    6:['hs-led'],                  // LED
-    7:['hs-sticks','hs-trigger','hs-paddles','hs-akku','hs-grip','hs-rumble']  // HW-Upgrades
+    0:[],                                            // Front-Schale
+    1:['grip'],                                       // Back-Schale -> Grip-Hinweis
+    2:[],                                             // Buttons
+    3:[],                                             // D-Pad
+    4:['sticks'],                                     // Sticks
+    5:['trigger'],                                    // Trigger
+    6:['sticks','trigger','paddles','akku','grip','rumble','frontbtn'] // HW
   };
-  const ids = map[step]||[];
-  ids.forEach(id=>{
-    const hs = document.getElementById(id); if(!hs) return;
-    hs.classList.add('show');
-    hs.style.animation='hsBlink 1.6s ease-in-out 2';
-    setTimeout(()=>{hs.style.animation='';},3400);
+  (map[step]||[]).forEach(anchor=>{
+    const dot=document.querySelector('.hs2[data-anchor="'+anchor+'"] .hs2-dot');
+    if(dot){dot.style.animation='hsBlink 1.6s ease-in-out 2,hsDot 2.4s ease-in-out infinite';setTimeout(()=>dot.style.animation='hsDot 2.4s ease-in-out infinite',3400);}
   });
 }
 
 /* === ALL HOTSPOTS — automatisch sichtbar basierend auf State === */
+/* === NEUES HOTSPOT-SYSTEM (hs2 mit Stage-relativen Positions) ===
+   - Labels sitzen in den RAND-ZONEN der Stage (nicht ueber dem Controller)
+   - Dots sitzen auf den Bauteilen
+   - Erscheinen nur wenn Option nicht Default
+*/
+function setHs2(anchor, label, show, lineDir){
+  const node = document.querySelector('.hs2[data-anchor="'+anchor+'"]');
+  if(!node) return;
+  node.classList.toggle('show', !!show);
+  const lbl = node.querySelector('.hs2-label');
+  if(lbl){
+    lbl.innerHTML = label;
+    lbl.classList.remove('line-right','line-left','line-down','line-up');
+    if(lineDir) lbl.classList.add('line-'+lineDir);
+  }
+}
 function updateAllHotspots(){
-  /* Sticks: zeigt immer den aktiven Stick-Typ */
-  const stickMap = {
-    'standard':{t:'Analog Sticks',  d:'PS5 DualSense Original'},
-    'hall':    {t:'Hall Effect Sticks', d:'Anti-Stickdrift · magnetisch'},
-    'tmr':     {t:'TMR Pro Sticks', d:'Premium · null Drift'}
-  };
-  const ss = stickMap[state.hw_stick]||stickMap.standard;
-  const sT=document.getElementById('hs-sticks-title');if(sT)sT.textContent=ss.t;
-  const sD=document.getElementById('hs-sticks-desc'); if(sD)sD.textContent=ss.d;
-  setHotspot('hs-sticks', state.hw_stick!=='standard'); /* nur bei Hall/TMR */
-
-  /* Trigger-Tech */
-  const trigMap = {
-    'standard':{t:'Adaptive Trigger',d:'PS5 Original'},
-    'clicky':  {t:'Clicky Trigger',  d:'1 mm Auslöseweg · FPS-ready'}
-  };
-  const tt = trigMap[state.hw_trigger]||trigMap.standard;
-  document.getElementById('hs-trigger-title').textContent = tt.t;
-  document.getElementById('hs-trigger-desc').textContent  = tt.d;
-  setHotspot('hs-trigger', state.hw_trigger!=='standard');
+  /* Trigger */
+  const trigTxt = state.hw_trigger==='clicky'
+    ? '<strong>Clicky Trigger</strong><br>1 mm · FPS-ready'
+    : '';
+  setHs2('trigger', trigTxt, state.hw_trigger==='clicky', 'right');
 
   /* Akku */
-  const akMap = {
-    'standard':{t:'Standard Akku',d:'1560 mAh · 6-8 h'},
-    'power':   {t:'Power-Akku 2200',d:'bis zu 12 h Laufzeit'},
-    'light':   {t:'Lightweight Akku',d:'−30 g · 4-6 h'}
-  };
-  const ak = akMap[state.hw_akku]||akMap.standard;
-  document.getElementById('hs-akku-title').textContent = ak.t;
-  document.getElementById('hs-akku-desc').textContent  = ak.d;
-  setHotspot('hs-akku', state.hw_akku!=='standard');
+  const akkuLbl = state.hw_akku==='power'?'<strong>Power-Akku 2200</strong><br>bis 12 h Laufzeit'
+              : state.hw_akku==='light'?'<strong>Lightweight Akku</strong><br>−30 g · 4-6 h':'';
+  setHs2('akku', akkuLbl, state.hw_akku!=='standard', 'down');
 
-  /* Grip */
-  setHotspot('hs-grip', state.hw_grip==='grip');
+  /* Touchpad */
+  const tpName = COLORS[state.touchpad]?COLORS[state.touchpad].name:'';
+  setHs2('touchpad', '<strong>Touchpad</strong><br>'+tpName, state.touchpad!==0, 'down');
+
+  /* Mittelstück */
+  const msName = COLORS[state.mittelstueck]?COLORS[state.mittelstueck].name:'';
+  setHs2('mittel', '<strong>Mittelstück</strong><br>'+msName, state.mittelstueck!==0, 'right');
+
+  /* Sticks */
+  const stickTxt = state.hw_stick==='hall'?'<strong>Hall Effect Sticks</strong><br>Anti-Stickdrift'
+              : state.hw_stick==='tmr'?'<strong>TMR Pro Sticks</strong><br>Premium · null Drift':'';
+  setHs2('sticks', stickTxt, state.hw_stick!=='standard', 'up');
 
   /* Rumble */
-  setHotspot('hs-rumble', state.hw_rumble==='strong');
+  setHs2('rumble', '<strong>Strong Rumble+</strong><br>30 % stärker', state.hw_rumble==='strong', 'up');
 
-  /* Touchpad — sichtbar wenn nicht Default */
-  setHotspot('hs-touchpad', state.touchpad!==0);
-  const tpD=document.getElementById('hs-touchpad-desc');
-  if(tpD)tpD.textContent = COLORS[state.touchpad]?COLORS[state.touchpad].name:'Custom';
+  /* FrontButtons (auf der Front) — gesteuert von Paddle-Meta */
+  const meta = state.hw_paddles_meta || {fb:0};
+  setHs2('frontbtn', '<strong>FrontButtons</strong><br>2× programmable', meta.fb>0, 'right');
 
-  /* Mittelstück — sichtbar wenn nicht Default */
-  setHotspot('hs-mittel', state.mittelstueck!==0);
-  const msD=document.getElementById('hs-mittel-desc');
-  if(msD)msD.textContent = COLORS[state.mittelstueck]?COLORS[state.mittelstueck].name:'Custom';
+  /* Paddles (back) */
+  setHs2('paddles', '<strong>Programmable Paddles</strong><br>'+(meta.label||''), meta.count>0, 'left');
 
-  /* LED — sichtbar wenn nicht Standard PS-Blau */
-  setHotspot('hs-led', state.led!==0);
-  const ldD=document.getElementById('hs-led-desc');
-  if(ldD)ldD.textContent = LED_COLORS[state.led]?LED_COLORS[state.led].name:'Custom';
-
-  /* FrontButtons + Paddles werden in updatePaddleOverlay() gesteuert */
+  /* Grip (back) */
+  setHs2('grip', '<strong>Grip Coating</strong><br>Anti-Rutsch', state.hw_grip==='grip', 'left');
 }
-function setHotspot(id, show){
-  const el=document.getElementById(id);if(!el)return;
-  el.classList.toggle('show', !!show);
-}
+function setHotspot(){/* Legacy no-op — Hotspots laufen jetzt ueber updateAllHotspots */}
 
 /* === PADDLE-KATALOG (bitros-Style) === */
 const PADDLE_TYPES = [
@@ -1592,8 +1558,8 @@ function setHw(group, value, price){
   if(group==='led_rgb'){state.hw_led_rgb=value;state.hw_led_rgb_price=price;const el=document.getElementById('hw-led-rgb');if(el)el.classList.toggle('sel',!!value);}
   if(group==='warranty'){state.hw_warranty=value;state.hw_warranty_price=price;document.querySelectorAll('[id^="hw-warranty-"]').forEach(el=>el.classList.remove('sel'));document.getElementById('hw-warranty-'+value).classList.add('sel');}
   /* Hotspot-Highlight fuer die gerade gewaehlte Hardware-Option */
-  const flashMap={stick:'hs-sticks',trigger:'hs-trigger',grip:'hs-grip',rumble:'hs-rumble',akku:'hs-akku'};
-  if(flashMap[group]){const hs=document.getElementById(flashMap[group]);if(hs){hs.classList.add('show');hs.style.animation='hsBlink 1.4s ease-in-out 2';setTimeout(()=>hs.style.animation='',3200);}}
+  const flashMap={stick:'sticks',trigger:'trigger',grip:'grip',rumble:'rumble',akku:'akku'};
+  if(flashMap[group]){const dot=document.querySelector('.hs2[data-anchor="'+flashMap[group]+'"] .hs2-dot');if(dot){dot.style.animation='hsBlink 1.4s ease-in-out 2,hsDot 2.4s ease-in-out infinite';setTimeout(()=>dot.style.animation='hsDot 2.4s ease-in-out infinite',3200);}}
   updateAllHotspots();
   updateAll();
 }
@@ -1664,17 +1630,15 @@ function updateSummary(){
     const dot = document.getElementById('sum-'+part+'-dot');
     if(dot){dot.style.background = c.special?`linear-gradient(135deg,${c.hex},#fff)`:c.hex;}
   });
-  const ledC = LED_COLORS[state.led];
-  document.getElementById('sum-led').textContent = ledC.name;
-  document.getElementById('sum-led-dot').style.background = ledC.hex;
-  document.getElementById('sum-stick-tech').textContent = state.hw_stick==='hall'?'Hall Effect':(state.hw_stick==='tmr'?'TMR Pro':'Standard');
-  document.getElementById('sum-trigger-mod').textContent = state.hw_trigger==='clicky'?'Clicky Trigger':'Standard';
-  document.getElementById('sum-paddles').textContent = state.hw_paddles?(state.hw_paddles+'× Paddles'):'Keine';
-  document.getElementById('sum-grip').textContent = state.hw_grip==='grip'?'GRIP Coating':'Standard';
-  document.getElementById('sum-rumble').textContent = state.hw_rumble==='strong'?'Strong Rumble+':'Standard';
-  document.getElementById('sum-rgb').textContent = state.hw_led_rgb?'Aktiv':'Aus';
-  document.getElementById('sum-engr').textContent = (state.engr_enabled && state.engr_text)?('"'+state.engr_text+'" ('+state.engr_font+')'):'Keine';
-  document.getElementById('sum-sticker').textContent = state.sticker>0?STICKERS[state.sticker].ico+' '+STICKERS[state.sticker].name:'Keiner';
+  const set=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=val;};
+  const setBg=(id,val)=>{const e=document.getElementById(id);if(e)e.style.background=val;};
+  set('sum-stick-tech', state.hw_stick==='hall'?'Hall Effect':(state.hw_stick==='tmr'?'TMR Pro':'Standard'));
+  set('sum-trigger-mod', state.hw_trigger==='clicky'?'Clicky Trigger':'Standard');
+  const meta=state.hw_paddles_meta;
+  set('sum-paddles', meta && meta.count>0?meta.label:'Keine');
+  set('sum-grip', state.hw_grip==='grip'?'GRIP Coating':'Standard');
+  set('sum-rumble', state.hw_rumble==='strong'?'Strong Rumble+':'Standard');
+  set('sum-akku', state.hw_akku==='power'?'Power 2200':(state.hw_akku==='light'?'Lightweight':'Standard'));
 }
 
 function updateProgress(){
@@ -1694,10 +1658,11 @@ function goToStep(s){
   document.getElementById('btn-next').style.display = currentStep===TOTAL_STEPS-1?'none':'block';
   document.getElementById('btn-cart').style.display = currentStep===TOTAL_STEPS-1?'block':'none';
   document.querySelector('.cfg-content').scrollTop = 0;
-  // Auto-View beim Step-Wechsel
-  if(currentStep===1){setView('back');}                 // Backshell
-  else if(currentStep===7){setView('both');}             // Hardware/Paddles
-  else if(currentStep>=0 && currentStep<=6){setView('front');} // Front/Buttons/D-Pad/Sticks/Trigger/LED
+  // Auto-View beim Step-Wechsel (nach LED/Gravur/Sticker-Entfernung)
+  if(currentStep===1){setView('back');}                  // Backshell
+  else if(currentStep===6){setView('both');}              // Hardware/Paddles
+  else if(currentStep===7){setView('both');}              // Fertig/Summary
+  else if(currentStep>=0 && currentStep<=5){setView('front');} // Front/Buttons/D-Pad/Sticks/Trigger
   // Hotspot-Highlight passend zum Step
   flashHotspot(currentStep);
   updateProgress();

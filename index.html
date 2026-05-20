@@ -157,6 +157,29 @@ header{position:fixed;top:30px;width:100%;z-index:9400;padding:11px 5%;display:f
 .land-lbl{font-family:'Orbitron';font-size:7.5px;color:#555;letter-spacing:1.5px;white-space:nowrap}
 .land-sel{flex:1;background:#111;border:1px solid #1a1a1a;color:#fff;font-family:'Orbitron';font-size:8.5px;padding:7px 10px;border-radius:5px;outline:none;cursor:pointer}
 .land-sel:focus{border-color:var(--neon)}
+/* === Lieferadress-Formular === */
+.ship-form{background:#0a0a0a;border:1px solid #1a1a1a;border-radius:10px;margin:10px 0;overflow:hidden;transition:border-color .3s}
+.ship-form.valid{border-color:rgba(0,242,255,.35)}
+.ship-form.invalid{border-color:rgba(255,80,80,.35)}
+.ship-form-hd{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;font-family:'Orbitron';font-size:9.5px;letter-spacing:2px;color:#bbb;cursor:pointer;user-select:none;background:linear-gradient(180deg,#0c0c0c,#080808)}
+.ship-form-hd:hover{color:#fff}
+.ship-form-status{font-size:11px;color:#666;transition:transform .3s}
+.ship-form.open .ship-form-status{transform:rotate(180deg);color:var(--neon)}
+.ship-form-body{display:none;padding:12px 14px 14px;border-top:1px solid #141414}
+.ship-form.open .ship-form-body{display:block}
+.ship-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.ship-input{background:#070707;border:1px solid #1a1a1a;color:#fff;font-family:'Orbitron';font-size:9px;padding:9px 11px;border-radius:6px;outline:none;letter-spacing:.6px;text-transform:none;transition:border-color .2s,background .2s;width:100%;box-sizing:border-box}
+.ship-input::placeholder{color:#444;letter-spacing:1px;text-transform:uppercase;font-size:8.5px}
+.ship-input:focus{border-color:var(--neon);background:#0a0a0a}
+.ship-input.err{border-color:#ff4d6d;background:#1a0808}
+.ship-input.ok{border-color:rgba(0,242,255,.4)}
+.ship-input.ship-wide{grid-column:span 1}
+.ship-input.ship-narrow{grid-column:span 1}
+.ship-input.ship-full{grid-column:1 / -1}
+@media(min-width:520px){.ship-grid{grid-template-columns:2fr 1fr 1fr 2fr}.ship-input[id="ship-fn"],.ship-input[id="ship-ln"]{grid-column:span 2}.ship-input.ship-wide{grid-column:span 3}.ship-input.ship-narrow{grid-column:span 1}.ship-input.ship-full{grid-column:1 / -1}}
+.ship-err{font-family:'Orbitron';font-size:8px;color:#ff4d6d;letter-spacing:1px;margin-top:8px;display:none}
+.ship-err.show{display:block}
+.ship-saved-chip{display:inline-block;font-family:'Orbitron';font-size:7px;letter-spacing:1.2px;color:var(--green);background:rgba(0,255,150,.1);padding:2px 7px;border-radius:3px;margin-left:8px}
 .discount-row{display:flex;gap:8px;margin:10px 0}
 .discount-input{flex:1;padding:9px 12px;background:#0c0c0c;border:1px solid #1a1a1a;color:#fff;font-family:'Orbitron';font-size:8.5px;border-radius:6px;outline:none;letter-spacing:1px;text-transform:uppercase}
 .discount-input:focus{border-color:var(--neon)}
@@ -989,16 +1012,32 @@ main{position:relative;z-index:1}
     <div class="cart-ft">
       <div class="ship-bar-lbl" id="ship-lbl">AB 50€ KOSTENLOSER VERSAND (DE)</div>
       <div class="ship-bar"><div class="ship-fill" id="ship-fill" style="width:0%"></div></div>
-      <div class="land-row">
-        <span class="land-lbl">🌍 LIEFERLAND</span>
-        <select class="land-sel" id="land-sel" onchange="updateCart()">
-          <option value="DE">🇩🇪 Deutschland</option><option value="AT">🇦🇹 Österreich</option><option value="CH">🇨🇭 Schweiz</option>
-          <option value="FR">🇫🇷 Frankreich</option><option value="NL">🇳🇱 Niederlande</option><option value="BE">🇧🇪 Belgien</option>
-          <option value="LU">🇱🇺 Luxemburg</option><option value="IT">🇮🇹 Italien</option><option value="ES">🇪🇸 Spanien</option>
-          <option value="PL">🇵🇱 Polen</option><option value="CZ">🇨🇿 Tschechien</option><option value="SE">🇸🇪 Schweden</option>
-          <option value="DK">🇩🇰 Dänemark</option><option value="EU_OTHER">🇪🇺 Sonstiges EU</option>
-          <option value="GB">🇬🇧 Großbritannien</option><option value="US">🇺🇸 USA</option><option value="WORLD">🌐 Sonstiges Ausland</option>
-        </select>
+      <div class="ship-form" id="ship-form">
+        <div class="ship-form-hd" onclick="toggleShipForm()">
+          <span>📦 LIEFERADRESSE</span>
+          <span class="ship-form-status" id="ship-form-status">▾</span>
+        </div>
+        <div class="ship-form-body" id="ship-form-body">
+          <div class="ship-grid">
+            <input type="text" class="ship-input" id="ship-fn" placeholder="VORNAME" autocomplete="given-name" oninput="onShipChange()">
+            <input type="text" class="ship-input" id="ship-ln" placeholder="NACHNAME" autocomplete="family-name" oninput="onShipChange()">
+            <input type="text" class="ship-input ship-wide" id="ship-street" placeholder="STRASSE" autocomplete="address-line1" oninput="onShipChange()">
+            <input type="text" class="ship-input ship-narrow" id="ship-no" placeholder="NR." autocomplete="address-line2" oninput="onShipChange()">
+            <input type="text" class="ship-input ship-narrow" id="ship-zip" placeholder="PLZ" autocomplete="postal-code" inputmode="numeric" oninput="onShipChange()">
+            <input type="text" class="ship-input ship-wide" id="ship-city" placeholder="STADT" autocomplete="address-level2" oninput="onShipChange()">
+            <select class="ship-input ship-full land-sel" id="land-sel" autocomplete="country" onchange="onShipChange()">
+              <option value="DE">🇩🇪 Deutschland</option><option value="AT">🇦🇹 Österreich</option><option value="CH">🇨🇭 Schweiz</option>
+              <option value="FR">🇫🇷 Frankreich</option><option value="NL">🇳🇱 Niederlande</option><option value="BE">🇧🇪 Belgien</option>
+              <option value="LU">🇱🇺 Luxemburg</option><option value="IT">🇮🇹 Italien</option><option value="ES">🇪🇸 Spanien</option>
+              <option value="PL">🇵🇱 Polen</option><option value="CZ">🇨🇿 Tschechien</option><option value="SE">🇸🇪 Schweden</option>
+              <option value="DK">🇩🇰 Dänemark</option><option value="EU_OTHER">🇪🇺 Sonstiges EU</option>
+              <option value="GB">🇬🇧 Großbritannien</option><option value="US">🇺🇸 USA</option><option value="WORLD">🌐 Sonstiges Ausland</option>
+            </select>
+            <input type="email" class="ship-input ship-full" id="ship-email" placeholder="E-MAIL FÜR BESTÄTIGUNG" autocomplete="email" oninput="onShipChange()">
+            <input type="tel" class="ship-input ship-full" id="ship-phone" placeholder="TELEFON (optional, für Rückfragen)" autocomplete="tel" oninput="onShipChange()">
+          </div>
+          <div class="ship-err" id="ship-err"></div>
+        </div>
       </div>
       <div>
         <div class="discount-row">
@@ -2449,9 +2488,32 @@ const EU_ZONE1=['AT','BE','NL','LU','PL','CZ','SK','HU','SI'];
 const EU_ZONE2=['FR','IT','ES','SE','DK','FI','GR','PT','RO','BG','HR','EE','LV','LT','CY','MT','IE'];
 function getShipping(land,sub){if(land==='DE')return sub>=50?0:6.99;if(EU_ZONE1.includes(land))return 14.49;if(EU_ZONE2.includes(land)||land==='EU_OTHER')return 16.49;if(land==='CH')return 20.99;if(land==='GB')return 19.99;if(land==='US')return 24.99;return 22.49;}
 
-const DISCOUNT_CODES={'WILLKOMMEN10':{type:'percent',value:10,label:'10% Newsletter-Rabatt'},'LEXORD15':{type:'percent',value:15,label:'15% Treue-Rabatt'},'REPAIR5':{type:'fixed',value:5,label:'5€ Reparatur-Rabatt'},'SOMMER2026':{type:'percent',value:20,label:'20% Sommer-Deal'}};
+const DISCOUNT_CODES={'WILLKOMMEN10':{type:'percent',value:10,label:'10% Willkommens-Bonus',welcome:true,customOnly:true},'LEXORD15':{type:'percent',value:15,label:'15% Treue-Rabatt'},'REPAIR5':{type:'fixed',value:5,label:'5€ Reparatur-Rabatt'},'SOMMER2026':{type:'percent',value:20,label:'20% Sommer-Deal'}};
+const WELCOME_CODES=['WILLKOMMEN10','WELCOME10','WELCOME'];
 let activeDiscount=null,cart=[],recentlyViewed=[];
-function calcDiscount(s){if(!activeDiscount)return 0;return activeDiscount.type==='percent'?s*activeDiscount.value/100:Math.min(activeDiscount.value,s);}
+
+/* Geraete-Fingerprint fuer Welcome-Code-Lock (kombiniert UA + Screen + Sprache + Zeitzone) */
+function getDeviceFP(){
+  try{
+    let fp=localStorage.getItem('lxrd_fp');if(fp)return fp;
+    const raw=[navigator.userAgent,navigator.language,screen.width+'x'+screen.height+'x'+screen.colorDepth,new Date().getTimezoneOffset(),navigator.hardwareConcurrency||0,navigator.platform||''].join('|');
+    let h=0;for(let i=0;i<raw.length;i++){h=((h<<5)-h+raw.charCodeAt(i))|0;}
+    fp='fp_'+Math.abs(h).toString(36)+'_'+Math.random().toString(36).slice(2,8);
+    localStorage.setItem('lxrd_fp',fp);return fp;
+  }catch(e){return 'fp_anon';}
+}
+
+function isCustomItem(it){return !!(it && (it.config || it.name==='LXRD Custom Controller'));}
+function customSubtotal(){return cart.filter(isCustomItem).reduce((a,i)=>a+i.price*i.qty,0);}
+
+function calcDiscount(s){
+  if(!activeDiscount)return 0;
+  /* Welcome/customOnly-Codes nur auf konfigurierte Controller-Items anwenden */
+  const base=activeDiscount.customOnly?customSubtotal():s;
+  if(base<=0)return 0;
+  return activeDiscount.type==='percent'?base*activeDiscount.value/100:Math.min(activeDiscount.value,base);
+}
+
 async function applyDiscount(){
   const code=document.getElementById('discount-code').value.trim().toUpperCase();
   const ok=document.getElementById('discount-ok'),err=document.getElementById('discount-err');
@@ -2459,8 +2521,28 @@ async function applyDiscount(){
   if(!code){err.innerText='BITTE CODE EINGEBEN';err.style.display='block';return;}
   const d=DISCOUNT_CODES[code];const isPersonal=/^LXRD\d{4}$/.test(code);
   if(!d && !isPersonal){err.innerText='✗ UNGÜLTIGER RABATTCODE';err.style.display='block';activeDiscount=null;updateCart();return;}
-  let custEmail='';try{const c=JSON.parse(sessionStorage.getItem('lxrd_customer')||'{}');custEmail=c.email||'';}catch(e){}
-  if(custEmail){try{const r=await fetch(CF_WORKER_URL+'/api/discount/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,email:custEmail})});const cd=await r.json();if(cd.alreadyUsed){err.innerText='✗ Dieser Code wurde bereits eingelöst';err.style.display='block';activeDiscount=null;updateCart();return;}}catch(e){}}
+
+  const isWelcome=WELCOME_CODES.includes(code)||(d&&d.welcome);
+
+  /* Welcome-Code-Beschraenkungen */
+  if(isWelcome){
+    /* 1) Geraete-Lock via localStorage — bereits eingeloest? */
+    let usedList=[];try{usedList=JSON.parse(localStorage.getItem('lxrd_welcome_used')||'[]');}catch(e){}
+    if(usedList.length){err.innerText='✗ Willkommens-Bonus bereits eingelöst (1× pro Gerät)';err.style.display='block';activeDiscount=null;updateCart();return;}
+    /* 2) Cart muss mindestens einen konfigurierten Controller enthalten */
+    if(!cart.some(isCustomItem)){err.innerText='✗ Nur für individuell konfigurierte Controller einlösbar';err.style.display='block';activeDiscount=null;updateCart();return;}
+    /* 3) Server-Check: IP- und Geraete-Fingerprint */
+    try{
+      const r=await fetch(CF_WORKER_URL+'/api/discount/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,fp:getDeviceFP()})});
+      const cd=await r.json();
+      if(cd.alreadyUsed){err.innerText='✗ '+(cd.error||'Bonus bereits eingelöst');err.style.display='block';activeDiscount=null;updateCart();return;}
+    }catch(e){/* Worker offline -> Geraete-Lock greift weiterhin */}
+  } else {
+    /* Standard-Codes: nur Email-Check (wie bisher) */
+    let custEmail='';try{const c=JSON.parse(sessionStorage.getItem('lxrd_customer')||'{}');custEmail=c.email||'';}catch(e){}
+    if(custEmail){try{const r=await fetch(CF_WORKER_URL+'/api/discount/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,email:custEmail})});const cd=await r.json();if(cd.alreadyUsed){err.innerText='✗ Dieser Code wurde bereits eingelöst';err.style.display='block';activeDiscount=null;updateCart();return;}}catch(e){}}
+  }
+
   if(isPersonal)activeDiscount={type:'percent',value:15,label:'15% Treue-Rabatt',code};
   else activeDiscount={...d,code};
   ok.innerText='✓ '+activeDiscount.label+' AKTIVIERT';ok.style.display='block';
@@ -2506,21 +2588,104 @@ function renderPP(sub,ship,land){
   const c=document.getElementById('pp-btn-cont');c.innerHTML='';
   if(sub<=0||typeof paypal==='undefined')return;
   try{paypal.Buttons({style:{layout:'vertical',color:'gold',shape:'rect',label:'paypal',height:42,tagline:false},
-    onClick:(d,a)=>{if(!document.getElementById('cart-agb').checked){toast('Bitte AGB & Widerruf akzeptieren','err');return a.reject();}},
-    createOrder:(d,a)=>a.order.create({purchase_units:[{description:'LEXORD Bestellung',amount:{currency_code:'EUR',value:(sub+ship).toFixed(2),breakdown:{item_total:{currency_code:'EUR',value:sub.toFixed(2)},shipping:{currency_code:'EUR',value:ship.toFixed(2)}}},items:cart.map(i=>({name:i.name.substring(0,127),quantity:String(i.qty),unit_amount:{currency_code:'EUR',value:i.price.toFixed(2)},category:'PHYSICAL_GOODS'}))}],application_context:{shipping_preference:'NO_SHIPPING',user_action:'PAY_NOW',brand_name:'LEXORD Engineering'}}),
-    onApprove:(d,a)=>a.order.capture().then(det=>{const email=det.payer?.email_address||'';const fn=det.payer?.name?.given_name||'Kunde';const ln=det.payer?.name?.surname||'';const orderNr='LXRD-'+Date.now().toString().slice(-7);processOrder(email,orderNr,fn,ln,det);showOrderSuccess(email,orderNr);}),
+    onClick:(d,a)=>{
+      if(!document.getElementById('cart-agb').checked){toast('Bitte AGB & Widerruf akzeptieren','err');return a.reject();}
+      if(!validateShipAddress(true)){toast('Bitte Lieferadresse vollständig ausfüllen','err');openShipForm();return a.reject();}
+      return a.resolve&&a.resolve();
+    },
+    createOrder:(d,a)=>{
+      const ad=getShipAddress();
+      const ppUnit=(it)=>{const isCustom=isCustomItem(it);return activeDiscount&&activeDiscount.customOnly&&isCustom?+(it.price*(1-activeDiscount.value/100)).toFixed(2):it.price;};
+      const itemTotal=cart.reduce((acc,i)=>acc+ppUnit(i)*i.qty,0);
+      const ppShipping={
+        name:{full_name:((ad.fn||'')+' '+(ad.ln||'')).trim().substring(0,300)||'Kunde'},
+        address:{
+          address_line_1:((ad.street||'')+' '+(ad.no||'')).trim().substring(0,300)||'-',
+          admin_area_2:(ad.city||'').substring(0,120)||'-',
+          postal_code:(ad.zip||'').substring(0,60)||'-',
+          country_code:countryToISO(ad.land||'DE')
+        }
+      };
+      return a.order.create({
+        intent:'CAPTURE',
+        purchase_units:[{
+          description:'LEXORD Bestellung · Custom PS5 Controller',
+          soft_descriptor:'LEXORD',
+          amount:{currency_code:'EUR',value:(itemTotal+ship).toFixed(2),breakdown:{item_total:{currency_code:'EUR',value:itemTotal.toFixed(2)},shipping:{currency_code:'EUR',value:ship.toFixed(2)}}},
+          items:cart.map(i=>({name:i.name.substring(0,127),description:(i.desc||'').substring(0,127)||undefined,quantity:String(i.qty),unit_amount:{currency_code:'EUR',value:ppUnit(i).toFixed(2)},category:'PHYSICAL_GOODS'})),
+          shipping:ppShipping
+        }],
+        payer:{email_address:ad.email||undefined,name:{given_name:ad.fn||undefined,surname:ad.ln||undefined},address:{country_code:countryToISO(ad.land||'DE')}},
+        application_context:{shipping_preference:'SET_PROVIDED_ADDRESS',user_action:'PAY_NOW',brand_name:'LEXORD Engineering',landing_page:'BILLING'}
+      });
+    },
+    onApprove:(d,a)=>a.order.capture().then(det=>{const ad=getShipAddress();const email=ad.email||det.payer?.email_address||'';const fn=ad.fn||det.payer?.name?.given_name||'Kunde';const ln=ad.ln||det.payer?.name?.surname||'';const orderNr='LXRD-'+Date.now().toString().slice(-7);processOrder(email,orderNr,fn,ln,det);showOrderSuccess(email,orderNr);}),
     onCancel:()=>toast('Zahlung abgebrochen','err'),
     onError:(err)=>{console.error('PayPal:',err);toast('PayPal Fehler. Erneut versuchen.','err');}
   }).render('#pp-btn-cont').catch(e=>console.warn('PayPal render:',e));}catch(e){console.warn('PayPal:',e);}
 }
 
+/* === LIEFERADRESS-VERWALTUNG === */
+const ISO_MAP={DE:'DE',AT:'AT',CH:'CH',FR:'FR',NL:'NL',BE:'BE',LU:'LU',IT:'IT',ES:'ES',PL:'PL',CZ:'CZ',SE:'SE',DK:'DK',EU_OTHER:'DE',GB:'GB',US:'US',WORLD:'DE'};
+function countryToISO(c){return ISO_MAP[c]||'DE';}
+const ZIP_PATTERNS={DE:/^\d{5}$/,AT:/^\d{4}$/,CH:/^\d{4}$/,FR:/^\d{5}$/,NL:/^\d{4}\s?[A-Za-z]{2}$/,BE:/^\d{4}$/,LU:/^\d{4}$/,IT:/^\d{5}$/,ES:/^\d{5}$/,PL:/^\d{2}-?\d{3}$/,CZ:/^\d{3}\s?\d{2}$/,SE:/^\d{3}\s?\d{2}$/,DK:/^\d{4}$/,GB:/^[A-Za-z]{1,2}\d{1,2}[A-Za-z]?\s?\d[A-Za-z]{2}$/,US:/^\d{5}(-\d{4})?$/};
+
+function getShipAddress(){
+  return{
+    fn:(document.getElementById('ship-fn')?.value||'').trim(),
+    ln:(document.getElementById('ship-ln')?.value||'').trim(),
+    street:(document.getElementById('ship-street')?.value||'').trim(),
+    no:(document.getElementById('ship-no')?.value||'').trim(),
+    zip:(document.getElementById('ship-zip')?.value||'').trim(),
+    city:(document.getElementById('ship-city')?.value||'').trim(),
+    land:document.getElementById('land-sel')?.value||'DE',
+    email:(document.getElementById('ship-email')?.value||'').trim(),
+    phone:(document.getElementById('ship-phone')?.value||'').trim()
+  };
+}
+function setShipAddress(a){
+  if(!a)return;
+  const set=(id,v)=>{const el=document.getElementById(id);if(el&&v)el.value=v;};
+  set('ship-fn',a.fn);set('ship-ln',a.ln);set('ship-street',a.street);set('ship-no',a.no);
+  set('ship-zip',a.zip);set('ship-city',a.city);set('ship-email',a.email);set('ship-phone',a.phone);
+  if(a.land){const ls=document.getElementById('land-sel');if(ls)ls.value=a.land;}
+}
+function saveShipAddress(){try{localStorage.setItem('lxrd_ship',JSON.stringify(getShipAddress()));}catch(e){}}
+function loadShipAddress(){try{const s=localStorage.getItem('lxrd_ship');if(s)setShipAddress(JSON.parse(s));}catch(e){}}
+function validateShipAddress(showErr){
+  const a=getShipAddress();const form=document.getElementById('ship-form');const errEl=document.getElementById('ship-err');
+  const checks=[
+    {id:'ship-fn',ok:a.fn.length>=2,msg:'Vorname'},
+    {id:'ship-ln',ok:a.ln.length>=2,msg:'Nachname'},
+    {id:'ship-street',ok:a.street.length>=2,msg:'Straße'},
+    {id:'ship-no',ok:a.no.length>=1,msg:'Hausnummer'},
+    {id:'ship-zip',ok:a.zip.length>=3&&(!ZIP_PATTERNS[a.land]||ZIP_PATTERNS[a.land].test(a.zip)),msg:'PLZ'},
+    {id:'ship-city',ok:a.city.length>=2,msg:'Stadt'},
+    {id:'ship-email',ok:/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(a.email),msg:'E-Mail'}
+  ];
+  let allOk=true;const missing=[];
+  checks.forEach(c=>{const el=document.getElementById(c.id);if(!el)return;if(c.ok){el.classList.remove('err');el.classList.add('ok');}else{allOk=false;missing.push(c.msg);if(showErr)el.classList.add('err');}});
+  if(form){form.classList.toggle('valid',allOk);form.classList.toggle('invalid',!allOk&&showErr);}
+  if(errEl){if(!allOk&&showErr){errEl.textContent='⚠ Fehlt: '+missing.join(', ');errEl.classList.add('show');}else{errEl.classList.remove('show');errEl.textContent='';}}
+  return allOk;
+}
+function onShipChange(){saveShipAddress();validateShipAddress(false);updateCart();}
+function toggleShipForm(){const f=document.getElementById('ship-form');if(f)f.classList.toggle('open');}
+function openShipForm(){const f=document.getElementById('ship-form');if(f){f.classList.add('open');setTimeout(()=>document.getElementById('ship-fn')?.focus(),120);}}
+
 async function processOrder(email,orderNr,fn,ln,paypalDet){
   const sub=cart.reduce((a,i)=>a+i.price*i.qty,0);const disc=calcDiscount(sub);const land=document.getElementById('land-sel')?.value||'DE';const ship=getShipping(land,sub-disc);const total=sub-disc+ship;const name=(fn+' '+ln).trim();
-  await saveOrderToCF({orderNr,email,name,items:cart.map(i=>({name:i.name,price:i.price,qty:i.qty})),subtotal:sub,discount:disc,shipping:ship,total,country:land,payment:'PayPal',paypal_id:paypalDet?.id||'',status:'paid',created:new Date().toISOString()});
-  const itemList=cart.map(i=>`<tr><td style="padding:6px 0;border-bottom:1px solid #eee">${esc(i.name)}</td><td style="text-align:center;border-bottom:1px solid #eee">${i.qty}×</td><td style="text-align:right;border-bottom:1px solid #eee">${(i.price*i.qty).toFixed(2)} €</td></tr>`).join('');
-  await ejsSend(email,name,`✅ Bestellbestätigung ${orderNr} | LEXORD®`,tplWrap('#00f2ff','✅ BESTELLUNG BESTÄTIGT',`<p>Hallo <strong>${esc(name)}</strong>,</p><p>vielen Dank für deine Bestellung! Versand in 1-3 Werktagen per DHL.</p><div style="background:#f9f9f9;border-radius:8px;padding:18px;margin:18px 0;border-left:4px solid #00f2ff"><div style="font-size:12px;color:#888;margin-bottom:10px">BESTELLNUMMER: <strong>${orderNr}</strong></div><table style="width:100%;font-size:13px;border-collapse:collapse"><tr style="font-weight:bold;border-bottom:2px solid #ddd"><td style="padding:6px 0">Artikel</td><td style="text-align:center">Menge</td><td style="text-align:right">Preis</td></tr>${itemList}</table><div style="margin-top:12px;font-size:13px;color:#555">${disc>0?`<div>Rabatt: <span style="color:#009900">-${disc.toFixed(2)} €</span></div>`:''}<div>Versand: ${ship===0?'Kostenlos':ship.toFixed(2)+' €'}</div><div style="font-weight:bold;font-size:15px;margin-top:8px;padding-top:8px;border-top:2px solid #ddd">GESAMT: <span style="color:#009900">${total.toFixed(2)} €</span></div></div><div style="font-size:11px;color:#999;margin-top:8px">Kleinunternehmer gem. § 19 UStG - keine MwSt. ausgewiesen</div></div><p style="font-size:13px"><strong>📍 Status verfolgen:</strong> Auf <a href="https://lexord.de" style="color:#00a8b5">lexord.de</a> oben rechts auf "LOGIN" klicken.</p>`),ADMIN_EMAIL);
+  const ad=getShipAddress();
+  const addrBlock=`${esc(ad.fn)} ${esc(ad.ln)}<br>${esc(ad.street)} ${esc(ad.no)}<br>${esc(ad.zip)} ${esc(ad.city)}<br>${esc(({DE:'Deutschland',AT:'Österreich',CH:'Schweiz',FR:'Frankreich',NL:'Niederlande',BE:'Belgien',LU:'Luxemburg',IT:'Italien',ES:'Spanien',PL:'Polen',CZ:'Tschechien',SE:'Schweden',DK:'Dänemark',EU_OTHER:'EU',GB:'Großbritannien',US:'USA',WORLD:'International'}[ad.land])||ad.land)}${ad.phone?'<br>Tel: '+esc(ad.phone):''}`;
+  await saveOrderToCF({orderNr,email,name,items:cart.map(i=>({name:i.name,price:i.price,qty:i.qty,desc:i.desc||'',config:i.config||null})),subtotal:sub,discount:disc,shipping:ship,total,country:land,payment:'PayPal',paypal_id:paypalDet?.id||'',status:'paid',created:new Date().toISOString(),shipping_address:{fn:ad.fn,ln:ad.ln,street:ad.street,no:ad.no,zip:ad.zip,city:ad.city,country:ad.land,phone:ad.phone,email:ad.email}});
+  const itemList=cart.map(i=>`<tr><td style="padding:6px 0;border-bottom:1px solid #eee">${esc(i.name)}${i.desc?`<br><span style="font-size:11px;color:#888">${esc(i.desc)}</span>`:''}</td><td style="text-align:center;border-bottom:1px solid #eee">${i.qty}×</td><td style="text-align:right;border-bottom:1px solid #eee">${(i.price*i.qty).toFixed(2)} €</td></tr>`).join('');
+  await ejsSend(email,name,`✅ Bestellbestätigung ${orderNr} | LEXORD®`,tplWrap('#00f2ff','✅ BESTELLUNG BESTÄTIGT',`<p>Hallo <strong>${esc(name)}</strong>,</p><p>vielen Dank für deine Bestellung! Versand in 1-3 Werktagen per DHL.</p><div style="background:#f9f9f9;border-radius:8px;padding:18px;margin:18px 0;border-left:4px solid #00f2ff"><div style="font-size:12px;color:#888;margin-bottom:10px">BESTELLNUMMER: <strong>${orderNr}</strong></div><table style="width:100%;font-size:13px;border-collapse:collapse"><tr style="font-weight:bold;border-bottom:2px solid #ddd"><td style="padding:6px 0">Artikel</td><td style="text-align:center">Menge</td><td style="text-align:right">Preis</td></tr>${itemList}</table><div style="margin-top:12px;font-size:13px;color:#555">${disc>0?`<div>Rabatt: <span style="color:#009900">-${disc.toFixed(2)} €</span></div>`:''}<div>Versand: ${ship===0?'Kostenlos':ship.toFixed(2)+' €'}</div><div style="font-weight:bold;font-size:15px;margin-top:8px;padding-top:8px;border-top:2px solid #ddd">GESAMT: <span style="color:#009900">${total.toFixed(2)} €</span></div></div><div style="font-size:11px;color:#999;margin-top:8px">Kleinunternehmer gem. § 19 UStG - keine MwSt. ausgewiesen</div></div><div style="background:#0c0c0c;color:#fff;border-radius:8px;padding:18px;margin:18px 0"><div style="font-size:11px;color:#aaa;letter-spacing:2px;margin-bottom:8px">📦 LIEFERADRESSE</div><div style="font-size:13px;line-height:1.7">${addrBlock}</div></div><p style="font-size:13px"><strong>📍 Status verfolgen:</strong> Auf <a href="https://lexord.de" style="color:#00a8b5">lexord.de</a> oben rechts auf "LOGIN" klicken.</p>`),ADMIN_EMAIL);
   await ejsSend(ADMIN_EMAIL,'LEXORD Admin',`[BESTELLUNG] ${orderNr} · ${name} · ${total.toFixed(2)} €`,tplOrderAdmin(name,email,orderNr,total,land),email);
-  if(activeDiscount && activeDiscount.code && email){try{await fetch(CF_WORKER_URL+'/api/discount/use',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:activeDiscount.code,email})});}catch(e){}}
+  if(activeDiscount && activeDiscount.code){
+    const isWelcome=WELCOME_CODES.includes(activeDiscount.code)||activeDiscount.welcome;
+    try{await fetch(CF_WORKER_URL+'/api/discount/use',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:activeDiscount.code,email,fp:getDeviceFP()})});}catch(e){}
+    if(isWelcome){try{let used=[];try{used=JSON.parse(localStorage.getItem('lxrd_welcome_used')||'[]');}catch(e){}used.push({code:activeDiscount.code,at:new Date().toISOString(),order:orderNr});localStorage.setItem('lxrd_welcome_used',JSON.stringify(used));}catch(e){}}
+  }
   cart=[];activeDiscount=null;saveCart();
 }
 
@@ -2676,7 +2841,10 @@ setTimeout(killIntro,2500);setTimeout(killIntro,3600);
 document.addEventListener('click',()=>{const intro=document.getElementById('intro-overlay');if(intro&&intro.style.display!=='none')setTimeout(killIntro,100);},true);
 
 /* INIT */
-loadCart();updateCart();
+loadCart();loadShipAddress();
+/* Prefill aus Kundenprofil falls eingeloggt und Adresse leer */
+try{const c=JSON.parse(sessionStorage.getItem('lxrd_customer')||'{}');if(c.email){const eEl=document.getElementById('ship-email');if(eEl&&!eEl.value)eEl.value=c.email;if(c.name){const parts=c.name.split(' ');const fnEl=document.getElementById('ship-fn'),lnEl=document.getElementById('ship-ln');if(fnEl&&!fnEl.value)fnEl.value=parts[0]||'';if(lnEl&&!lnEl.value&&parts.length>1)lnEl.value=parts.slice(1).join(' ');}}}catch(e){}
+validateShipAddress(false);updateCart();
 setTimeout(showCookieBanner,3000);
 setTimeout(()=>setLang(localStorage.getItem('lxrd_lang')||'de',{silent:true}),100);
 if(window.location.hash==='#cart-open'){setTimeout(()=>{try{openCart();}catch(e){}},800);history.replaceState(null,'',window.location.pathname);}

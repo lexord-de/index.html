@@ -650,17 +650,32 @@ function escapeHtml(s) {
 }
 
 // ============ SINGLE-USE DISCOUNT CODES ============
+// Welcome-Codes: einmal pro Geraet/IP/Email einloesbar, nur fuer konfigurierte Controller
+const WELCOME_CODES = ["WILLKOMMEN10", "WELCOME10", "WELCOME"];
+
 async function checkDiscountCode(request, env) {
   if (!env.LEXORD_DATA) return json({ valid: false, error: "DB nicht konfiguriert" });
   const body = await request.json();
   const code = (body.code || "").trim().toUpperCase();
   const email = (body.email || "").trim().toLowerCase();
+  const fp = (body.fp || "").trim();
+  const ip = request.headers.get("CF-Connecting-IP") || "0.0.0.0";
   if (!code) return json({ valid: false, error: "Code fehlt" });
 
-  // Check if already used
+  // Email-based usage (legacy)
   if (email) {
     const used = await env.LEXORD_DATA.get("discount_used:" + code + ":" + email);
     if (used) return json({ valid: false, alreadyUsed: true, error: "Dieser Code wurde bereits eingeloest" });
+  }
+
+  // Welcome-Codes: zusaetzlich pro IP und Geraet pruefen — auch wenn ohne Email
+  if (WELCOME_CODES.includes(code)) {
+    const ipUsed = await env.LEXORD_DATA.get("welcome_ip:" + ip);
+    if (ipUsed) return json({ valid: false, alreadyUsed: true, error: "Dieser Bonus wurde bereits von dieser Verbindung eingeloest" });
+    if (fp) {
+      const fpUsed = await env.LEXORD_DATA.get("welcome_fp:" + fp);
+      if (fpUsed) return json({ valid: false, alreadyUsed: true, error: "Dieser Bonus wurde bereits auf diesem Geraet eingeloest" });
+    }
   }
   return json({ valid: true });
 }
@@ -670,8 +685,19 @@ async function useDiscountCode(request, env) {
   const body = await request.json();
   const code = (body.code || "").trim().toUpperCase();
   const email = (body.email || "").trim().toLowerCase();
-  if (!code || !email) return json({ success: false, error: "Code+Email noetig" });
-  await env.LEXORD_DATA.put("discount_used:" + code + ":" + email, new Date().toISOString());
+  const fp = (body.fp || "").trim();
+  const ip = request.headers.get("CF-Connecting-IP") || "0.0.0.0";
+  if (!code) return json({ success: false, error: "Code fehlt" });
+
+  const ts = new Date().toISOString();
+  // Pro Email markieren (legacy)
+  if (email) await env.LEXORD_DATA.put("discount_used:" + code + ":" + email, ts);
+
+  // Welcome-Codes: zusaetzlich IP- und Geraete-Lock setzen — permanent
+  if (WELCOME_CODES.includes(code)) {
+    await env.LEXORD_DATA.put("welcome_ip:" + ip, code + "|" + ts);
+    if (fp) await env.LEXORD_DATA.put("welcome_fp:" + fp, code + "|" + ts);
+  }
   return json({ success: true });
 }
 

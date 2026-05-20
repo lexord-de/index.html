@@ -294,8 +294,57 @@ h1 .accent{background:linear-gradient(90deg,var(--neon),var(--neon2),var(--neon)
 .mpb-price small{font-size:9px;color:#888;display:block;margin-top:2px}
 .mpb-cart{padding:13px 22px;background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:10px;letter-spacing:2px;border-radius:8px;cursor:pointer}
 
-footer{padding:30px 5%;text-align:center;background:#040404;border-top:1px solid #0a0a0a;font-family:'Orbitron';font-size:9px;color:#444;letter-spacing:2px}
-footer a{color:var(--neon);margin:0 10px}
+/* ═════ PREMIUM FOOTER (gespiegelt aus collections.html) ═════ */
+footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e;font-family:'Orbitron';color:#888;letter-spacing:normal}
+.foot-top{max-width:1100px;margin:0 auto;padding:44px 5% 28px;display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:40px}
+.foot-col h4{font-size:9.5px;letter-spacing:2.5px;color:#fff;margin-bottom:14px;font-weight:600}
+.foot-brand-logo{font-family:'Orbitron';font-weight:900;font-size:18px;letter-spacing:4px;color:#fff;margin-bottom:10px;display:inline-block}
+.foot-brand-logo span{color:var(--neon)}
+.foot-tag{font-size:9.5px;letter-spacing:1.3px;color:#666;line-height:1.6;margin-bottom:14px}
+.foot-col ul{list-style:none;padding:0;margin:0}
+.foot-col ul li{margin:7px 0}
+.foot-col ul li a{font-size:9.5px;letter-spacing:1.4px;color:#888;text-decoration:none;transition:.2s;margin:0}
+.foot-col ul li a:hover{color:var(--neon)}
+.foot-social{display:flex;gap:8px;margin-top:10px}
+.foot-social a{width:30px;height:30px;border-radius:50%;background:#0a0a0a;border:1px solid #1a1a1a;display:flex;align-items:center;justify-content:center;color:#888;font-size:12px;text-decoration:none;transition:.2s;margin:0}
+.foot-social a:hover{background:var(--neon);color:#000;border-color:var(--neon)}
+.foot-bottom{max-width:1100px;margin:0 auto;padding:16px 5% 24px;border-top:1px solid #0e0e0e;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;font-size:9px;letter-spacing:1.5px;color:#555}
+.foot-bottom-meta a{color:var(--neon);text-decoration:none}
+@media(max-width:680px){.foot-top{grid-template-columns:1fr 1fr;gap:28px}.foot-col:first-child{grid-column:span 2}.foot-bottom{flex-direction:column;text-align:center}}
+
+/* ═════ PADDLE-VISUALISIERUNG (Backshell-View) ═════ */
+.paddle-overlay{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .5s cubic-bezier(.2,.8,.2,1);z-index:6}
+.preview-stack.show-back .paddle-overlay.active{opacity:1}
+.paddle{position:absolute;width:14%;height:34%;background:linear-gradient(180deg,#1a1a1a 0%,#0a0a0a 100%);border:1px solid #2a2a2a;border-radius:18px/40px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 6px 16px rgba(0,0,0,.7),0 0 0 1px rgba(0,242,255,.15);transform:translateY(40px);opacity:0;transition:transform .55s cubic-bezier(.2,1.4,.3,1),opacity .4s;backface-visibility:hidden}
+.paddle::after{content:'';position:absolute;top:8%;left:12%;right:12%;height:24%;background:linear-gradient(180deg,rgba(255,255,255,.06),transparent);border-radius:14px;pointer-events:none}
+.paddle-overlay.active .paddle{opacity:.9;transform:translateY(0)}
+.paddle-overlay.active .paddle.p1{transition-delay:0ms}
+.paddle-overlay.active .paddle.p2{transition-delay:80ms}
+.paddle-overlay.active .paddle.p3{transition-delay:160ms}
+.paddle-overlay.active .paddle.p4{transition-delay:240ms}
+/* Position der 4 Paddles auf der Backshell (relativ zum mask-backshell) */
+.paddle.p1{top:36%;left:22%}
+.paddle.p2{top:36%;right:22%}
+.paddle.p3{top:58%;left:30%}
+.paddle.p4{top:58%;right:30%}
+.paddle-overlay.count-2 .paddle.p3,.paddle-overlay.count-2 .paddle.p4{display:none}
+.paddle-overlay.count-0{opacity:0!important}
+
+/* ═════ PART-HIGHLIGHT (welcher Teil wird gerade konfiguriert) ═════ */
+.preview-layer.highlight{animation:partGlow 2.4s ease-in-out infinite;z-index:5}
+@keyframes partGlow{0%,100%{filter:drop-shadow(0 0 0px rgba(0,242,255,0)) brightness(1)}50%{filter:drop-shadow(0 0 14px rgba(0,242,255,.85)) brightness(1.18)}}
+.part-pulse-ring{position:absolute;inset:0;pointer-events:none;border-radius:50%;border:2px solid rgba(0,242,255,.5);opacity:0;z-index:4}
+.part-pulse-ring.fire{animation:partRing .7s ease-out}
+@keyframes partRing{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.4);opacity:0}}
+
+/* ═════ COLOR-SHIMMER beim Farbwechsel ═════ */
+.preview-layer.shimmer{position:relative}
+.shimmer-sweep{position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);background-size:300% 100%;background-position:200% 0;mix-blend-mode:overlay;pointer-events:none;animation:colorSwipe .9s ease-out;z-index:7}
+@keyframes colorSwipe{0%{background-position:200% 0;opacity:0}10%{opacity:1}100%{background-position:-200% 0;opacity:0}}
+
+/* ═════ TRIGGER-PRESS-ANIMATION (beim Hover über Trigger-Farbpicker) ═════ */
+.trigger-press #layer-triggers{animation:triggerPress 1s ease-in-out infinite}
+@keyframes triggerPress{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-1.5%) scale(.985)}}
 
 .help-tip{display:inline-flex;align-items:center;gap:6px;font-family:'Orbitron';font-size:8.5px;color:#555;background:#0a0a0a;border:1px solid #131318;padding:8px 12px;border-radius:6px;margin-bottom:16px;letter-spacing:1px}
 .help-tip strong{color:var(--neon)}
@@ -663,6 +712,12 @@ footer a{color:var(--neon);margin:0 10px}
         <div class="preview-layer" id="layer-dpad" style="-webkit-mask-image:url('mask-dpad.PNG');mask-image:url('mask-dpad.PNG');background-color:#cccccc;mix-blend-mode:screen"></div>
         <div class="preview-layer" id="layer-sticks" style="-webkit-mask-image:url('mask-stickcap.PNG');mask-image:url('mask-stickcap.PNG');background-color:#222222"></div>
         <div class="preview-layer" id="layer-triggers" style="-webkit-mask-image:url('mask-triggercolor.PNG');mask-image:url('mask-triggercolor.PNG');background-color:#0a0a0a"></div>
+        <div class="paddle-overlay" id="paddle-overlay" aria-hidden="true">
+          <div class="paddle p1"></div>
+          <div class="paddle p2"></div>
+          <div class="paddle p3"></div>
+          <div class="paddle p4"></div>
+        </div>
         <div class="led-bar" id="led-bar"></div>
         <div class="engraving-overlay" id="engr-display"></div>
       </div>
@@ -767,7 +822,7 @@ footer a{color:var(--neon);margin:0 10px}
       </div>
 
       <!-- STEP 5 TRIGGERS -->
-      <div class="step" data-step="5">
+      <div class="step" data-step="5" onmouseenter="document.getElementById('preview-stack')?.classList.add('trigger-press')" onmouseleave="document.getElementById('preview-stack')?.classList.remove('trigger-press')">
         <div class="step-h">TRIGGER &amp; BUMPER</div>
         <div class="step-sub">L1 / R1 / L2 / R2</div>
         <div class="color-name">FARBE: <strong id="name-triggers">SCHWARZ MATT</strong></div>
@@ -949,12 +1004,41 @@ footer a{color:var(--neon);margin:0 10px}
   <button class="mpb-cart" onclick="addToCart()">🛒 IN DEN WARENKORB</button>
 </div>
 
-<footer>
-  © LEXORD® 2026 · Made in Germany ·
-  <a href="/">Shop</a> ·
-  <a href="/#agb">AGB</a> ·
-  <a href="/#datenschutz">Datenschutz</a> ·
-  <a href="/#widerruf">Widerruf</a>
+<!-- ═══ PREMIUM FOOTER (lxrd-foot · 1:1 wie collections.html) ═══ -->
+<footer class="lxrd-foot">
+  <div class="foot-top">
+    <div class="foot-col">
+      <div class="foot-brand-logo">LEX<span>O</span>RD<span style="font-size:11px;vertical-align:super">®</span></div>
+      <div class="foot-tag">Handgefertigte Premium-Controller — Made in Germany. Jeder Custom-Build entsteht in Mecklenburg-Vorpommern.</div>
+      <div class="foot-social" aria-label="Social Media">
+        <a href="https://instagram.com/lexord.de" target="_blank" rel="noopener" title="Instagram">◉</a>
+        <a href="https://wa.me/4915204718720" target="_blank" rel="noopener" title="WhatsApp">✆</a>
+        <a href="mailto:Kontakt@Lexord.de" title="E-Mail">✉</a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h4>SHOP</h4>
+      <ul>
+        <li><a href="/">Startseite</a></li>
+        <li><a href="collections.html">Alle Controller</a></li>
+        <li><a href="konfigurator.html">Konfigurator</a></li>
+        <li><a href="b2b.html">B2B</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h4>RECHTLICHES</h4>
+      <ul>
+        <li><a href="/#impressum">Impressum</a></li>
+        <li><a href="/#datenschutz">Datenschutz</a></li>
+        <li><a href="/#agb">AGB</a></li>
+        <li><a href="/#widerruf">Widerruf</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <div>© 2026 LEXORD® Engineering · Domsühl, Deutschland · USt-Befreit § 19 UStG</div>
+    <div class="foot-bottom-meta"><a href="mailto:Kontakt@Lexord.de">Kontakt@Lexord.de</a></div>
+  </div>
 </footer>
 
 <script>
@@ -1089,6 +1173,10 @@ function pickColor(part, idx, ev){
   buildColorGrid(part);
   updateAll();
   particleBurst(ev, c.hex);
+  highlightPart(part);
+  /* Bei Backshell/Sticks auf Rueckseite drehen damit sichtbar ist */
+  if(part==='back'&&currentView!=='back'){setView('back');}
+  if(part==='front'&&currentView!=='front'){setView('front');}
   toast('✓ '+PART_LABELS[part]+': '+c.name);
 }
 
@@ -1152,6 +1240,37 @@ function applyToLayer(part, color){
   el.style.webkitMaskRepeat = 'no-repeat';
   el.style.webkitMaskSize = 'contain';
   el.style.webkitMaskPosition = 'center';
+  triggerShimmer(el);
+}
+
+/* === Color-Shimmer: holographischer Sweep beim Farbwechsel === */
+function triggerShimmer(el){
+  if(!el) return;
+  const existing=el.querySelector('.shimmer-sweep');if(existing)existing.remove();
+  const sw=document.createElement('div');sw.className='shimmer-sweep';el.appendChild(sw);
+  setTimeout(()=>sw.remove(),900);
+}
+
+/* === Part-Highlight: pulst den aktuell konfigurierten Layer === */
+let _highlightTimer=null;
+function highlightPart(part){
+  document.querySelectorAll('.preview-layer.highlight').forEach(el=>el.classList.remove('highlight'));
+  if(_highlightTimer){clearTimeout(_highlightTimer);_highlightTimer=null;}
+  if(!part)return;
+  const el=document.getElementById(LAYER_IDS[part]);if(!el)return;
+  el.classList.add('highlight');
+  _highlightTimer=setTimeout(()=>el.classList.remove('highlight'),3200);
+}
+
+/* === Paddle-Overlay aktualisieren === */
+function updatePaddleOverlay(){
+  const ov=document.getElementById('paddle-overlay');if(!ov)return;
+  const n=state.hw_paddles||0;
+  ov.classList.remove('count-0','count-2','count-4','active');
+  if(n>0){ov.classList.add('active','count-'+n);}else{ov.classList.add('count-0');}
+  /* Paddles nur sichtbar wenn Rueckseite gezeigt wird */
+  const stack=document.getElementById('preview-stack');
+  if(stack){stack.classList.toggle('show-back',currentView==='back');}
 }
 
 /* PRESETS */
@@ -1172,7 +1291,7 @@ function applyPreset(key, ev){
 function setHw(group, value, price){
   if(group==='stick'){state.hw_stick=value;state.hw_stick_price=price;document.querySelectorAll('[id^="hw-stick-"]').forEach(el=>el.classList.remove('sel'));document.getElementById('hw-stick-'+value).classList.add('sel');}
   if(group==='trigger'){state.hw_trigger=value;state.hw_trigger_price=price;document.querySelectorAll('[id^="hw-trigger-"]').forEach(el=>el.classList.remove('sel'));document.getElementById('hw-trigger-'+value).classList.add('sel');}
-  if(group==='paddles'){state.hw_paddles=value;state.hw_paddles_price=price;document.querySelectorAll('.pc-btn').forEach(el=>el.classList.remove('sel'));document.getElementById('pc-'+value).classList.add('sel');}
+  if(group==='paddles'){state.hw_paddles=value;state.hw_paddles_price=price;document.querySelectorAll('.pc-btn').forEach(el=>el.classList.remove('sel'));document.getElementById('pc-'+value).classList.add('sel');if(value>0){currentView='back';if(typeof updateViewState==='function')updateViewState();}updatePaddleOverlay();}
   if(group==='grip'){state.hw_grip=value;state.hw_grip_price=price;document.querySelectorAll('[id^="hw-grip-"]').forEach(el=>el.classList.remove('sel'));document.getElementById('hw-grip-'+value).classList.add('sel');}
   if(group==='rumble'){state.hw_rumble=value;state.hw_rumble_price=price;document.querySelectorAll('[id^="hw-rumble-"]').forEach(el=>el.classList.remove('sel'));document.getElementById('hw-rumble-'+value).classList.add('sel');}
   if(group==='led_rgb'){state.hw_led_rgb=value;state.hw_led_rgb_price=price;const el=document.getElementById('hw-led-rgb');if(el)el.classList.toggle('sel',!!value);}
@@ -1290,7 +1409,8 @@ function setView(v){
   const stack = document.getElementById('preview-stack');
   if(v==='back'){stack.classList.add('flipped');}else{stack.classList.remove('flipped');}
   document.querySelectorAll('.vt-btn').forEach(b=>b.classList.remove('sel'));
-  document.getElementById('vt-'+v).classList.add('sel');
+  const vb=document.getElementById('vt-'+v);if(vb)vb.classList.add('sel');
+  updatePaddleOverlay();
 }
 function toggleSpin(){
   autoSpin = !autoSpin;
@@ -1306,7 +1426,16 @@ function rotateOnce(){
   stack.classList.toggle('flipped');
   currentView = stack.classList.contains('flipped')?'back':'front';
   document.querySelectorAll('.vt-btn').forEach(b=>b.classList.remove('sel'));
-  document.getElementById('vt-'+currentView).classList.add('sel');
+  const vb=document.getElementById('vt-'+currentView);if(vb)vb.classList.add('sel');
+  updatePaddleOverlay();
+}
+function updateViewState(){
+  const stack = document.getElementById('preview-stack');if(!stack)return;
+  if(currentView==='back'){stack.classList.add('flipped');stack.classList.remove('spin');autoSpin=false;}
+  else stack.classList.remove('flipped');
+  document.querySelectorAll('.vt-btn').forEach(b=>b.classList.remove('sel'));
+  const vb=document.getElementById('vt-'+currentView);if(vb)vb.classList.add('sel');
+  updatePaddleOverlay();
 }
 function screenshot(){
   toast('📸 Screenshot-Funktion: bitte mit Geräte-Screenshot speichern');
@@ -1735,6 +1864,7 @@ updateAll = function(){
 PARTS.forEach(part=>{buildColorGrid(part);applyToLayer(part, COLORS[state[part]]);});
 state.buildName = state.buildName||'';
 renderBundles();
+updatePaddleOverlay();
 loadFromHash();
 buildLEDGrid();
 buildStickerGrid();

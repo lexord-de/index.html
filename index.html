@@ -2158,7 +2158,9 @@ async function _translateAll(lang){
   next();
 }
 
-function setLang(l){
+function setLang(l,opts){
+  const silent=opts&&opts.silent;
+  const prev=localStorage.getItem('lxrd_lang');
   localStorage.setItem('lxrd_lang',l);
   document.documentElement.lang=l;
   const t=I18N[l]||I18N.de;
@@ -2169,7 +2171,7 @@ function setLang(l){
   // Vollständige Website-Übersetzung mit API-Fallback
   _translateAll(l).catch(e=>console.warn('Translation:',e));
   const drop=document.getElementById('lang-drop');if(drop)drop.classList.remove('open');
-  toast('🌍 '+t.cur,'ok');
+  if(!silent&&prev&&prev!==l)toast('🌍 '+t.cur,'ok');
 }
 
 /* ═══ E-MAIL: CLOUDFLARE PRIMÄR + EMAILJS FALLBACK ═══ */
@@ -2676,7 +2678,7 @@ document.addEventListener('click',()=>{const intro=document.getElementById('intr
 /* INIT */
 loadCart();updateCart();
 setTimeout(showCookieBanner,3000);
-setTimeout(()=>setLang(localStorage.getItem('lxrd_lang')||'de'),100);
+setTimeout(()=>setLang(localStorage.getItem('lxrd_lang')||'de',{silent:true}),100);
 if(window.location.hash==='#cart-open'){setTimeout(()=>{try{openCart();}catch(e){}},800);history.replaceState(null,'',window.location.pathname);}
 const _urlParams=new URLSearchParams(window.location.search);
 if(_urlParams.get('admin')==='1'){setTimeout(openAdmin,500);}

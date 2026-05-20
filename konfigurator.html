@@ -266,6 +266,24 @@ h1 .accent{background:linear-gradient(90deg,var(--neon),var(--neon2),var(--neon)
 .preview-shadow{position:absolute;bottom:5%;left:18%;right:18%;height:28px;background:radial-gradient(ellipse,rgba(0,242,255,.22) 0%,rgba(0,0,0,.55) 35%,transparent 75%);filter:blur(22px);z-index:0;animation:shadowPulse 5s ease-in-out infinite}
 @keyframes shadowPulse{50%{opacity:.5;transform:scaleX(.92)}}
 
+/* === Mobile: Hotspot-Labels schrumpfen === */
+@media(max-width:780px){
+  .hs2-label{font-size:7.5px;padding:3px 6px;max-width:100px;border-radius:11px}
+  .hs2-label strong{font-size:8px}
+  .hs2-label::before,.hs2-label.line-right::before,.hs2-label.line-left::before{width:22px}
+  .hs2-label.line-right::before{right:-22px}.hs2-label.line-left::before{left:-22px}
+  .hs2-label.line-down::after,.hs2-label.line-up::after{height:20px}
+  .hs2-dot{width:7px;height:7px}
+}
+@media(max-width:480px){
+  .hs2-label{font-size:6.5px;padding:2px 5px;max-width:80px}
+  .hs2-label strong{font-size:7px;margin-bottom:0}
+  .hs2-label::before,.hs2-label.line-right::before,.hs2-label.line-left::before{width:14px}
+  .hs2-label.line-right::before{right:-14px}.hs2-label.line-left::before{left:-14px}
+  .hs2-dot{width:6px;height:6px}
+  .hs2-dot::after{inset:-8px}
+}
+
 .preview-info{margin-top:18px;padding-top:18px;border-top:1px solid #131318;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}
 .pv-left{font-family:'Orbitron';font-size:9px;color:#555;letter-spacing:2px}
 .pv-name{color:var(--neon);font-size:13px;margin-bottom:4px;letter-spacing:1px;font-weight:700}
@@ -813,7 +831,7 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
     </div>
 
     <div class="preview-stage" id="preview-stage">
-      <div class="preview-stack" id="preview-stack">
+      <div class="preview-stack view-both" id="preview-stack">
 
         <!-- HOTSPOT-LAYER: liegt UEBER beiden Units, Labels sitzen in den Rand-Zonen -->
         <div class="hotspot-layer" id="hotspot-layer">

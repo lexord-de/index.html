@@ -16,16 +16,30 @@
 <meta property="og:title" content="LEXORD® | Custom PS5 Controller Made in Germany">
 <meta property="og:description" content="Premium Custom Controller mit TMR & Hall Effect Sticks. Made in Germany.">
 <meta property="og:image" content="https://lexord.de/IMG_7023.png">
+<meta property="og:image:secure_url" content="https://lexord.de/IMG_7023.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="1200">
+<meta property="og:image:alt" content="LEXORD® — Custom PS5 Controller Made in Germany">
 <meta property="og:locale" content="de_DE">
 <meta property="og:site_name" content="LEXORD®">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"LEXORD Engineering","url":"https://lexord.de","logo":"https://lexord.de/IMG_7023.png","email":"Kontakt@Lexord.de","telephone":"+49-152-04718720","address":{"@type":"PostalAddress","streetAddress":"An Der Domsühler Str. 2","postalCode":"19374","addressLocality":"Domsühl","addressCountry":"DE"},"founder":{"@type":"Person","name":"Leon Schulz"},"sameAs":["https://instagram.com/lexord.de","https://tiktok.com/@lexord.de"]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Product","name":"LEXORD Custom PS5 Controller","description":"Premium Custom PS5 Controller mit TMR & Hall Effect Sticks, Paddle System, Made in Germany","brand":{"@type":"Brand","name":"LEXORD"},"offers":{"@type":"AggregateOffer","lowPrice":"70.00","highPrice":"240.00","priceCurrency":"EUR","availability":"https://schema.org/InStock"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"91","bestRating":"5","worstRating":"1"}}</script>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LEXORD® | Custom PS5 Controller Made in Germany">
+<meta name="twitter:description" content="Premium Custom Controller mit TMR & Hall Effect Sticks. Made in Germany.">
+<meta name="twitter:image" content="https://lexord.de/IMG_7023.png">
+<meta name="twitter:image:alt" content="LEXORD® — Custom PS5 Controller">
+<meta name="thumbnail" content="https://lexord.de/IMG_7023.png">
+<link rel="image_src" href="https://lexord.de/IMG_7023.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"LEXORD Engineering","url":"https://lexord.de","logo":{"@type":"ImageObject","url":"https://lexord.de/IMG_7023.png","width":1200,"height":1200},"image":"https://lexord.de/IMG_7023.png","email":"Kontakt@Lexord.de","telephone":"+49-152-04718720","address":{"@type":"PostalAddress","streetAddress":"An Der Domsühler Str. 2","postalCode":"19374","addressLocality":"Domsühl","addressCountry":"DE"},"founder":{"@type":"Person","name":"Leon Schulz"},"sameAs":["https://instagram.com/lexord.de","https://tiktok.com/@lexord.de"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"LEXORD®","url":"https://lexord.de","image":"https://lexord.de/IMG_7023.png","publisher":{"@type":"Organization","name":"LEXORD Engineering","logo":{"@type":"ImageObject","url":"https://lexord.de/IMG_7023.png"}}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Product","name":"LEXORD Custom PS5 Controller","image":["https://lexord.de/IMG_7023.png"],"description":"Premium Custom PS5 Controller mit TMR & Hall Effect Sticks, Paddle System, Made in Germany","brand":{"@type":"Brand","name":"LEXORD"},"offers":{"@type":"AggregateOffer","lowPrice":"70.00","highPrice":"240.00","priceCurrency":"EUR","availability":"https://schema.org/InStock"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"91","bestRating":"5","worstRating":"1"}}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.paypal.com">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="icon" type="image/png" href="IMG_7023.png">
 <link rel="apple-touch-icon" href="IMG_7023.png">
+<link rel="preload" as="image" href="IMG_7023.png" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 <!-- PayPal SDK -->
@@ -743,6 +757,8 @@ main{position:relative;z-index:1}
 <a href="#hero" class="sr-only">Zum Hauptinhalt springen</a>
 
 <!-- INTRO -->
+<img src="IMG_7023.png" alt="LEXORD® — Custom PS5 Controller Made in Germany" itemprop="image" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;left:-9999px" fetchpriority="high">
+
 <div id="intro-overlay" aria-hidden="true">
   <canvas id="warp-canvas"></canvas>
   <div class="intro-content">
@@ -900,7 +916,7 @@ main{position:relative;z-index:1}
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     </button>
     <div class="lang-switcher">
-      <button class="lang-btn" onclick="toggleLangDrop()" id="lang-btn-cur">🇩🇪 DE</button>
+      <button class="lang-btn" onclick="toggleLangDrop()" id="lang-btn-cur">🇩🇪</button>
       <div class="lang-drop" id="lang-drop">
         <button class="lang-item active" data-lang="de" onclick="setLang('de')">🇩🇪 Deutsch</button>
         <button class="lang-item" data-lang="en" onclick="setLang('en')">🇬🇧 English</button>
@@ -1923,9 +1939,9 @@ function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 
 /* ═══ I18N — Sprach-Switcher DE/EN/FR ═══ */
 const I18N = {
-  de:{nav_home:'HOME',nav_konfig:'3D KONFIGURATOR',nav_shop:'PRODUKTE',nav_repair:'REPARATUR',nav_tester:'TESTER',nav_contact:'KONTAKT',nav_review:'BEWERTEN',nav_account:'👤 MEIN KONTO',nav_b2b:'🏢 B2B SHOP',cta_main:'🎮 JETZT KONFIGURIEREN',cta_sec:'SHOP ANSEHEN →',cur:'🇩🇪 DE'},
-  en:{nav_home:'HOME',nav_konfig:'3D CONFIGURATOR',nav_shop:'PRODUCTS',nav_repair:'REPAIR',nav_tester:'TESTER',nav_contact:'CONTACT',nav_review:'REVIEW US',nav_account:'👤 MY ACCOUNT',nav_b2b:'🏢 B2B SHOP',cta_main:'🎮 CONFIGURE NOW',cta_sec:'VIEW SHOP →',cur:'🇬🇧 EN'},
-  fr:{nav_home:'ACCUEIL',nav_konfig:'CONFIGURATEUR 3D',nav_shop:'PRODUITS',nav_repair:'RÉPARATION',nav_tester:'TESTEUR',nav_contact:'CONTACT',nav_review:'AVIS',nav_account:'👤 MON COMPTE',nav_b2b:'🏢 ESPACE B2B',cta_main:'🎮 CONFIGURER',cta_sec:'BOUTIQUE →',cur:'🇫🇷 FR'}
+  de:{nav_home:'HOME',nav_konfig:'3D KONFIGURATOR',nav_shop:'PRODUKTE',nav_repair:'REPARATUR',nav_tester:'TESTER',nav_contact:'KONTAKT',nav_review:'BEWERTEN',nav_account:'👤 MEIN KONTO',nav_b2b:'🏢 B2B SHOP',cta_main:'🎮 JETZT KONFIGURIEREN',cta_sec:'SHOP ANSEHEN →',cur:'🇩🇪'},
+  en:{nav_home:'HOME',nav_konfig:'3D CONFIGURATOR',nav_shop:'PRODUCTS',nav_repair:'REPAIR',nav_tester:'TESTER',nav_contact:'CONTACT',nav_review:'REVIEW US',nav_account:'👤 MY ACCOUNT',nav_b2b:'🏢 B2B SHOP',cta_main:'🎮 CONFIGURE NOW',cta_sec:'VIEW SHOP →',cur:'🇬🇧'},
+  fr:{nav_home:'ACCUEIL',nav_konfig:'CONFIGURATEUR 3D',nav_shop:'PRODUITS',nav_repair:'RÉPARATION',nav_tester:'TESTEUR',nav_contact:'CONTACT',nav_review:'AVIS',nav_account:'👤 MON COMPTE',nav_b2b:'🏢 ESPACE B2B',cta_main:'🎮 CONFIGURER',cta_sec:'BOUTIQUE →',cur:'🇫🇷'}
 };
 function toggleLangDrop(){document.getElementById('lang-drop').classList.toggle('open');}
 document.addEventListener('click',e=>{if(!e.target.closest('.lang-switcher'))document.getElementById('lang-drop')?.classList.remove('open');});
@@ -2000,31 +2016,96 @@ function _collectTextNodes(){
   return nodes;
 }
 
-function _translateAll(lang){
+/* MyMemory Translation API - free, no key required */
+const _LXRD_TCACHE_KEY='lxrd_tcache_v2';
+function _loadTCache(){try{return JSON.parse(localStorage.getItem(_LXRD_TCACHE_KEY)||'{}');}catch(e){return {};}}
+function _saveTCache(c){try{localStorage.setItem(_LXRD_TCACHE_KEY,JSON.stringify(c));}catch(e){}}
+let _tCache=_loadTCache();
+
+async function _apiTranslate(text,lang){
+  if(!text||!text.trim()||lang==='de')return text;
+  const key=lang+'::'+text;
+  if(_tCache[key])return _tCache[key];
+  try{
+    const url='https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair=de|'+lang;
+    const r=await fetch(url);
+    if(!r.ok)throw 0;
+    const d=await r.json();
+    const out=d&&d.responseData&&d.responseData.translatedText;
+    if(out&&!/MYMEMORY WARNING|INVALID|QUOTA/i.test(out)){
+      _tCache[key]=out;_saveTCache(_tCache);
+      return out;
+    }
+  }catch(e){}
+  return text;
+}
+
+async function _translateAll(lang){
   const dict=TRANS[lang]||{};
-  _collectTextNodes().forEach(n=>{
-    const orig=n._lxrdOrig||(n._lxrdOrig=n.nodeValue);
-    if(lang==='de'){n.nodeValue=orig;return;}
+  const nodes=_collectTextNodes();
+  // Cache originals
+  nodes.forEach(n=>{if(!n._lxrdOrig)n._lxrdOrig=n.nodeValue;});
+
+  if(lang==='de'){
+    nodes.forEach(n=>{n.nodeValue=n._lxrdOrig;});
+    document.querySelectorAll('input[placeholder],textarea[placeholder]').forEach(el=>{if(el._lxrdPh)el.placeholder=el._lxrdPh;});
+    document.querySelectorAll('[aria-label]').forEach(el=>{if(el._lxrdAria)el.setAttribute('aria-label',el._lxrdAria);});
+    return;
+  }
+
+  // Phase 1: instant dictionary application
+  const pending=[];
+  nodes.forEach(n=>{
+    const orig=n._lxrdOrig;
     const key=orig.trim();
+    if(!key){return;}
     if(dict[key]){n.nodeValue=n.nodeValue.replace(key,dict[key]);return;}
-    // Fallback: zerlege Whitespace-separated tokens
+    // word-by-word fallback
     const tokens=key.split(/(\s+|[·•—–\-,.:;!?()/\\|])/);
+    let changed=false;
     if(tokens.length>1){
-      let changed=false;
       const out=tokens.map(tok=>{const tt=tok.trim();if(tt&&dict[tt]){changed=true;return tok.replace(tt,dict[tt]);}return tok;});
-      if(changed)n.nodeValue=n.nodeValue.replace(key,out.join(''));
+      if(changed){n.nodeValue=n.nodeValue.replace(key,out.join(''));}
+    }
+    // If still mostly German, queue for API translation
+    if(!dict[key]&&/[a-zäöüß]/i.test(key)&&key.length>2&&key.length<480){
+      pending.push({n,key,orig});
     }
   });
-  // Inputs: placeholders
+
+  // Placeholders + aria-labels
   document.querySelectorAll('input[placeholder],textarea[placeholder]').forEach(el=>{
     const o=el._lxrdPh||(el._lxrdPh=el.placeholder);
-    if(lang==='de'){el.placeholder=o;}else if(dict[o]){el.placeholder=dict[o];}
+    if(dict[o])el.placeholder=dict[o];else if(o&&o.length>2&&o.length<200){pending.push({el,key:o,kind:'ph'});}
   });
-  // Aria-labels
   document.querySelectorAll('[aria-label]').forEach(el=>{
     const o=el._lxrdAria||(el._lxrdAria=el.getAttribute('aria-label'));
-    if(lang==='de'){el.setAttribute('aria-label',o);}else if(dict[o]){el.setAttribute('aria-label',dict[o]);}
+    if(dict[o])el.setAttribute('aria-label',dict[o]);else if(o&&o.length>2&&o.length<200){pending.push({el,key:o,kind:'aria'});}
   });
+
+  // Phase 2: API translation in batches (rate-limit friendly)
+  const seen=new Map();
+  pending.forEach(p=>{if(!seen.has(p.key))seen.set(p.key,[]);seen.get(p.key).push(p);});
+  const uniq=[...seen.keys()];
+
+  let idx=0;
+  const BATCH=4, DELAY=120;
+  async function next(){
+    if(idx>=uniq.length||document.documentElement.lang!==lang)return;
+    const slice=uniq.slice(idx,idx+BATCH);idx+=BATCH;
+    await Promise.all(slice.map(async k=>{
+      const tr=await _apiTranslate(k,lang);
+      if(tr&&tr!==k&&document.documentElement.lang===lang){
+        seen.get(k).forEach(p=>{
+          if(p.n){const cur=p.n.nodeValue;p.n.nodeValue=cur.replace(k,tr);}
+          else if(p.el&&p.kind==='ph'){p.el.placeholder=tr;}
+          else if(p.el&&p.kind==='aria'){p.el.setAttribute('aria-label',tr);}
+        });
+      }
+    }));
+    setTimeout(next,DELAY);
+  }
+  next();
 }
 
 function setLang(l){
@@ -2034,8 +2115,8 @@ function setLang(l){
   const btn=document.getElementById('lang-btn-cur');if(btn)btn.textContent=t.cur;
   document.querySelectorAll('.lang-item').forEach(it=>it.classList.toggle('active',it.getAttribute('data-lang')===l));
   document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');if(t[k])el.textContent=t[k];});
-  // Vollständige Website-Übersetzung
-  try{_translateAll(l);}catch(e){console.warn('Translation:',e);}
+  // Vollständige Website-Übersetzung mit API-Fallback
+  _translateAll(l).catch(e=>console.warn('Translation:',e));
   const drop=document.getElementById('lang-drop');if(drop)drop.classList.remove('open');
   toast('🌍 '+t.cur,'ok');
 }

@@ -191,18 +191,34 @@ h1 .accent{background:linear-gradient(90deg,var(--neon),var(--neon2),var(--neon)
 .hs-line::before{content:'';position:absolute;left:0;top:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:#00f2ff;box-shadow:0 0 8px #00f2ff}
 .hs-lbl{font-family:'Inter','Segoe UI',sans-serif;font-size:9.5px;color:#e8e8e8;background:rgba(8,8,8,.92);padding:6px 9px;border:1px solid rgba(0,242,255,.35);border-radius:6px;backdrop-filter:blur(6px);line-height:1.35;white-space:nowrap;letter-spacing:.2px}
 .hs-lbl strong{color:#fff;font-weight:700;font-size:10px;display:block;margin-bottom:1px}
-/* Front-Hotspots — Magnetic Sticks unten links, FrontButtons oben rechts */
-.hs-sticks{left:-2%;bottom:18%;flex-direction:row-reverse}
-.hs-sticks .hs-line{background:linear-gradient(-90deg,rgba(0,242,255,.7),rgba(255,255,255,.25))}
-.hs-sticks .hs-line::before{left:auto;right:0;transform:translate(50%,-50%)}
-.hs-frontbtn{right:-2%;top:14%;flex-direction:row-reverse}
-.hs-frontbtn .hs-lbl{order:2}
-/* Back-Hotspot — Paddles links oben */
-.hs-paddles{left:-2%;top:14%}
+/* Front-Hotspots — strategisch um den Controller verteilt */
+.hs-sticks  {left:-30%;bottom:20%}                             /* Linie -> Sticks (Mitte unten) */
+.hs-frontbtn{right:-30%;top:8%;flex-direction:row-reverse}     /* Linie -> Bumper-Bereich oben rechts */
+.hs-trigger {right:-30%;top:-2%;flex-direction:row-reverse}    /* Linie -> Trigger (oben rechts) */
+.hs-akku    {left:-30%;top:-2%}                                /* Linie -> Top-Bar (Akku im Inneren) */
+.hs-touchpad{left:-30%;top:32%}                                /* Linie -> Touchpad (oben Mitte) */
+.hs-mittel  {right:-30%;bottom:32%;flex-direction:row-reverse} /* Linie -> PS-Logo (Mitte unten) */
+.hs-rumble  {left:-30%;bottom:2%}                              /* Linie -> Griff-Bereich */
+.hs-led     {right:-30%;top:30%;flex-direction:row-reverse}    /* Linie -> Lightbar */
+/* row-reverse: Line auf der rechten Seite des Labels */
+.hs-frontbtn .hs-line,.hs-trigger .hs-line,.hs-mittel .hs-line,.hs-led .hs-line{background:linear-gradient(-90deg,rgba(0,242,255,.7),rgba(255,255,255,.25))}
+.hs-frontbtn .hs-line::before,.hs-trigger .hs-line::before,.hs-mittel .hs-line::before,.hs-led .hs-line::before{left:auto;right:0;transform:translate(50%,-50%)}
+
+/* Back-Hotspots */
+.hs-paddles{left:-30%;top:8%}                                  /* Linie -> Paddle-Bereich */
+.hs-grip   {right:-30%;bottom:10%;flex-direction:row-reverse}  /* Linie -> Grip-Gehaeuse */
+.hs-grip .hs-line{background:linear-gradient(-90deg,rgba(0,242,255,.7),rgba(255,255,255,.25))}
+.hs-grip .hs-line::before{left:auto;right:0;transform:translate(50%,-50%)}
 .unit-back .hotspot{font-size:8.5px}
 .unit-back .hs-lbl{font-size:8.5px;padding:5px 7px}
 .unit-back .hs-line{width:32px}
-@keyframes hsBlink{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.05);filter:brightness(1.4) drop-shadow(0 0 8px #00f2ff)}}
+
+@keyframes hsBlink{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.06);filter:brightness(1.4) drop-shadow(0 0 8px #00f2ff)}}
+/* Slide-In wenn Hotspot show wird */
+.hotspot{transform:translateX(-8px)}
+.hs-frontbtn,.hs-trigger,.hs-mittel,.hs-led,.hs-grip{transform:translateX(8px)}
+.hotspot.show{transform:translateX(0)}
+.hotspot{transition:opacity .4s ease,transform .4s ease}
 
 /* LED LIGHTBAR — animiert */
 .led-bar{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);width:34%;height:4px;border-radius:4px;background:var(--led-color,#3aa3ff);box-shadow:0 0 14px var(--led-color,#3aa3ff),0 0 28px var(--led-color,#3aa3ff);opacity:.9;z-index:5;animation:ledBreathe 2.5s ease-in-out infinite}
@@ -366,6 +382,12 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
 .paddle.p4{top:54%;right:28%}
 .paddle-overlay.count-2 .paddle.p3,.paddle-overlay.count-2 .paddle.p4{display:none}
 .paddle-overlay.count-0{opacity:0!important}
+
+/* ═════ TOUCHPAD + MITTELSTUECK OVERLAY ═════ */
+.layer-touchpad{position:absolute;top:23%;left:35%;width:30%;height:13%;border-radius:8% / 30%;background:transparent;mix-blend-mode:multiply;opacity:0;transition:background-color .5s,opacity .5s,box-shadow .4s;z-index:4;pointer-events:none}
+.layer-touchpad.on{opacity:.85;box-shadow:inset 0 0 0 2px rgba(0,242,255,.15)}
+.layer-mittelstueck{position:absolute;top:38%;left:46%;width:8%;height:8%;border-radius:50%;background:transparent;mix-blend-mode:multiply;opacity:0;transition:background-color .5s,opacity .5s;z-index:4;pointer-events:none}
+.layer-mittelstueck.on{opacity:.85}
 
 /* ═════ FRONT-BUTTON OVERLAY (2× FrontButtons fuer 6er/4er+Front Pakete) ═════ */
 .frontbtn-overlay{position:absolute;inset:0;pointer-events:none;z-index:6;opacity:0;transition:opacity .4s}
@@ -762,9 +784,18 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
           <div class="ctrl-layer" id="layer-dpad" style="-webkit-mask-image:url('mask-dpad.PNG');mask-image:url('mask-dpad.PNG');background-color:#cccccc;mix-blend-mode:screen"></div>
           <div class="ctrl-layer" id="layer-sticks" style="-webkit-mask-image:url('mask-stickcap.PNG');mask-image:url('mask-stickcap.PNG');background-color:#222222;mix-blend-mode:multiply"></div>
           <div class="ctrl-layer" id="layer-triggers" style="-webkit-mask-image:url('mask-triggercolor.PNG');mask-image:url('mask-triggercolor.PNG');background-color:#0a0a0a;mix-blend-mode:multiply"></div>
-          <!-- Front-Hotspots: Magnetic Sticks + FrontButtons -->
-          <div class="hotspot hs-sticks show" id="hs-sticks"><span class="hs-line"></span><span class="hs-lbl"><strong>Magnetic Sticks</strong><br>Anti-Stickdrift · Hall Effect</span></div>
+          <!-- Touchpad & Mittelstuck als positionierte Overlays (keine Masken noetig) -->
+          <div class="layer-touchpad" id="layer-touchpad"></div>
+          <div class="layer-mittelstueck" id="layer-mittelstueck"></div>
+          <!-- Front-Hotspots: Sticks, Trigger, Akku, FrontButtons, Touchpad, Mittelstueck, Rumble, LED, Gravur -->
+          <div class="hotspot hs-sticks show" id="hs-sticks"><span class="hs-line"></span><span class="hs-lbl"><strong id="hs-sticks-title">Magnetic Sticks</strong><br><span id="hs-sticks-desc">Anti-Stickdrift · Hall Effect</span></span></div>
           <div class="hotspot hs-frontbtn" id="hs-frontbtn"><span class="hs-line"></span><span class="hs-lbl"><strong>FrontButtons</strong><br>2× programmable Buttons</span></div>
+          <div class="hotspot hs-trigger" id="hs-trigger"><span class="hs-line"></span><span class="hs-lbl"><strong id="hs-trigger-title">Clicky Trigger</strong><br><span id="hs-trigger-desc">1 mm Auslöseweg · FPS-ready</span></span></div>
+          <div class="hotspot hs-akku" id="hs-akku"><span class="hs-line"></span><span class="hs-lbl"><strong id="hs-akku-title">Power-Akku 2200</strong><br><span id="hs-akku-desc">bis 12 h Laufzeit</span></span></div>
+          <div class="hotspot hs-touchpad" id="hs-touchpad"><span class="hs-line"></span><span class="hs-lbl"><strong>Touchpad Custom</strong><br><span id="hs-touchpad-desc">Custom-Farbe</span></span></div>
+          <div class="hotspot hs-mittel" id="hs-mittel"><span class="hs-line"></span><span class="hs-lbl"><strong>Mittelstück</strong><br><span id="hs-mittel-desc">PS-Logo-Bereich</span></span></div>
+          <div class="hotspot hs-rumble" id="hs-rumble"><span class="hs-line"></span><span class="hs-lbl"><strong>Strong Rumble+</strong><br>30 % stärkere Motoren</span></div>
+          <div class="hotspot hs-led" id="hs-led"><span class="hs-line"></span><span class="hs-lbl"><strong>LED Lightbar</strong><br><span id="hs-led-desc">Farb-Akzent</span></span></div>
           <!-- Front-Front-Buttons-Visualisierung -->
           <div class="frontbtn-overlay" id="frontbtn-overlay" aria-hidden="true">
             <span class="fb fb1"></span><span class="fb fb2"></span>
@@ -785,8 +816,9 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
             <div class="paddle p3"><span class="paddle-ico"></span></div>
             <div class="paddle p4"><span class="paddle-ico"></span></div>
           </div>
-          <!-- Back-Hotspot: Paddles -->
+          <!-- Back-Hotspots: Paddles, Grip-Coating -->
           <div class="hotspot hs-paddles" id="hs-paddles"><span class="hs-line"></span><span class="hs-lbl"><strong>Programmable Paddles</strong><br><span id="hs-paddle-desc">Action+Cross+L3/R3</span></span></div>
+          <div class="hotspot hs-grip" id="hs-grip"><span class="hs-line"></span><span class="hs-lbl"><strong>Grip Coating</strong><br>Anti-Rutsch Soft-Touch</span></div>
         </div>
 
       </div>
@@ -867,7 +899,7 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
       </div>
 
       <!-- STEP 5 TRIGGERS -->
-      <div class="step" data-step="5" onmouseenter="document.getElementById('preview-stack')?.classList.add('trigger-press')" onmouseleave="document.getElementById('preview-stack')?.classList.remove('trigger-press')">
+      <div class="step" data-step="5" onmouseenter="document.getElementById('preview-stack')?.classList.add('trigger-press');document.getElementById('hs-trigger')?.classList.add('show')" onmouseleave="document.getElementById('preview-stack')?.classList.remove('trigger-press');updateAllHotspots()">
         <div class="step-h">TRIGGER &amp; BUMPER</div>
         <div class="step-sub">L1 / R1 / L2 / R2</div>
         <div class="color-name">FARBE: <strong id="name-triggers">SCHWARZ MATT</strong></div>
@@ -915,6 +947,19 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
         <div style="font-family:Orbitron;font-size:9px;color:var(--neon);letter-spacing:2px;margin:24px 0 10px">🔊 RUMBLE-MODUL</div>
         <div class="hw-opt sel" onclick="setHw('rumble','standard',0)" id="hw-rumble-standard"><div class="left"><div class="title">STANDARD RUMBLE</div><div class="desc">Original Vibration + Haptic Feedback</div></div><div class="price free">INKL.</div></div>
         <div class="hw-opt" onclick="setHw('rumble','strong',18)" id="hw-rumble-strong"><div class="left"><div class="title">💥 STRONG RUMBLE+</div><div class="desc">Verstärkte Motoren · 30% stärker</div></div><div class="price">+18 €</div></div>
+
+        <div style="font-family:Orbitron;font-size:9px;color:var(--neon);letter-spacing:2px;margin:24px 0 10px">🔋 AKKU-SYSTEM</div>
+        <div class="hw-opt sel" onclick="setHw('akku','standard',0)" id="hw-akku-standard"><div class="left"><div class="title">STANDARD AKKU</div><div class="desc">Original PS5 · 1560 mAh · 6-8 h Laufzeit</div></div><div class="price free">INKL.</div></div>
+        <div class="hw-opt" onclick="setHw('akku','power',45)" id="hw-akku-power"><div class="left"><div class="title">⚡ POWER-AKKU 2200 mAh</div><div class="desc">+40% Laufzeit · bis zu 12 h Spielzeit</div></div><div class="price">+45 €</div></div>
+        <div class="hw-opt" onclick="setHw('akku','light',25)" id="hw-akku-light"><div class="left"><div class="title">🪶 LIGHTWEIGHT-AKKU</div><div class="desc">-30 g · spürbar weniger Gewicht · 4-6 h Laufzeit</div></div><div class="price">+25 €</div></div>
+
+        <div style="font-family:Orbitron;font-size:9px;color:var(--neon);letter-spacing:2px;margin:24px 0 10px">🎨 TOUCHPAD-FARBE</div>
+        <div class="color-name">FARBE: <strong id="name-touchpad">SCHWARZ MATT</strong></div>
+        <div class="color-grid" id="grid-touchpad"></div>
+
+        <div style="font-family:Orbitron;font-size:9px;color:var(--neon);letter-spacing:2px;margin:24px 0 10px">⬛ MITTELSTÜCK (PS-LOGO-BEREICH)</div>
+        <div class="color-name">FARBE: <strong id="name-mittelstueck">SCHWARZ MATT</strong></div>
+        <div class="color-grid" id="grid-mittelstueck"></div>
       </div>
 
       <!-- STEP 8 GRAVUR -->
@@ -1145,19 +1190,21 @@ const PRESETS = {
   camo:    {front:27,back:27,buttons:14,dpad:14,sticks:14,triggers:14,led:7, name:'TACTICAL CAMO'}
 };
 
-const PARTS = ['front','back','buttons','dpad','sticks','triggers'];
-const PART_LABELS = {front:'FRONT-SCHALE',back:'BACK-SCHALE',buttons:'BUTTONS',dpad:'D-PAD',sticks:'STICK-CAPS',triggers:'TRIGGER'};
-const LAYER_IDS  = {front:'layer-frontshell',back:'layer-backshell',buttons:'layer-buttons',dpad:'layer-dpad',sticks:'layer-sticks',triggers:'layer-triggers'};
+const PARTS = ['front','back','buttons','dpad','sticks','triggers','touchpad','mittelstueck'];
+const PART_LABELS = {front:'FRONT-SCHALE',back:'BACK-SCHALE',buttons:'BUTTONS',dpad:'D-PAD',sticks:'STICK-CAPS',triggers:'TRIGGER',touchpad:'TOUCHPAD',mittelstueck:'MITTELSTÜCK'};
+const LAYER_IDS  = {front:'layer-frontshell',back:'layer-backshell',buttons:'layer-buttons',dpad:'layer-dpad',sticks:'layer-sticks',triggers:'layer-triggers',touchpad:'layer-touchpad',mittelstueck:'layer-mittelstueck'};
 const BASE_PRICE = 70;
 
 let state = {
   front:0, back:0, buttons:1, dpad:2, sticks:0, triggers:0,
+  touchpad:0, mittelstueck:0,
   led:0,
   hw_stick:'standard', hw_stick_price:0,
   hw_trigger:'standard', hw_trigger_price:0,
   hw_paddles:0, hw_paddles_price:0,
   hw_grip:'standard', hw_grip_price:0,
   hw_rumble:'standard', hw_rumble_price:0,
+  hw_akku:'standard', hw_akku_price:0,
   hw_led_rgb:false, hw_led_rgb_price:0,
   hw_warranty:24, hw_warranty_price:0,
   engr_enabled:false, engr_text:'', engr_font:'orbitron',
@@ -1210,14 +1257,18 @@ function pickColor(part, idx, ev){
   const c = COLORS[idx];
   delete state.customColors[part];
   applyToLayer(part, c);
-  document.getElementById('name-'+part).textContent = c.name.toUpperCase();
+  const lbl=document.getElementById('name-'+part);if(lbl)lbl.textContent = c.name.toUpperCase();
   buildColorGrid(part);
   updateAll();
+  updateAllHotspots();
   particleBurst(ev, c.hex);
   highlightPart(part);
-  /* Bei Backshell/Sticks auf Rueckseite drehen damit sichtbar ist */
+  /* Auto-Flip auf passende Seite */
   if(part==='back'&&currentView!=='back'){setView('back');}
-  if(part==='front'&&currentView!=='front'){setView('front');}
+  if((part==='front'||part==='touchpad'||part==='mittelstueck')&&currentView==='back'){setView('front');}
+  /* Hotspot zur ausgewaehlten Part anzeigen + blinken */
+  const partHs={sticks:'hs-sticks',triggers:'hs-trigger',touchpad:'hs-touchpad',mittelstueck:'hs-mittel'};
+  if(partHs[part]){const hs=document.getElementById(partHs[part]);if(hs){hs.classList.add('show');hs.style.animation='hsBlink 1.4s ease-in-out 2';setTimeout(()=>hs.style.animation='',3200);}}
   toast('✓ '+PART_LABELS[part]+': '+c.name);
 }
 
@@ -1258,6 +1309,11 @@ function applyToLayer(part, color){
   el.style.backgroundImage = '';
   el.style.animation = '';
   el.style.backgroundColor = color.hex;
+  /* Touchpad/Mittelstueck: aktiviere Overlay nur wenn nicht Default-Schwarz */
+  if(part==='touchpad' || part==='mittelstueck'){
+    const idx = state[part];
+    el.classList.toggle('on', idx!==0);
+  }
   if(color.special==='carbon'){
     el.style.background = `repeating-linear-gradient(45deg,${color.hex},${color.hex} 3px,#222 3px,#222 6px)`;
   }
@@ -1305,13 +1361,86 @@ function highlightPart(part){
 
 /* === Hotspot-Highlight beim Step-Wechsel === */
 function flashHotspot(step){
-  /* Step 4 = Sticks, Step 7 = HW (Paddles/FrontButtons) */
-  const map = {4:'hs-sticks', 7:'hs-paddles'};
-  const id = map[step]; if(!id) return;
-  const hs = document.getElementById(id); if(!hs) return;
-  hs.classList.add('show');
-  hs.style.animation='hsBlink 1.6s ease-in-out 2';
-  setTimeout(()=>{hs.style.animation='';},3400);
+  /* Mapping Step -> Hotspot-IDs (welche bei Step-Wechsel aufblinken sollen) */
+  const map = {
+    0:['hs-touchpad','hs-led'],   // Front-Schale (zeigt Touchpad/LED-Lokalitaeten)
+    1:['hs-grip'],                 // Back-Schale -> Grip-Hinweis
+    2:['hs-frontbtn'],             // Buttons
+    3:[],                          // D-Pad
+    4:['hs-sticks'],               // Sticks
+    5:['hs-trigger'],              // Trigger
+    6:['hs-led'],                  // LED
+    7:['hs-sticks','hs-trigger','hs-paddles','hs-akku','hs-grip','hs-rumble']  // HW-Upgrades
+  };
+  const ids = map[step]||[];
+  ids.forEach(id=>{
+    const hs = document.getElementById(id); if(!hs) return;
+    hs.classList.add('show');
+    hs.style.animation='hsBlink 1.6s ease-in-out 2';
+    setTimeout(()=>{hs.style.animation='';},3400);
+  });
+}
+
+/* === ALL HOTSPOTS — automatisch sichtbar basierend auf State === */
+function updateAllHotspots(){
+  /* Sticks: zeigt immer den aktiven Stick-Typ */
+  const stickMap = {
+    'standard':{t:'Analog Sticks',  d:'PS5 DualSense Original'},
+    'hall':    {t:'Hall Effect Sticks', d:'Anti-Stickdrift · magnetisch'},
+    'tmr':     {t:'TMR Pro Sticks', d:'Premium · null Drift'}
+  };
+  const ss = stickMap[state.hw_stick]||stickMap.standard;
+  const sT=document.getElementById('hs-sticks-title');if(sT)sT.textContent=ss.t;
+  const sD=document.getElementById('hs-sticks-desc'); if(sD)sD.textContent=ss.d;
+  setHotspot('hs-sticks', true);
+
+  /* Trigger-Tech */
+  const trigMap = {
+    'standard':{t:'Adaptive Trigger',d:'PS5 Original'},
+    'clicky':  {t:'Clicky Trigger',  d:'1 mm Auslöseweg · FPS-ready'}
+  };
+  const tt = trigMap[state.hw_trigger]||trigMap.standard;
+  document.getElementById('hs-trigger-title').textContent = tt.t;
+  document.getElementById('hs-trigger-desc').textContent  = tt.d;
+  setHotspot('hs-trigger', state.hw_trigger!=='standard');
+
+  /* Akku */
+  const akMap = {
+    'standard':{t:'Standard Akku',d:'1560 mAh · 6-8 h'},
+    'power':   {t:'Power-Akku 2200',d:'bis zu 12 h Laufzeit'},
+    'light':   {t:'Lightweight Akku',d:'−30 g · 4-6 h'}
+  };
+  const ak = akMap[state.hw_akku]||akMap.standard;
+  document.getElementById('hs-akku-title').textContent = ak.t;
+  document.getElementById('hs-akku-desc').textContent  = ak.d;
+  setHotspot('hs-akku', state.hw_akku!=='standard');
+
+  /* Grip */
+  setHotspot('hs-grip', state.hw_grip==='grip');
+
+  /* Rumble */
+  setHotspot('hs-rumble', state.hw_rumble==='strong');
+
+  /* Touchpad — sichtbar wenn nicht Default */
+  setHotspot('hs-touchpad', state.touchpad!==0);
+  const tpD=document.getElementById('hs-touchpad-desc');
+  if(tpD)tpD.textContent = COLORS[state.touchpad]?COLORS[state.touchpad].name:'Custom';
+
+  /* Mittelstück — sichtbar wenn nicht Default */
+  setHotspot('hs-mittel', state.mittelstueck!==0);
+  const msD=document.getElementById('hs-mittel-desc');
+  if(msD)msD.textContent = COLORS[state.mittelstueck]?COLORS[state.mittelstueck].name:'Custom';
+
+  /* LED — sichtbar wenn nicht Standard PS-Blau */
+  setHotspot('hs-led', state.led!==0);
+  const ldD=document.getElementById('hs-led-desc');
+  if(ldD)ldD.textContent = LED_COLORS[state.led]?LED_COLORS[state.led].name:'Custom';
+
+  /* FrontButtons + Paddles werden in updatePaddleOverlay() gesteuert */
+}
+function setHotspot(id, show){
+  const el=document.getElementById(id);if(!el)return;
+  el.classList.toggle('show', !!show);
 }
 
 /* === PADDLE-KATALOG (bitros-Style) === */
@@ -1408,8 +1537,13 @@ function setHw(group, value, price){
   if(group==='paddles'){pickPaddle(value);return;}
   if(group==='grip'){state.hw_grip=value;state.hw_grip_price=price;document.querySelectorAll('[id^="hw-grip-"]').forEach(el=>el.classList.remove('sel'));document.getElementById('hw-grip-'+value).classList.add('sel');}
   if(group==='rumble'){state.hw_rumble=value;state.hw_rumble_price=price;document.querySelectorAll('[id^="hw-rumble-"]').forEach(el=>el.classList.remove('sel'));document.getElementById('hw-rumble-'+value).classList.add('sel');}
+  if(group==='akku'){state.hw_akku=value;state.hw_akku_price=price;document.querySelectorAll('[id^="hw-akku-"]').forEach(el=>el.classList.remove('sel'));document.getElementById('hw-akku-'+value).classList.add('sel');}
   if(group==='led_rgb'){state.hw_led_rgb=value;state.hw_led_rgb_price=price;const el=document.getElementById('hw-led-rgb');if(el)el.classList.toggle('sel',!!value);}
   if(group==='warranty'){state.hw_warranty=value;state.hw_warranty_price=price;document.querySelectorAll('[id^="hw-warranty-"]').forEach(el=>el.classList.remove('sel'));document.getElementById('hw-warranty-'+value).classList.add('sel');}
+  /* Hotspot-Highlight fuer die gerade gewaehlte Hardware-Option */
+  const flashMap={stick:'hs-sticks',trigger:'hs-trigger',grip:'hs-grip',rumble:'hs-rumble',akku:'hs-akku'};
+  if(flashMap[group]){const hs=document.getElementById(flashMap[group]);if(hs){hs.classList.add('show');hs.style.animation='hsBlink 1.4s ease-in-out 2';setTimeout(()=>hs.style.animation='',3200);}}
+  updateAllHotspots();
   updateAll();
 }
 
@@ -1450,7 +1584,7 @@ function setFont(font, el){
 /* PRICE */
 function calcPrice(){
   let p = BASE_PRICE;
-  p += state.hw_stick_price + state.hw_trigger_price + state.hw_paddles_price + state.hw_grip_price + state.hw_rumble_price + state.hw_led_rgb_price + state.hw_warranty_price;
+  p += state.hw_stick_price + state.hw_trigger_price + state.hw_paddles_price + state.hw_grip_price + state.hw_rumble_price + state.hw_akku_price + state.hw_led_rgb_price + state.hw_warranty_price;
   if(state.engr_enabled) p += 15;
   if(state.sticker > 0) p += 12;
   // Custom-Color +8 each
@@ -1957,6 +2091,7 @@ state.buildName = state.buildName||'';
 renderBundles();
 buildPaddleGrid();
 updatePaddleOverlay();
+updateAllHotspots();
 setView('both');
 loadFromHash();
 buildLEDGrid();

@@ -197,12 +197,10 @@ h1 .accent{background:linear-gradient(90deg,var(--neon),var(--neon2),var(--neon)
 @keyframes dotRing{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.35);opacity:0}}
 
 /* Label: float in Rand-Zonen, sehr transparent, kompakt */
-.hs2-label{position:absolute;font-family:'Inter','Segoe UI',sans-serif;font-size:8.5px;font-weight:600;color:rgba(255,255,255,.92);background:rgba(0,0,0,.42);padding:4px 8px;border:1px solid rgba(0,242,255,.45);border-radius:14px;backdrop-filter:blur(6px);white-space:nowrap;letter-spacing:.3px;text-shadow:0 0 6px rgba(0,0,0,.95);max-width:140px;text-align:center;line-height:1.25}
-.hs2-label::before{content:'';position:absolute;width:36px;height:1px;background:linear-gradient(90deg,rgba(0,242,255,.65),rgba(0,242,255,.05));top:50%}
-.hs2-label.line-right::before{right:-36px;background:linear-gradient(90deg,rgba(0,242,255,.65),rgba(0,242,255,.05))}
-.hs2-label.line-left::before{left:-36px;background:linear-gradient(-90deg,rgba(0,242,255,.65),rgba(0,242,255,.05))}
-.hs2-label.line-down::before{display:none}.hs2-label.line-down::after{content:'';position:absolute;width:1px;height:30px;background:linear-gradient(180deg,rgba(0,242,255,.65),rgba(0,242,255,.05));bottom:-30px;left:50%}
-.hs2-label.line-up::before{display:none}.hs2-label.line-up::after{content:'';position:absolute;width:1px;height:30px;background:linear-gradient(0deg,rgba(0,242,255,.65),rgba(0,242,255,.05));top:-30px;left:50%}
+/* Label: einzeilige Pill, sehr transparent, einheitlich kompakt — kein Listen-Layout */
+.hs2-label{position:absolute;font-family:'Inter','Segoe UI',sans-serif;font-size:8.5px;font-weight:600;color:#fff;background:rgba(0,0,0,.55);padding:3px 9px;border:1px solid rgba(0,242,255,.5);border-radius:99px;backdrop-filter:blur(6px);white-space:nowrap;letter-spacing:.25px;text-shadow:0 1px 3px rgba(0,0,0,.85);line-height:1.3;transform:translate(-50%,-50%);box-shadow:0 4px 12px rgba(0,0,0,.35)}
+.hs2-label::before{content:'';position:absolute;left:50%;top:100%;width:1px;height:0;background:linear-gradient(180deg,rgba(0,242,255,.75),rgba(0,242,255,0));transition:height .4s ease}
+.hs2.show .hs2-label::before{height:var(--lh,18px)}
 
 /* === Positions-Berechnung ===
    Front-Unit ist bei left:5% bottom:5% mit 58% Breite x 58% Hoehe.
@@ -231,16 +229,19 @@ h1 .accent{background:linear-gradient(90deg,var(--neon),var(--neon2),var(--neon)
 .hs2[data-anchor="paddles"]  .hs2-dot{top:18%;left:62%}
 .hs2[data-anchor="grip"]     .hs2-dot{top:30%;left:88%}
 
-/* LABEL positions — alle in Rand-Zonen (links/rechts/oben), nie auf dem Controller */
-.hs2[data-anchor="trigger"]  .hs2-label{top:8%;left:2%}
-.hs2[data-anchor="akku"]     .hs2-label{top:8%;left:30%}
-.hs2[data-anchor="touchpad"] .hs2-label{top:20%;left:30%}
-.hs2[data-anchor="frontbtn"] .hs2-label{top:30%;left:0%}
-.hs2[data-anchor="sticks"]   .hs2-label{top:92%;left:2%}
-.hs2[data-anchor="rumble"]   .hs2-label{top:92%;left:30%}
-.hs2[data-anchor="mittel"]   .hs2-label{top:62%;left:0%}
-.hs2[data-anchor="paddles"]  .hs2-label{top:50%;left:55%}
-.hs2[data-anchor="grip"]     .hs2-label{top:50%;left:80%}
+/* LABEL positions — alle als Pill mit translate(-50%,-50%) zentriert
+   --lh = Laenge der Verbindungslinie zum Bauteil (Pixel) */
+/* Top-Left-Zone (ueber unit-front, links von unit-back) */
+.hs2[data-anchor="trigger"]  .hs2-label{top:25%;left:18%;--lh:48px}
+.hs2[data-anchor="akku"]     .hs2-label{top:22%;left:32%;--lh:50px}
+.hs2[data-anchor="touchpad"] .hs2-label{top:38%;left:18%;--lh:36px}
+.hs2[data-anchor="frontbtn"] .hs2-label{top:32%;left:6%;--lh:38px}
+/* Bottom-Right-Zone (rechts von unit-front, unter unit-back) */
+.hs2[data-anchor="mittel"]   .hs2-label{top:60%;left:75%;--lh:0px}
+.hs2[data-anchor="sticks"]   .hs2-label{top:80%;left:60%;--lh:0px}
+.hs2[data-anchor="rumble"]   .hs2-label{top:88%;left:80%;--lh:0px}
+.hs2[data-anchor="paddles"]  .hs2-label{top:50%;left:80%;--lh:0px}
+.hs2[data-anchor="grip"]     .hs2-label{top:42%;left:88%;--lh:0px}
 
 /* Front-Unit Bauteil-Positionen (relativ zum unit-front):
    L1/R1 Bumper:  top:18%, links 25% / rechts 25%
@@ -434,6 +435,10 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
 .paddle.p4{top:54%;right:28%}
 .paddle-overlay.count-2 .paddle.p3,.paddle-overlay.count-2 .paddle.p4{display:none}
 .paddle-overlay.count-0{opacity:0!important}
+/* 4er/6er-Pakete: komplettes Backshell-Bild ueberlagert, einzelne Paddles aus */
+.paddle-overlay .paddle-back-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;pointer-events:none;opacity:0;transition:opacity .5s ease;filter:drop-shadow(0 8px 14px rgba(0,0,0,.65))}
+.paddle-overlay.use-back-img .paddle-back-img{opacity:1}
+.paddle-overlay.use-back-img .paddle{display:none}
 
 /* ═════ TOUCHPAD + MITTELSTUECK OVERLAY ═════ */
 .layer-touchpad{position:absolute;top:23%;left:35%;width:30%;height:13%;border-radius:8% / 30%;background:transparent;mix-blend-mode:multiply;opacity:0;transition:background-color .5s,opacity .5s,box-shadow .4s;z-index:4;pointer-events:none}
@@ -458,13 +463,14 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
 .pp-card:hover{border-color:#3a3a3a;transform:translateY(-2px)}
 .pp-card.sel{border-color:var(--neon);background:rgba(0,242,255,.06);box-shadow:0 0 14px rgba(0,242,255,.18)}
 .pp-card.sel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--neon),transparent)}
-.pp-ico{width:54px;height:34px;display:flex;align-items:center;justify-content:center;margin-bottom:2px;background:#f7f7f7;border-radius:8px;padding:3px;overflow:hidden;border:1px solid #1a1a1a}
-.pp-ico svg{width:100%;height:100%}
+.pp-ico{width:54px;height:34px;display:flex;align-items:center;justify-content:center;margin-bottom:2px;background:#101010;border-radius:8px;padding:3px;overflow:hidden;border:1px dashed #2a2a2a;position:relative}
 .pp-img{width:100%;height:100%;object-fit:contain;display:block}
-.pp-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
-.pp-ph svg{width:100%;height:100%}
-.pp-card.sel .pp-ico{border-color:var(--neon);background:#fff;box-shadow:inset 0 0 0 1px rgba(0,242,255,.3)}
+.pp-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#444;font-size:6.5px;text-align:center;line-height:1.2;font-family:Inter,sans-serif;letter-spacing:.2px}
+.pp-ph-x{font-family:Arial;font-size:18px;color:#ff4d4f;font-weight:900;border:none}
+.pp-ph-x span{display:block}
+.pp-card.sel .pp-ico{border:1px solid var(--neon);background:rgba(0,242,255,.06);box-shadow:inset 0 0 0 1px rgba(0,242,255,.3)}
 .paddle-img{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}
+.paddle-ph{width:100%;height:100%;border:1px dashed rgba(0,242,255,.4);border-radius:50%;background:rgba(0,242,255,.05)}
 .pp-lbl{font-family:'Orbitron';font-size:7.5px;color:#bbb;letter-spacing:.5px;line-height:1.25;min-height:18px;display:flex;align-items:center}
 .pp-card.sel .pp-lbl{color:#fff}
 .pp-price{font-family:'Orbitron';font-size:8px;color:var(--neon);font-weight:700;letter-spacing:.5px}
@@ -856,8 +862,9 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
           <div class="ctrl-layer" id="layer-dpad" style="-webkit-mask-image:url('mask-dpad.PNG');mask-image:url('mask-dpad.PNG');background-color:#cccccc;mix-blend-mode:screen"></div>
           <div class="ctrl-layer" id="layer-sticks" style="-webkit-mask-image:url('mask-stickcap.PNG');mask-image:url('mask-stickcap.PNG');background-color:#222222;mix-blend-mode:multiply"></div>
           <div class="ctrl-layer" id="layer-triggers" style="-webkit-mask-image:url('mask-triggercolor.PNG');mask-image:url('mask-triggercolor.PNG');background-color:#0a0a0a;mix-blend-mode:multiply"></div>
-          <!-- Touchpad & Mittelstuck als positionierte Overlays (keine Masken noetig) -->
-          <div class="layer-touchpad" id="layer-touchpad"></div>
+          <!-- Touchpad via Maske (mask-touchpad.JPG vom User) -->
+          <div class="ctrl-layer" id="layer-touchpad" style="-webkit-mask-image:url('mask-touchpad.JPG');mask-image:url('mask-touchpad.JPG');background-color:#0a0a0a;mix-blend-mode:multiply;opacity:0;transition:opacity .5s,background-color .5s"></div>
+          <!-- Mittelstueck: positioniertes Overlay (keine Maske vorhanden) -->
           <div class="layer-mittelstueck" id="layer-mittelstueck"></div>
           <!-- Front-Front-Buttons-Visualisierung -->
           <div class="frontbtn-overlay" id="frontbtn-overlay" aria-hidden="true">
@@ -871,6 +878,9 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
           <div class="ctrl-layer" id="layer-backshell" style="-webkit-mask-image:url('mask-backshell.PNG');mask-image:url('mask-backshell.PNG');background-color:#0a0a0a;mix-blend-mode:multiply"></div>
           <!-- Paddle-Overlay sitzt auf der Backshell -->
           <div class="paddle-overlay" id="paddle-overlay" aria-hidden="true">
+            <!-- Komplettes Backshell-Bild (4er/6er-Pakete) -->
+            <img class="paddle-back-img" id="paddle-back-img" alt="" style="display:none">
+            <!-- Einzelne Paddle-Slots (2er-Pakete oder Fallback) -->
             <div class="paddle p1"><span class="paddle-ico"></span></div>
             <div class="paddle p2"><span class="paddle-ico"></span></div>
             <div class="paddle p3"><span class="paddle-ico"></span></div>
@@ -1307,10 +1317,12 @@ function applyToLayer(part, color){
   el.style.backgroundImage = '';
   el.style.animation = '';
   el.style.backgroundColor = color.hex;
-  /* Touchpad/Mittelstueck: aktiviere Overlay nur wenn nicht Default-Schwarz */
-  if(part==='touchpad' || part==='mittelstueck'){
-    const idx = state[part];
-    el.classList.toggle('on', idx!==0);
+  /* Touchpad (Maske) und Mittelstueck (positioniertes Overlay): nur sichtbar wenn nicht Default */
+  if(part==='touchpad'){
+    el.style.opacity = state[part]!==0 ? '.85' : '0';
+  }
+  if(part==='mittelstueck'){
+    el.classList.toggle('on', state[part]!==0);
   }
   if(color.special==='carbon'){
     el.style.background = `repeating-linear-gradient(45deg,${color.hex},${color.hex} 3px,#222 3px,#222 6px)`;
@@ -1393,42 +1405,23 @@ function setHs2(anchor, label, show, lineDir){
   }
 }
 function updateAllHotspots(){
-  /* Trigger */
-  const trigTxt = state.hw_trigger==='clicky'
-    ? '<strong>Clicky Trigger</strong><br>1 mm · FPS-ready'
-    : '';
-  setHs2('trigger', trigTxt, state.hw_trigger==='clicky', 'right');
-
-  /* Akku */
-  const akkuLbl = state.hw_akku==='power'?'<strong>Power-Akku 2200</strong><br>bis 12 h Laufzeit'
-              : state.hw_akku==='light'?'<strong>Lightweight Akku</strong><br>−30 g · 4-6 h':'';
-  setHs2('akku', akkuLbl, state.hw_akku!=='standard', 'down');
-
-  /* Touchpad */
+  /* Kompakte einzeilige Pills — kein <strong>/<br> mehr */
+  setHs2('trigger', 'Clicky Trigger', state.hw_trigger==='clicky');
+  setHs2('akku',
+    state.hw_akku==='power'?'Power-Akku 2200':state.hw_akku==='light'?'Lightweight Akku':'',
+    state.hw_akku!=='standard');
   const tpName = COLORS[state.touchpad]?COLORS[state.touchpad].name:'';
-  setHs2('touchpad', '<strong>Touchpad</strong><br>'+tpName, state.touchpad!==0, 'down');
-
-  /* Mittelstück */
+  setHs2('touchpad', 'Touchpad: '+tpName, state.touchpad!==0);
   const msName = COLORS[state.mittelstueck]?COLORS[state.mittelstueck].name:'';
-  setHs2('mittel', '<strong>Mittelstück</strong><br>'+msName, state.mittelstueck!==0, 'right');
-
-  /* Sticks */
-  const stickTxt = state.hw_stick==='hall'?'<strong>Hall Effect Sticks</strong><br>Anti-Stickdrift'
-              : state.hw_stick==='tmr'?'<strong>TMR Pro Sticks</strong><br>Premium · null Drift':'';
-  setHs2('sticks', stickTxt, state.hw_stick!=='standard', 'up');
-
-  /* Rumble */
-  setHs2('rumble', '<strong>Strong Rumble+</strong><br>30 % stärker', state.hw_rumble==='strong', 'up');
-
-  /* FrontButtons (auf der Front) — gesteuert von Paddle-Meta */
-  const meta = state.hw_paddles_meta || {fb:0};
-  setHs2('frontbtn', '<strong>FrontButtons</strong><br>2× programmable', meta.fb>0, 'right');
-
-  /* Paddles (back) */
-  setHs2('paddles', '<strong>Programmable Paddles</strong><br>'+(meta.label||''), meta.count>0, 'left');
-
-  /* Grip (back) */
-  setHs2('grip', '<strong>Grip Coating</strong><br>Anti-Rutsch', state.hw_grip==='grip', 'left');
+  setHs2('mittel', 'Mittelstück: '+msName, state.mittelstueck!==0);
+  setHs2('sticks',
+    state.hw_stick==='hall'?'Hall Effect Sticks':state.hw_stick==='tmr'?'TMR Pro Sticks':'',
+    state.hw_stick!=='standard');
+  setHs2('rumble', 'Strong Rumble+', state.hw_rumble==='strong');
+  const meta = state.hw_paddles_meta || {fb:0,count:0};
+  setHs2('frontbtn', '2× FrontButtons', meta.fb>0);
+  setHs2('paddles', meta.label||'', meta.count>0);
+  setHs2('grip', 'Grip Coating', state.hw_grip==='grip');
 }
 function setHotspot(){/* Legacy no-op — Hotspots laufen jetzt ueber updateAllHotspots */}
 
@@ -1461,34 +1454,58 @@ const PADDLE_TYPES = [
    - paddle-on-plain-prog.png
    Fehlt eine Datei -> SVG-Fallback wird automatisch angezeigt.
 */
-function paddleSvg(kind){
-  if(kind==='ares')       return '<svg viewBox="0 0 24 24"><path d="M12 3 L20 12 L14 12 L14 21 L10 21 L10 12 L4 12 Z" fill="#fff"/></svg>';
-  if(kind==='scull')      return '<svg viewBox="0 0 24 24"><path d="M12 3c-4 0-7 3-7 7v3l-1 3 2 1v3h3v-2h6v2h3v-3l2-1-1-3v-3c0-4-3-7-7-7zm-3 8a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm6 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z" fill="#fff"/></svg>';
-  if(kind==='ares-prog')  return '<svg viewBox="0 0 24 24"><path d="M12 3 L20 12 L14 12 L14 21 L10 21 L10 12 L4 12 Z" fill="#fff"/><rect x="6" y="16" width="12" height="4" fill="#00f2ff" stroke="#000" stroke-width=".5"/></svg>';
-  if(kind==='scull-prog') return '<svg viewBox="0 0 24 24"><path d="M12 3c-4 0-7 3-7 7v3l-1 3 2 1v3h3v-2h6v2h3v-3l2-1-1-3v-3c0-4-3-7-7-7zm-3 8a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm6 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z" fill="#fff"/><rect x="6" y="20" width="12" height="3" fill="#00f2ff"/></svg>';
-  if(kind==='plain-prog') return '<svg viewBox="0 0 24 24"><rect x="6" y="18" width="12" height="4" fill="#00f2ff"/></svg>';
-  if(kind==='plain')      return '';
-  return '<text x="12" y="17" text-anchor="middle" fill="#ff4d4f" font-family="Orbitron" font-weight="900" font-size="16">×</text>';
-}
-function paddleCardSvg(kind){
-  const inner = paddleSvg(kind);
-  return `<svg viewBox="0 0 60 36" xmlns="http://www.w3.org/2000/svg">
-    <path d="M8 8 Q4 10 4 18 Q4 26 12 30 Q22 33 30 30 Q38 33 48 30 Q56 26 56 18 Q56 10 52 8 Q46 6 30 6 Q14 6 8 8 Z" fill="#1a1a1a" stroke="#3a3a3a" stroke-width="1"/>
-    ${kind==='X' ? '<text x="30" y="24" text-anchor="middle" fill="#ff4d4f" font-family="Arial" font-weight="900" font-size="22">×</text>' : ''}
-    <g transform="translate(20 8) scale(.83)">${kind!=='X'?inner:''}</g>
-  </svg>`;
-}
-/* Card-Image-Platzhalter: probiert PNG, faellt auf SVG zurueck */
+/* === PADDLE-BILDER (reine Platzhalter — KEINE SVG-Grafiken mehr) ===
+   Wenn du echte Paddle-Bilder bereitstellen willst, lege diese Dateien
+   in den Projektordner. Bis dahin zeigt das System leere Slots.
+
+   CARD-VORSCHAU (im Konfig-Grid):
+   - paddle-card-ares.png         (Mini-Controller mit Ares X/O Paddle)
+   - paddle-card-scull.png        (Mini-Controller mit Scull X/O Paddle)
+   - paddle-card-ares-prog.png    (Mini-Controller mit Ares programmierbar)
+   - paddle-card-scull-prog.png
+   - paddle-card-plain.png
+   - paddle-card-plain-prog.png
+
+   AUF-CONTROLLER-OVERLAY (einzelne Paddles auf der Backshell — 2er-Pakete):
+   - paddle-on-ares.png
+   - paddle-on-scull.png
+   - paddle-on-ares-prog.png
+   - paddle-on-scull-prog.png
+   - paddle-on-plain.png
+   - paddle-on-plain-prog.png
+
+   4er-PAKETE — kompletter Backshell-Render mit allen 4 Paddles:
+   - paddle-back-4.png      (Standard 4er — Photoroom_20260520_222658.png als Beispiel)
+   - paddle-back-4-prog.png (4er programmierbar)
+   - paddle-back-6.png      (6er 2x Front+4x programmierbar)
+
+   Fehlt eine Datei -> Slot bleibt leer (gestrichelter Platzhalter).
+*/
 function paddleCardImg(kind){
-  if(kind==='X') return `<div class="pp-ph">${paddleCardSvg('X')}</div>`;
+  if(kind==='X') return '<div class="pp-ph pp-ph-x" title="ohne"><span>X</span></div>';
   const file = 'paddle-card-'+kind+'.png';
-  const fallback = paddleCardSvg(kind).replace(/"/g,'&quot;');
   return `<img class="pp-img" src="${file}" alt="${kind}" loading="lazy"
-            onerror="this.outerHTML='<div class=\\'pp-ph\\'>${fallback}</div>'">`;
+            onerror="this.outerHTML='<div class=&quot;pp-ph&quot;><span>Bild fehlt:<br>${file}</span></div>'">`;
 }
-/* On-Controller-Image-Platzhalter: PNG-erste Wahl, SVG-Fallback */
 function paddleOnImg(kind){
   if(!kind || kind==='X') return '';
+  const file = 'paddle-on-'+kind+'.png';
+  return `<img class="paddle-img" src="${file}" alt=""
+            onerror="this.outerHTML='<div class=&quot;paddle-ph&quot;></div>'">`;
+}
+/* 4er / 6er Paddles werden als KOMPLETTE Backshell-Overlay angezeigt
+   (statt einzelner Paddle-Divs — bitros-Look).
+   Standard 4er: Photoroom_20260520_222658.png (oder paddle-back-4.png als Alt).
+   4er programmierbar: paddle-back-4-prog.png
+*/
+function paddleBackFile(meta){
+  if(!meta || meta.count!==4) return null;
+  return meta.prog ? 'paddle-back-4-prog.png' : 'Photoroom_20260520_222658.png';
+}
+function paddleBackAlt(meta){
+  if(!meta || meta.count!==4) return null;
+  return 'paddle-back-4.png'; /* Fallback wenn Hauptdatei fehlt */
+}
   const file = 'paddle-on-'+kind+'.png';
   const fallback = paddleSvg(kind).replace(/"/g,'&quot;');
   return `<img class="paddle-img" src="${file}" alt=""
@@ -1523,18 +1540,33 @@ function updatePaddleOverlay(){
   const ov=document.getElementById('paddle-overlay');if(!ov)return;
   const meta = state.hw_paddles_meta || {count:0, fb:0, ico:'X', prog:false};
   const n = meta.count||0;
-  ov.classList.remove('count-0','count-2','count-4','active','prog');
+  ov.classList.remove('count-0','count-2','count-4','active','prog','use-back-img');
   if(n>0){ov.classList.add('active','count-'+n);if(meta.prog)ov.classList.add('prog');}else{ov.classList.add('count-0');}
-  /* Icons in jedes Paddle */
-  ov.querySelectorAll('.paddle-ico').forEach(ic=>{ic.innerHTML = n>0 ? paddleOnImg(meta.ico) : '';});
+
+  /* 4er-Pakete: komplettes Backshell-Bild als Overlay (statt einzelner Paddles).
+     2er-Pakete oder fehlende 4er-Datei: einzelne Paddle-Divs mit paddleOnImg(). */
+  const backFile = paddleBackFile(meta);
+  const backImg = document.getElementById('paddle-back-img');
+  if(backFile){
+    ov.classList.add('use-back-img');
+    if(backImg){
+      backImg.src = backFile;
+      const alt = paddleBackAlt(meta);
+      backImg.onerror = function(){
+        if(alt && this.src.indexOf(alt)===-1){this.src = alt;}
+        else{this.style.display='none';ov.classList.remove('use-back-img');}
+      };
+      backImg.onload = function(){this.style.display='block';};
+      backImg.style.display = 'block';
+    }
+  } else {
+    if(backImg){backImg.style.display='none';backImg.src='';}
+    /* Einzelne Paddles (2er-Pakete) */
+    ov.querySelectorAll('.paddle-ico').forEach(ic=>{ic.innerHTML = n>0 ? paddleOnImg(meta.ico) : '';});
+  }
 
   /* FrontButtons-Visualisierung */
   const fb=document.getElementById('frontbtn-overlay');if(fb)fb.classList.toggle('active', meta.fb>0);
-
-  /* Hotspots aktualisieren */
-  const hsP=document.getElementById('hs-paddles');if(hsP)hsP.classList.toggle('show', n>0);
-  const hsF=document.getElementById('hs-frontbtn');if(hsF)hsF.classList.toggle('show', meta.fb>0);
-  const desc=document.getElementById('hs-paddle-desc');if(desc)desc.textContent = meta.label||'';
 }
 
 /* PRESETS */

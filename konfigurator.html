@@ -1506,11 +1506,6 @@ function paddleBackAlt(meta){
   if(!meta || meta.count!==4) return null;
   return 'paddle-back-4.png'; /* Fallback wenn Hauptdatei fehlt */
 }
-  const file = 'paddle-on-'+kind+'.png';
-  const fallback = paddleSvg(kind).replace(/"/g,'&quot;');
-  return `<img class="paddle-img" src="${file}" alt=""
-            onerror="this.outerHTML='${fallback}'">`;
-}
 function buildPaddleGrid(){
   const g=document.getElementById('paddle-grid');if(!g)return;
   g.innerHTML = PADDLE_TYPES.map(t=>{

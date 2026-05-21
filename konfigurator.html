@@ -189,59 +189,42 @@ h1 .accent{background:linear-gradient(90deg,var(--neon),var(--neon2),var(--neon)
 .preview-stack.view-front .hotspot-layer .hs2[data-anchor="paddles"],
 .preview-stack.view-front .hotspot-layer .hs2[data-anchor="grip"]{display:none}
 .preview-stack.view-back .hotspot-layer .hs2:not([data-anchor="paddles"]):not([data-anchor="grip"]){display:none}
-.hs2{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;transition:opacity .4s ease;pointer-events:none}
+.hs2{position:absolute;width:0;height:0;opacity:0;transition:opacity .35s ease;pointer-events:none}
 .hs2.show{opacity:1}
-.hs2-dot{position:absolute;width:9px;height:9px;border-radius:50%;background:#00f2ff;box-shadow:0 0 10px #00f2ff,0 0 0 3px rgba(0,242,255,.18);transform:translate(-50%,-50%);animation:hsDot 2.4s ease-in-out infinite}
+.hs2-dot{position:absolute;top:0;left:0;width:9px;height:9px;border-radius:50%;background:#00f2ff;box-shadow:0 0 10px #00f2ff,0 0 0 3px rgba(0,242,255,.18);transform:translate(-50%,-50%);animation:hsDot 2.4s ease-in-out infinite}
 .hs2-dot::after{content:'';position:absolute;inset:-12px;border:1px solid rgba(0,242,255,.35);border-radius:50%;animation:dotRing 2.4s ease-in-out infinite}
 @keyframes hsDot{0%,100%{box-shadow:0 0 10px #00f2ff,0 0 0 3px rgba(0,242,255,.18)}50%{box-shadow:0 0 16px #00f2ff,0 0 0 6px rgba(0,242,255,.06)}}
 @keyframes dotRing{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.35);opacity:0}}
 
 /* Label: float in Rand-Zonen, sehr transparent, kompakt */
 /* Label: einzeilige Pill, sehr transparent, einheitlich kompakt — kein Listen-Layout */
-.hs2-label{position:absolute;font-family:'Inter','Segoe UI',sans-serif;font-size:8.5px;font-weight:600;color:#fff;background:rgba(0,0,0,.55);padding:3px 9px;border:1px solid rgba(0,242,255,.5);border-radius:99px;backdrop-filter:blur(6px);white-space:nowrap;letter-spacing:.25px;text-shadow:0 1px 3px rgba(0,0,0,.85);line-height:1.3;transform:translate(-50%,-50%);box-shadow:0 4px 12px rgba(0,0,0,.35)}
-.hs2-label::before{content:'';position:absolute;left:50%;top:100%;width:1px;height:0;background:linear-gradient(180deg,rgba(0,242,255,.75),rgba(0,242,255,0));transition:height .4s ease}
-.hs2.show .hs2-label::before{height:var(--lh,18px)}
+.hs2-label{position:absolute;top:0;left:0;font-family:'Inter','Segoe UI',sans-serif;font-size:8.5px;font-weight:600;color:#fff;background:rgba(0,0,0,.7);padding:3px 9px;border:1px solid rgba(0,242,255,.5);border-radius:99px;backdrop-filter:blur(8px);white-space:nowrap;letter-spacing:.25px;text-shadow:0 1px 2px rgba(0,0,0,.85);line-height:1.3;box-shadow:0 4px 12px rgba(0,0,0,.45)}
+/* Label-Richtungen relativ zum Dot (Dot sitzt bei top:0;left:0 vom hs2-Wrapper) */
+.hs2.lbl-top    .hs2-label{transform:translate(-50%,calc(-100% - 18px))}
+.hs2.lbl-bottom .hs2-label{transform:translate(-50%,18px)}
+.hs2.lbl-left   .hs2-label{transform:translate(calc(-100% - 18px),-50%)}
+.hs2.lbl-right  .hs2-label{transform:translate(18px,-50%)}
+/* Verbindungs-Strich vom Label zum Dot */
+.hs2-label::after{content:'';position:absolute;background:linear-gradient(rgba(0,242,255,.8),rgba(0,242,255,.15))}
+.hs2.lbl-top    .hs2-label::after{bottom:-14px;left:50%;width:1px;height:12px;transform:translateX(-50%)}
+.hs2.lbl-bottom .hs2-label::after{top:-14px;left:50%;width:1px;height:12px;transform:translateX(-50%)}
+.hs2.lbl-left   .hs2-label::after{right:-14px;top:50%;width:12px;height:1px;transform:translateY(-50%);background:linear-gradient(-90deg,rgba(0,242,255,.8),rgba(0,242,255,.15))}
+.hs2.lbl-right  .hs2-label::after{left:-14px;top:50%;width:12px;height:1px;transform:translateY(-50%);background:linear-gradient(90deg,rgba(0,242,255,.8),rgba(0,242,255,.15))}
 
-/* === Positions-Berechnung ===
-   Front-Unit ist bei left:5% bottom:5% mit 58% Breite x 58% Hoehe.
-   D.h. Stage-Koordinaten: unit-front belegt left:5% bis 63%, top:37% bis 95%.
-   Bauteil-Positionen (Stage-relativ):
-     Trigger L2: top:38% left:18%
-     Akku:       top:38% left:32%
-     Touchpad:   top:50% left:33%
-     Mittel:     top:64% left:33%
-     LED:        top:58% left:32%   (entfernt)
-     Sticks:     top:73% left:34%
-     FrontBtn:   top:43% left:14%
-     Rumble:     top:80% left:48%
-   Back-Unit: right:5% top:5%, 42% Breite x 42% Hoehe -> stage left:53-95%, top:5-47%
-     Paddles:    top:18% left:62%
-     Grip:       top:30% left:88%
-*/
-/* DOT positions */
-.hs2[data-anchor="trigger"]  .hs2-dot{top:38%;left:18%}
-.hs2[data-anchor="akku"]     .hs2-dot{top:38%;left:32%}
-.hs2[data-anchor="touchpad"] .hs2-dot{top:50%;left:33%}
-.hs2[data-anchor="mittel"]   .hs2-dot{top:64%;left:33%}
-.hs2[data-anchor="sticks"]   .hs2-dot{top:73%;left:34%}
-.hs2[data-anchor="frontbtn"] .hs2-dot{top:43%;left:14%}
-.hs2[data-anchor="rumble"]   .hs2-dot{top:80%;left:48%}
-.hs2[data-anchor="paddles"]  .hs2-dot{top:18%;left:62%}
-.hs2[data-anchor="grip"]     .hs2-dot{top:30%;left:88%}
-
-/* LABEL positions — alle als Pill mit translate(-50%,-50%) zentriert
-   --lh = Laenge der Verbindungslinie zum Bauteil (Pixel) */
-/* Top-Left-Zone (ueber unit-front, links von unit-back) */
-.hs2[data-anchor="trigger"]  .hs2-label{top:25%;left:18%;--lh:48px}
-.hs2[data-anchor="akku"]     .hs2-label{top:22%;left:32%;--lh:50px}
-.hs2[data-anchor="touchpad"] .hs2-label{top:38%;left:18%;--lh:36px}
-.hs2[data-anchor="frontbtn"] .hs2-label{top:32%;left:6%;--lh:38px}
-/* Bottom-Right-Zone (rechts von unit-front, unter unit-back) */
-.hs2[data-anchor="mittel"]   .hs2-label{top:60%;left:75%;--lh:0px}
-.hs2[data-anchor="sticks"]   .hs2-label{top:80%;left:60%;--lh:0px}
-.hs2[data-anchor="rumble"]   .hs2-label{top:88%;left:80%;--lh:0px}
-.hs2[data-anchor="paddles"]  .hs2-label{top:50%;left:80%;--lh:0px}
-.hs2[data-anchor="grip"]     .hs2-label{top:42%;left:88%;--lh:0px}
+/* === EXAKTE Bauteil-Positionen (PS5 DualSense Layout)
+   unit-front belegt Stage 5-63% horizontal, 37-95% vertikal
+   unit-back  belegt Stage 53-95% horizontal, 5-47% vertikal
+   Jeder hs2 ist ein 0x0-Anker bei der Bauteil-Position.
+   Label-Richtung via lbl-top/bottom/left/right Klasse. */
+.hs2[data-anchor="trigger"]   {top:39%;left:22%}   /* L2 Trigger */
+.hs2[data-anchor="akku"]      {top:38%;left:34%}   /* USB-C oben (Akku innen) */
+.hs2[data-anchor="touchpad"]  {top:49%;left:34%}   /* Touchpad Mitte */
+.hs2[data-anchor="frontbtn"]  {top:42%;left:18%}   /* L1 / FrontButton oben links */
+.hs2[data-anchor="mittel"]    {top:63%;left:34%}   /* PS-Logo / Mittelstueck */
+.hs2[data-anchor="sticks"]    {top:71%;left:34%}   /* Mitte zwischen Sticks */
+.hs2[data-anchor="rumble"]    {top:88%;left:22%}   /* linker Griff (Rumble) */
+.hs2[data-anchor="paddles"]   {top:14%;left:65%}   /* oberer Paddle-Bereich Backshell */
+.hs2[data-anchor="grip"]      {top:28%;left:75%}   /* Backshell Mitte (Grip) */
 
 /* Front-Unit Bauteil-Positionen (relativ zum unit-front):
    L1/R1 Bumper:  top:18%, links 25% / rechts 25%
@@ -1393,16 +1376,26 @@ function flashHotspot(step){
    - Dots sitzen auf den Bauteilen
    - Erscheinen nur wenn Option nicht Default
 */
-function setHs2(anchor, label, show, lineDir){
+/* Label-Richtung pro Bauteil — Label muss in eine Richtung wo der Controller nicht ist */
+const HS2_DIR = {
+  trigger:'top',     /* L2 oben links -> Label DRUEBER (in leere Top-Zone) */
+  akku:'top',        /* USB-C oben Mitte -> Label DRUEBER */
+  touchpad:'top',    /* Touchpad oben -> Label DRUEBER */
+  frontbtn:'left',   /* L1 links -> Label LINKS davon (in linke Rand-Zone) */
+  mittel:'right',    /* PS-Logo Mitte -> Label RECHTS (in rechte Zone unter unit-back) */
+  sticks:'right',    /* Sticks Mitte unten -> Label RECHTS */
+  rumble:'right',    /* linker Griff -> Label RECHTS davon */
+  paddles:'left',    /* Paddle-Bereich auf Backshell -> Label LINKS (in Lücke zw Units) */
+  grip:'right'       /* Backshell Mitte -> Label RECHTS davon */
+};
+function setHs2(anchor, label, show){
   const node = document.querySelector('.hs2[data-anchor="'+anchor+'"]');
   if(!node) return;
   node.classList.toggle('show', !!show);
+  node.classList.remove('lbl-top','lbl-bottom','lbl-left','lbl-right');
+  node.classList.add('lbl-'+(HS2_DIR[anchor]||'top'));
   const lbl = node.querySelector('.hs2-label');
-  if(lbl){
-    lbl.innerHTML = label;
-    lbl.classList.remove('line-right','line-left','line-down','line-up');
-    if(lineDir) lbl.classList.add('line-'+lineDir);
-  }
+  if(lbl) lbl.textContent = label;
 }
 function updateAllHotspots(){
   /* Kompakte einzeilige Pills — kein <strong>/<br> mehr */

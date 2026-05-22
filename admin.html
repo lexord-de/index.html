@@ -7,6 +7,12 @@
 <meta name="robots" content="noindex,nofollow">
 <title>LEXORD® Admin Panel</title>
 <link rel="icon" type="image/png" href="IMG_7023.png">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="IMG_7023.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LEXORD">
+<meta name="theme-color" content="#00f2ff">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--neon:#00f2ff;--neon2:#bc13fe;--green:#00b67a;--err:#ff4d4f;--warn:#ffa500;--bg:#020207;--card:rgba(12,12,16,.7);--bord:rgba(255,255,255,.06)}
@@ -273,6 +279,7 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
     <div class="dash-title">LEXORD<span>®</span> ADMIN</div>
     <div class="dash-header-r">
       <span class="live-pill"><span class="live-dot"></span><span id="live-count">0</span> LIVE</span>
+      <button class="dash-logout" onclick="testPush()" title="Test-Push an dein Handy">📲 TEST</button>
       <button class="dash-logout" id="notif-toggle" onclick="toggleNotifications()" title="Sound + Push-Benachrichtigungen">🔔 ON</button>
       <button class="dash-logout" onclick="doLogout()">↩ LOGOUT</button>
     </div>
@@ -1286,6 +1293,74 @@ let NOTIF_FIRST_LOAD = true;
 let AUDIO_CTX = null;
 
 function notifBtn(){const b=document.getElementById('notif-toggle');if(b)b.innerText = NOTIF_ON?'🔔 ON':'🔕 OFF';}
+
+/* ════════ WEB PUSH (Service Worker + VAPID) — Lockscreen-Push wie Shopify ════════ */
+const VAPID_PUBLIC_KEY_FALLBACK = ''; // wird vom Worker zurueckgegeben
+let SW_REG = null;
+let VAPID_PUB = null;
+
+function urlBase64ToUint8(s){
+  const pad = '='.repeat((4 - s.length % 4) % 4);
+  const b64 = (s + pad).replace(/-/g,'+').replace(/_/g,'/');
+  const raw = atob(b64);
+  const arr = new Uint8Array(raw.length);
+  for(let i=0;i<raw.length;i++) arr[i] = raw.charCodeAt(i);
+  return arr;
+}
+
+async function setupServiceWorker(){
+  if(!('serviceWorker' in navigator) || !('PushManager' in window)) return null;
+  try{
+    SW_REG = await navigator.serviceWorker.register('sw.js', { scope: '/' });
+    return SW_REG;
+  }catch(e){ console.warn('SW reg failed:', e); return null; }
+}
+
+async function subscribePush(){
+  if(!SW_REG) await setupServiceWorker();
+  if(!SW_REG) return false;
+  /* Public Key vom Worker holen (cached) */
+  if(!VAPID_PUB){
+    const d = await api('/admin/push/key');
+    if(d && d.publicKey) VAPID_PUB = d.publicKey;
+    else { toast('VAPID-Key fehlt im Worker','error'); return false; }
+  }
+  let sub = await SW_REG.pushManager.getSubscription();
+  if(!sub){
+    try{
+      sub = await SW_REG.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8(VAPID_PUB)
+      });
+    }catch(e){
+      toast('Push-Subscribe abgelehnt: '+e.message,'error');
+      return false;
+    }
+  }
+  /* Sub an Backend schicken */
+  const r = await api('/admin/push/subscribe', { method:'POST', body: JSON.stringify({ subscription: sub.toJSON ? sub.toJSON() : sub }) });
+  if(r && r.success){
+    toast('🔔 Lockscreen-Push aktiv','success');
+    return true;
+  }
+  return false;
+}
+
+async function unsubscribePush(){
+  if(!SW_REG) return;
+  const sub = await SW_REG.pushManager.getSubscription();
+  if(sub){
+    await sub.unsubscribe();
+    await api('/admin/push/unsubscribe', { method:'POST', body: JSON.stringify({ endpoint: sub.endpoint }) });
+  }
+}
+
+async function testPush(){
+  const r = await api('/admin/push/test', { method:'POST', body: JSON.stringify({}) });
+  if(r && r.success) toast('Test-Push gesendet — schau auf dein Handy 📱','success');
+  else toast('Test-Push fehlgeschlagen — VAPID-Keys im Worker setzen','error');
+}
+
 async function toggleNotifications(){
   NOTIF_ON = !NOTIF_ON;
   localStorage.setItem(NOTIF_KEY, NOTIF_ON?'1':'0');
@@ -1296,6 +1371,8 @@ async function toggleNotifications(){
       const p = await Notification.requestPermission();
       if(p !== 'granted'){toast('Browser hat Benachrichtigungen blockiert','warn');}
     }
+    /* Service Worker + Web Push fuer Lockscreen-Notifications */
+    if(Notification.permission === 'granted') await subscribePush();
     /* AudioContext starten (Geste benötigt) */
     if(!AUDIO_CTX) try{ AUDIO_CTX = new (window.AudioContext||window.webkitAudioContext)(); }catch(_){}
     if(AUDIO_CTX && AUDIO_CTX.state==='suspended') AUDIO_CTX.resume();
@@ -1453,10 +1530,17 @@ showDashboard = function(){
   /* Permission proaktiv anfragen wenn Notifs an aber noch nicht erlaubt */
   if(NOTIF_ON && 'Notification' in window && Notification.permission === 'default'){
     setTimeout(()=>{
-      Notification.requestPermission().then(p=>{
-        if(p==='granted') toast('Push-Benachrichtigungen aktiv','success');
+      Notification.requestPermission().then(async p=>{
+        if(p==='granted'){
+          toast('Push-Benachrichtigungen aktiv','success');
+          await subscribePush();
+        }
       });
     }, 1500);
+  }
+  /* Service Worker registrieren + Sub erneuern wenn Permission schon da */
+  if(NOTIF_ON && 'Notification' in window && Notification.permission === 'granted'){
+    setupServiceWorker().then(()=>subscribePush());
   }
   /* Initial-Load: Bestehende Bestellungen merken, OHNE Sound */
   setTimeout(async ()=>{

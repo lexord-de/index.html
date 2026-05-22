@@ -198,6 +198,13 @@ async function test(){
         return await admin2ArchiveGet(request, env, key);
       }
 
+      // WEB PUSH (Lockscreen-Push wie Shopify)
+      if (path === "/admin/push/key" && request.method === "GET") return await admin2PushKey(request, env);
+      if (path === "/admin/push/subscribe" && request.method === "POST") return await admin2PushSubscribe(request, env);
+      if (path === "/admin/push/unsubscribe" && request.method === "POST") return await admin2PushUnsubscribe(request, env);
+      if (path === "/admin/push/test" && request.method === "POST") return await admin2PushTest(request, env);
+      if (path === "/admin/push/genkeys" && request.method === "POST") return await admin2PushGenKeys(request, env);
+
       return json({ error: "Not found", path: path }, 404);
     } catch (err) {
       return json({ error: String(err.message || err), stack: err.stack }, 500);
@@ -275,6 +282,18 @@ async function saveOrder(request, env) {
   await env.LEXORD_DATA.put("order:" + o.orderNr, JSON.stringify(o));
   await env.LEXORD_DATA.put("byemail:" + o.email.toLowerCase() + ":order:" + o.orderNr, o.orderNr);
 
+  // Push-Notification auf Admin-Handys (Lockscreen)
+  try {
+    await broadcastPush(env, {
+      title: '💰 Neue Bestellung · ' + o.orderNr,
+      body: (o.name || 'Kunde') + ' · ' + parseFloat(o.total || 0).toFixed(2) + ' €',
+      tag: 'order-' + o.orderNr,
+      url: '/admin.html',
+      orderNr: o.orderNr,
+      type: 'order'
+    });
+  } catch (e) {}
+
   return json({ success: true, orderNr: o.orderNr });
 }
 
@@ -289,6 +308,17 @@ async function saveRepair(request, env) {
 
   await env.LEXORD_DATA.put("repair:" + r.repNr, JSON.stringify(r));
   await env.LEXORD_DATA.put("byemail:" + r.email.toLowerCase() + ":repair:" + r.repNr, r.repNr);
+
+  // Push-Notification auf Admin-Handys
+  try {
+    await broadcastPush(env, {
+      title: '🔧 Neue Reparatur · ' + r.repNr,
+      body: (r.name || r.fname || 'Kunde') + ' · ' + (r.damage || r.model || ''),
+      tag: 'repair-' + r.repNr,
+      url: '/admin.html',
+      type: 'repair'
+    });
+  } catch (e) {}
 
   return json({ success: true, repNr: r.repNr });
 }
@@ -1811,3 +1841,222 @@ async function admin2ArchiveGet(request, env, key) {
   if (!entry) return json({ error: "Eintrag nicht gefunden oder Schluessel falsch" }, 404);
   return json({ entry });
 }
+
+// ════════════════════════════════════════════════════════════════
+// WEB PUSH (RFC 8291 + VAPID) — native Lockscreen-Push wie Shopify
+// REQUIRED Cloudflare Secrets:
+//   VAPID_PUBLIC_KEY  (Base64URL, 87 chars, beginnt mit 'B')
+//   VAPID_PRIVATE_KEY (Base64URL, 43 chars)
+//   VAPID_SUBJECT     (mailto:dein-email@domain.de)
+// Generieren: einmaliger Aufruf /admin/push/genkeys (admin auth required)
+// ════════════════════════════════════════════════════════════════
+
+function b64uEncode(buf){
+  const bytes = buf instanceof ArrayBuffer ? new Uint8Array(buf) : buf;
+  let s = '';
+  for(let i=0;i<bytes.length;i++) s += String.fromCharCode(bytes[i]);
+  return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function b64uDecode(s){
+  const pad = '='.repeat((4 - s.length % 4) % 4);
+  const b64 = (s + pad).replace(/-/g,'+').replace(/_/g,'/');
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) arr[i] = bin.charCodeAt(i);
+  return arr;
+}
+function concatBuf(...arrs){
+  const len = arrs.reduce((a,b)=>a + b.length, 0);
+  const out = new Uint8Array(len);
+  let off = 0;
+  for(const a of arrs){ out.set(a, off); off += a.length; }
+  return out;
+}
+
+/* HKDF mit SHA-256 (RFC 5869) */
+async function hkdfExpand(prk, info, length){
+  const key = await crypto.subtle.importKey('raw', prk, {name:'HMAC',hash:'SHA-256'}, false, ['sign']);
+  let T = new Uint8Array(0), out = new Uint8Array(0), counter = 0;
+  while(out.length < length){
+    counter++;
+    const input = concatBuf(T, info, new Uint8Array([counter]));
+    const sig = await crypto.subtle.sign('HMAC', key, input);
+    T = new Uint8Array(sig);
+    out = concatBuf(out, T);
+  }
+  return out.slice(0, length);
+}
+async function hkdf(salt, ikm, info, length){
+  const saltKey = await crypto.subtle.importKey('raw', salt, {name:'HMAC',hash:'SHA-256'}, false, ['sign']);
+  const prk = new Uint8Array(await crypto.subtle.sign('HMAC', saltKey, ikm));
+  return hkdfExpand(prk, info, length);
+}
+
+/* DER -> raw signature (ECDSA) — Cloudflare gibt raw, aber zur Sicherheit Helper */
+function jwtSegment(obj){ return b64uEncode(new TextEncoder().encode(JSON.stringify(obj))); }
+
+async function buildVapidJwt(env, audience){
+  if(!env.VAPID_PRIVATE_KEY) throw new Error('VAPID_PRIVATE_KEY fehlt');
+  const header = { typ:'JWT', alg:'ES256' };
+  const payload = {
+    aud: audience,
+    exp: Math.floor(Date.now()/1000) + 12*60*60,
+    sub: env.VAPID_SUBJECT || 'mailto:kontakt@lexord.de'
+  };
+  const unsigned = jwtSegment(header) + '.' + jwtSegment(payload);
+  /* Private Key als PKCS8 importieren via raw d-bytes -> JWK */
+  const d = b64uDecode(env.VAPID_PRIVATE_KEY);
+  if(!env.VAPID_PUBLIC_KEY) throw new Error('VAPID_PUBLIC_KEY fehlt');
+  const pubRaw = b64uDecode(env.VAPID_PUBLIC_KEY); // 65 bytes uncompressed (0x04 + X + Y)
+  if(pubRaw.length !== 65 || pubRaw[0] !== 0x04) throw new Error('VAPID_PUBLIC_KEY format invalid');
+  const x = pubRaw.slice(1, 33);
+  const y = pubRaw.slice(33, 65);
+  const jwk = {
+    kty: 'EC', crv: 'P-256',
+    d: b64uEncode(d),
+    x: b64uEncode(x),
+    y: b64uEncode(y),
+    ext: true
+  };
+  const key = await crypto.subtle.importKey('jwk', jwk, {name:'ECDSA',namedCurve:'P-256'}, false, ['sign']);
+  const sig = await crypto.subtle.sign({name:'ECDSA', hash:'SHA-256'}, key, new TextEncoder().encode(unsigned));
+  return unsigned + '.' + b64uEncode(sig);
+}
+
+/* Payload-Encryption gem. RFC 8291 (aes128gcm) */
+async function encryptPushPayload(payload, p256dhRaw, authRaw){
+  // 1. Eigenes Ephemeral-Keypair
+  const local = await crypto.subtle.generateKey({name:'ECDH', namedCurve:'P-256'}, true, ['deriveBits']);
+  const localPubRaw = new Uint8Array(await crypto.subtle.exportKey('raw', local.publicKey));
+
+  // 2. Client public key importieren
+  const clientPub = await crypto.subtle.importKey('raw', p256dhRaw, {name:'ECDH', namedCurve:'P-256'}, false, []);
+  const sharedSecret = new Uint8Array(await crypto.subtle.deriveBits({name:'ECDH', public:clientPub}, local.privateKey, 256));
+
+  // 3. PRK_key = HKDF(auth, sharedSecret, "WebPush: info\0" + clientPub + localPub, 32)
+  const infoKey = concatBuf(
+    new TextEncoder().encode('WebPush: info\0'),
+    p256dhRaw, localPubRaw
+  );
+  const ikm = await hkdf(authRaw, sharedSecret, infoKey, 32);
+
+  // 4. Salt (16 random bytes)
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+
+  // 5. CEK + Nonce ableiten
+  const cek = await hkdf(salt, ikm, concatBuf(new TextEncoder().encode('Content-Encoding: aes128gcm\0')), 16);
+  const nonce = await hkdf(salt, ikm, concatBuf(new TextEncoder().encode('Content-Encoding: nonce\0')), 12);
+
+  // 6. Plaintext + Padding (0x02 + 00..00) — minimales Padding
+  const plain = typeof payload === 'string' ? new TextEncoder().encode(payload) : payload;
+  const padded = concatBuf(plain, new Uint8Array([0x02]));
+
+  // 7. AES-128-GCM
+  const cekKey = await crypto.subtle.importKey('raw', cek, {name:'AES-GCM'}, false, ['encrypt']);
+  const cipher = new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM', iv:nonce}, cekKey, padded));
+
+  // 8. Header (aes128gcm): salt(16) | rs(4)=4096 | idlen(1)=65 | keyid(localPubRaw 65 bytes)
+  const rs = new Uint8Array([0x00, 0x00, 0x10, 0x00]);
+  const idlen = new Uint8Array([65]);
+  const header = concatBuf(salt, rs, idlen, localPubRaw);
+
+  return concatBuf(header, cipher);
+}
+
+async function sendWebPush(env, subscription, payloadStr){
+  const endpoint = subscription.endpoint;
+  if(!endpoint) return false;
+  const aud = new URL(endpoint).origin;
+  let jwt;
+  try { jwt = await buildVapidJwt(env, aud); }
+  catch(e){ console.log('VAPID jwt error:', e.message); return false; }
+
+  const p256dh = b64uDecode(subscription.keys.p256dh);
+  const auth = b64uDecode(subscription.keys.auth);
+  const encrypted = await encryptPushPayload(payloadStr, p256dh, auth);
+
+  const r = await fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'TTL': '86400',
+      'Content-Encoding': 'aes128gcm',
+      'Content-Type': 'application/octet-stream',
+      'Authorization': 'vapid t=' + jwt + ', k=' + env.VAPID_PUBLIC_KEY
+    },
+    body: encrypted
+  });
+  return r.ok || r.status === 201;
+}
+
+/* Alle gespeicherten Subscriptions abrufen, Push an jede senden */
+async function broadcastPush(env, payload){
+  if(!env.LEXORD_DATA || !env.VAPID_PRIVATE_KEY) return { sent:0, failed:0 };
+  const list = await env.LEXORD_DATA.list({ prefix:'pushsub:' });
+  let sent = 0, failed = 0;
+  const payloadStr = typeof payload === 'string' ? payload : JSON.stringify(payload);
+  for(const k of list.keys){
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if(!raw) continue;
+    try{
+      const sub = JSON.parse(raw);
+      const ok = await sendWebPush(env, sub, payloadStr);
+      if(ok) sent++;
+      else { failed++; /* Abgelaufene Subs entfernen */ await env.LEXORD_DATA.delete(k.name); }
+    }catch(e){ failed++; }
+  }
+  return { sent, failed };
+}
+
+// ──── ENDPOINTS ────
+async function admin2PushKey(request, env){
+  if(!checkAdmin(request, env)) return json({ error:'Unauthorized' }, 401);
+  if(!env.VAPID_PUBLIC_KEY) return json({ error:'VAPID_PUBLIC_KEY nicht im Worker gesetzt' }, 500);
+  return json({ publicKey: env.VAPID_PUBLIC_KEY });
+}
+async function admin2PushSubscribe(request, env){
+  if(!checkAdmin(request, env)) return json({ error:'Unauthorized' }, 401);
+  if(!env.LEXORD_DATA) return json({ success:false }, 500);
+  const body = await request.json().catch(()=>({}));
+  const sub = body.subscription || body;
+  if(!sub || !sub.endpoint) return json({ success:false, error:'Invalid subscription' }, 400);
+  const id = b64uEncode(new TextEncoder().encode(sub.endpoint)).slice(0, 64);
+  await env.LEXORD_DATA.put('pushsub:'+id, JSON.stringify({ ...sub, added: new Date().toISOString() }));
+  return json({ success:true, id });
+}
+async function admin2PushUnsubscribe(request, env){
+  if(!checkAdmin(request, env)) return json({ success:true });
+  const body = await request.json().catch(()=>({}));
+  if(!body.endpoint) return json({ success:true });
+  const id = b64uEncode(new TextEncoder().encode(body.endpoint)).slice(0, 64);
+  if(env.LEXORD_DATA) await env.LEXORD_DATA.delete('pushsub:'+id);
+  return json({ success:true });
+}
+async function admin2PushTest(request, env){
+  if(!checkAdmin(request, env)) return json({ error:'Unauthorized' }, 401);
+  const result = await broadcastPush(env, {
+    title:'🎮 LEXORD Test',
+    body:'Push funktioniert! Du bist abonniert ✓',
+    tag:'test-'+Date.now(),
+    url:'/admin.html'
+  });
+  return json({ success: result.sent > 0, ...result });
+}
+
+/* Einmaliger Generator fuer VAPID-Keys (zum Setup) */
+async function admin2PushGenKeys(request, env){
+  if(!checkAdmin(request, env)) return json({ error:'Unauthorized' }, 401);
+  const kp = await crypto.subtle.generateKey({name:'ECDSA', namedCurve:'P-256'}, true, ['sign','verify']);
+  const jwk = await crypto.subtle.exportKey('jwk', kp.privateKey);
+  // x|y in JWK -> uncompressed public key
+  const x = b64uDecode(jwk.x), y = b64uDecode(jwk.y);
+  const pub = concatBuf(new Uint8Array([0x04]), x, y);
+  const d = b64uDecode(jwk.d);
+  return json({
+    note: 'Diese Keys EINMAL als Cloudflare-Secrets speichern, dann NIE wieder neu generieren!',
+    publicKey: b64uEncode(pub),
+    privateKey: b64uEncode(d),
+    subject: 'mailto:kontakt@lexord.de',
+    instructions: 'In Cloudflare → Worker Settings → Variables and Secrets: VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT setzen'
+  });
+}
+

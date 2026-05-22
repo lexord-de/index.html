@@ -147,6 +147,50 @@ async function test(){
         const orderNr = path.split("/").pop();
         return await updateOrder(request, env, orderNr);
       }
+
+      // ════════ NEUE ADMIN-PANEL-ROUTES (v4.0) ════════
+      // Auth
+      if (path === "/admin/login" && request.method === "POST") return await admin2Login(request, env);
+      if (path === "/admin/logout" && request.method === "POST") return json({ success: true });
+
+      // Visitor-Tracking (kein Auth — Frontend schickt fuer Live-Globe)
+      if (path === "/track/visitor" && request.method === "POST") return await trackVisitor(request, env);
+
+      // Admin-Daten (Auth required)
+      if (path === "/admin/stats" && request.method === "GET") return await admin2Stats(request, env);
+      if (path === "/admin/visitors" && request.method === "GET") return await admin2Visitors(request, env);
+      if (path === "/admin/orders" && request.method === "GET") return await admin2Orders(request, env);
+      if (path === "/admin/repairs" && request.method === "GET") return await admin2Repairs(request, env);
+      if (path === "/admin/users" && request.method === "GET") return await admin2Users(request, env);
+      if (path === "/admin/discounts" && request.method === "GET") return await admin2DiscountsList(request, env);
+      if (path === "/admin/discounts" && request.method === "POST") return await admin2DiscountsCreate(request, env);
+      if (path === "/admin/stats/deep" && request.method === "GET") return await admin2DeepStats(request, env);
+
+      // Pro-Bestellung Aktionen
+      if (path.startsWith("/admin/orders/") && path.endsWith("/refund") && request.method === "POST") {
+        return await admin2OrderRefund(request, env, decodeURIComponent(path.split("/")[3]));
+      }
+      if (path.startsWith("/admin/orders/") && path.endsWith("/status") && request.method === "POST") {
+        return await admin2OrderStatus(request, env, decodeURIComponent(path.split("/")[3]));
+      }
+      if (path.startsWith("/admin/orders/") && path.endsWith("/tracking") && request.method === "POST") {
+        return await admin2OrderTracking(request, env, decodeURIComponent(path.split("/")[3]));
+      }
+      if (path.startsWith("/admin/orders/") && path.endsWith("/email") && request.method === "POST") {
+        return await admin2OrderEmail(request, env, decodeURIComponent(path.split("/")[3]));
+      }
+      if (path.startsWith("/admin/orders/") && path.endsWith("/invoice") && request.method === "GET") {
+        return await admin2OrderInvoice(request, env, decodeURIComponent(path.split("/")[3]), url);
+      }
+
+      // Pro-Discount Aktionen
+      if (path.startsWith("/admin/discounts/") && request.method === "PATCH") {
+        return await admin2DiscountToggle(request, env, decodeURIComponent(path.split("/").pop()));
+      }
+      if (path.startsWith("/admin/discounts/") && request.method === "DELETE") {
+        return await admin2DiscountDelete(request, env, decodeURIComponent(path.split("/").pop()));
+      }
+
       return json({ error: "Not found", path: path }, 404);
     } catch (err) {
       return json({ error: String(err.message || err), stack: err.stack }, 500);
@@ -1199,3 +1243,468 @@ async function adminConversations(request, env) {
   return json({ conversations });
 }
 
+
+// ════════════════════════════════════════════════════════════════
+// ADMIN-PANEL v4.0 — Live-Visitor-Tracking, Refund, Discounts, Stats
+// ════════════════════════════════════════════════════════════════
+
+// Akzeptiert {code} ODER {password} (kompatibel mit beidem)
+async function admin2Login(request, env) {
+  const body = await request.json().catch(() => ({}));
+  const input = body.code || body.password;
+  if (!env.ADMIN_PASSWORD) return json({ success: false, error: "ADMIN_PASSWORD not set" }, 500);
+  if (!input || input !== env.ADMIN_PASSWORD) return json({ success: false, error: "Falscher Code" }, 401);
+  const token = btoa("admin:" + Date.now() + ":" + (env.JWT_SECRET || "x").slice(0, 8));
+  return json({ success: true, token });
+}
+
+// Visitor-Tracking (Frontend ruft das auf, kein Auth noetig)
+async function trackVisitor(request, env) {
+  if (!env.LEXORD_DATA) return json({ success: false }, 200);
+  try {
+    const body = await request.json().catch(() => ({}));
+    const sid = body.sid || (request.headers.get("CF-Connecting-IP") || "anon") + "-" + Math.floor(Date.now() / (5 * 60 * 1000));
+    const cf = request.cf || {};
+    const ip = request.headers.get("CF-Connecting-IP") || "?";
+    const data = {
+      sid,
+      ip: ip.split(".").slice(0, 3).concat(["x"]).join("."), // privacy: last octet masked
+      country: cf.country || body.country || "XX",
+      city: cf.city || body.city || "",
+      region: cf.region || "",
+      lat: cf.latitude ? parseFloat(cf.latitude) : null,
+      lng: cf.longitude ? parseFloat(cf.longitude) : null,
+      page: body.page || "/",
+      ref: body.ref || "",
+      ua: (request.headers.get("User-Agent") || "").slice(0, 120),
+      mobile: /Mobile|Android|iPhone/.test(request.headers.get("User-Agent") || ""),
+      lastSeen: Date.now(),
+      event: body.event || "view" // view | config_start | cart_add | checkout
+    };
+    // Live-Visitor mit 5-Minuten-TTL
+    await env.LEXORD_DATA.put("visitor:" + sid, JSON.stringify(data), { expirationTtl: 300 });
+
+    // Heute-Aggregation
+    const today = new Date().toISOString().slice(0, 10);
+    const aggKey = "agg:" + today;
+    const aggRaw = await env.LEXORD_DATA.get(aggKey);
+    const agg = aggRaw ? JSON.parse(aggRaw) : { visitors: {}, views: 0, configurators: 0, carts: 0, checkouts: 0, orders: 0 };
+    agg.visitors[sid] = 1;
+    agg.views++;
+    if (data.event === "config_start") agg.configurators++;
+    if (data.event === "cart_add") agg.carts++;
+    if (data.event === "checkout") agg.checkouts++;
+    if (data.event === "order_complete") agg.orders++;
+    await env.LEXORD_DATA.put(aggKey, JSON.stringify(agg), { expirationTtl: 60 * 60 * 24 * 31 });
+
+    return json({ success: true });
+  } catch (e) {
+    return json({ success: false, error: String(e) });
+  }
+}
+
+// Live-Besucher fuer den Globe
+async function admin2Visitors(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ visitors: [], byCountry: {}, today: {} });
+  const list = await env.LEXORD_DATA.list({ prefix: "visitor:" });
+  const visitors = [];
+  const byCountry = {};
+  for (const k of list.keys) {
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if (!raw) continue;
+    const v = JSON.parse(raw);
+    visitors.push(v);
+    byCountry[v.country] = (byCountry[v.country] || 0) + 1;
+  }
+  visitors.sort((a, b) => b.lastSeen - a.lastSeen);
+  // Heute-Aggregation
+  const today = new Date().toISOString().slice(0, 10);
+  const aggRaw = await env.LEXORD_DATA.get("agg:" + today);
+  const agg = aggRaw ? JSON.parse(aggRaw) : { visitors: {}, views: 0, configurators: 0, carts: 0, orders: 0 };
+  const todayVisitors = Object.keys(agg.visitors || {}).length;
+  const conv = todayVisitors > 0 ? (agg.orders / todayVisitors) * 100 : 0;
+  return json({
+    visitors,
+    byCountry,
+    today: {
+      visitors: todayVisitors,
+      views: agg.views,
+      configurators: agg.configurators,
+      carts: agg.carts,
+      checkouts: agg.checkouts || 0,
+      orders: agg.orders,
+      conversion: conv
+    }
+  });
+}
+
+// Stats erweitert (today, deltas)
+async function admin2Stats(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ stats: { orders: 0, revenue: 0, customers: 0, thisMonth: 0, today: 0 } });
+  const orderList = await env.LEXORD_DATA.list({ prefix: "order:" });
+  let total = 0, revenue = 0, today = 0, thisMonth = 0, lastWeekOrders = 0, lastWeekRevenue = 0;
+  const customers = {};
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const monthStr = new Date().toISOString().slice(0, 7);
+  const weekAgo = Date.now() - 7 * 24 * 3600 * 1000;
+  const twoWeeksAgo = Date.now() - 14 * 24 * 3600 * 1000;
+  for (const k of orderList.keys) {
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if (!raw) continue;
+    const o = JSON.parse(raw);
+    total++;
+    revenue += parseFloat(o.total || 0);
+    if ((o.date || o.created || "").slice(0, 10) === todayStr) today++;
+    if ((o.date || o.created || "").slice(0, 7) === monthStr) thisMonth++;
+    const t = new Date(o.date || o.created || 0).getTime();
+    if (t > weekAgo) lastWeekOrders++;
+    if (t > twoWeeksAgo && t <= weekAgo) lastWeekRevenue++;
+    if (o.email) customers[o.email.toLowerCase()] = 1;
+  }
+  return json({
+    stats: {
+      orders: total,
+      revenue: revenue,
+      customers: Object.keys(customers).length,
+      thisMonth,
+      today,
+      ordersDelta: lastWeekOrders - lastWeekRevenue
+    }
+  });
+}
+
+// Bestellungen-Liste
+async function admin2Orders(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ orders: [] });
+  const list = await env.LEXORD_DATA.list({ prefix: "order:" });
+  const orders = [];
+  for (const k of list.keys) {
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if (raw) orders.push(JSON.parse(raw));
+  }
+  orders.sort((a, b) => new Date(b.date || b.created || 0) - new Date(a.date || a.created || 0));
+  return json({ orders });
+}
+
+async function admin2Repairs(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ repairs: [] });
+  const list = await env.LEXORD_DATA.list({ prefix: "repair:" });
+  const repairs = [];
+  for (const k of list.keys) {
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if (raw) repairs.push(JSON.parse(raw));
+  }
+  repairs.sort((a, b) => new Date(b.date || b.created || 0) - new Date(a.date || a.created || 0));
+  return json({ repairs });
+}
+
+async function admin2Users(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ users: [] });
+  const orderList = await env.LEXORD_DATA.list({ prefix: "order:" });
+  const users = {};
+  for (const k of orderList.keys) {
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if (!raw) continue;
+    const o = JSON.parse(raw);
+    const em = (o.email || "").toLowerCase();
+    if (!em) continue;
+    if (!users[em]) users[em] = { email: em, name: o.name || "", created: o.date || o.created, orderCount: 0, totalSpent: 0 };
+    users[em].orderCount++;
+    users[em].totalSpent += parseFloat(o.total || 0);
+  }
+  return json({ users: Object.values(users).sort((a, b) => b.totalSpent - a.totalSpent) });
+}
+
+// ──── REFUND (Stripe / PayPal automatisch) ────
+async function admin2OrderRefund(request, env, orderNr) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ success: false, error: "KV nicht verbunden" }, 500);
+  const body = await request.json().catch(() => ({}));
+  const orderRaw = await env.LEXORD_DATA.get("order:" + orderNr);
+  if (!orderRaw) return json({ success: false, error: "Order nicht gefunden" }, 404);
+  const order = JSON.parse(orderRaw);
+  const amount = parseFloat(body.amount || order.total || 0);
+
+  let refundId = null;
+  let refundError = null;
+
+  try {
+    if ((order.payment || "").toLowerCase().includes("stripe") && order.stripeChargeId && env.STRIPE_SECRET_KEY) {
+      // Stripe Refund
+      const r = await fetch("https://api.stripe.com/v1/refunds", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + env.STRIPE_SECRET_KEY,
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "charge=" + encodeURIComponent(order.stripeChargeId) + "&amount=" + Math.round(amount * 100) + "&reason=requested_by_customer"
+      });
+      const d = await r.json();
+      if (d.id) refundId = d.id;
+      else refundError = d.error ? d.error.message : "Stripe-Refund fehlgeschlagen";
+    } else if ((order.payment || "").toLowerCase().includes("paypal") && order.paypalCaptureId && env.PAYPAL_CLIENT_ID && env.PAYPAL_SECRET) {
+      // PayPal OAuth
+      const tokenR = await fetch("https://api-m.paypal.com/v1/oauth2/token", {
+        method: "POST",
+        headers: {
+          "Authorization": "Basic " + btoa(env.PAYPAL_CLIENT_ID + ":" + env.PAYPAL_SECRET),
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "grant_type=client_credentials"
+      });
+      const tk = await tokenR.json();
+      if (tk.access_token) {
+        const r = await fetch("https://api-m.paypal.com/v2/payments/captures/" + order.paypalCaptureId + "/refund", {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + tk.access_token,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ amount: { value: amount.toFixed(2), currency_code: "EUR" }, note_to_payer: body.reason || "Stornierung" })
+        });
+        const d = await r.json();
+        if (d.id) refundId = d.id;
+        else refundError = d.message || "PayPal-Refund fehlgeschlagen";
+      } else refundError = "PayPal-Auth fehlgeschlagen";
+    } else {
+      refundError = "Keine Stripe-/PayPal-Daten in der Bestellung — Refund muss manuell ausgeloest werden";
+    }
+  } catch (e) {
+    refundError = String(e.message || e);
+  }
+
+  // Status auf STORNIERT setzen (auch wenn Refund manuell)
+  order.status = "STORNIERT";
+  order.cancelled = new Date().toISOString();
+  order.cancelReason = body.reason || "";
+  order.refundId = refundId;
+  order.refundAmount = amount;
+  order.refundError = refundError;
+  await env.LEXORD_DATA.put("order:" + orderNr, JSON.stringify(order));
+
+  // Kunden per Mail benachrichtigen
+  if (body.notify !== false && order.email && env.BREVO_API_KEY) {
+    const subject = "Stornierung deiner Bestellung " + orderNr + " — LEXORD";
+    const html = "<p>Hallo " + (order.name || "Kunde") + ",</p>" +
+      "<p>deine Bestellung <strong>" + orderNr + "</strong> wurde storniert.</p>" +
+      "<p><strong>Rueckerstattung:</strong> " + amount.toFixed(2) + " EUR " +
+      (refundId ? "(Referenz: " + refundId + ")" : "(manuelle Bearbeitung)") + "</p>" +
+      (body.reason ? "<p><strong>Grund:</strong> " + escapeHtml(body.reason) + "</p>" : "") +
+      "<p>Die Erstattung wird auf das urspruengliche Zahlungskonto zurueckgebucht und ist je nach Anbieter in 3-10 Werktagen sichtbar.</p>" +
+      "<p>Liebe Gruesse<br>LEXORD Engineering</p>";
+    await sendBrevoMail(env, order.email, subject, html);
+  }
+  return json({ success: !refundError || refundId !== null, refundId, refundError, amount });
+}
+
+// ──── STATUS-Update ────
+async function admin2OrderStatus(request, env, orderNr) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ success: false }, 500);
+  const body = await request.json().catch(() => ({}));
+  const orderRaw = await env.LEXORD_DATA.get("order:" + orderNr);
+  if (!orderRaw) return json({ success: false, error: "Order not found" }, 404);
+  const order = JSON.parse(orderRaw);
+  const oldStatus = order.status;
+  order.status = body.status;
+  order.statusChanged = new Date().toISOString();
+  await env.LEXORD_DATA.put("order:" + orderNr, JSON.stringify(order));
+  if (body.notify !== false && order.email && env.BREVO_API_KEY) {
+    const subject = "Status-Update zu Bestellung " + orderNr;
+    const html = "<p>Hallo " + (order.name || "Kunde") + ",</p>" +
+      "<p>der Status deiner Bestellung <strong>" + orderNr + "</strong> wurde aktualisiert:</p>" +
+      "<p style='font-size:18px'><strong>" + body.status + "</strong></p>" +
+      (oldStatus ? "<p style='color:#666;font-size:12px'>vorher: " + oldStatus + "</p>" : "") +
+      "<p>Liebe Gruesse<br>LEXORD Engineering</p>";
+    await sendBrevoMail(env, order.email, subject, html);
+  }
+  return json({ success: true });
+}
+
+// ──── TRACKING-Nummer ────
+async function admin2OrderTracking(request, env, orderNr) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ success: false }, 500);
+  const body = await request.json().catch(() => ({}));
+  const orderRaw = await env.LEXORD_DATA.get("order:" + orderNr);
+  if (!orderRaw) return json({ success: false, error: "Order not found" }, 404);
+  const order = JSON.parse(orderRaw);
+  order.tracking = body.tracking;
+  order.shipped = new Date().toISOString();
+  order.status = order.status === "STORNIERT" ? order.status : "VERSANDT";
+  await env.LEXORD_DATA.put("order:" + orderNr, JSON.stringify(order));
+  if (body.notify !== false && order.email && env.BREVO_API_KEY) {
+    const trackUrl = "https://www.dhl.de/de/privatkunden/dhl-sendungsverfolgung.html?piececode=" + encodeURIComponent(body.tracking);
+    const subject = "Deine Bestellung " + orderNr + " ist unterwegs!";
+    const html = "<p>Hallo " + (order.name || "Kunde") + ",</p>" +
+      "<p>deine Bestellung <strong>" + orderNr + "</strong> wurde verschickt!</p>" +
+      "<p><strong>Tracking-Nummer:</strong> <a href='" + trackUrl + "'>" + escapeHtml(body.tracking) + "</a></p>" +
+      "<p>Lieferzeit: in der Regel 1-3 Werktage</p>" +
+      "<p>Liebe Gruesse<br>LEXORD Engineering</p>";
+    await sendBrevoMail(env, order.email, subject, html);
+  }
+  return json({ success: true });
+}
+
+// ──── Custom-Email an Kunden ────
+async function admin2OrderEmail(request, env, orderNr) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  const body = await request.json().catch(() => ({}));
+  const orderRaw = await env.LEXORD_DATA.get("order:" + orderNr);
+  if (!orderRaw) return json({ success: false, error: "Order not found" }, 404);
+  const order = JSON.parse(orderRaw);
+  if (!order.email) return json({ success: false, error: "Keine Kundenmail" }, 400);
+  const html = "<p>" + escapeHtml(body.body || "").replace(/\n/g, "<br>") + "</p>";
+  const ok = await sendBrevoMail(env, order.email, body.subject || "Nachricht von LEXORD", html);
+  return json({ success: ok });
+}
+
+// ──── Rechnung als simples HTML/PDF ────
+async function admin2OrderInvoice(request, env, orderNr, url) {
+  // Token kann im Query stehen (fuer window.open)
+  const queryToken = url.searchParams.get("token");
+  if (queryToken) request = new Request(request.url, { headers: { Authorization: "Bearer " + queryToken } });
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  const orderRaw = await env.LEXORD_DATA.get("order:" + orderNr);
+  if (!orderRaw) return new Response("Order not found", { status: 404 });
+  const o = JSON.parse(orderRaw);
+  const items = (o.items || []).map(i => "<tr><td>" + escapeHtml(i.name) + "</td><td>" + i.qty + "</td><td>" + (i.price * i.qty).toFixed(2) + " EUR</td></tr>").join("");
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Rechnung ${orderNr}</title>
+<style>body{font-family:sans-serif;padding:40px;max-width:680px;margin:auto;color:#222}h1{font-size:24px;letter-spacing:3px}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{padding:10px;border-bottom:1px solid #ddd;text-align:left}th{background:#f5f5f5}.tot{font-size:18px;font-weight:700;text-align:right;padding-top:14px}.head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:30px}.head .brand{font-weight:900;color:#00bdd6}.print{padding:10px 20px;background:#000;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-bottom:20px}@media print{.print{display:none}}</style></head>
+<body><button class="print" onclick="window.print()">PDF / Drucken</button>
+<div class="head"><div><h1 class="brand">LEXORD ENGINEERING</h1><div>Domsuehl, Deutschland</div><div>kontakt@lexord.de</div></div><div><div>Rechnung Nr.</div><strong>${escapeHtml(orderNr)}</strong><div>${new Date(o.date || o.created).toLocaleDateString("de-DE")}</div></div></div>
+<div><strong>${escapeHtml(o.name || "")}</strong><br>${escapeHtml(o.email || "")}<br>${escapeHtml(o.address || "")}</div>
+<table><thead><tr><th>Artikel</th><th>Menge</th><th>Preis</th></tr></thead><tbody>${items}</tbody></table>
+<div class="tot">Gesamt: ${parseFloat(o.total || 0).toFixed(2)} EUR</div>
+<p style="margin-top:30px;font-size:11px;color:#888">Kleinunternehmer gemaess Para 19 UStG — kein Ausweis der Umsatzsteuer.</p>
+</body></html>`;
+  return new Response(html, { headers: { "Content-Type": "text/html;charset=UTF-8", ...CORS } });
+}
+
+// ──── DISCOUNTS CRUD ────
+async function admin2DiscountsList(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ discounts: [] });
+  const list = await env.LEXORD_DATA.list({ prefix: "discount:" });
+  const discounts = [];
+  for (const k of list.keys) {
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if (raw) discounts.push(JSON.parse(raw));
+  }
+  discounts.sort((a, b) => new Date(b.created || 0) - new Date(a.created || 0));
+  return json({ discounts });
+}
+async function admin2DiscountsCreate(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ success: false }, 500);
+  const body = await request.json().catch(() => ({}));
+  const code = (body.code || "").toUpperCase().trim();
+  if (!code) return json({ success: false, error: "Code fehlt" }, 400);
+  const existing = await env.LEXORD_DATA.get("discount:" + code);
+  if (existing) return json({ success: false, error: "Code existiert" }, 409);
+  const disc = {
+    code,
+    type: body.type || "percent",
+    value: parseFloat(body.value || 0),
+    expires: body.expires || null,
+    active: true,
+    uses: 0,
+    totalDiscount: 0,
+    created: new Date().toISOString()
+  };
+  await env.LEXORD_DATA.put("discount:" + code, JSON.stringify(disc));
+  return json({ success: true, discount: disc });
+}
+async function admin2DiscountToggle(request, env, code) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  const body = await request.json().catch(() => ({}));
+  const raw = await env.LEXORD_DATA.get("discount:" + code);
+  if (!raw) return json({ success: false }, 404);
+  const d = JSON.parse(raw);
+  d.active = !!body.active;
+  await env.LEXORD_DATA.put("discount:" + code, JSON.stringify(d));
+  return json({ success: true });
+}
+async function admin2DiscountDelete(request, env, code) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  await env.LEXORD_DATA.delete("discount:" + code);
+  return json({ success: true });
+}
+
+// ──── DEEP STATS ────
+async function admin2DeepStats(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ products: [], configurations: [], abandonment: {}, topCustomers: [] });
+  const orderList = await env.LEXORD_DATA.list({ prefix: "order:" });
+  const products = {};
+  const configs = {};
+  const customers = {};
+  for (const k of orderList.keys) {
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if (!raw) continue;
+    const o = JSON.parse(raw);
+    if (o.status === "STORNIERT") continue;
+    for (const i of (o.items || [])) {
+      products[i.name] = (products[i.name] || 0) + (i.qty || 1);
+    }
+    // Config-Detection: items mit "custom" oder spezifischen Namen
+    for (const i of (o.items || [])) {
+      if (/custom|lxrd|edition/i.test(i.name)) {
+        configs[i.name] = (configs[i.name] || 0) + 1;
+      }
+    }
+    const em = (o.email || "").toLowerCase();
+    if (em) {
+      if (!customers[em]) customers[em] = { email: em, name: o.name || em, totalSpent: 0, orderCount: 0 };
+      customers[em].totalSpent += parseFloat(o.total || 0);
+      customers[em].orderCount++;
+    }
+  }
+  // Aggregations
+  const productsArr = Object.entries(products).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count);
+  const configsArr = Object.entries(configs).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count);
+  const topCustomers = Object.values(customers).sort((a, b) => b.totalSpent - a.totalSpent);
+
+  // Cart-Abandonment aus today-agg (vereinfachte Cross-Day-Aggregation)
+  let abStarted = 0, abCheckout = 0, abCompleted = 0;
+  const aggList = await env.LEXORD_DATA.list({ prefix: "agg:" });
+  for (const k of aggList.keys) {
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if (!raw) continue;
+    const a = JSON.parse(raw);
+    abStarted += a.carts || 0;
+    abCheckout += a.checkouts || 0;
+    abCompleted += a.orders || 0;
+  }
+  return json({
+    products: productsArr,
+    configurations: configsArr,
+    abandonment: { started: abStarted, checkout: abCheckout, completed: abCompleted },
+    topCustomers
+  });
+}
+
+// ──── Brevo-Mail Helper ────
+async function sendBrevoMail(env, to, subject, html) {
+  if (!env.BREVO_API_KEY) return false;
+  try {
+    const r = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: { "api-key": env.BREVO_API_KEY, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sender: { name: "LEXORD Engineering", email: env.FROM_EMAIL || "kontakt@lexord.de" },
+        to: [{ email: to }],
+        subject,
+        htmlContent: html
+      })
+    });
+    return r.ok;
+  } catch (e) {
+    return false;
+  }
+}

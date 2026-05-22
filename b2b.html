@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#000000">
+<title>LEXORD® B2B Portal | Login &amp; Registrierung für Geschäftskunden</title>
+<meta name="description" content="LEXORD® B2B Portal: Geschlossener Bereich für Wiederverkäufer, Esports-Teams, Gaming-Cafés. Mengenrabatte bis 25%, Custom Branding, Reverse-Charge. Anmeldung mit Firmen-Account erforderlich.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--neon:#00f2ff;--neon2:#bc13fe;--bg:#000;--panel:#080808;--green:#00b67a;--err:#ff4d4f;--gold:#ffae00;--border:#131318}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+body{background:#000;color:#fff;font-family:'Inter',sans-serif;overflow-x:hidden;min-height:100vh}
+a,a:link,a:visited{color:var(--neon);text-decoration:none}
+a:hover{color:#fff}
+button{font-family:inherit}
+
+#star-canvas{position:fixed;inset:0;z-index:-2;background:#000;pointer-events:none}
+#particle-canvas{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.4}
+.lightning-bg{position:fixed;inset:0;pointer-events:none;z-index:-1;overflow:hidden}
+.lightning-line{position:absolute;width:2px;background:linear-gradient(to bottom,transparent,var(--neon2),transparent);opacity:.15;animation:lF var(--dur,3s) var(--delay,0s) infinite}
+@keyframes lF{0%,90%,100%{opacity:0}92%,96%{opacity:.4}94%{opacity:0}}
+
+header{position:fixed;top:0;width:100%;z-index:100;padding:14px 5%;background:rgba(0,0,0,.94);backdrop-filter:blur(22px);border-bottom:1px solid #0d0d0d;display:flex;align-items:center;justify-content:space-between}
+.brand{font-family:'Orbitron';font-weight:900;font-size:1.05rem;letter-spacing:5px;color:#fff!important}
+.brand .tag{color:var(--neon2);font-size:.62rem;letter-spacing:3px;margin-left:8px;border:1px solid var(--neon2);padding:2px 9px;border-radius:4px;vertical-align:middle;background:rgba(188,19,254,.1)}
+.hdr-r{display:flex;align-items:center;gap:14px}
+.back-link{font-family:'Orbitron';font-size:9px;color:#888!important;letter-spacing:2px;transition:.3s}
+.back-link:hover{color:var(--neon)!important}
+.hdr-status{font-family:'Orbitron';font-size:8.5px;color:var(--green);letter-spacing:1.5px;display:none;align-items:center;gap:7px}
+.hdr-status .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:pulse 2s infinite}
+.hdr-status.on{display:flex}
+@keyframes pulse{50%{opacity:.5}}
+
+/* ───── HERO (Public) ───── */
+.hero{padding:110px 5% 40px;text-align:center;background:radial-gradient(ellipse at top,rgba(188,19,254,.08),transparent 60%);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:90px;left:50%;transform:translateX(-50%);width:90%;max-width:900px;height:400px;background:radial-gradient(ellipse,rgba(0,242,255,.08) 0%,transparent 60%);filter:blur(80px);pointer-events:none}
+.eyebrow{display:inline-block;padding:7px 16px;background:rgba(188,19,254,.08);border:1px solid rgba(188,19,254,.3);border-radius:20px;font-family:'Orbitron';font-size:8.5px;color:#d97aff;letter-spacing:3px;margin-bottom:16px;animation:eyePulse 3s infinite;position:relative;z-index:1}
+@keyframes eyePulse{50%{box-shadow:0 0 18px rgba(188,19,254,.3)}}
+.hero h1{font-family:'Orbitron';font-size:clamp(2rem,5.5vw,3.2rem);font-weight:900;letter-spacing:-1.5px;line-height:1;margin-bottom:18px;position:relative;z-index:1}
+.hero h1 .accent{background:linear-gradient(90deg,var(--neon),var(--neon2),var(--neon));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;background-size:200%;animation:nS 4s ease-in-out infinite;display:block}
+@keyframes nS{50%{background-position:100% 50%}}
+.hero p.lead{font-size:14px;color:#aaa;max-width:620px;margin:0 auto;line-height:1.7;position:relative;z-index:1}
+.locked-note{display:inline-flex;align-items:center;gap:8px;margin-top:20px;padding:9px 18px;background:rgba(255,174,0,.08);border:1px solid rgba(255,174,0,.3);color:var(--gold);font-family:'Orbitron';font-size:9.5px;letter-spacing:2px;border-radius:8px;position:relative;z-index:1}
+.locked-note .ico{font-size:14px}
+
+/* ───── BENEFITS GRID ───── */
+.benefits{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;max-width:1100px;margin:0 auto;padding:40px 5%}
+.bf-card{background:linear-gradient(180deg,#0a0a0a,#040404);border:1px solid var(--border);border-radius:14px;padding:24px;text-align:center;transition:.3s}
+.bf-card:hover{border-color:var(--neon2);transform:translateY(-4px);box-shadow:0 14px 40px rgba(188,19,254,.15)}
+.bf-ico{font-size:32px;margin-bottom:14px}
+.bf-title{font-family:'Orbitron';font-size:11px;color:var(--neon);letter-spacing:2px;margin-bottom:10px}
+.bf-desc{font-size:12px;color:#999;line-height:1.7}
+
+/* ───── TIERS ───── */
+.tier-sec{padding:50px 5% 30px;max-width:1100px;margin:0 auto}
+.tier-sec h2{font-family:'Orbitron';font-size:clamp(1rem,2.5vw,1.5rem);letter-spacing:4px;text-align:center;margin-bottom:8px}
+.tier-sub{font-family:'Orbitron';font-size:9px;color:#444;letter-spacing:3px;text-align:center;margin-bottom:30px}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.tier{background:linear-gradient(180deg,#080808,#000);border:1px solid var(--border);border-radius:16px;padding:28px;position:relative;transition:.3s}
+.tier:hover{border-color:var(--neon);transform:translateY(-3px)}
+.tier.featured{border-color:var(--neon2);box-shadow:0 14px 40px rgba(188,19,254,.18)}
+.tier.featured::before{content:'EMPFOHLEN';position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--neon2);color:#fff;font-family:'Orbitron';font-size:8px;padding:5px 14px;border-radius:5px;letter-spacing:2px;font-weight:900}
+.tier-name{font-family:'Orbitron';font-size:10px;color:var(--neon);letter-spacing:3px;margin-bottom:6px}
+.tier-vol{font-family:'Orbitron';font-size:9px;color:#555;letter-spacing:1.5px;margin-bottom:18px}
+.tier-disc{font-family:'Orbitron';font-size:42px;color:#fff;font-weight:900;line-height:1}
+.tier-disc small{font-size:13px;color:var(--neon);font-weight:400;display:block;margin-top:6px;letter-spacing:1px}
+.tier-list{margin-top:22px;font-size:11.5px;color:#aaa;line-height:2}
+.tier-list li{list-style:none;padding-left:20px;position:relative}
+.tier-list li::before{content:'✓';position:absolute;left:0;color:var(--neon)}
+
+/* ───── AUTH BOX (Login/Register) ───── */
+.auth-wrap{max-width:680px;margin:30px auto 40px;padding:0 5%}
+.auth-tabs{display:flex;background:#080808;border:1px solid var(--border);border-radius:12px 12px 0 0;padding:5px;gap:4px;border-bottom:none}
+.auth-tab{flex:1;padding:14px;background:transparent;border:none;color:#666;font-family:'Orbitron';font-size:10px;letter-spacing:2px;cursor:pointer;border-radius:8px;transition:.25s;font-weight:700}
+.auth-tab:hover{color:#aaa}
+.auth-tab.active{background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;box-shadow:0 6px 18px rgba(0,242,255,.3);font-weight:900}
+.auth-box{background:#070707;border:1px solid var(--border);border-radius:0 0 16px 16px;padding:36px;border-top:none}
+.auth-panel{display:none}
+.auth-panel.active{display:block;animation:fadeIn .35s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.auth-head{font-family:'Orbitron';font-size:15px;color:var(--neon);letter-spacing:3px;margin-bottom:6px}
+.auth-sub{font-family:'Orbitron';font-size:9px;color:#555;letter-spacing:2px;margin-bottom:24px}
+.field{margin-bottom:14px}
+.field label{display:block;font-family:'Orbitron';font-size:8.5px;color:#777;letter-spacing:1.8px;margin-bottom:7px;text-transform:uppercase}
+.field label .req{color:var(--neon)}
+.field input,.field select,.field textarea{width:100%;padding:13px 15px;background:#040404;border:1px solid #1a1a1a;color:#fff;font-family:'Inter';font-size:13px;border-radius:8px;outline:none;transition:.2s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--neon);background:rgba(0,242,255,.03);box-shadow:0 0 14px rgba(0,242,255,.1)}
+.field textarea{min-height:90px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:520px){.row2{grid-template-columns:1fr}}
+.pwd-strength{display:flex;gap:3px;margin-top:6px}
+.pwd-strength span{height:3px;flex:1;background:#1a1a1a;border-radius:2px;transition:.3s}
+.pwd-strength.s1 span:nth-child(1){background:var(--err)}
+.pwd-strength.s2 span:nth-child(-n+2){background:var(--gold)}
+.pwd-strength.s3 span:nth-child(-n+3){background:var(--green)}
+.pwd-strength.s4 span{background:var(--green)}
+.pwd-hint{font-family:'Orbitron';font-size:7.5px;color:#444;letter-spacing:1px;margin-top:4px}
+.cb-row{display:flex;align-items:flex-start;gap:9px;font-size:11.5px;color:#888;line-height:1.6;margin-bottom:16px;cursor:pointer}
+.cb-row input{accent-color:var(--neon);width:15px;height:15px;margin-top:2px;flex-shrink:0;cursor:pointer}
+.cb-row a{color:var(--neon)}
+.auth-btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:11px;letter-spacing:2.5px;border-radius:9px;cursor:pointer;transition:.3s;margin-top:8px;box-shadow:0 8px 24px rgba(0,242,255,.3),0 4px 12px rgba(188,19,254,.18)}
+.auth-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,242,255,.45)}
+.auth-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.err-msg{background:rgba(255,77,79,.08);border:1px solid rgba(255,77,79,.3);color:#ff7779;padding:11px 14px;border-radius:8px;font-family:'Orbitron';font-size:10px;letter-spacing:1px;margin-bottom:16px;display:none}
+.err-msg.on{display:block;animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.success-state{display:none;text-align:center;padding:30px 10px}
+.success-state.on{display:block}
+.success-ico{font-size:60px;margin-bottom:18px;animation:successPop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes successPop{from{transform:scale(0)}to{transform:scale(1)}}
+.success-head{font-family:'Orbitron';font-size:14px;color:var(--green);letter-spacing:3px;margin-bottom:14px}
+.success-msg{font-size:13px;color:#aaa;line-height:1.8;margin-bottom:18px}
+.success-id{display:inline-block;padding:8px 18px;background:#040404;border:1px dashed var(--neon);border-radius:6px;font-family:'Orbitron';font-size:11px;color:var(--neon);letter-spacing:2px}
+.pending-state{display:none;text-align:center;padding:30px 10px}
+.pending-state.on{display:block}
+.pending-ico{font-size:54px;margin-bottom:16px}
+.pending-head{font-family:'Orbitron';font-size:13px;color:var(--gold);letter-spacing:3px;margin-bottom:12px}
+.pending-msg{font-size:12px;color:#999;line-height:1.7}
+
+/* ───── DASHBOARD (after login) ───── */
+.dashboard{display:none;padding:90px 5% 60px;max-width:1300px;margin:0 auto}
+.dashboard.on{display:block}
+.dash-welcome{background:linear-gradient(135deg,rgba(0,242,255,.06),rgba(188,19,254,.06));border:1px solid rgba(0,242,255,.2);border-radius:18px;padding:30px 32px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px}
+.dw-left h2{font-family:'Orbitron';font-size:16px;color:#fff;letter-spacing:2px;margin-bottom:6px}
+.dw-left h2 .accent{color:var(--neon)}
+.dw-left p{font-family:'Orbitron';font-size:9.5px;color:#777;letter-spacing:2px}
+.dw-right{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.tier-badge{padding:10px 18px;background:#0a0a0a;border:1.5px solid;border-radius:9px;font-family:'Orbitron';font-size:9px;letter-spacing:2px;font-weight:900;text-transform:uppercase}
+.tier-badge.starter{border-color:#888;color:#aaa}
+.tier-badge.pro{border-color:var(--gold);color:var(--gold);box-shadow:0 0 12px rgba(255,174,0,.3)}
+.tier-badge.enterprise{border-color:var(--neon);color:var(--neon);box-shadow:0 0 12px rgba(0,242,255,.3)}
+.logout-btn{padding:10px 18px;background:transparent;border:1px solid #2a2a2a;color:#888;font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;border-radius:7px;cursor:pointer;transition:.2s}
+.logout-btn:hover{border-color:var(--err);color:var(--err)}
+
+.dash-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:24px}
+.ds-card{background:#0a0a0a;border:1px solid var(--border);border-radius:13px;padding:20px}
+.ds-num{font-family:'Orbitron';font-size:24px;color:var(--neon);font-weight:900;text-shadow:0 0 10px rgba(0,242,255,.3);line-height:1}
+.ds-lbl{font-family:'Orbitron';font-size:8px;color:#666;letter-spacing:1.5px;margin-top:7px;text-transform:uppercase}
+
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:900px){.dash-grid{grid-template-columns:1fr}}
+.dash-panel{background:#070707;border:1px solid var(--border);border-radius:16px;padding:28px}
+.dp-head{font-family:'Orbitron';font-size:12px;color:var(--neon);letter-spacing:3px;margin-bottom:6px}
+.dp-sub{font-family:'Orbitron';font-size:8.5px;color:#555;letter-spacing:1.5px;margin-bottom:22px}
+
+/* B2B CATALOG (in dashboard) */
+.b2b-catalog{display:flex;flex-direction:column;gap:12px;max-height:480px;overflow-y:auto;padding-right:6px}
+.b2b-catalog::-webkit-scrollbar{width:4px}
+.b2b-catalog::-webkit-scrollbar-thumb{background:#1a1a1a;border-radius:3px}
+.bp-row{background:#0a0a0a;border:1px solid var(--border);border-radius:11px;padding:13px;display:flex;gap:13px;align-items:center;transition:.25s}
+.bp-row:hover{border-color:var(--neon);transform:translateX(2px)}
+.bp-img{width:55px;height:55px;background:#050505;border-radius:8px;padding:7px;flex-shrink:0;object-fit:contain}
+.bp-info{flex:1;min-width:0}
+.bp-name{font-family:'Orbitron';font-size:10px;color:#fff;letter-spacing:.5px;margin-bottom:4px;font-weight:700}
+.bp-cat{font-family:'Orbitron';font-size:7.5px;color:#555;letter-spacing:1.5px}
+.bp-prices{text-align:right;flex-shrink:0}
+.bp-price-old{font-family:'Orbitron';font-size:9.5px;color:#444;text-decoration:line-through;margin-bottom:3px}
+.bp-price-new{font-family:'Orbitron';font-size:14px;color:var(--neon);font-weight:900}
+.bp-save{font-family:'Orbitron';font-size:7.5px;color:var(--green);letter-spacing:1px;margin-top:2px}
+
+/* CONTACT FORM with TEMPLATES */
+.tpl-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;margin-bottom:18px}
+.tpl-btn{padding:13px 10px;background:#0a0a0a;border:1.5px solid var(--border);border-radius:9px;cursor:pointer;text-align:center;transition:.25s;color:#888;font-family:'Orbitron';font-size:8.5px;letter-spacing:1px}
+.tpl-btn:hover{border-color:#2a2a2a;color:#fff}
+.tpl-btn.active{border-color:var(--neon);background:rgba(0,242,255,.07);color:var(--neon);box-shadow:0 4px 12px rgba(0,242,255,.15)}
+.tpl-btn .ico{font-size:20px;margin-bottom:5px;display:block}
+.tpl-btn .lbl{font-weight:700}
+
+footer{padding:40px 5%;text-align:center;background:#040404;border-top:1px solid #0a0a0a;font-family:'Orbitron';font-size:9px;color:#444;letter-spacing:2px;margin-top:40px}
+footer a{color:var(--neon);margin:0 10px}
+
+.toast{position:fixed;bottom:30px;right:28px;background:#0c0c0c;border:1px solid var(--neon);border-left:3px solid var(--neon);padding:13px 18px;border-radius:8px;font-family:'Orbitron';font-size:9.5px;letter-spacing:1.5px;z-index:99999;color:#fff;animation:tIn .3s}
+.toast.err{border-left-color:var(--err);border-color:var(--err)}
+.toast.success{border-left-color:var(--green);border-color:var(--green)}
+@keyframes tIn{from{transform:translateX(60px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+@media(max-width:640px){
+  header{padding:11px 4%}
+  .brand{font-size:.85rem;letter-spacing:3px}
+  .hero{padding:95px 4% 30px}
+  .hero h1{font-size:1.8rem}
+  .hero p.lead{font-size:12px}
+  .auth-wrap{margin:24px auto 30px}
+  .auth-box{padding:24px 20px}
+  .auth-head{font-size:13px}
+  .field input,.field select,.field textarea{font-size:12px;padding:11px 13px}
+  .dashboard{padding:80px 4% 40px}
+  .dash-welcome{padding:22px}
+  .dash-panel{padding:22px}
+  .tpl-btn{padding:11px 7px;font-size:8px}
+  .tpl-btn .ico{font-size:18px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="star-canvas"></canvas>
+<canvas id="particle-canvas"></canvas>
+<div class="lightning-bg" id="lightning-bg"></div>
+
+<header>
+  <a class="brand" href="/">LEXORD® <span class="tag">B2B</span></a>
+  <div class="hdr-r">
+    <div class="hdr-status" id="hdr-status"><span class="dot"></span><span id="hdr-status-text">Eingeloggt</span></div>
+    <a href="/" class="back-link">← STARTSEITE</a>
+  </div>
+</header>
+
+<!-- ════════ PUBLIC AREA (Login + Register) ════════ -->
+<div id="public-area">
+
+<section class="hero">
+  <div class="eyebrow">🔐 GESCHLOSSENER B2B-BEREICH</div>
+  <h1>LEXORD® B2B Portal<span class="accent">für Geschäftskunden.</span></h1>
+  <p class="lead">Mengenrabatte bis 25%, Custom Branding, Dropshipping, Reverse-Charge — exklusiv für registrierte Firmen. Anmeldung nach Prüfung Ihrer USt-ID innerhalb von 24 Stunden.</p>
+  <div class="locked-note"><span class="ico">🔒</span>NUR FÜR REGISTRIERTE B2B-KUNDEN ZUGÄNGLICH</div>
+</section>
+
+<section class="benefits">
+  <div class="bf-card">
+    <div class="bf-ico">💰</div>
+    <div class="bf-title">MENGENRABATT</div>
+    <div class="bf-desc">Bis zu <strong style="color:var(--neon)">25% Rabatt</strong> ab 25 Stück. Individuelle Staffeln.</div>
+  </div>
+  <div class="bf-card">
+    <div class="bf-ico">🎨</div>
+    <div class="bf-title">CUSTOM BRANDING</div>
+    <div class="bf-desc">Team-Logos, Sponsor-Designs, individuelle Farben &amp; Gravur.</div>
+  </div>
+  <div class="bf-card">
+    <div class="bf-ico">📦</div>
+    <div class="bf-title">DROPSHIPPING</div>
+    <div class="bf-desc">Direktversand mit Ihrem Branding an Endkunden.</div>
+  </div>
+  <div class="bf-card">
+    <div class="bf-ico">📃</div>
+    <div class="bf-title">REVERSE-CHARGE</div>
+    <div class="bf-desc">EU-Lieferungen mit USt-ID gem. §13b UStG.</div>
+  </div>
+  <div class="bf-card">
+    <div class="bf-ico">🛡️</div>
+    <div class="bf-title">B2B-GARANTIE</div>
+    <div class="bf-desc">24 Monate Gewährleistung + Account-Manager.</div>
+  </div>
+  <div class="bf-card">
+    <div class="bf-ico">🇩🇪</div>
+    <div class="bf-title">MADE IN GERMANY</div>
+    <div class="bf-desc">100% Handarbeit aus Domsühl. Faire Produktion.</div>
+  </div>
+</section>
+
+<section class="tier-sec">
+  <h2>STAFFELPREISE</h2>
+  <p class="tier-sub">RICHTPREISE · INDIVIDUELL VERHANDELBAR</p>
+  <div class="tiers">
+    <div class="tier">
+      <div class="tier-name">STARTER</div>
+      <div class="tier-vol">5 – 10 Stück / Jahr</div>
+      <div class="tier-disc">10%<small>Rabatt auf UVP</small></div>
+      <ul class="tier-list">
+        <li>Sammelversand</li>
+        <li>14 Tage Zahlungsziel</li>
+        <li>Email-Support</li>
+      </ul>
+    </div>
+    <div class="tier featured">
+      <div class="tier-name">PROFESSIONAL</div>
+      <div class="tier-vol">11 – 25 Stück / Jahr</div>
+      <div class="tier-disc">18%<small>Rabatt auf UVP</small></div>
+      <ul class="tier-list">
+        <li>Versand kostenfrei (DE)</li>
+        <li>Custom Branding optional</li>
+        <li>30 Tage Zahlungsziel</li>
+        <li>Persönlicher Account-Manager</li>
+      </ul>
+    </div>
+    <div class="tier">
+      <div class="tier-name">ENTERPRISE</div>
+      <div class="tier-vol">26+ Stück / Jahr</div>
+      <div class="tier-disc">25%<small>Rabatt auf UVP</small></div>
+      <ul class="tier-list">
+        <li>Versand kostenfrei (EU)</li>
+        <li>Vollständiges Custom Branding</li>
+        <li>60 Tage Zahlungsziel</li>
+        <li>Dropshipping verfügbar</li>
+        <li>API-Zugang (auf Anfrage)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- AUTH BOX -->
+<div class="auth-wrap" id="auth-wrap">
+  <div class="auth-tabs">
+    <button class="auth-tab active" data-tab="login" onclick="switchAuthTab('login')">🔑 ANMELDEN</button>
+    <button class="auth-tab" data-tab="register" onclick="switchAuthTab('register')">🏢 NEU REGISTRIEREN</button>
+  </div>
+  <div class="auth-box">
+
+    <!-- LOGIN PANEL -->
+    <div class="auth-panel active" id="panel-login">
+      <div class="auth-head">B2B-LOGIN</div>
+      <div class="auth-sub">FIRMEN-ACCOUNT · ZUGRIFF AUF SONDERPREISE</div>
+      <div class="err-msg" id="login-err"></div>
+      <div class="field">
+        <label>E-MAIL <span class="req">*</span></label>
+        <input type="email" id="login-email" autocomplete="email" placeholder="firma@beispiel.de">
+      </div>
+      <div class="field">
+        <label>PASSWORT <span class="req">*</span></label>
+        <input type="password" id="login-password" autocomplete="current-password">
+      </div>
+      <button class="auth-btn" id="login-btn" onclick="doLogin()">EINLOGGEN →</button>
+      <p style="font-size:10.5px;color:#555;text-align:center;margin-top:18px;line-height:1.7">Passwort vergessen? <a href="mailto:Kontakt@Lexord.de?subject=B2B%20Passwort-Reset">Kontakt@Lexord.de</a></p>
+    </div>
+
+    <!-- REGISTER PANEL -->
+    <div class="auth-panel" id="panel-register">
+      <div class="auth-head">FIRMA REGISTRIEREN</div>
+      <div class="auth-sub">PRÜFUNG INNERHALB 24H · ANSCHLIESSEND FREISCHALTUNG</div>
+      <div class="err-msg" id="reg-err"></div>
+
+      <div class="row2">
+        <div class="field">
+          <label>FIRMA <span class="req">*</span></label>
+          <input type="text" id="reg-company" maxlength="120">
+        </div>
+        <div class="field">
+          <label>USt-ID <span class="req">*</span></label>
+          <input type="text" id="reg-ustid" placeholder="DE123456789" maxlength="20">
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label>ANSPRECHPARTNER <span class="req">*</span></label>
+          <input type="text" id="reg-name" autocomplete="name" maxlength="80">
+        </div>
+        <div class="field">
+          <label>POSITION</label>
+          <input type="text" id="reg-position" placeholder="z.B. Einkauf" maxlength="80">
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label>E-MAIL <span class="req">*</span></label>
+          <input type="email" id="reg-email" autocomplete="email" maxlength="120">
+        </div>
+        <div class="field">
+          <label>TELEFON <span class="req">*</span></label>
+          <input type="tel" id="reg-phone" autocomplete="tel" maxlength="40">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>FIRMENANSCHRIFT <span class="req">*</span></label>
+        <input type="text" id="reg-address" placeholder="Straße · PLZ · Ort · Land" maxlength="200">
+      </div>
+
+      <div class="field">
+        <label>PASSWORT <span class="req">*</span> · MIN. 8 ZEICHEN</label>
+        <input type="password" id="reg-password" autocomplete="new-password" oninput="checkPwd()">
+        <div class="pwd-strength" id="pwd-strength"><span></span><span></span><span></span><span></span></div>
+        <div class="pwd-hint" id="pwd-hint">Tipp: Mind. 8 Zeichen, Groß+Klein, Zahl, Sonderzeichen</div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label>BRANCHE</label>
+          <select id="reg-industry">
+            <option value="">— bitte wählen —</option>
+            <option>Wiederverkäufer / Reseller</option>
+            <option>Esports-Team / Pro-Gaming</option>
+            <option>Gaming-Café / LAN-Center</option>
+            <option>Streamer / Content Creator</option>
+            <option>Eventagentur / Promotion</option>
+            <option>Großhandel</option>
+            <option>Sonstiges</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>VOLUMEN (geplant)</label>
+          <select id="reg-volume">
+            <option value="">— bitte wählen —</option>
+            <option>5 – 10 Stück / Jahr</option>
+            <option>11 – 25 Stück / Jahr</option>
+            <option>26 – 50 Stück / Jahr</option>
+            <option>51 – 100 Stück / Jahr</option>
+            <option>100+ Stück / Jahr</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>NACHRICHT (optional)</label>
+        <textarea id="reg-message" maxlength="1000" placeholder="Beschreiben Sie kurz Ihr Vorhaben oder Anforderungen."></textarea>
+      </div>
+
+      <label class="cb-row">
+        <input type="checkbox" id="reg-agb">
+        <span>Ich akzeptiere die <a href="/#agb" target="_blank">AGB</a> und die <a href="/#datenschutz" target="_blank">Datenschutzerklärung</a>. Speicherdauer 3 Jahre nach letztem Kontakt (Art. 6 Abs. 1 lit. b DSGVO).</span>
+      </label>
+
+      <button class="auth-btn" id="reg-btn" onclick="doRegister()">📨 REGISTRIERUNG ABSENDEN →</button>
+
+      <!-- Success after registration -->
+      <div class="success-state" id="reg-success">
+        <div class="success-ico">✅</div>
+        <div class="success-head">REGISTRIERUNG EINGEGANGEN</div>
+        <div class="success-msg">Vielen Dank! Wir prüfen Ihre Angaben (Firma, USt-ID) und melden uns <strong style="color:var(--neon)">innerhalb von 24 Stunden</strong>.<br>Nach Freischaltung können Sie sich mit E-Mail und Passwort einloggen.</div>
+        <div class="success-id" id="reg-id">B2B-XXXXXXX</div>
+      </div>
+    </div>
+
+    <!-- Pending state shown after attempted login while pending -->
+    <div class="pending-state" id="pending-state">
+      <div class="pending-ico">⏳</div>
+      <div class="pending-head">KONTO IN PRÜFUNG</div>
+      <div class="pending-msg">Ihr B2B-Konto wird gerade geprüft. Sie erhalten innerhalb von 24h eine Freischaltungs-E-Mail.<br><br>Bei Fragen: <a href="mailto:Kontakt@Lexord.de">Kontakt@Lexord.de</a></div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /public-area -->
+
+<!-- ════════ PRIVATE DASHBOARD (after login) ════════ -->
+<div class="dashboard" id="dashboard">
+
+  <div class="dash-welcome">
+    <div class="dw-left">
+      <h2>Willkommen <span class="accent" id="dash-name">Kunde</span></h2>
+      <p id="dash-company">— · B2B-ID: —</p>
+    </div>
+    <div class="dw-right">
+      <div class="tier-badge starter" id="tier-badge">STARTER · 10%</div>
+      <button class="logout-btn" onclick="doLogout()">↩ LOGOUT</button>
+    </div>
+  </div>
+
+  <div class="dash-stats">
+    <div class="ds-card"><div class="ds-num" id="ds-discount">10%</div><div class="ds-lbl">DEIN RABATT</div></div>
+    <div class="ds-card"><div class="ds-num">24h</div><div class="ds-lbl">VERSAND</div></div>
+    <div class="ds-card"><div class="ds-num">30T</div><div class="ds-lbl">ZAHLUNGSZIEL</div></div>
+    <div class="ds-card"><div class="ds-num">24M</div><div class="ds-lbl">GARANTIE</div></div>
+  </div>
+
+  <div class="dash-grid">
+
+    <!-- B2B PRODUKT-KATALOG -->
+    <div class="dash-panel">
+      <div class="dp-head">🛒 B2B-KATALOG</div>
+      <div class="dp-sub">PREISE INKLUSIVE DEINES <strong style="color:var(--neon)" id="dp-disc">10%</strong> RABATTS</div>
+      <div class="b2b-catalog" id="b2b-catalog"></div>
+      <p style="font-size:10.5px;color:#555;margin-top:16px;text-align:center">Für Großbestellungen ≥10 Stück: Sonderkonditionen via Kontaktformular →</p>
+    </div>
+
+    <!-- KONTAKTFORMULAR mit TEMPLATES -->
+    <div class="dash-panel">
+      <div class="dp-head">💬 KONTAKT</div>
+      <div class="dp-sub">DIREKT AN <strong style="color:var(--neon)">KONTAKT@LEXORD.DE</strong></div>
+
+      <div style="font-family:Orbitron;font-size:8.5px;color:#666;letter-spacing:1.5px;margin-bottom:10px">ANFRAGE-TEMPLATE WÄHLEN</div>
+      <div class="tpl-row" id="tpl-row">
+        <button class="tpl-btn active" data-tpl="anfrage" onclick="selectTemplate('anfrage')"><span class="ico">💼</span><span class="lbl">ANGEBOT</span></button>
+        <button class="tpl-btn" data-tpl="bestellung" onclick="selectTemplate('bestellung')"><span class="ico">📦</span><span class="lbl">BESTELLUNG</span></button>
+        <button class="tpl-btn" data-tpl="reklamation" onclick="selectTemplate('reklamation')"><span class="ico">⚠️</span><span class="lbl">REKLAMATION</span></button>
+        <button class="tpl-btn" data-tpl="individuell" onclick="selectTemplate('individuell')"><span class="ico">🎨</span><span class="lbl">CUSTOM</span></button>
+        <button class="tpl-btn" data-tpl="sonstiges" onclick="selectTemplate('sonstiges')"><span class="ico">💬</span><span class="lbl">SONSTIGES</span></button>
+      </div>
+
+      <div class="err-msg" id="contact-err"></div>
+
+      <div class="field">
+        <label>NACHRICHT <span class="req">*</span></label>
+        <textarea id="contact-message" maxlength="2000" style="min-height:160px"></textarea>
+      </div>
+
+      <button class="auth-btn" id="contact-btn" onclick="sendContact()">📨 ABSENDEN AN KONTAKT@LEXORD.DE</button>
+
+      <div class="success-state" id="contact-success" style="padding:20px 10px">
+        <div class="success-ico" style="font-size:48px">✅</div>
+        <div class="success-head" style="font-size:12px">NACHRICHT GESENDET</div>
+        <div class="success-msg" style="font-size:12px">Antwort innerhalb von <strong style="color:var(--neon)">24 Stunden</strong> an Ihre E-Mail.</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  © LEXORD® 2026 · Made in Germany ·
+  <a href="/">Shop</a> ·
+  <a href="collections.html">Produkte</a> ·
+  <a href="/#impressum">Impressum</a> ·
+  <a href="/#datenschutz">Datenschutz</a> ·
+  <a href="/#agb">AGB</a>
+</footer>
+
+<script>
+'use strict';
+const CF_WORKER_URL = 'https://lexord-api.leonschulz1420.workers.dev';
+
+const PRODUCTS = [
+  {slug:'lxrd-elite-pro',     name:'LXRD Elite Pro',         cat:'Premium Controller', uvp:280, img:'Photoroom_20260306_112425.png'},
+  {slug:'lxrd-performance',   name:'LXRD Performance Black', cat:'Premium Controller', uvp:240, img:'Photoroom_20260305_123705.png'},
+  {slug:'lxrd-stealth',       name:'LXRD Stealth Edition',   cat:'Premium Controller', uvp:220, img:'Photoroom_20260501_094506.png'},
+  {slug:'lxrd-plus',          name:'LXRD Plus Black',        cat:'Premium Controller', uvp:180, img:'Photoroom_20260305_140346.png'},
+  {slug:'lxrd-basic',         name:'LXRD Basic Black',       cat:'Premium Controller', uvp:105, img:'Photoroom_20260402_014813.png'},
+  {slug:'tmr-upgrade-kit',    name:'TMR Stick Upgrade Kit',  cat:'Upgrade-Kit',         uvp:55,  img:'Photoroom_20260305_123705.png'},
+  {slug:'paddle-system-v2',   name:'Paddle System V2',       cat:'Upgrade-Kit',         uvp:40,  img:'Photoroom_20260304_212902.png'},
+  {slug:'hall-effect-kit',    name:'Hall Effect Upgrade Kit',cat:'Upgrade-Kit',         uvp:35,  img:'Photoroom_20260305_140346.png'},
+  {slug:'grip-housing',       name:'GRIP Gehäuse Set',       cat:'Gehäuse',             uvp:28,  img:'Photoroom_20260402_014813.png'},
+  {slug:'clicky-trigger',     name:'Clicky Trigger Kit',     cat:'Upgrade-Kit',         uvp:22,  img:'Photoroom_20260304_212902.png'},
+  {slug:'stickzange-pro',     name:'Stickzange Pro',         cat:'Werkzeug',            uvp:5,   img:'Stickzange.PNG'}
+];
+
+const TEMPLATES = {
+  anfrage:    {label:'Angebotsanfrage', placeholder:'z.B. Bitte erstellen Sie mir ein unverbindliches Angebot für 15 Stück LXRD Performance Black mit Team-Logo-Gravur. Lieferung bis Anfang nächsten Monats. Zahlung auf Rechnung.'},
+  bestellung: {label:'Bestellanfrage',  placeholder:'z.B. Hiermit bestelle ich verbindlich: 10× LXRD Performance Black mit Hall Effect Sticks. Versand an unsere Zentrale. Bitte Rechnung mit USt-ID.'},
+  reklamation:{label:'Reklamation',     placeholder:'z.B. Bestell-Nr. LXRD-1234567 — bei Controller XYZ funktioniert der rechte Stick nach 2 Wochen nicht mehr richtig. Bitte um Reparatur/Tausch im Rahmen der Gewährleistung.'},
+  individuell:{label:'Custom-Branding', placeholder:'z.B. Wir benötigen 25 Controller mit unserem Team-Logo (im Anhang) auf dem Touchpad sowie unseren Vereinsfarben Blau/Gold. Können Sie ein Mockup erstellen?'},
+  sonstiges:  {label:'Sonstige Anfrage',placeholder:'Beschreiben Sie Ihr Anliegen so detailliert wie möglich.'}
+};
+
+let session = null; // {token, email, name, company, id, discount, tier}
+let activeTemplate = 'anfrage';
+
+/* ═══ AUTH ═══ */
+function switchAuthTab(tab){
+  document.querySelectorAll('.auth-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===tab));
+  document.querySelectorAll('.auth-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+  document.getElementById('pending-state').classList.remove('on');
+  document.getElementById('reg-success').classList.remove('on');
+  hideErrors();
+}
+
+function checkPwd(){
+  const v = document.getElementById('reg-password').value;
+  const bar = document.getElementById('pwd-strength');
+  let s = 0;
+  if(v.length>=8) s++;
+  if(/[A-Z]/.test(v) && /[a-z]/.test(v)) s++;
+  if(/\d/.test(v)) s++;
+  if(/[^A-Za-z0-9]/.test(v)) s++;
+  bar.className = 'pwd-strength s'+s;
+}
+
+function hideErrors(){
+  document.querySelectorAll('.err-msg').forEach(e=>e.classList.remove('on'));
+}
+function showErr(id, msg){
+  const el = document.getElementById(id);
+  el.textContent = '✗ ' + msg;
+  el.classList.add('on');
+}
+
+async function doLogin(){
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const password = document.getElementById('login-password').value;
+  const btn = document.getElementById('login-btn');
+  hideErrors();
+  document.getElementById('pending-state').classList.remove('on');
+
+  if(!email || !email.includes('@')) return showErr('login-err','E-Mail ungültig');
+  if(!password || password.length<8) return showErr('login-err','Passwort mind. 8 Zeichen');
+
+  btn.disabled = true;
+  btn.textContent = 'PRÜFE ZUGANG …';
+
+  try{
+    const r = await fetch(CF_WORKER_URL+'/api/b2b/login',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,password})
+    });
+    const d = await r.json();
+    if(d.success){
+      session = {token:d.token,email:d.email,name:d.name,company:d.company,id:d.id,discount:d.discount,tier:d.tier};
+      sessionStorage.setItem('lxrd_b2b_session', JSON.stringify(session));
+      showDashboard();
+      toast('✓ Willkommen, '+d.name,'success');
+    } else if(d.pending){
+      document.getElementById('pending-state').classList.add('on');
+    } else {
+      showErr('login-err', d.error || 'Login fehlgeschlagen');
+    }
+  }catch(e){
+    showErr('login-err','Netzwerk-Fehler — bitte später erneut versuchen');
+  }
+  btn.disabled = false;
+  btn.textContent = 'EINLOGGEN →';
+}
+
+async function doRegister(){
+  const data = {
+    company:  document.getElementById('reg-company').value.trim(),
+    ustid:    document.getElementById('reg-ustid').value.trim(),
+    name:     document.getElementById('reg-name').value.trim(),
+    position: document.getElementById('reg-position').value.trim(),
+    email:    document.getElementById('reg-email').value.trim().toLowerCase(),
+    phone:    document.getElementById('reg-phone').value.trim(),
+    address:  document.getElementById('reg-address').value.trim(),
+    password: document.getElementById('reg-password').value,
+    industry: document.getElementById('reg-industry').value,
+    volume:   document.getElementById('reg-volume').value,
+    message:  document.getElementById('reg-message').value.trim()
+  };
+  const btn = document.getElementById('reg-btn');
+  hideErrors();
+
+  if(!data.company || !data.ustid || !data.name || !data.email || !data.phone || !data.address || !data.password)
+    return showErr('reg-err','Bitte alle Pflichtfelder ausfüllen');
+  if(!/^[A-Z]{2}[0-9A-Z]{8,12}$/i.test(data.ustid.replace(/\s/g,'')))
+    return showErr('reg-err','USt-ID Format ungültig (z.B. DE123456789)');
+  if(data.password.length<8) return showErr('reg-err','Passwort mind. 8 Zeichen');
+  if(!document.getElementById('reg-agb').checked) return showErr('reg-err','Bitte AGB &amp; Datenschutz akzeptieren');
+
+  btn.disabled = true;
+  btn.textContent = 'WIRD GESENDET …';
+
+  try{
+    const r = await fetch(CF_WORKER_URL+'/api/b2b/register',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(data)
+    });
+    const d = await r.json();
+    if(d.success){
+      document.querySelectorAll('#panel-register > *:not(.success-state)').forEach(el=>el.style.display='none');
+      document.getElementById('reg-success').classList.add('on');
+      document.getElementById('reg-id').textContent = d.id;
+      toast('✓ Registrierung eingegangen','success');
+    } else {
+      showErr('reg-err', d.error || 'Registrierung fehlgeschlagen');
+      btn.disabled = false;
+      btn.textContent = '📨 REGISTRIERUNG ABSENDEN →';
+    }
+  }catch(e){
+    showErr('reg-err','Netzwerk-Fehler — bitte später erneut versuchen');
+    btn.disabled = false;
+    btn.textContent = '📨 REGISTRIERUNG ABSENDEN →';
+  }
+}
+
+function showDashboard(){
+  document.getElementById('public-area').style.display='none';
+  document.getElementById('dashboard').classList.add('on');
+  document.getElementById('hdr-status').classList.add('on');
+  document.getElementById('hdr-status-text').textContent = session.company;
+
+  document.getElementById('dash-name').textContent = session.name || 'Kunde';
+  document.getElementById('dash-company').textContent = (session.company||'-') + ' · B2B-ID: ' + (session.id||'-');
+
+  const tier = (session.tier||'starter').toLowerCase();
+  const tierName = {starter:'STARTER',pro:'PROFESSIONAL',professional:'PROFESSIONAL',enterprise:'ENTERPRISE'}[tier]||'STARTER';
+  const tierClass = tier==='professional'||tier==='pro'?'pro':(tier==='enterprise'?'enterprise':'starter');
+  const badge = document.getElementById('tier-badge');
+  badge.className = 'tier-badge '+tierClass;
+  badge.textContent = tierName+' · '+session.discount+'%';
+
+  document.getElementById('ds-discount').textContent = session.discount+'%';
+  document.getElementById('dp-disc').textContent = session.discount+'%';
+
+  renderCatalog();
+}
+
+function renderCatalog(){
+  const disc = session.discount || 10;
+  document.getElementById('b2b-catalog').innerHTML = PRODUCTS.map(p=>{
+    const newPrice = p.uvp * (1 - disc/100);
+    return `<div class="bp-row">
+      <img src="${p.img}" alt="${p.name}" class="bp-img">
+      <div class="bp-info">
+        <div class="bp-name">${p.name}</div>
+        <div class="bp-cat">${p.cat}</div>
+      </div>
+      <div class="bp-prices">
+        <div class="bp-price-old">${p.uvp.toFixed(2).replace('.',',')} €</div>
+        <div class="bp-price-new">${newPrice.toFixed(2).replace('.',',')} €</div>
+        <div class="bp-save">−${(p.uvp-newPrice).toFixed(2).replace('.',',')} €</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function doLogout(){
+  sessionStorage.removeItem('lxrd_b2b_session');
+  session = null;
+  document.getElementById('public-area').style.display='block';
+  document.getElementById('dashboard').classList.remove('on');
+  document.getElementById('hdr-status').classList.remove('on');
+  document.getElementById('login-email').value='';
+  document.getElementById('login-password').value='';
+  toast('Ausgeloggt','success');
+  switchAuthTab('login');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ═══ TEMPLATES + CONTACT ═══ */
+function selectTemplate(key){
+  activeTemplate = key;
+  document.querySelectorAll('.tpl-btn').forEach(b=>b.classList.toggle('active',b.dataset.tpl===key));
+  const t = TEMPLATES[key];
+  document.getElementById('contact-message').placeholder = t.placeholder;
+}
+
+async function sendContact(){
+  if(!session){toast('Bitte zuerst einloggen','err');return;}
+  const msg = document.getElementById('contact-message').value.trim();
+  const btn = document.getElementById('contact-btn');
+  hideErrors();
+  if(msg.length<10) return showErr('contact-err','Nachricht mind. 10 Zeichen');
+
+  btn.disabled = true;
+  btn.textContent = 'SENDE …';
+
+  try{
+    const r = await fetch(CF_WORKER_URL+'/api/b2b/contact',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        template:activeTemplate,
+        message:msg,
+        email:session.email,
+        name:session.name,
+        company:session.company,
+        b2bId:session.id,
+        phone:''
+      })
+    });
+    const d = await r.json();
+    if(d.success){
+      document.getElementById('contact-message').value='';
+      document.getElementById('contact-success').classList.add('on');
+      setTimeout(()=>document.getElementById('contact-success').classList.remove('on'),5000);
+      toast('✓ Nachricht an Kontakt@Lexord.de gesendet','success');
+    } else {
+      showErr('contact-err', d.error || 'Fehler beim Senden');
+    }
+  }catch(e){
+    showErr('contact-err','Netzwerk-Fehler');
+  }
+  btn.disabled = false;
+  btn.textContent = '📨 ABSENDEN AN KONTAKT@LEXORD.DE';
+}
+
+/* ═══ TOAST ═══ */
+function toast(msg,type){
+  const t = document.createElement('div');
+  t.className = 'toast'+(type?' '+type:'');
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>{t.style.transition='.4s';t.style.opacity='0';t.style.transform='translateX(60px)';},2400);
+  setTimeout(()=>t.remove(),2900);
+}
+
+/* ═══ CANVAS BG ═══ */
+(function(){const sc=document.getElementById('star-canvas');if(!sc)return;const sx=sc.getContext('2d');const rsz=()=>{sc.width=window.innerWidth;sc.height=window.innerHeight;};window.addEventListener('resize',rsz);rsz();const stars=[];for(let i=0;i<90;i++)stars.push({x:Math.random()*sc.width,y:Math.random()*sc.height,v:.05+Math.random()*.22,o:Math.random()*.6});function draw(){sx.clearRect(0,0,sc.width,sc.height);stars.forEach(s=>{s.y-=s.v;if(s.y<0)s.y=sc.height;sx.fillStyle='rgba(255,255,255,'+s.o+')';sx.fillRect(s.x,s.y,1,1);});requestAnimationFrame(draw);}draw();})();
+(function(){const pc=document.getElementById('particle-canvas');if(!pc)return;const px=pc.getContext('2d');const rsz=()=>{pc.width=window.innerWidth;pc.height=window.innerHeight;};window.addEventListener('resize',rsz);rsz();const pts=[];for(let i=0;i<55;i++)pts.push({x:Math.random()*pc.width,y:Math.random()*pc.height,vx:(Math.random()-.5)*.3,vy:-Math.random()*.4-.1,sz:Math.random()*1.5+.4,alpha:Math.random()*.35+.1,color:Math.random()>.5?'#bc13fe':'#00f2ff'});function draw(){px.clearRect(0,0,pc.width,pc.height);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.y<-10){p.y=pc.height+10;p.x=Math.random()*pc.width;}if(p.x<-10)p.x=pc.width+10;if(p.x>pc.width+10)p.x=-10;px.save();px.globalAlpha=p.alpha;px.fillStyle=p.color;px.shadowColor=p.color;px.shadowBlur=7;px.beginPath();px.arc(p.x,p.y,p.sz,0,Math.PI*2);px.fill();px.restore();});requestAnimationFrame(draw);}draw();})();
+(function(){const bg=document.getElementById('lightning-bg');if(!bg)return;for(let i=0;i<7;i++){const el=document.createElement('div');el.className='lightning-line';el.style.cssText='left:'+(5+Math.random()*90)+'%;top:'+Math.random()*60+'%;height:'+(120+Math.random()*250)+'px;--dur:'+(2.5+Math.random()*3.5)+'s;--delay:'+Math.random()*5+'s';bg.appendChild(el);}})();
+
+/* ═══ INIT ═══ */
+try{
+  const stored = sessionStorage.getItem('lxrd_b2b_session');
+  if(stored){
+    session = JSON.parse(stored);
+    showDashboard();
+  }
+}catch(e){}
+</script>
+
+<script src="lxrd-tracker.js" defer></script>
+</body>
+</html>

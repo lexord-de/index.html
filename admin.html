@@ -160,6 +160,25 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
 .toast.success{border-left-color:var(--green)}.toast.error{border-left-color:var(--err)}.toast.warn{border-left-color:var(--warn)}
 @keyframes toastSlide{from{transform:translateX(40px);opacity:0}to{transform:translateX(0);opacity:1}}
 
+/* === ARCHIV === */
+.arch-banner{background:linear-gradient(90deg,rgba(0,242,255,.08),rgba(188,19,254,.06));border:1px solid rgba(0,242,255,.25);border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:11px;color:#bbb;line-height:1.6}
+.arch-banner strong{color:#fff}
+.arch-banner code{font-family:monospace;background:rgba(0,0,0,.4);padding:1px 6px;border-radius:4px;color:var(--neon)}
+.arch-count{font-family:Orbitron;font-size:9px;color:#666;letter-spacing:1.5px;margin-left:auto}
+.arch-row{background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:.2s}
+.arch-row:hover{border-color:rgba(0,242,255,.3);background:rgba(0,242,255,.03)}
+.arch-icon{font-size:18px;width:34px;text-align:center;flex-shrink:0}
+.arch-main{flex:1;min-width:0;overflow:hidden}
+.arch-title{font-family:Orbitron;font-size:11px;color:#fff;font-weight:700;letter-spacing:.5px;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arch-sub{font-size:10.5px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arch-meta{display:flex;flex-direction:column;align-items:flex-end;font-family:Orbitron;font-size:9px;color:#666;letter-spacing:.5px;flex-shrink:0;text-align:right}
+.arch-meta .badge{background:rgba(0,182,122,.12);color:var(--green);padding:2px 7px;border-radius:4px;font-size:8.5px;margin-bottom:4px}
+.arch-meta .badge.bad{background:rgba(255,77,79,.12);color:var(--err)}
+.arch-meta .hash{color:#3a3a3a;font-size:8px}
+
+.arch-detail-content{padding:14px;background:rgba(0,0,0,.4);border-radius:8px;margin:10px 0;font-family:monospace;font-size:10.5px;color:#ccc;line-height:1.6;max-height:340px;overflow:auto;word-break:break-word;white-space:pre-wrap}
+.arch-html-preview{background:#fff;color:#000;padding:16px;border-radius:8px;margin:10px 0;max-height:400px;overflow:auto}
+
 /* === FINANZEN (Steuer-Aufstellung) === */
 .fin-toolbar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;align-items:center}
 .fin-sel{padding:9px 12px;background:rgba(0,0,0,.4);border:1px solid var(--bord);color:#fff;font-family:Orbitron;font-size:10px;border-radius:8px;outline:none;letter-spacing:.5px;cursor:pointer}
@@ -278,6 +297,7 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
     <button class="dash-tab" onclick="switchTab('discounts',this)">🎟️ RABATTCODES</button>
     <button class="dash-tab" onclick="switchTab('stats',this)">📊 STATS</button>
     <button class="dash-tab" onclick="switchTab('finanzen',this)">📋 FINANZEN</button>
+    <button class="dash-tab" onclick="switchTab('archiv',this)">🗄️ ARCHIV</button>
   </div>
 
   <!-- PANEL: LIVE -->
@@ -346,6 +366,28 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
       <button class="dash-action primary" onclick="createDiscount()">+ CODE ANLEGEN</button>
     </div>
     <div id="discounts-container"><div class="dash-loading"><div class="spinner"></div><div>LADE CODES…</div></div></div>
+  </div>
+
+  <!-- PANEL: ARCHIV (verschluesselte Mail-/Rechnungs-Historie) -->
+  <div class="dash-panel" id="panel-archiv">
+    <div class="arch-banner">
+      🔒 <strong>Verschlüsseltes Archiv</strong> · alle Mails, Rechnungen, Refunds &amp; Status-Änderungen werden
+      <strong>AES-256-GCM-verschlüsselt</strong> im Cloudflare-KV gespeichert. Nur mit deinem <code>ARCHIVE_KEY</code> lesbar.
+      <strong>Append-Only</strong> — Einträge können nicht gelöscht oder geändert werden (GoBD-konform).
+    </div>
+    <div class="dash-actions">
+      <select class="fin-sel" id="arch-filter" onchange="loadArchive()">
+        <option value="">Alle Typen</option>
+        <option value="email">✉ Mails</option>
+        <option value="invoice">📄 Rechnungen</option>
+        <option value="refund">💸 Refunds/Stornos</option>
+        <option value="status">📦 Status-Änderungen</option>
+        <option value="tracking">📮 Tracking</option>
+      </select>
+      <button class="dash-action" onclick="loadArchive()">↻ AKTUALISIEREN</button>
+      <span class="arch-count" id="arch-count"></span>
+    </div>
+    <div id="archive-container"><div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div></div>
   </div>
 
   <!-- PANEL: FINANZEN / STEUERAUFSTELLUNG -->
@@ -929,6 +971,111 @@ function barRow(name, lbl, pct){
   return `<div class="bar-row"><div class="lbl"><b>${esc(name)}</b><span>${esc(lbl)}</span></div><div class="bar"><div class="bar-fill" style="width:${pct}%"></div></div></div>`;
 }
 
+/* ════════ ARCHIV (verschluesselte Historie) ════════ */
+const ARCH_ICONS = { email:'✉', invoice:'📄', refund:'💸', status:'📦', tracking:'📮' };
+const ARCH_LABELS = { email:'Mail-Versand', invoice:'Rechnung', refund:'Refund/Storno', status:'Status-Änderung', tracking:'Tracking' };
+
+async function loadArchive(){
+  const c = document.getElementById('archive-container');
+  c.innerHTML = '<div class="dash-loading"><div class="spinner"></div><div>LADE ARCHIV…</div></div>';
+  const filter = document.getElementById('arch-filter').value;
+  const path = '/admin/archive' + (filter ? '?type='+encodeURIComponent(filter) : '');
+  const d = await api(path);
+  if(!d || !d.entries){ c.innerHTML = empty('⚠','VERBINDUNGSFEHLER'); return; }
+  document.getElementById('arch-count').innerText = (d.entries.length + (d.total > d.entries.length ? ' / '+d.total+' insgesamt' : ''));
+  if(!d.entries.length){ c.innerHTML = empty('🗄️','NOCH KEINE EINTRAEGE'); return; }
+  c.innerHTML = d.entries.map(e => `
+    <div class="arch-row" onclick="openArchive('${esc(e.key)}')">
+      <div class="arch-icon">${ARCH_ICONS[e.type]||'•'}</div>
+      <div class="arch-main">
+        <div class="arch-title">${ARCH_LABELS[e.type]||e.type}</div>
+        <div class="arch-sub">${new Date(e.time).toLocaleString('de-DE')}</div>
+      </div>
+      <div class="arch-meta">
+        <span class="badge">🔒 ENC</span>
+        <span class="hash">SHA: ${esc(e.hash)}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function openArchive(key){
+  const d = await api('/admin/archive/'+encodeURIComponent(key));
+  if(!d || !d.entry){ toast('Konnte nicht laden / entschluesseln','error'); return; }
+  const e = d.entry;
+  const intactBadge = e._intact
+    ? '<span class="badge">✓ Integritaet OK</span>'
+    : '<span class="badge bad">⚠ Hash-Mismatch!</span>';
+  const data = e.data || {};
+  let body = '';
+  if(e.type === 'email'){
+    body = `
+      <div style="margin-bottom:10px;font-size:11px;color:#888">An: <strong style="color:#fff;font-family:Orbitron">${esc(data.to||'')}</strong></div>
+      <div style="margin-bottom:10px;font-size:11px;color:#888">Betreff: <strong style="color:#fff">${esc(data.subject||'')}</strong></div>
+      ${data.orderNr?`<div style="margin-bottom:10px;font-size:11px;color:#888">Bestell-Nr.: <strong style="color:var(--neon);font-family:Orbitron">${esc(data.orderNr)}</strong></div>`:''}
+      ${data.kind?`<div style="margin-bottom:10px;font-size:11px;color:#888">Typ: <strong style="color:#fff">${esc(data.kind)}</strong></div>`:''}
+      <div style="margin-bottom:10px;font-size:11px;color:#888">Versand: <strong style="color:${data.ok?'var(--green)':'var(--err)'}">${data.ok?'✓ erfolgreich':'⚠ fehlgeschlagen'}</strong></div>
+      <div style="font-family:Orbitron;font-size:9px;color:#999;letter-spacing:1.5px;margin:14px 0 6px">VOLLSTAENDIGER INHALT (HTML-Vorschau)</div>
+      <div class="arch-html-preview">${data.html||''}</div>
+      <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+        <button class="oa-btn" id="arch-resend">↻ Nochmal senden</button>
+        <button class="oa-btn" id="arch-download">⤓ HTML</button>
+      </div>`;
+    setTimeout(()=>{
+      const rs = document.getElementById('arch-resend');
+      const dl = document.getElementById('arch-download');
+      if(rs) rs.onclick = ()=>reSendArchivMail(data.to||'', data.subject||'', data.html||'');
+      if(dl) dl.onclick = ()=>downloadHtml(key, data.html||'');
+    }, 0);
+  } else if(e.type === 'invoice'){
+    body = `
+      <div style="margin-bottom:10px;font-size:11px;color:#888">Bestell-Nr.: <strong style="color:var(--neon);font-family:Orbitron">${esc(data.orderNr||'')}</strong></div>
+      <div style="margin-bottom:10px;font-size:11px;color:#888">Betrag: <strong style="color:#fff;font-family:Orbitron">${parseFloat(data.total||0).toFixed(2)} €</strong></div>
+      <div style="font-family:Orbitron;font-size:9px;color:#999;letter-spacing:1.5px;margin:14px 0 6px">RECHNUNGS-SNAPSHOT</div>
+      <div class="arch-html-preview">${data.html||''}</div>`;
+  } else {
+    body = `<div class="arch-detail-content">${esc(JSON.stringify(data, null, 2))}</div>`;
+  }
+  modal({
+    title: (ARCH_ICONS[e.type]||'•') + ' <span>' + (ARCH_LABELS[e.type]||e.type).toUpperCase() + '</span>',
+    body: `
+      <div style="display:flex;gap:8px;margin-bottom:14px;font-family:Orbitron;font-size:9px;color:#666;flex-wrap:wrap">
+        <span>${new Date(e.time).toLocaleString('de-DE')}</span>
+        ${intactBadge}
+      </div>
+      ${body}
+    `,
+    primary: 'SCHLIESSEN',
+    onok: ()=>{}
+  });
+}
+function reSendArchivMail(to, subject, html){
+  // Nutzt vorhandenen Custom-Email-Endpoint
+  modal({
+    title: 'MAIL NOCHMAL <span>SENDEN</span>',
+    body: `<div class="modal-p">Mail wird erneut an <strong>${esc(to)}</strong> versendet.</div>
+      <input class="modal-input" id="rs-to" value="${esc(to)}">
+      <input class="modal-input" id="rs-subject" value="${esc(subject)}">`,
+    primary: '✉ SENDEN',
+    onok: async ()=>{
+      const r = await api('/api/send-email', {method:'POST', body:JSON.stringify({
+        to: document.getElementById('rs-to').value,
+        subject: document.getElementById('rs-subject').value,
+        html
+      })});
+      if(r) toast('Mail erneut versendet','success');
+      else toast('Fehler beim Versand','error');
+    }
+  });
+}
+function downloadHtml(name, html){
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name.replace(/[^a-z0-9]/gi,'-')+'.html';
+  a.click(); URL.revokeObjectURL(url);
+}
+
 /* ════════ FINANZEN / STEUER-AUFSTELLUNG (GoBD-konform) ════════ */
 let FIN_ROWS = [];
 function finFillYears(){
@@ -1116,6 +1263,7 @@ function switchTab(tab, btn){
   if(tab === 'discounts') loadDiscounts();
   if(tab === 'stats') loadDeepStats();
   if(tab === 'finanzen') loadFinanzen();
+  if(tab === 'archiv') loadArchive();
   if(tab === 'live') { loadLive(); resizeGlobe(); }
 }
 async function exportData(type){

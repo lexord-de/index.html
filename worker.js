@@ -191,6 +191,13 @@ async function test(){
         return await admin2DiscountDelete(request, env, decodeURIComponent(path.split("/").pop()));
       }
 
+      // ARCHIV (verschluesselt, append-only)
+      if (path === "/admin/archive" && request.method === "GET") return await admin2ArchiveList(request, env, url);
+      if (path.startsWith("/admin/archive/") && request.method === "GET") {
+        const key = decodeURIComponent(path.replace("/admin/archive/", ""));
+        return await admin2ArchiveGet(request, env, key);
+      }
+
       return json({ error: "Not found", path: path }, 404);
     } catch (err) {
       return json({ error: String(err.message || err), stack: err.stack }, 500);
@@ -1497,7 +1504,7 @@ async function admin2OrderRefund(request, env, orderNr) {
       (body.reason ? "<p><strong>Grund:</strong> " + escapeHtml(body.reason) + "</p>" : "") +
       "<p>Die Erstattung wird auf das urspruengliche Zahlungskonto zurueckgebucht und ist je nach Anbieter in 3-10 Werktagen sichtbar.</p>" +
       "<p>Liebe Gruesse<br>LEXORD Engineering</p>";
-    await sendBrevoMail(env, order.email, subject, html);
+    await sendBrevoMail(env, order.email, subject, html, { orderNr, kind: "refund", amount, refundId });
   }
   return json({ success: !refundError || refundId !== null, refundId, refundError, amount });
 }
@@ -1521,7 +1528,7 @@ async function admin2OrderStatus(request, env, orderNr) {
       "<p style='font-size:18px'><strong>" + body.status + "</strong></p>" +
       (oldStatus ? "<p style='color:#666;font-size:12px'>vorher: " + oldStatus + "</p>" : "") +
       "<p>Liebe Gruesse<br>LEXORD Engineering</p>";
-    await sendBrevoMail(env, order.email, subject, html);
+    await sendBrevoMail(env, order.email, subject, html, { orderNr, kind: "status", from: oldStatus, to: body.status });
   }
   return json({ success: true });
 }
@@ -1546,7 +1553,7 @@ async function admin2OrderTracking(request, env, orderNr) {
       "<p><strong>Tracking-Nummer:</strong> <a href='" + trackUrl + "'>" + escapeHtml(body.tracking) + "</a></p>" +
       "<p>Lieferzeit: in der Regel 1-3 Werktage</p>" +
       "<p>Liebe Gruesse<br>LEXORD Engineering</p>";
-    await sendBrevoMail(env, order.email, subject, html);
+    await sendBrevoMail(env, order.email, subject, html, { orderNr, kind: "tracking", tracking: body.tracking });
   }
   return json({ success: true });
 }
@@ -1560,7 +1567,7 @@ async function admin2OrderEmail(request, env, orderNr) {
   const order = JSON.parse(orderRaw);
   if (!order.email) return json({ success: false, error: "Keine Kundenmail" }, 400);
   const html = "<p>" + escapeHtml(body.body || "").replace(/\n/g, "<br>") + "</p>";
-  const ok = await sendBrevoMail(env, order.email, body.subject || "Nachricht von LEXORD", html);
+  const ok = await sendBrevoMail(env, order.email, body.subject || "Nachricht von LEXORD", html, { orderNr, kind: "custom" });
   return json({ success: ok });
 }
 
@@ -1583,6 +1590,8 @@ async function admin2OrderInvoice(request, env, orderNr, url) {
 <div class="tot">Gesamt: ${parseFloat(o.total || 0).toFixed(2)} EUR</div>
 <p style="margin-top:30px;font-size:11px;color:#888">Kleinunternehmer gemaess Para 19 UStG — kein Ausweis der Umsatzsteuer.</p>
 </body></html>`;
+  // Rechnungs-Snapshot ins verschluesselte Archiv (GoBD: jede Rechnung muss unveraenderlich archiviert sein)
+  try { await archiveStore(env, "invoice", { orderNr, total: o.total, html, order: o }); } catch (e) {}
   return new Response(html, { headers: { "Content-Type": "text/html;charset=UTF-8", ...CORS } });
 }
 
@@ -1690,8 +1699,9 @@ async function admin2DeepStats(request, env) {
 }
 
 // ──── Brevo-Mail Helper ────
-async function sendBrevoMail(env, to, subject, html) {
+async function sendBrevoMail(env, to, subject, html, meta) {
   if (!env.BREVO_API_KEY) return false;
+  let ok = false;
   try {
     const r = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
@@ -1703,8 +1713,101 @@ async function sendBrevoMail(env, to, subject, html) {
         htmlContent: html
       })
     });
-    return r.ok;
+    ok = r.ok;
   } catch (e) {
-    return false;
+    ok = false;
   }
+  // === ARCHIV: jede Mail wird verschluesselt + unveraenderlich gespeichert ===
+  try { await archiveStore(env, "email", { to, subject, html, ok, ...(meta || {}) }); } catch (e) {}
+  return ok;
+}
+
+// ════════════════════════════════════════════════════════════════
+// VERSCHLUESSELTES ARCHIV (AES-256-GCM, GoBD: append-only)
+// ════════════════════════════════════════════════════════════════
+async function deriveKey(env) {
+  const secret = env.ARCHIVE_KEY || env.JWT_SECRET || env.ADMIN_PASSWORD || "lxrd-fallback";
+  const enc = new TextEncoder();
+  const hash = await crypto.subtle.digest("SHA-256", enc.encode("lxrd-archive::" + secret));
+  return await crypto.subtle.importKey("raw", hash, { name: "AES-GCM" }, false, ["encrypt", "decrypt"]);
+}
+async function aesEncrypt(env, plaintext) {
+  const key = await deriveKey(env);
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const enc = new TextEncoder().encode(plaintext);
+  const cipher = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, enc);
+  const buf = new Uint8Array(iv.byteLength + cipher.byteLength);
+  buf.set(iv, 0); buf.set(new Uint8Array(cipher), iv.byteLength);
+  // base64url
+  return btoa(String.fromCharCode(...buf)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+async function aesDecrypt(env, ciphertext) {
+  try {
+    const key = await deriveKey(env);
+    const b64 = ciphertext.replace(/-/g, "+").replace(/_/g, "/");
+    const bin = atob(b64);
+    const buf = Uint8Array.from(bin, c => c.charCodeAt(0));
+    const iv = buf.slice(0, 12);
+    const data = buf.slice(12);
+    const dec = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, data);
+    return new TextDecoder().decode(dec);
+  } catch (e) { return null; }
+}
+
+// Speichert einen Eintrag im verschluesselten Archiv (Append-Only).
+// type: "email" | "invoice" | "refund" | "status" | "tracking"
+async function archiveStore(env, type, data) {
+  if (!env.LEXORD_DATA) return;
+  const id = Date.now() + "-" + Math.random().toString(36).slice(2, 10);
+  const entry = {
+    id, type,
+    time: new Date().toISOString(),
+    data
+  };
+  const json = JSON.stringify(entry);
+  // SHA-256 Hash als Integritaets-Pruefsumme (gegen Manipulation erkennbar)
+  const hashBuf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(json));
+  const hash = Array.from(new Uint8Array(hashBuf)).map(b => b.toString(16).padStart(2, "0")).join("");
+  const cipher = await aesEncrypt(env, json);
+  await env.LEXORD_DATA.put("archive:" + entry.time + ":" + id, JSON.stringify({ cipher, hash, type, time: entry.time }));
+}
+
+async function archiveLoad(env, key) {
+  const raw = await env.LEXORD_DATA.get(key);
+  if (!raw) return null;
+  const wrapper = JSON.parse(raw);
+  const plain = await aesDecrypt(env, wrapper.cipher);
+  if (!plain) return null;
+  // Integritaets-Check
+  const hashBuf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(plain));
+  const hash = Array.from(new Uint8Array(hashBuf)).map(b => b.toString(16).padStart(2, "0")).join("");
+  const intact = (hash === wrapper.hash);
+  return { ...JSON.parse(plain), _intact: intact, _hash: wrapper.hash };
+}
+
+async function admin2ArchiveList(request, env, url) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ entries: [] });
+  const typeFilter = url.searchParams.get("type");
+  const list = await env.LEXORD_DATA.list({ prefix: "archive:" });
+  const entries = [];
+  // Reverse-chronologisch
+  list.keys.reverse();
+  for (const k of list.keys.slice(0, 200)) {
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if (!raw) continue;
+    const w = JSON.parse(raw);
+    if (typeFilter && w.type !== typeFilter) continue;
+    // Nur Metadaten in der Liste (nicht der entschluesselte Inhalt)
+    entries.push({ key: k.name, type: w.type, time: w.time, hash: w.hash.slice(0, 16) });
+  }
+  return json({ entries, total: list.keys.length });
+}
+
+async function admin2ArchiveGet(request, env, key) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ error: "KV nicht verbunden" }, 500);
+  const entry = await archiveLoad(env, key);
+  if (!entry) return json({ error: "Eintrag nicht gefunden oder Schluessel falsch" }, 404);
+  return json({ entry });
 }

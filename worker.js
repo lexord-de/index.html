@@ -743,13 +743,35 @@ async function checkDiscountCode(request, env) {
   const ip = request.headers.get("CF-Connecting-IP") || "0.0.0.0";
   if (!code) return json({ valid: false, error: "Code fehlt" });
 
-  // Email-based usage (legacy)
+  // === NEU: Admin-angelegte Codes (Tab 'RABATTCODES') ===
+  const adminRaw = await env.LEXORD_DATA.get("discount:" + code);
+  if (adminRaw) {
+    const d = JSON.parse(adminRaw);
+    if (!d.active) return json({ valid: false, error: "Code ist deaktiviert" });
+    if (d.expires && new Date(d.expires) < new Date()) return json({ valid: false, error: "Code ist abgelaufen" });
+    // Optional: pro Email nur 1x
+    if (email) {
+      const used = await env.LEXORD_DATA.get("discount_used:" + code + ":" + email);
+      if (used) return json({ valid: false, alreadyUsed: true, error: "Dieser Code wurde bereits eingeloest" });
+    }
+    // Antwort mit Discount-Details fuer das Frontend
+    const info = { valid: true, type: d.type, value: d.value };
+    if (d.type === "percent")   info.percentOff = d.value;
+    if (d.type === "fixed")     info.amountOff  = d.value;
+    if (d.type === "shipping")  info.freeShipping = true;
+    info.label = d.type === "percent" ? (d.value + "% Rabatt")
+              : d.type === "fixed"   ? (d.value + " EUR Rabatt")
+              : "Free Shipping";
+    return json(info);
+  }
+
+  // === LEGACY: Email-based usage check ===
   if (email) {
     const used = await env.LEXORD_DATA.get("discount_used:" + code + ":" + email);
     if (used) return json({ valid: false, alreadyUsed: true, error: "Dieser Code wurde bereits eingeloest" });
   }
 
-  // Welcome-Codes: zusaetzlich pro IP und Geraet pruefen — auch wenn ohne Email
+  // === LEGACY: Welcome-Codes (hartcodiert) ===
   if (WELCOME_CODES.includes(code)) {
     const ipUsed = await env.LEXORD_DATA.get("welcome_ip:" + ip);
     if (ipUsed) return json({ valid: false, alreadyUsed: true, error: "Dieser Bonus wurde bereits von dieser Verbindung eingeloest" });
@@ -757,8 +779,11 @@ async function checkDiscountCode(request, env) {
       const fpUsed = await env.LEXORD_DATA.get("welcome_fp:" + fp);
       if (fpUsed) return json({ valid: false, alreadyUsed: true, error: "Dieser Bonus wurde bereits auf diesem Geraet eingeloest" });
     }
+    return json({ valid: true });
   }
-  return json({ valid: true });
+
+  // Kein Code gefunden
+  return json({ valid: false, error: "Ungueltiger Rabattcode" });
 }
 
 async function useDiscountCode(request, env) {
@@ -773,6 +798,16 @@ async function useDiscountCode(request, env) {
   const ts = new Date().toISOString();
   // Pro Email markieren (legacy)
   if (email) await env.LEXORD_DATA.put("discount_used:" + code + ":" + email, ts);
+
+  // Admin-Code: Use-Counter und Gesamt-Discount-Sum erhoehen
+  const adminRaw = await env.LEXORD_DATA.get("discount:" + code);
+  if (adminRaw) {
+    const d = JSON.parse(adminRaw);
+    d.uses = (d.uses || 0) + 1;
+    d.totalDiscount = (d.totalDiscount || 0) + parseFloat(body.amountSaved || 0);
+    d.lastUsed = ts;
+    await env.LEXORD_DATA.put("discount:" + code, JSON.stringify(d));
+  }
 
   // Welcome-Codes: zusaetzlich IP- und Geraete-Lock setzen — permanent
   if (WELCOME_CODES.includes(code)) {

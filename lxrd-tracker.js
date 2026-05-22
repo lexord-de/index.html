@@ -9,7 +9,7 @@
  */
 (function(){
   'use strict';
-  var WORKER = 'https://lexord-mail.leonschulz1420.workers.dev';
+  var WORKER = 'https://lexord-api.leonschulz1420.workers.dev';
   var SID_KEY = 'lxrd_sid';
   var sid = sessionStorage.getItem(SID_KEY);
   if(!sid){

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>LEXORD System-Diagnose</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:linear-gradient(180deg,#020207,#04040a);color:#e8e8ec;font-family:-apple-system,Inter,sans-serif;min-height:100vh;padding:30px 20px;display:flex;flex-direction:column;align-items:center}
+  .box{background:rgba(12,12,16,.92);border:1px solid rgba(0,242,255,.25);border-radius:18px;padding:30px 28px;max-width:680px;width:100%;backdrop-filter:blur(20px);box-shadow:0 30px 80px rgba(0,0,0,.6)}
+  h1{font-family:Orbitron,sans-serif;font-weight:900;font-size:18px;letter-spacing:3px;color:#fff;margin-bottom:6px;text-align:center}
+  h1 span{color:#00f2ff}
+  .sub{font-family:Orbitron;font-size:9px;color:#888;letter-spacing:3px;margin-bottom:24px;text-align:center}
+  button.go{width:100%;padding:16px;background:linear-gradient(135deg,#00f2ff,#00bdd6);color:#000;border:none;font-family:Orbitron;font-weight:900;font-size:11px;letter-spacing:2px;border-radius:11px;cursor:pointer;box-shadow:0 8px 20px rgba(0,242,255,.25);margin-bottom:18px;transition:.2s}
+  button.go:hover{transform:translateY(-2px)}
+  button.go:disabled{opacity:.5;cursor:not-allowed;transform:none}
+  .test{background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.06);border-radius:11px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px}
+  .test.pass{border-color:rgba(0,182,122,.35);background:rgba(0,182,122,.05)}
+  .test.fail{border-color:rgba(255,77,79,.4);background:rgba(255,77,79,.05)}
+  .test.warn{border-color:rgba(255,165,0,.4);background:rgba(255,165,0,.05)}
+  .test.pending{border-color:rgba(0,242,255,.3)}
+  .ico{font-size:22px;width:34px;text-align:center;flex-shrink:0}
+  .body{flex:1;min-width:0}
+  .name{font-family:Orbitron;font-size:11px;font-weight:700;color:#fff;letter-spacing:.5px;margin-bottom:3px}
+  .msg{font-size:11.5px;color:#bbb;line-height:1.45;word-break:break-word}
+  .msg code{font-family:'SF Mono',Menlo,monospace;font-size:10.5px;background:rgba(0,0,0,.5);padding:1px 6px;border-radius:4px;color:#00f2ff}
+  .fix{font-size:11px;color:#ffc370;margin-top:6px;line-height:1.5}
+  .summary{margin-top:20px;padding:16px;border-radius:11px;font-family:Orbitron;font-size:11px;letter-spacing:1.5px;text-align:center}
+  .summary.ok{background:rgba(0,182,122,.1);border:1px solid rgba(0,182,122,.4);color:#00b67a}
+  .summary.err{background:rgba(255,77,79,.1);border:1px solid rgba(255,77,79,.4);color:#ff4d4f}
+  .back{display:inline-block;margin-top:18px;font-family:Orbitron;font-size:9px;letter-spacing:1.5px;color:#666;text-decoration:none;text-align:center;width:100%}
+  .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(0,242,255,.2);border-top-color:#00f2ff;border-radius:50%;animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h1>SYSTEM-<span>DIAGNOSE</span></h1>
+  <div class="sub">⟫ LEXORD ADMIN HEALTHCHECK ⟪</div>
+
+  <button class="go" id="run-btn" onclick="runAll()">🔍 ALLE TESTS STARTEN</button>
+
+  <div id="tests"></div>
+  <div id="summary"></div>
+
+  <a href="admin.html" class="back">← zurück zum Admin-Panel</a>
+</div>
+
+<script>
+'use strict';
+
+const WORKER = 'https://lexord-api.leonschulz1420.workers.dev';
+const TESTS = [
+  { id:'tracker', name:'Tracker-Datei (lxrd-tracker.js)', fn: testTracker },
+  { id:'worker',  name:'Cloudflare Worker erreichbar', fn: testWorker },
+  { id:'visitor', name:'Visitor-Tracking-Endpoint', fn: testVisitor },
+  { id:'login',   name:'Admin-Login-Endpoint', fn: testLogin },
+  { id:'token',   name:'Admin-Token im Browser', fn: testToken },
+  { id:'stats',   name:'Admin-Stats abrufbar', fn: testStats },
+  { id:'visapi',  name:'Live-Visitors abrufbar', fn: testVisApi },
+  { id:'pushkey', name:'VAPID-Keys gesetzt', fn: testPushKey },
+  { id:'sw',      name:'Service Worker installierbar', fn: testServiceWorker },
+  { id:'sworker', name:'sw.js (Service-Worker-Datei)', fn: testSwFile },
+  { id:'manifest',name:'manifest.json', fn: testManifest },
+];
+
+function renderTest(t, status, msg, fix){
+  const el = document.getElementById('t-'+t.id);
+  el.className = 'test ' + status;
+  const ico = { pass:'✅', fail:'❌', warn:'⚠️', pending:'<span class="spinner"></span>' }[status];
+  el.innerHTML = `<div class="ico">${ico}</div>
+    <div class="body">
+      <div class="name">${t.name}</div>
+      <div class="msg">${msg}</div>
+      ${fix ? '<div class="fix">💡 ' + fix + '</div>' : ''}
+    </div>`;
+}
+
+async function runAll(){
+  const btn = document.getElementById('run-btn');
+  btn.disabled = true;
+  btn.innerText = 'TESTE …';
+  const cont = document.getElementById('tests');
+  cont.innerHTML = TESTS.map(t => `<div class="test pending" id="t-${t.id}"><div class="ico"><span class="spinner"></span></div><div class="body"><div class="name">${t.name}</div><div class="msg">prüfe …</div></div></div>`).join('');
+  document.getElementById('summary').innerHTML = '';
+
+  let pass = 0, fail = 0, warn = 0;
+  for(const t of TESTS){
+    try {
+      const r = await t.fn();
+      renderTest(t, r.status, r.msg, r.fix);
+      if(r.status === 'pass') pass++;
+      else if(r.status === 'warn') warn++;
+      else fail++;
+    } catch(e) {
+      renderTest(t, 'fail', 'Test-Fehler: ' + e.message);
+      fail++;
+    }
+  }
+
+  const sum = document.getElementById('summary');
+  if(fail === 0 && warn === 0){
+    sum.innerHTML = '<div class="summary ok">✅ ALLES OK — ' + pass + '/' + TESTS.length + ' bestanden</div>';
+  } else {
+    sum.innerHTML = '<div class="summary err">⚠ ' + fail + ' Probleme, ' + warn + ' Warnungen, ' + pass + ' OK</div>';
+  }
+  btn.disabled = false;
+  btn.innerText = '🔄 ERNEUT TESTEN';
+}
+
+async function testTracker(){
+  try {
+    const r = await fetch('lxrd-tracker.js', { cache:'no-store' });
+    if(!r.ok) return { status:'fail', msg:'<code>lxrd-tracker.js</code> nicht gefunden (HTTP '+r.status+')', fix:'Datei in GitHub-Repo hochladen' };
+    const text = await r.text();
+    if(text.includes('lexord-mail.')) return { status:'fail', msg:'Datei verwendet noch alte URL <code>lexord-mail</code>', fix:'Neue Version mit <code>lexord-api</code> hochladen' };
+    if(text.includes('lexord-api.')) return { status:'pass', msg:'Datei vorhanden + URL aktuell ✓' };
+    return { status:'warn', msg:'Datei vorhanden, aber keine bekannte Worker-URL erkannt' };
+  } catch(e) {
+    return { status:'fail', msg:'Konnte nicht laden: ' + e.message };
+  }
+}
+
+async function testWorker(){
+  try {
+    const r = await fetch(WORKER + '/', { cache:'no-store' });
+    const d = await r.json();
+    if(d.ok && d.service) return { status:'pass', msg:'Worker antwortet · Version <code>' + (d.version||'?') + '</code>' };
+    return { status:'warn', msg:'Worker antwortet, aber unbekannte Response' };
+  } catch(e) {
+    return { status:'fail', msg:'Worker nicht erreichbar', fix:'Cloudflare → Worker <code>lexord-api</code> deployen' };
+  }
+}
+
+async function testVisitor(){
+  try {
+    const r = await fetch(WORKER + '/track/visitor', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ sid:'diag-'+Date.now(), page:'/diag' })
+    });
+    const d = await r.json();
+    if(d.success) return { status:'pass', msg:'Visitor-Tracking funktioniert ✓ (Test-Eintrag erzeugt)' };
+    if(d.error && d.error.includes('Not found')) return { status:'fail', msg:'Endpoint <code>/track/visitor</code> existiert nicht', fix:'Neue worker.js in Cloudflare deployen' };
+    return { status:'warn', msg:JSON.stringify(d) };
+  } catch(e) {
+    return { status:'fail', msg:'Request fehlgeschlagen: ' + e.message };
+  }
+}
+
+async function testLogin(){
+  try {
+    const r = await fetch(WORKER + '/admin/login', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ code:'__test__' })
+    });
+    const d = await r.json();
+    if(d.error && d.error.includes('Not found')) return { status:'fail', msg:'Endpoint <code>/admin/login</code> fehlt', fix:'Neue worker.js deployen' };
+    if(d.success === false) return { status:'pass', msg:'Endpoint OK · Worker prüft Passwort korrekt' };
+    if(d.success === true) return { status:'warn', msg:'Login akzeptiert beliebiges Passwort?!' };
+    return { status:'warn', msg:JSON.stringify(d) };
+  } catch(e) {
+    return { status:'fail', msg:e.message };
+  }
+}
+
+async function testToken(){
+  const t = localStorage.getItem('lxrd_admin_token');
+  if(!t) return { status:'warn', msg:'Du bist gerade nicht eingeloggt', fix:'Im Admin-Panel einloggen, dann nochmal testen' };
+  return { status:'pass', msg:'Token vorhanden · Login aktiv' };
+}
+
+async function testStats(){
+  const t = localStorage.getItem('lxrd_admin_token');
+  if(!t) return { status:'warn', msg:'Übersprungen — kein Token' };
+  try {
+    const r = await fetch(WORKER + '/admin/stats', { headers:{Authorization:'Bearer '+t} });
+    const d = await r.json();
+    if(d.stats) return { status:'pass', msg:'Stats OK · ' + d.stats.orders + ' Bestellungen · ' + (d.stats.revenue||0).toFixed(0) + ' € Umsatz' };
+    return { status:'fail', msg:JSON.stringify(d) };
+  } catch(e) {
+    return { status:'fail', msg:e.message };
+  }
+}
+
+async function testVisApi(){
+  const t = localStorage.getItem('lxrd_admin_token');
+  if(!t) return { status:'warn', msg:'Übersprungen — kein Token' };
+  try {
+    const r = await fetch(WORKER + '/admin/visitors', { headers:{Authorization:'Bearer '+t} });
+    const d = await r.json();
+    if(d.visitors !== undefined) {
+      const n = d.visitors.length;
+      return { status: n > 0 ? 'pass' : 'warn',
+        msg: n > 0
+          ? '<code>'+n+'</code> Live-Besucher · '+Object.keys(d.byCountry||{}).length+' Länder'
+          : 'Endpoint OK, aber 0 Live-Besucher (möglich wenn niemand auf der Seite ist)',
+        fix: n === 0 ? 'Öffne lexord.de in einem anderen Tab und lade hier neu' : null
+      };
+    }
+    if(d.error) return { status:'fail', msg:d.error };
+    return { status:'warn', msg:JSON.stringify(d).slice(0,200) };
+  } catch(e) {
+    return { status:'fail', msg:e.message };
+  }
+}
+
+async function testPushKey(){
+  const t = localStorage.getItem('lxrd_admin_token');
+  if(!t) return { status:'warn', msg:'Übersprungen — kein Token' };
+  try {
+    const r = await fetch(WORKER + '/admin/push/key', { headers:{Authorization:'Bearer '+t} });
+    const d = await r.json();
+    if(d.publicKey && d.publicKey.length > 80) return { status:'pass', msg:'VAPID-Public-Key gesetzt · Push einsatzbereit' };
+    if(d.error && d.error.includes('nicht im Worker')) return { status:'warn', msg:'VAPID-Keys noch nicht gesetzt', fix:'Auf vapid-setup.html generieren und in Cloudflare-Secrets eintragen' };
+    return { status:'warn', msg:JSON.stringify(d) };
+  } catch(e) {
+    return { status:'fail', msg:e.message };
+  }
+}
+
+async function testServiceWorker(){
+  if(!('serviceWorker' in navigator)) return { status:'fail', msg:'Browser unterstützt keinen Service Worker' };
+  if(!('PushManager' in window)) return { status:'fail', msg:'Browser unterstützt kein Web Push' };
+  if(!('Notification' in window)) return { status:'fail', msg:'Browser unterstützt keine Notifications' };
+  const p = Notification.permission;
+  if(p === 'granted') return { status:'pass', msg:'Permission erteilt + Browser unterstützt alles' };
+  if(p === 'denied') return { status:'warn', msg:'Notifications blockiert', fix:'In Safari → Einstellungen → Websites → Mitteilungen für lexord.de erlauben' };
+  return { status:'warn', msg:'Permission noch nicht angefragt', fix:'Im Admin-Panel auf 🔔 ON klicken' };
+}
+
+async function testSwFile(){
+  try {
+    const r = await fetch('sw.js', { cache:'no-store' });
+    if(r.ok) return { status:'pass', msg:'sw.js gefunden ✓' };
+    return { status:'fail', msg:'sw.js fehlt (HTTP '+r.status+')', fix:'Datei in GitHub-Repo hochladen' };
+  } catch(e) { return { status:'fail', msg:e.message }; }
+}
+
+async function testManifest(){
+  try {
+    const r = await fetch('manifest.json', { cache:'no-store' });
+    if(r.ok) {
+      const d = await r.json();
+      return { status:'pass', msg:'manifest.json vorhanden · App-Name: <code>'+d.name+'</code>' };
+    }
+    return { status:'fail', msg:'manifest.json fehlt (HTTP '+r.status+')', fix:'Datei in GitHub-Repo hochladen' };
+  } catch(e) { return { status:'fail', msg:e.message }; }
+}
+
+/* Auto-Start nach 500ms */
+setTimeout(runAll, 500);
+</script>
+
+</body>
+</html>

@@ -160,6 +160,56 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
 .toast.success{border-left-color:var(--green)}.toast.error{border-left-color:var(--err)}.toast.warn{border-left-color:var(--warn)}
 @keyframes toastSlide{from{transform:translateX(40px);opacity:0}to{transform:translateX(0);opacity:1}}
 
+/* === FINANZEN (Steuer-Aufstellung) === */
+.fin-toolbar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;align-items:center}
+.fin-sel{padding:9px 12px;background:rgba(0,0,0,.4);border:1px solid var(--bord);color:#fff;font-family:Orbitron;font-size:10px;border-radius:8px;outline:none;letter-spacing:.5px;cursor:pointer}
+.fin-sel:focus{border-color:var(--neon)}
+.fin-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+.fin-sum-card{background:var(--card);border:1px solid var(--bord);border-radius:12px;padding:14px}
+.fin-sum-lbl{font-family:Orbitron;font-size:8px;color:#666;letter-spacing:2px;margin-bottom:6px}
+.fin-sum-val{font-family:Orbitron;font-size:20px;font-weight:900;color:#fff}
+.fin-sum-val.neon{color:var(--neon)}.fin-sum-val.green{color:var(--green)}.fin-sum-val.warn{color:var(--warn)}.fin-sum-val.err{color:var(--err)}
+.fin-sum-sub{font-size:10px;color:#888;margin-top:4px}
+
+.fin-table-wrap{background:var(--card);border:1px solid var(--bord);border-radius:12px;overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:14px}
+.fin-table{width:100%;border-collapse:collapse;font-size:11px;min-width:880px}
+.fin-table thead{background:rgba(0,242,255,.05);position:sticky;top:0}
+.fin-table th{text-align:left;padding:11px 10px;font-family:Orbitron;font-size:9px;letter-spacing:1.2px;color:#999;border-bottom:1px solid var(--bord);white-space:nowrap}
+.fin-table td{padding:10px;border-bottom:1px solid rgba(255,255,255,.03);color:#ccc;vertical-align:top}
+.fin-table tbody tr:hover{background:rgba(0,242,255,.03)}
+.fin-table .nr{font-family:Orbitron;color:var(--neon);font-size:10px;font-weight:700;white-space:nowrap}
+.fin-table .dt{color:#888;font-size:10px;white-space:nowrap}
+.fin-table .land{font-family:Orbitron;font-size:10px;color:#bbb}
+.fin-table .brutto{font-family:Orbitron;font-weight:700;color:#fff;text-align:right;white-space:nowrap}
+.fin-table .netto{font-family:Orbitron;color:var(--green);text-align:right;white-space:nowrap}
+.fin-table .ust{font-family:Orbitron;color:var(--warn);text-align:right;white-space:nowrap}
+.fin-table .ustp{color:#666;font-size:10px;text-align:center}
+.fin-table .stat{font-family:Orbitron;font-size:8.5px;letter-spacing:1px;padding:3px 7px;border-radius:4px;background:rgba(0,182,122,.12);color:var(--green);display:inline-block}
+.fin-table .stat.cancel{background:rgba(255,77,79,.12);color:var(--err)}
+.fin-table tr.cancelled{opacity:.5}
+.fin-table tr.cancelled .brutto,.fin-table tr.cancelled .netto,.fin-table tr.cancelled .ust{text-decoration:line-through}
+.fin-table tfoot tr{background:rgba(0,242,255,.05);font-weight:700}
+.fin-table tfoot td{padding:12px 10px;font-family:Orbitron;color:#fff;border-top:2px solid var(--neon);border-bottom:none}
+.fin-note{font-size:11px;color:#666;line-height:1.6;background:rgba(255,255,255,.02);border-left:3px solid rgba(0,242,255,.3);padding:12px 14px;border-radius:6px;margin-top:10px}
+.fin-note strong{color:#aaa}
+
+/* Print-Optimierung fuer Finanzamt-PDF */
+@media print{
+  body *{visibility:hidden}
+  #panel-finanzen, #panel-finanzen *{visibility:visible}
+  #panel-finanzen{position:absolute;left:0;top:0;width:100%;background:#fff;color:#000;padding:20px}
+  .fin-toolbar{display:none}
+  .fin-table{color:#000;font-size:10px}
+  .fin-table th{color:#000;background:#eee;border-bottom:2px solid #000}
+  .fin-table td{color:#000;border-bottom:1px solid #ddd}
+  .fin-table .nr{color:#0066cc}
+  .fin-table .brutto,.fin-table .netto,.fin-table .ust{color:#000}
+  .fin-table tfoot td{color:#000;background:#eee;border-top:2px solid #000}
+  .fin-sum-card{background:#fff;border:1px solid #000;color:#000}
+  .fin-sum-val{color:#000}
+  .fin-note{color:#333;background:#f5f5f5;border-color:#999}
+}
+
 /* === DISCOUNT === */
 .disc-form{background:var(--card);border:1px solid var(--bord);border-radius:14px;padding:18px;margin-bottom:14px;display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr auto;gap:8px;align-items:end}
 @media(max-width:780px){.disc-form{grid-template-columns:1fr 1fr}}
@@ -227,6 +277,7 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
     <button class="dash-tab" onclick="switchTab('users',this)">👥 KUNDEN</button>
     <button class="dash-tab" onclick="switchTab('discounts',this)">🎟️ RABATTCODES</button>
     <button class="dash-tab" onclick="switchTab('stats',this)">📊 STATS</button>
+    <button class="dash-tab" onclick="switchTab('finanzen',this)">📋 FINANZEN</button>
   </div>
 
   <!-- PANEL: LIVE -->
@@ -295,6 +346,44 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
       <button class="dash-action primary" onclick="createDiscount()">+ CODE ANLEGEN</button>
     </div>
     <div id="discounts-container"><div class="dash-loading"><div class="spinner"></div><div>LADE CODES…</div></div></div>
+  </div>
+
+  <!-- PANEL: FINANZEN / STEUERAUFSTELLUNG -->
+  <div class="dash-panel" id="panel-finanzen">
+    <div class="fin-toolbar">
+      <select class="fin-sel" id="fin-year" onchange="loadFinanzen()"></select>
+      <select class="fin-sel" id="fin-period" onchange="loadFinanzen()">
+        <option value="year">Ganzes Jahr</option>
+        <option value="q1">Q1 (Jan-Mär)</option>
+        <option value="q2">Q2 (Apr-Jun)</option>
+        <option value="q3">Q3 (Jul-Sep)</option>
+        <option value="q4">Q4 (Okt-Dez)</option>
+        <option value="m1">Januar</option><option value="m2">Februar</option><option value="m3">März</option>
+        <option value="m4">April</option><option value="m5">Mai</option><option value="m6">Juni</option>
+        <option value="m7">Juli</option><option value="m8">August</option><option value="m9">September</option>
+        <option value="m10">Oktober</option><option value="m11">November</option><option value="m12">Dezember</option>
+      </select>
+      <select class="fin-sel" id="fin-mode" onchange="loadFinanzen()">
+        <option value="kleinunt">§ 19 UStG (Kleinunternehmer · keine USt)</option>
+        <option value="regular">Regelbesteuerung (19 % USt)</option>
+      </select>
+      <button class="dash-action" onclick="loadFinanzen()">↻ AKTUALISIEREN</button>
+      <button class="dash-action primary" onclick="exportFinanzenCSV()">⤓ CSV-EXPORT</button>
+      <button class="dash-action" onclick="printFinanzen()">🖨️ DRUCKEN / PDF</button>
+    </div>
+
+    <!-- Summary-Karten -->
+    <div class="fin-summary" id="fin-summary"></div>
+
+    <!-- Steuer-Tabelle (GoBD-konform fuer Finanzamt) -->
+    <div class="fin-table-wrap" id="fin-table-wrap">
+      <div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div>
+    </div>
+    <p class="fin-note">
+      📌 <strong>Hinweis Finanzamt:</strong> Diese Aufstellung ist nach GoBD strukturiert (chronologisch, lueckenlos, unveraenderlich).
+      Beim § 19 UStG-Modus werden keine Umsatzsteuer-Anteile ausgewiesen. Stornos sind als negative Eintraege markiert.
+      Fuer eine offizielle Steuererklaerung empfiehlt sich der CSV-Export an deinen Steuerberater.
+    </p>
   </div>
 
   <!-- PANEL: STATS -->
@@ -840,6 +929,158 @@ function barRow(name, lbl, pct){
   return `<div class="bar-row"><div class="lbl"><b>${esc(name)}</b><span>${esc(lbl)}</span></div><div class="bar"><div class="bar-fill" style="width:${pct}%"></div></div></div>`;
 }
 
+/* ════════ FINANZEN / STEUER-AUFSTELLUNG (GoBD-konform) ════════ */
+let FIN_ROWS = [];
+function finFillYears(){
+  const sel = document.getElementById('fin-year'); if(!sel) return;
+  const now = new Date().getFullYear();
+  if(sel.options.length) return;
+  for(let y=now;y>=now-5;y--){
+    const opt = document.createElement('option');
+    opt.value = y; opt.textContent = y;
+    sel.appendChild(opt);
+  }
+}
+function finPeriodFilter(date){
+  const year = parseInt(document.getElementById('fin-year').value);
+  const period = document.getElementById('fin-period').value;
+  const d = new Date(date);
+  if(d.getFullYear() !== year) return false;
+  if(period === 'year') return true;
+  const m = d.getMonth() + 1;
+  if(period.startsWith('q')){
+    const q = parseInt(period.slice(1));
+    return m >= (q-1)*3 + 1 && m <= q*3;
+  }
+  if(period.startsWith('m')) return m === parseInt(period.slice(1));
+  return true;
+}
+async function loadFinanzen(){
+  finFillYears();
+  const wrap = document.getElementById('fin-table-wrap');
+  wrap.innerHTML = '<div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div>';
+  const d = await api('/admin/orders');
+  if(!d || !d.orders){ wrap.innerHTML = empty('⚠','VERBINDUNGSFEHLER'); return; }
+  const mode = document.getElementById('fin-mode').value; // kleinunt | regular
+  const ustRate = mode === 'regular' ? 0.19 : 0;
+  const filtered = d.orders.filter(o => finPeriodFilter(o.date || o.created));
+  filtered.sort((a,b) => new Date(a.date||a.created) - new Date(b.date||b.created));
+  FIN_ROWS = filtered.map((o,i) => {
+    const brutto = parseFloat(o.total || 0);
+    const cancelled = (o.status||'').toUpperCase() === 'STORNIERT';
+    const sign = cancelled ? -1 : 1;
+    const netto = mode === 'regular' ? brutto / (1 + ustRate) : brutto;
+    const ust = mode === 'regular' ? brutto - netto : 0;
+    return {
+      lfd: i+1,
+      date: o.date || o.created,
+      orderNr: o.orderNr || '',
+      name: o.name || '',
+      email: o.email || '',
+      land: (o.land || 'DE').toUpperCase(),
+      payment: o.payment || '',
+      status: o.status || 'NEU',
+      cancelled,
+      brutto: sign * brutto,
+      netto: sign * netto,
+      ust: sign * ust,
+      ustRate: mode === 'regular' ? '19%' : '–'
+    };
+  });
+  renderFinTable(FIN_ROWS, mode);
+}
+function renderFinTable(rows, mode){
+  // Summary
+  const totals = rows.reduce((acc,r) => {
+    acc.brutto += r.brutto; acc.netto += r.netto; acc.ust += r.ust;
+    if(r.cancelled) acc.storno++; else acc.gueltig++;
+    acc.byLand[r.land] = (acc.byLand[r.land] || 0) + r.brutto;
+    return acc;
+  }, {brutto:0, netto:0, ust:0, gueltig:0, storno:0, byLand:{}});
+  const sumEl = document.getElementById('fin-summary');
+  const topLand = Object.entries(totals.byLand).sort((a,b)=>b[1]-a[1])[0];
+  sumEl.innerHTML = `
+    <div class="fin-sum-card"><div class="fin-sum-lbl">⟫ BESTELLUNGEN</div><div class="fin-sum-val neon">${totals.gueltig}</div><div class="fin-sum-sub">${totals.storno} storniert</div></div>
+    <div class="fin-sum-card"><div class="fin-sum-lbl">⟫ BRUTTO-UMSATZ</div><div class="fin-sum-val green">${totals.brutto.toFixed(2)} €</div></div>
+    <div class="fin-sum-card"><div class="fin-sum-lbl">⟫ NETTO-UMSATZ</div><div class="fin-sum-val">${totals.netto.toFixed(2)} €</div></div>
+    <div class="fin-sum-card"><div class="fin-sum-lbl">⟫ UMSATZSTEUER</div><div class="fin-sum-val warn">${totals.ust.toFixed(2)} €</div><div class="fin-sum-sub">${mode==='regular'?'19 % USt':'§ 19 UStG – keine USt'}</div></div>
+    ${topLand?`<div class="fin-sum-card"><div class="fin-sum-lbl">⟫ TOP-LAND</div><div class="fin-sum-val">${flagEmoji(topLand[0])} ${topLand[0]}</div><div class="fin-sum-sub">${topLand[1].toFixed(2)} €</div></div>`:''}
+  `;
+  // Tabelle
+  const tableHtml = rows.length ? `
+    <table class="fin-table">
+      <thead><tr>
+        <th>#</th><th>Datum</th><th>Bestell-Nr.</th><th>Kunde</th><th>E-Mail</th>
+        <th>Land</th><th>Zahlung</th><th>Status</th>
+        <th style="text-align:right">Brutto</th><th style="text-align:center">USt %</th>
+        <th style="text-align:right">USt-Betrag</th><th style="text-align:right">Netto</th>
+      </tr></thead>
+      <tbody>
+        ${rows.map(r => `<tr class="${r.cancelled?'cancelled':''}">
+          <td>${r.lfd}</td>
+          <td class="dt">${new Date(r.date).toLocaleDateString('de-DE')}</td>
+          <td class="nr">${esc(r.orderNr)}</td>
+          <td>${esc(r.name)}</td>
+          <td style="color:#888;font-size:10px">${esc(r.email)}</td>
+          <td class="land">${flagEmoji(r.land)} ${esc(r.land)}</td>
+          <td style="color:#999;font-size:10px">${esc(r.payment)}</td>
+          <td><span class="stat ${r.cancelled?'cancel':''}">${esc(r.status)}</span></td>
+          <td class="brutto">${r.brutto.toFixed(2)} €</td>
+          <td class="ustp">${r.ustRate}</td>
+          <td class="ust">${r.ust.toFixed(2)} €</td>
+          <td class="netto">${r.netto.toFixed(2)} €</td>
+        </tr>`).join('')}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="8" style="text-align:right">SUMME</td>
+          <td style="text-align:right;color:var(--green)">${totals.brutto.toFixed(2)} €</td>
+          <td></td>
+          <td style="text-align:right;color:var(--warn)">${totals.ust.toFixed(2)} €</td>
+          <td style="text-align:right">${totals.netto.toFixed(2)} €</td>
+        </tr>
+      </tfoot>
+    </table>` : empty('📋','KEINE BESTELLUNGEN IM ZEITRAUM');
+  document.getElementById('fin-table-wrap').innerHTML = tableHtml;
+}
+function exportFinanzenCSV(){
+  if(!FIN_ROWS.length) return toast('Keine Daten zum Export','warn');
+  const year = document.getElementById('fin-year').value;
+  const period = document.getElementById('fin-period').options[document.getElementById('fin-period').selectedIndex].text;
+  const mode = document.getElementById('fin-mode').value;
+  // Header (DATEV-kompatibel light)
+  const header = ['Lfd-Nr','Datum','Bestell-Nr','Kunde','E-Mail','Land','Zahlung','Status','Brutto','USt-%','USt-Betrag','Netto'];
+  const rows = FIN_ROWS.map(r => [
+    r.lfd, new Date(r.date).toLocaleDateString('de-DE'), r.orderNr, r.name, r.email,
+    r.land, r.payment, r.status,
+    r.brutto.toFixed(2).replace('.',','),
+    r.ustRate,
+    r.ust.toFixed(2).replace('.',','),
+    r.netto.toFixed(2).replace('.',',')
+  ]);
+  // Totals
+  const totals = FIN_ROWS.reduce((a,r)=>{a.b+=r.brutto;a.n+=r.netto;a.u+=r.ust;return a;},{b:0,n:0,u:0});
+  rows.push([]);
+  rows.push(['','','','','','','','SUMME', totals.b.toFixed(2).replace('.',','), '', totals.u.toFixed(2).replace('.',','), totals.n.toFixed(2).replace('.',',')]);
+  const csv = [header, ...rows].map(r => r.map(c => {
+    const s = String(c==null?'':c);
+    return /[";,\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+  }).join(';')).join('\r\n');
+  // BOM fuer Excel
+  const blob = new Blob(['﻿' + csv], {type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'LEXORD-Steueraufstellung-'+year+'-'+document.getElementById('fin-period').value+'-'+mode+'.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('CSV exportiert','success');
+}
+function printFinanzen(){
+  if(!FIN_ROWS.length) return toast('Keine Daten zum Drucken','warn');
+  window.print();
+}
+
 /* ════════ HELPERS ════════ */
 function empty(icon,text){return `<div class="no-orders"><div class="no-orders-icon">${icon}</div><div class="no-orders-text">${text}</div></div>`;}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -874,6 +1115,7 @@ function switchTab(tab, btn){
   if(tab === 'users') loadUsers();
   if(tab === 'discounts') loadDiscounts();
   if(tab === 'stats') loadDeepStats();
+  if(tab === 'finanzen') loadFinanzen();
   if(tab === 'live') { loadLive(); resizeGlobe(); }
 }
 async function exportData(type){

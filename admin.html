@@ -867,19 +867,157 @@ async function loadRepairs(){
   const d = await api('/admin/repairs');
   if(!d || !d.repairs){ c.innerHTML = empty('⚠','VERBINDUNGSFEHLER'); return; }
   if(!d.repairs.length){ c.innerHTML = empty('🔧','KEINE REPARATUREN'); return; }
-  c.innerHTML = d.repairs.map(r => `<div class="order-card">
+  c.innerHTML = d.repairs.map(r => {
+    const status = (r.status||'received').toLowerCase();
+    const statusMap = {received:'EINGANG',diagnosed:'DIAGNOSE',repairing:'IN REPARATUR',shipped:'VERSANDT',done:'ABGESCHLOSSEN',cancelled:'STORNIERT'};
+    const statusCls = {received:'s-neu',diagnosed:'s-bearbeitung',repairing:'s-bearbeitung',shipped:'s-versandt',done:'s-geliefert',cancelled:'s-storniert'};
+    const isDone = status==='done'||status==='cancelled';
+    return `<div class="order-card">
     <div class="order-hd">
-      <div><div class="order-nr">${esc(r.repNr)}</div><div class="order-date">${new Date(r.date).toLocaleString('de-DE')}</div></div>
-      <div class="order-status s-bearbeitung">REPARATUR</div>
+      <div><div class="order-nr">${esc(r.repNr)}</div><div class="order-date">${new Date(r.date||r.created).toLocaleString('de-DE')}</div></div>
+      <div class="order-status ${statusCls[status]||'s-bearbeitung'}" onclick="changeRepairStatus('${esc(r.repNr)}','${esc(r.status||'received')}')" title="Klicken zum Ändern">${statusMap[status]||'REPARATUR'}</div>
     </div>
     <div class="order-info-grid">
-      <div>KUNDE<strong>${esc(r.name)}</strong></div>
+      <div>KUNDE<strong>${esc(r.name || ((r.fname||'')+' '+(r.lname||'')).trim())}</strong></div>
       <div>E-MAIL<strong>${esc(r.email)}</strong></div>
-      <div>SCHADEN<strong>${esc(r.damage)}</strong></div>
-      <div>CONTROLLER<strong>${esc(r.model)}</strong></div>
+      <div>TELEFON<strong>${esc(r.phone||'–')}</strong></div>
+      <div>CONTROLLER<strong>${esc(r.model||'PS5 DualSense')}</strong></div>
+      <div>SCHADEN<strong>${esc(r.damage||r.damageKey||'–')}</strong></div>
+      <div>KOSTEN<strong>${r.estPrice?esc(r.estPrice):'Noch offen'}</strong></div>
+      ${r.tracking?`<div>TRACKING<strong>${esc(r.tracking)}</strong></div>`:''}
+      ${r.addr?`<div>ADRESSE<strong>${esc(r.addr)}, ${esc(r.zip||'')} ${esc(r.city||'')}</strong></div>`:''}
     </div>
-    <div class="order-items">${esc(r.desc)}</div>
-  </div>`).join('');
+    <div class="order-items">${esc(r.desc||'Keine Beschreibung')}</div>
+    ${!isDone?`<div class="track-row">
+      <input class="track-input" id="rtn-${esc(r.repNr)}" placeholder="Tracking-Nummer (DHL/UPS) …" value="${esc(r.tracking||'')}">
+      <button class="oa-btn success" onclick="saveRepairTracking('${esc(r.repNr)}')">📮 TRACKING + MAIL</button>
+    </div>`:''}
+    <div class="order-actions">
+      <button class="oa-btn" onclick="emailRepairCustomer('${esc(r.repNr)}','${esc(r.email||'')}','${esc((r.name||r.fname||'Kunde').replace(/'/g,''))}')">✉ EMAIL AN KUNDEN</button>
+      <button class="oa-btn warn" onclick="sendRepairQuote('${esc(r.repNr)}','${esc(r.email||'')}','${esc((r.name||r.fname||'Kunde').replace(/'/g,''))}')">📋 KOSTENVORANSCHLAG</button>
+      <button class="oa-btn success" onclick="sendRepairDone('${esc(r.repNr)}','${esc(r.email||'')}','${esc((r.name||r.fname||'Kunde').replace(/'/g,''))}')">✓ FERTIG-MAIL</button>
+      ${status!=='cancelled'?`<button class="oa-btn danger" onclick="cancelRepair('${esc(r.repNr)}','${esc(r.email||'')}','${esc((r.name||r.fname||'Kunde').replace(/'/g,''))}')">✕ STORNIEREN</button>`:'<span style="font-family:Orbitron;font-size:9px;color:var(--err);letter-spacing:1.5px;padding:7px 12px">STORNIERT ✓</span>'}
+    </div>
+  </div>`;
+  }).join('');
+}
+
+/* ──── Reparatur-Status aendern ──── */
+function changeRepairStatus(repNr, current){
+  modal({
+    title:'STATUS <span>REPARATUR</span>',
+    body:`<div class="modal-p">Reparatur <strong style="color:var(--neon)">${esc(repNr)}</strong></div>
+      <select class="modal-select" id="m-rep-status">
+        <option value="received">EINGANG</option>
+        <option value="diagnosed">DIAGNOSE</option>
+        <option value="repairing">IN REPARATUR</option>
+        <option value="shipped">VERSANDT</option>
+        <option value="done">ABGESCHLOSSEN</option>
+        <option value="cancelled">STORNIERT</option>
+      </select>
+      <label style="display:flex;gap:6px;font-size:11px;color:#aaa;margin-top:6px;cursor:pointer">
+        <input type="checkbox" id="m-rep-mail" checked> Kunden per E-Mail informieren
+      </label>`,
+    primary:'STATUS SETZEN',
+    onok:async()=>{
+      const s=document.getElementById('m-rep-status').value;
+      const mail=document.getElementById('m-rep-mail').checked;
+      const r=await api('/admin/repair/'+encodeURIComponent(repNr),{method:'PATCH',body:JSON.stringify({status:s,notify:mail})});
+      if(r&&(r.success||r.updated)){toast('Reparatur: '+s,'success');loadRepairs();}
+      else toast('Fehler','error');
+    }
+  });
+  setTimeout(()=>{const sel=document.getElementById('m-rep-status');if(sel)sel.value=current;},0);
+}
+
+/* ──── Reparatur Tracking-Nr speichern + Mail ──── */
+async function saveRepairTracking(repNr){
+  const tn=document.getElementById('rtn-'+repNr).value.trim();
+  if(!tn) return toast('Tracking-Nr. fehlt','warn');
+  const r=await api('/admin/repair/'+encodeURIComponent(repNr),{method:'PATCH',body:JSON.stringify({tracking:tn,status:'shipped',notify:true})});
+  if(r&&(r.success||r.updated)){toast('Tracking gespeichert + Mail versendet','success');loadRepairs();}
+  else toast('Fehler','error');
+}
+
+/* ──── Email an Reparatur-Kunden ──── */
+function emailRepairCustomer(repNr, email, name){
+  modal({
+    title:'EMAIL AN <span>KUNDEN</span>',
+    body:`<div class="modal-p">Reparatur <strong style="color:var(--neon)">${esc(repNr)}</strong> · ${esc(name)}</div>
+      <input class="modal-input" id="m-rep-subj" placeholder="Betreff" value="Update zu deiner Reparatur ${esc(repNr)}">
+      <textarea class="modal-textarea" id="m-rep-body" placeholder="Nachricht …" rows="6"></textarea>`,
+    primary:'✉ SENDEN',
+    onok:async()=>{
+      const subject=document.getElementById('m-rep-subj').value;
+      const body=document.getElementById('m-rep-body').value;
+      if(!body.trim()) return toast('Nachricht leer','warn');
+      const r=await api('/admin/repair/'+encodeURIComponent(repNr)+'/email',{method:'POST',body:JSON.stringify({subject,body,to:email,name})});
+      if(r&&r.success) toast('E-Mail versendet','success');
+      else toast('Fehler beim Versand','error');
+    }
+  });
+}
+
+/* ──── Kostenvoranschlag senden ──── */
+function sendRepairQuote(repNr, email, name){
+  modal({
+    title:'KOSTENVORANSCHLAG <span>SENDEN</span>',
+    body:`<div class="modal-p">Reparatur <strong style="color:var(--neon)">${esc(repNr)}</strong> · ${esc(name)}</div>
+      <input class="modal-input" id="m-kv-damage" placeholder="Schaden / Diagnose (z.B. Stick-Drift links)">
+      <input class="modal-input" id="m-kv-price" placeholder="Kosten (z.B. 35,00 €)" type="text">
+      <input class="modal-input" id="m-kv-time" placeholder="Bearbeitungszeit (z.B. 3-5 Werktage)" value="3-5 Werktage">
+      <textarea class="modal-textarea" id="m-kv-note" placeholder="Zusätzliche Hinweise (optional)" rows="3"></textarea>`,
+    primary:'📋 KV SENDEN',
+    onok:async()=>{
+      const damage=document.getElementById('m-kv-damage').value;
+      const price=document.getElementById('m-kv-price').value;
+      const time=document.getElementById('m-kv-time').value;
+      const note=document.getElementById('m-kv-note').value;
+      if(!price) return toast('Kosten fehlen','warn');
+      const r=await api('/admin/repair/'+encodeURIComponent(repNr)+'/quote',{method:'POST',body:JSON.stringify({to:email,name,damage,price,time,note})});
+      if(r&&r.success){toast('KV versendet an '+email,'success');loadRepairs();}
+      else toast('Fehler','error');
+    }
+  });
+}
+
+/* ──── Reparatur fertig — Abholungs-/Versand-Mail ──── */
+function sendRepairDone(repNr, email, name){
+  modal({
+    title:'REPARATUR <span>ABGESCHLOSSEN</span>',
+    body:`<div class="modal-p">Reparatur <strong style="color:var(--neon)">${esc(repNr)}</strong> · ${esc(name)}</div>
+      <textarea class="modal-textarea" id="m-done-note" placeholder="Nachricht an Kunden (z.B. Controller ist fertig, wird heute verschickt)" rows="4">Deine Reparatur ist abgeschlossen! Der Controller wird heute per DHL verschickt.</textarea>
+      <input class="modal-input" id="m-done-track" placeholder="Tracking-Nummer (optional)">`,
+    primary:'✓ FERTIG-MAIL SENDEN',
+    onok:async()=>{
+      const note=document.getElementById('m-done-note').value;
+      const tracking=document.getElementById('m-done-track').value;
+      const r=await api('/admin/repair/'+encodeURIComponent(repNr),{method:'PATCH',body:JSON.stringify({status:'done',tracking:tracking||undefined,notify:true,doneNote:note})});
+      if(r&&(r.success||r.updated)){toast('Fertig-Mail versendet','success');loadRepairs();}
+      else toast('Fehler','error');
+    }
+  });
+}
+
+/* ──── Reparatur stornieren ──── */
+function cancelRepair(repNr, email, name){
+  modal({
+    title:'REPARATUR <span>STORNIEREN</span>',
+    body:`<div class="modal-p">Reparatur <strong style="color:var(--neon)">${esc(repNr)}</strong> · ${esc(name)}</div>
+      <textarea class="modal-textarea" id="m-cancel-reason" placeholder="Grund (optional)" rows="3"></textarea>
+      <label style="display:flex;gap:6px;font-size:11px;color:#aaa;margin-top:6px;cursor:pointer">
+        <input type="checkbox" id="m-cancel-mail" checked> Kunden per E-Mail benachrichtigen
+      </label>`,
+    primary:'✕ STORNIEREN',
+    danger:true,
+    onok:async()=>{
+      const reason=document.getElementById('m-cancel-reason').value;
+      const mail=document.getElementById('m-cancel-mail').checked;
+      const r=await api('/admin/repair/'+encodeURIComponent(repNr),{method:'PATCH',body:JSON.stringify({status:'cancelled',note:reason,notify:mail})});
+      if(r&&(r.success||r.updated)){toast('Reparatur storniert','success');loadRepairs();}
+      else toast('Fehler','error');
+    }
+  });
 }
 
 /* ════════ USERS ════════ */

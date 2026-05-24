@@ -198,6 +198,18 @@ async function test(){
         return await admin2ArchiveGet(request, env, key);
       }
 
+      // REPARATUR-AKTIONEN (Status/Tracking/Email/KV/Storno)
+      if (path.startsWith("/admin/repair/") && path.endsWith("/email") && request.method === "POST") {
+        return await admin2RepairEmail(request, env, decodeURIComponent(path.split("/")[3]));
+      }
+      if (path.startsWith("/admin/repair/") && path.endsWith("/quote") && request.method === "POST") {
+        return await admin2RepairQuote(request, env, decodeURIComponent(path.split("/")[3]));
+      }
+      if (path.startsWith("/admin/repair/") && request.method === "PATCH") {
+        const repNr = path.split("/").pop();
+        return await updateRepair(request, env, decodeURIComponent(repNr));
+      }
+
       // WEB PUSH (Lockscreen-Push wie Shopify)
       if (path === "/admin/push/key" && request.method === "GET") return await admin2PushKey(request, env);
       if (path === "/admin/push/subscribe" && request.method === "POST") return await admin2PushSubscribe(request, env);
@@ -545,6 +557,7 @@ async function updateRepair(request, env, repNr) {
   const oldStatus = rep.status;
   if (body.status) rep.status = body.status;
   if (body.note) rep.adminNote = body.note;
+  if (body.doneNote) rep.doneNote = body.doneNote;
   if (body.tracking) rep.tracking = body.tracking;
   if (body.finalPrice) rep.finalPrice = body.finalPrice;
   rep.updated = new Date().toISOString();
@@ -2164,3 +2177,58 @@ function buildEmailTemplate(opts) {
     + '</body></html>';
 }
 
+
+// ──── REPARATUR: Custom-Email an Kunden ────
+async function admin2RepairEmail(request, env, repNr) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  const body = await request.json().catch(() => ({}));
+  const repRaw = await env.LEXORD_DATA.get("repair:" + repNr);
+  if (!repRaw) return json({ success: false, error: "Reparatur nicht gefunden" }, 404);
+  const rep = JSON.parse(repRaw);
+  const to = body.to || rep.email;
+  if (!to) return json({ success: false, error: "Keine Kundenmail" }, 400);
+  const html = buildEmailTemplate({
+    headerTitle: body.subject || "Update zu deiner Reparatur",
+    customerName: body.name || rep.fname || rep.name || "Kunde",
+    body: "<p>" + escapeHtml(body.body || "").replace(/\n/g, "<br>") + "</p>" +
+      "<p style='margin-top:18px;padding:14px;background:#f0f0f0;border-radius:8px;color:#333'>Reparatur-Nr.: <strong style='color:#00bdd6'>" + escapeHtml(repNr) + "</strong></p>"
+  });
+  const ok = await sendBrevoMail(env, to, body.subject || "Update Reparatur " + repNr, html, { repNr, kind: "repair-email" });
+  return json({ success: ok });
+}
+
+// ──── REPARATUR: Kostenvoranschlag senden ────
+async function admin2RepairQuote(request, env, repNr) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  const body = await request.json().catch(() => ({}));
+  const repRaw = await env.LEXORD_DATA.get("repair:" + repNr);
+  if (!repRaw) return json({ success: false, error: "Reparatur nicht gefunden" }, 404);
+  const rep = JSON.parse(repRaw);
+  const to = body.to || rep.email;
+  if (!to) return json({ success: false, error: "Keine Kundenmail" }, 400);
+  // Preis in der Reparatur speichern
+  if (body.price) {
+    rep.estPrice = body.price;
+    rep.status = rep.status === "received" ? "diagnosed" : rep.status;
+    rep.updated = new Date().toISOString();
+    await env.LEXORD_DATA.put("repair:" + repNr, JSON.stringify(rep));
+  }
+  const html = buildEmailTemplate({
+    headerTitle: "Kostenvoranschlag",
+    customerName: body.name || rep.fname || rep.name || "Kunde",
+    body: "<p>vielen Dank fuer deine Reparaturanfrage. Hier ist unser Kostenvoranschlag:</p>" +
+      "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='margin:20px 0'>" +
+      "<tr><td style='padding:12px;background:#f9f9f9;border-left:4px solid #00f2ff;border-radius:6px'>" +
+      "<div style='font-size:12px;color:#666'>Reparatur-Nr.</div><div style='font-size:16px;font-weight:900;color:#00bdd6'>" + escapeHtml(repNr) + "</div>" +
+      "</td></tr></table>" +
+      (body.damage ? "<p><strong>Diagnose:</strong> " + escapeHtml(body.damage) + "</p>" : "") +
+      "<p style='font-size:22px;font-weight:900;color:#00bdd6;margin:16px 0'>" + escapeHtml(body.price || "–") + "</p>" +
+      (body.time ? "<p><strong>Bearbeitungszeit:</strong> " + escapeHtml(body.time) + "</p>" : "") +
+      (body.note ? "<p style='color:#666;margin-top:12px'>" + escapeHtml(body.note) + "</p>" : "") +
+      "<p style='margin-top:20px'>Moechtest du die Reparatur durchfuehren lassen? Antworte einfach auf diese Mail mit <strong>JA</strong> oder <strong>NEIN</strong>.</p>",
+    ctaButton: "REPARATUR BESTÄTIGEN",
+    ctaUrl: "mailto:kontakt@lexord.de?subject=Reparatur%20" + encodeURIComponent(repNr) + "%20bestaetigen&body=Ja%2C%20bitte%20Reparatur%20durchfuehren."
+  });
+  const ok = await sendBrevoMail(env, to, "Kostenvoranschlag Reparatur " + repNr + " — LEXORD", html, { repNr, kind: "repair-quote", price: body.price });
+  return json({ success: ok });
+}

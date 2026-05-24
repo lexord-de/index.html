@@ -569,7 +569,7 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
     <div class="hero-left">
       <div class="eyebrow">🛒 PREMIUM KATALOG · 9 PRODUKTE</div>
       <h1>Zubehör &amp; Ersatzteile<span class="accent">made in Germany.</span></h1>
-      <p class="lead">Controller-Zubehör &amp; Ersatzteile für PS5 DualSense. Akku Upgrades · Hall &amp; TMR Sticks · Paddle Systeme · Rückschalen · Werkzeug — Made-in-Germany Qualität ab 4,90 € bis 59,90 €.</p>
+      <p class="lead">Controller-Zubehör &amp; Ersatzteile für PS5 DualSense. Akku Upgrades · Hall &amp; TMR Sticks · Paddle Systeme · Rückschalen · Werkzeug — Made-in-Germany Qualität ab 4,90 € bis 49,90 €.</p>
       <div class="hero-stats">
         <div class="hs-item"><div class="hs-num">91+</div><div class="hs-lbl">BEWERTUNGEN</div></div>
         <div class="hs-item"><div class="hs-num">4.9★</div><div class="hs-lbl">DURCHSCHNITT</div></div>
@@ -811,7 +811,7 @@ const PRODUCTS = [
   {slug:'ps5-tmr-hallstick-hes',  name:'PS5 TMR Hallstick HES',     cat:'Ersatzteil',  price:34.90, oldPrice:0, rating:4.9, reviews:31, badge:'',          badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['tmr'], variants:['#00f2ff'], color:'#00f2ff', desc:'Präzisions-Ersatzteil gegen Stickdrift · TMR-Technologie', created:'2026-03-01', bestseller:true},
   {slug:'ps5-skull-paddle',       name:'PS5 SKULL Paddle',          cat:'Paddle',      price:29.90, oldPrice:0, rating:4.8, reviews:19, badge:'',          badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['paddle'], variants:['#0a0a0a'], color:'#0a0a0a', desc:'Custom Back Buttons für DualSense · Scull-Design', created:'2026-01-15', bestseller:false},
   {slug:'ps5-analogstick',        name:'PS5 Analogstick',           cat:'Ersatzteil',  price:9.90,  oldPrice:0, rating:4.7, reviews:22, badge:'',          badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:[], variants:['#0a0a0a'], color:'#0a0a0a', desc:'Original-Ersatz Analogstick für DualSense', created:'2025-10-01', bestseller:false},
-  {slug:'ps5-4er-paddle-spritzguss', name:'PS5 4er Paddle Spritzguss', cat:'Paddle',  price:59.90, oldPrice:0, rating:4.9, reviews:16, badge:'BESTSELLER',badgeType:'best', img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['paddle'], variants:['#0a0a0a'], color:'#0a0a0a', desc:'mit Softtouch-Lackierung · 4 programmierbare Buttons', created:'2026-04-01', bestseller:true},
+  {slug:'ps5-4er-paddle-spritzguss', name:'PS5 4er Paddle Spritzguss', cat:'Paddle',  price:11.90, oldPrice:0, rating:4.9, reviews:16, badge:'BESTSELLER',badgeType:'best', img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['paddle'], variants:['#0a0a0a'], color:'#0a0a0a', desc:'mit Softtouch-Lackierung · 4 programmierbare Buttons', created:'2026-04-01', bestseller:true},
   {slug:'skull-v3-rueckschale',   name:'SKULL V3 Rückschale',       cat:'Gehäuse',     price:39.90, oldPrice:0, rating:4.8, reviews:12, badge:'',          badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['grip'], variants:['#0a0a0a'], color:'#0a0a0a', desc:'Grip schwarz mit Paddle-Slots · Anti-Rutsch', created:'2026-02-01', bestseller:false},
   {slug:'ps5-hall-sticks',        name:'PS5 Hall Sticks',           cat:'Ersatzteil',  price:24.90, oldPrice:0, rating:4.8, reviews:35, badge:'',          badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['hall'], variants:['#bc13fe'], color:'#bc13fe', desc:'Hall Effect Stickdrift Fix · 2er-Set', created:'2026-01-01', bestseller:true},
   {slug:'ps5-tmr-ersatz-sticks',  name:'PS5 TMR Ersatz-Sticks',     cat:'Ersatzteil',  price:44.90, oldPrice:0, rating:4.9, reviews:18, badge:'NEU',       badgeType:'new',  img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['tmr'], variants:['#00f2ff'], color:'#00f2ff', desc:'TMR Pro Sticks · Premium Drift-Free · 2er-Set', created:'2026-05-10', bestseller:true}
@@ -1123,82 +1123,68 @@ function goToProduct(slug){trackRecent(slug);location.href=slug+'.html';}
 
 /* ════════ FULL PRODUCT DETAIL OVERLAY (inline) ════════ */
 const PRODUCT_DETAILS = {
-  'lxrd-elite-pro':{
-    desc:'Unser Flaggschiff — TMR Pro Sticks, Clicky Trigger Pro, Carbon-Gehäuse, 4× Paddles V3, RGB-Beleuchtung. Premium-Klasse.',
-    images:['Photoroom_20260306_112425.png','Photoroom_20260305_123705.png','Photoroom_20260305_140346.png'],
-    features:['TMR Pro Sticks (Premium · drift-resistant)','Clicky Trigger Pro · 1 mm Auslöseweg','Carbon-Look Premium-Gehäuse','4× programmierbare Back-Paddles V3','RGB-Beleuchtung · Audio-reaktiv · App','Custom Gravur inklusive (Touchpad)','24 Monate Garantie · Made in Germany'],
-    specs:[['Modell','LEXORD Elite Pro · 2026'],['Basis','Sony PS5 DualSense'],['Sticks','TMR Pro (magnetisch)'],['Trigger','Clicky Pro · 1 mm'],['Paddles','4× programmierbar V3'],['Beleuchtung','RGB · Audio-reaktiv'],['Verbindung','USB-C · Bluetooth 5.0'],['Akku','1560 mAh · 12 h'],['Garantie','24 Monate'],['Herkunft','Made in Germany']],
-    longDesc:'<h3>🎮 Das Flaggschiff aus dem Hause LEXORD</h3><p>Der <strong>LXRD Elite Pro</strong> ist unsere absolute Spitzenklasse — entwickelt für professionelle Gamer. Jedes Detail wurde in präziser Handarbeit umgesetzt.</p><h3>⚡ TMR Pro Sticks</h3><p>Kontaktlose magnetische Sensoren — kein Drift, lebenslange Präzision.</p><h3>🎯 Clicky Trigger Pro</h3><p>Taktiles Mouse-Click-Feedback mit 1 mm Auslöseweg. Perfekt für Shooter.</p><h3>🎨 Carbon-Look &amp; RGB</h3><p>Matte Carbon-Optik plus konfigurierbare RGB-Beleuchtung.</p><h3>✨ 4× Back-Paddles V3</h3><p>Vier frei programmierbare Paddles — Profile speicherbar.</p>'
+  'ps5-akku-upgrade-3000':{
+    desc:'+90% Laufzeit · bis zu 16h Spielzeit. Premium Akku-Upgrade für den PS5 DualSense Controller.',
+    images:['Photoroom_20260305_122914.png','Photoroom_20260305_122914.png','Photoroom_20260305_122914.png'],
+    features:['3000mAh Kapazität (+90% vs. Original)','Bis zu 16h Spielzeit','Einfacher Einbau · kein Löten','PS5 DualSense kompatibel','Made in Germany · 24 Monate Garantie'],
+    specs:[['Kapazität','3000 mAh'],['Laufzeit','bis zu 16h'],['Kompatibilität','PS5 DualSense'],['Einbau','Einfach · kein Löten'],['Garantie','24 Monate']],
+    longDesc:'<h3>🔋 +90% mehr Laufzeit</h3><p>Der <strong>PS5 Akku Upgrade 3000mAh</strong> ersetzt den Original-Akku und liefert bis zu 16 Stunden Spielzeit — kein ständiges Aufladen mehr.</p><h3>⚡ Einfacher Einbau</h3><p>Kein Löten nötig. Einfach alten Akku entnehmen, neuen einsetzen, fertig.</p>'
   },
-  'lxrd-performance':{
-    desc:'Bestseller-Controller mit TMR Hall-Effect Sticks, Clicky Trigger, GRIP Gehäuse, 2× Paddles V2. Made in Germany.',
-    images:['Photoroom_20260305_123705.png','Photoroom_20260306_112425.png','Photoroom_20260305_140346.png'],
-    features:['TMR Hall-Effect Sticks (drift-frei)','Clicky Trigger · Mouse-Click-Feel','GRIP Gehäuse · Anti-Rutsch','2× Paddle-System V2','DualSense Edge Alternative','24 Monate Garantie · Made in Germany'],
-    specs:[['Modell','LEXORD Performance · 2026'],['Sticks','TMR Hall-Effect'],['Trigger','Clicky · Mouse-Click'],['Paddles','2× V2 programmierbar'],['Gehäuse','GRIP Anti-Rutsch'],['Verbindung','USB-C · Bluetooth 5.0'],['Akku','1560 mAh · 12 h'],['Garantie','24 Monate']],
-    longDesc:'<h3>🏆 Unser Bestseller mit 42+ Bewertungen</h3><p>Der <strong>LXRD Performance Black</strong> ist die ideale Scuf-Alternative aus Deutschland — bis zu 50% günstiger und mit überlegener Verarbeitung.</p><h3>⚡ TMR Hall-Effect Sticks</h3><p>Magnetische Sticks halten ein Leben lang — null Drift.</p><h3>🎯 Clicky Trigger</h3><p>Verwandle die Trigger in Maus-Klicks — perfekt für FPS-Spiele.</p><h3>🛡️ GRIP-Gehäuse &amp; 2× Paddles</h3><p>Anti-Rutsch-Beschichtung plus zwei Back-Paddles für mehr Kontrolle.</p>'
-  },
-  'lxrd-stealth':{
-    desc:'Limited Edition mit Stealth-Matt-Finish, Hall-Effect Sticks, Soft-Touch Coating, 2× Paddle V2.',
-    images:['Photoroom_20260501_094506.png','Photoroom_20260305_140346.png','Photoroom_20260305_123705.png'],
-    features:['Hall-Effect Sticks (drift-frei)','Stealth Matt-Finish','Soft-Touch Coating','2× Paddle-System V2','Smart Clicky Trigger','Limited Edition · nummeriert'],
-    specs:[['Edition','Limited · nummeriert'],['Sticks','Hall-Effect'],['Trigger','Smart Clicky'],['Paddles','2× V2'],['Finish','Matt + Soft-Touch'],['Garantie','24 Monate']],
-    longDesc:'<h3>🌑 Limited Edition · Stealth Black</h3><p>Komplett mattschwarz mit Soft-Touch-Beschichtung. Zeitloses Design für Gamer, die ein Statement setzen.</p><h3>⚡ Hall-Effect Sticks</h3><p>Magnetisch · lebenslang haltbar · null Drift.</p><h3>🎁 Limited Edition Box</h3><p>Schwarz/Türkis-Verpackung mit nummerierter Echtheits-Karte.</p>'
-  },
-  'lxrd-plus':{
-    desc:'Power-Paket: Hall-Effect Sticks, Clicky Trigger, GRIP Gehäuse, 2× Paddles V2.',
-    images:['Photoroom_20260305_140346.png','Photoroom_20260306_112425.png','Photoroom_20260305_123705.png'],
-    features:['Hall-Effect Sticks','Clicky Trigger','GRIP Gehäuse','2× Paddle-System V2','24 Monate Garantie'],
-    specs:[['Sticks','Hall-Effect'],['Trigger','Clicky'],['Paddles','2× V2'],['Gehäuse','GRIP'],['Garantie','24 Monate']],
-    longDesc:'<h3>💪 Power-Paket zum fairen Preis</h3><p>Alle Pro-Features zum erschwinglichen Preis: Hall-Effect-Sticks, Clicky Trigger, GRIP-Gehäuse und 2 Paddles.</p>'
-  },
-  'lxrd-basic':{
-    desc:'Der perfekte Einstieg: 2× Paddle-System, Standard-Gehäuse.',
-    images:['Photoroom_20260402_014813.png','Photoroom_20260402_014150.png','Photoroom_20260306_112425.png'],
-    features:['2× Paddle-System','Standard Gehäuse','Perfekter Einstieg','Volle PS5-Funktionalität','24 Monate Garantie'],
-    specs:[['Paddles','2× Standard'],['Gehäuse','Original'],['Garantie','24 Monate']],
-    longDesc:'<h3>🎯 Der perfekte Einstieg</h3><p>Du willst Back-Paddles ohne tiefen Griff in die Tasche? Der LXRD Basic Black ist genau richtig.</p>'
-  },
-  'tmr-upgrade-kit':{
-    desc:'TMR-Sensoren für deinen DualSense — magnetisch, drift-frei, ein Leben lang haltbar.',
-    images:['Photoroom_20260305_123705.png','Photoroom_20260305_140346.png','Photoroom_20260306_112425.png'],
-    features:['2× TMR Stick Sensoren','Komplett-Set für DIY','Magnetisch kontaktlos','Lebenslange Haltbarkeit','PS5 DualSense kompatibel'],
-    specs:[['Inhalt','2× TMR Sensoren'],['Kompatibilität','PS5 DualSense'],['Schwierigkeit','Fortgeschritten · Löten'],['Dauer','30–45 Minuten']],
-    longDesc:'<h3>🔧 Drift-Killer für DIY-Profis</h3><p>Mit unserem TMR-Upgrade-Kit machst du deinen vorhandenen DualSense Drift-frei.</p><p><strong>⚠ Einbau erfordert Lötkenntnisse.</strong> Alternative: unser Reparatur-Service.</p>'
-  },
-  'paddle-system-v2':{
-    desc:'2× Back-Paddles · frei programmierbar · magnetische Befestigung.',
-    images:['Photoroom_20260304_212902.png','Photoroom_20260305_123705.png','Photoroom_20260305_140346.png'],
-    features:['2× Back-Paddles','Frei programmierbar','Magnetische Befestigung','Original-Look bleibt','Einfacher Einbau ohne Lötkenntnisse'],
-    specs:[['Inhalt','2× Paddle V2'],['Befestigung','Magnetisch'],['Schwierigkeit','Einfach · 10–15 Min'],['Material','ABS + Stahl-Magnete']],
-    longDesc:'<h3>🎮 Mehr Kontrolle ohne Umgreifen</h3><p>Zwei programmierbare Paddles auf der Rückseite — entscheidender Vorteil in jedem Match.</p><h3>🧲 Magnetische Befestigung</h3><p>Kein Bohren, keine Schrauben — Original-Look bleibt erhalten.</p>'
-  },
-  'hall-effect-kit':{
-    desc:'Hall-Effect Sticks für PS5/PS4 — magnetische Sensoren statt Schleifkontakte.',
-    images:['Photoroom_20260305_140346.png','Photoroom_20260305_123705.png','Photoroom_20260306_112425.png'],
-    features:['2× Hall-Effect Sensoren','Drift-resistent','Magnetische Funktionsweise','Einfacher Tausch','PS5 / PS4 kompatibel'],
-    specs:[['Inhalt','2× Hall-Effect Sticks'],['Kompatibilität','PS5 · PS4'],['Schwierigkeit','Fortgeschritten · Löten'],['Dauer','ca. 30 Min']],
-    longDesc:'<h3>⚡ Drift adé</h3><p>Hall-Effect-Sensoren nutzen Magnete statt Schleifkontakten — praktisch unzerstörbar.</p>'
-  },
-  'grip-housing':{
-    desc:'Soft-Touch Anti-Rutsch-Beschichtung an allen Kontaktflächen.',
-    images:['Photoroom_20260402_014813.png','Photoroom_20260402_014150.png','Photoroom_20260306_112425.png'],
-    features:['Anti-Rutsch Soft-Touch','Verbessertes Handling','Komplett-Set','Schwarz matt','Original-Optik bleibt'],
-    specs:[['Inhalt','Vorder + Rückschale + Griffe'],['Finish','Matt · Soft-Touch'],['Schwierigkeit','Mittel · Schraubendreher'],['Dauer','ca. 20 Min']],
-    longDesc:'<h3>🛡️ Sicherer Halt für lange Sessions</h3><p>Soft-Touch-Beschichtung verhindert Abrutschen — auch bei stundenlangen Marathon-Sessions.</p>'
-  },
-  'clicky-trigger':{
-    desc:'Mouse-Click-Trigger · 1mm Auslöseweg · taktiles Feedback.',
-    images:['Photoroom_20260304_212902.png','Photoroom_20260305_140346.png','Photoroom_20260306_112425.png'],
-    features:['2× Trigger-Module','Mouse-Click-Feedback','1 mm Auslöseweg','Perfekt für FPS','Einfacher Einbau'],
-    specs:[['Inhalt','2× Clicky Module'],['Auslöseweg','1 mm'],['Schwierigkeit','Mittel · Schraubendreher'],['Dauer','ca. 15 Min']],
-    longDesc:'<h3>🎯 Schneller drücken, schneller treffen</h3><p>Verwandle deine Trigger in Maus-Klicks — entscheidende Millisekunden.</p><p><strong>⚠ Hinweis:</strong> Adaptive Trigger werden deaktiviert.</p>'
-  },
-  'stickzange-pro':{
-    desc:'Profi-Werkzeug zum rückstandslosen Abziehen von Stick-Caps.',
-    images:['Stickzange.PNG','Stickzange.PNG','Stickzange.PNG'],
-    features:['Profi-Werkzeug','Rückstandslos','PS4/PS5/Xbox/Switch','ABS-Kunststoff','Universal-Anwendung'],
+  'stickzange-controller':{
+    desc:'Profi-Werkzeug zum einfachen Stickwechsel am PS5 Controller.',
+    images:['Photoroom_20260305_122914.png','Photoroom_20260305_122914.png','Photoroom_20260305_122914.png'],
+    features:['Profi-Werkzeug','Einfacher Stickwechsel','Rückstandslos','PS4/PS5/Xbox/Switch','Universal-Anwendung'],
     specs:[['Material','ABS-Kunststoff'],['Anwendung','PS4 · PS5 · Xbox · Switch'],['Länge','ca. 8 cm']],
-    longDesc:'<h3>🔧 Das Werkzeug der Profis</h3><p>Ziehe Stick-Caps rückstandslos ab — unverzichtbar für DIY-Modder.</p>'
+    longDesc:'<h3>🔧 Das Werkzeug der Profis</h3><p>Mit der <strong>Stickzange</strong> wechselst du Stick-Caps mühelos und rückstandslos — unverzichtbar für jeden Modder.</p>'
+  },
+  'ps5-tmr-hallstick-hes':{
+    desc:'Präzisions-Ersatzteil gegen Stickdrift · TMR-Technologie für den PS5 DualSense.',
+    images:['Photoroom_20260305_122914.png','Photoroom_20260305_122914.png','Photoroom_20260305_122914.png'],
+    features:['TMR-Technologie (kontaktlos)','Gegen Stickdrift','Lebenslange Haltbarkeit','PS5 DualSense kompatibel','Premium-Präzision'],
+    specs:[['Technologie','TMR (Tunnel-Magnetoresistiv)'],['Kompatibilität','PS5 DualSense'],['Schwierigkeit','Fortgeschritten · Löten'],['Dauer','30–45 Minuten']],
+    longDesc:'<h3>🎯 TMR-Technologie gegen Stickdrift</h3><p>Der <strong>PS5 TMR Hallstick HES</strong> nutzt kontaktlose magnetische TMR-Sensoren — kein mechanischer Verschleiß, kein Drift, lebenslange Präzision.</p><h3>⚡ Präziser als Hall-Effect</h3><p>TMR-Sensoren bieten eine noch höhere Auflösung als klassische Hall-Effect-Sticks.</p>'
+  },
+  'ps5-skull-paddle':{
+    desc:'Custom Back Buttons für DualSense · Scull-Design.',
+    images:['Photoroom_20260305_122914.png','Photoroom_20260305_122914.png','Photoroom_20260305_122914.png'],
+    features:['2× Back-Paddles','Skull-Design','Frei programmierbar','PS5 DualSense kompatibel','Einfacher Einbau'],
+    specs:[['Inhalt','2× SKULL Paddle'],['Design','Skull / Totenkopf'],['Schwierigkeit','Einfach · 10–15 Min'],['Material','ABS Premium']],
+    longDesc:'<h3>💀 SKULL Design Paddles</h3><p>Die <strong>PS5 SKULL Paddles</strong> bringen Style und Funktion zusammen — zwei programmierbare Back Buttons im auffälligen Skull-Design.</p>'
+  },
+  'ps5-analogstick':{
+    desc:'Original-Ersatz Analogstick für den PS5 DualSense Controller.',
+    images:['Photoroom_20260305_122914.png','Photoroom_20260305_122914.png','Photoroom_20260305_122914.png'],
+    features:['Original-Ersatz Qualität','PS5 DualSense kompatibel','Einfacher Tausch','Gegen Stickdrift','Sofort einsatzbereit'],
+    specs:[['Typ','Analogstick komplett'],['Kompatibilität','PS5 DualSense'],['Schwierigkeit','Fortgeschritten · Löten'],['Dauer','ca. 20 Min']],
+    longDesc:'<h3>🎮 Original-Ersatz Analogstick</h3><p>Der <strong>PS5 Analogstick</strong> ist der ideale Ersatz bei defektem oder abgenutztem Stick. Originalgetreue Qualität.</p>'
+  },
+  'ps5-4er-paddle-spritzguss':{
+    desc:'4 programmierbare Back Buttons mit Softtouch-Lackierung für den PS5 DualSense.',
+    images:['Photoroom_20260305_122914.png','Photoroom_20260305_122914.png','Photoroom_20260305_122914.png'],
+    features:['4× programmierbare Paddles','Softtouch-Lackierung','Spritzguss-Qualität','PS5 DualSense kompatibel','Premium-Haptik'],
+    specs:[['Inhalt','4× Paddle Buttons'],['Oberfläche','Softtouch-Lackierung'],['Fertigung','Spritzguss'],['Schwierigkeit','Einfach · 15–20 Min'],['Material','ABS + Softtouch']],
+    longDesc:'<h3>🏆 4 Paddles — maximale Kontrolle</h3><p>Das <strong>PS5 4er Paddle Set</strong> bietet vier frei programmierbare Back Buttons in Premium-Spritzguss-Qualität mit Softtouch-Lackierung für perfekte Haptik.</p><h3>✨ Softtouch-Finish</h3><p>Samtweiche Oberfläche — kein Abrutschen, maximaler Komfort auch bei langen Sessions.</p>'
+  },
+  'skull-v3-rueckschale':{
+    desc:'GRIP Rückschale schwarz mit Paddle-Slots und Anti-Rutsch-Beschichtung.',
+    images:['Photoroom_20260305_122914.png','Photoroom_20260305_122914.png','Photoroom_20260305_122914.png'],
+    features:['GRIP Anti-Rutsch-Beschichtung','Integrierte Paddle-Slots','Skull V3 Design','PS5 DualSense kompatibel','Schwarz matt'],
+    specs:[['Typ','Rückschale komplett'],['Finish','Matt · GRIP Beschichtung'],['Paddle-Slots','Ja · kompatibel mit Paddle-Systemen'],['Schwierigkeit','Mittel · Schraubendreher'],['Dauer','ca. 20 Min']],
+    longDesc:'<h3>🛡️ SKULL V3 Rückschale</h3><p>Die <strong>SKULL V3 Rückschale</strong> kombiniert Anti-Rutsch-Grip mit integrierten Paddle-Slots — das perfekte Upgrade für deinen DualSense.</p>'
+  },
+  'ps5-hall-sticks':{
+    desc:'Hall Effect Stickdrift Fix im 2er-Set für den PS5 DualSense.',
+    images:['Photoroom_20260305_122914.png','Photoroom_20260305_122914.png','Photoroom_20260305_122914.png'],
+    features:['2× Hall-Effect Sticks','Drift-resistent','Magnetische Sensoren','PS5 DualSense kompatibel','Langlebig'],
+    specs:[['Inhalt','2× Hall-Effect Sticks'],['Technologie','Hall-Effect (magnetisch)'],['Kompatibilität','PS5 DualSense'],['Schwierigkeit','Fortgeschritten · Löten'],['Dauer','ca. 30 Min']],
+    longDesc:'<h3>⚡ Hall Effect — Drift adé</h3><p>Die <strong>PS5 Hall Sticks</strong> nutzen magnetische Hall-Effect-Sensoren statt mechanischer Schleifkontakte — praktisch unzerstörbar und drift-frei.</p>'
+  },
+  'ps5-tmr-ersatz-sticks':{
+    desc:'TMR Pro Sticks · Premium Drift-Free · 2er-Set für den PS5 DualSense.',
+    images:['Photoroom_20260305_122914.png','Photoroom_20260305_122914.png','Photoroom_20260305_122914.png'],
+    features:['2× TMR Pro Sticks','Premium Drift-Free Technologie','Höchste Präzision','PS5 DualSense kompatibel','Made in Germany'],
+    specs:[['Inhalt','2× TMR Pro Sticks'],['Technologie','TMR (Tunnel-Magnetoresistiv)'],['Kompatibilität','PS5 DualSense'],['Schwierigkeit','Fortgeschritten · Löten'],['Dauer','30–45 Minuten'],['Garantie','24 Monate']],
+    longDesc:'<h3>🏅 TMR Pro — Premium Drift-Free</h3><p>Die <strong>PS5 TMR Ersatz-Sticks</strong> sind die Spitzenklasse der Stick-Technologie — kontaktlose TMR-Sensoren für maximale Präzision und null Drift.</p><h3>⚡ Warum TMR?</h3><p>TMR-Sensoren (Tunnel-Magnetoresistiv) bieten eine noch höhere Auflösung und Linearität als klassische Hall-Effect-Sensoren.</p>'
   }
 };
 

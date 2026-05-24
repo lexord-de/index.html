@@ -1562,13 +1562,17 @@ async function admin2OrderRefund(request, env, orderNr) {
   // Kunden per Mail benachrichtigen
   if (body.notify !== false && order.email && env.BREVO_API_KEY) {
     const subject = "Stornierung deiner Bestellung " + orderNr + " — LEXORD";
-    const html = "<p>Hallo " + (order.name || "Kunde") + ",</p>" +
-      "<p>deine Bestellung <strong>" + orderNr + "</strong> wurde storniert.</p>" +
-      "<p><strong>Rueckerstattung:</strong> " + amount.toFixed(2) + " EUR " +
-      (refundId ? "(Referenz: " + refundId + ")" : "(manuelle Bearbeitung)") + "</p>" +
-      (body.reason ? "<p><strong>Grund:</strong> " + escapeHtml(body.reason) + "</p>" : "") +
-      "<p>Die Erstattung wird auf das urspruengliche Zahlungskonto zurueckgebucht und ist je nach Anbieter in 3-10 Werktagen sichtbar.</p>" +
-      "<p>Liebe Gruesse<br>LEXORD Engineering</p>";
+    const html = buildEmailTemplate({
+      subject,
+      customerName: order.name,
+      headerTitle: "Bestellung storniert",
+      body: '<p style="margin:0 0 14px 0">deine Bestellung <strong>' + escapeHtml(orderNr) + '</strong> wurde storniert.</p>'
+        + '<p style="margin:0 0 14px 0"><strong>Rueckerstattung:</strong> ' + amount.toFixed(2) + ' EUR '
+        + (refundId ? '(Referenz: ' + escapeHtml(refundId) + ')' : '(manuelle Bearbeitung)') + '</p>'
+        + (body.reason ? '<p style="margin:0 0 14px 0"><strong>Grund:</strong> ' + escapeHtml(body.reason) + '</p>' : '')
+        + '<p style="margin:0 0 14px 0">Die Erstattung wird auf das urspruengliche Zahlungskonto zurueckgebucht und ist je nach Anbieter in 3-10 Werktagen sichtbar.</p>'
+        + '<p style="margin:0;color:#888">Liebe Gruesse<br><strong style="color:#fff">LEXORD Engineering</strong></p>'
+    });
     await sendBrevoMail(env, order.email, subject, html, { orderNr, kind: "refund", amount, refundId });
   }
   return json({ success: !refundError || refundId !== null, refundId, refundError, amount });
@@ -1588,11 +1592,15 @@ async function admin2OrderStatus(request, env, orderNr) {
   await env.LEXORD_DATA.put("order:" + orderNr, JSON.stringify(order));
   if (body.notify !== false && order.email && env.BREVO_API_KEY) {
     const subject = "Status-Update zu Bestellung " + orderNr;
-    const html = "<p>Hallo " + (order.name || "Kunde") + ",</p>" +
-      "<p>der Status deiner Bestellung <strong>" + orderNr + "</strong> wurde aktualisiert:</p>" +
-      "<p style='font-size:18px'><strong>" + body.status + "</strong></p>" +
-      (oldStatus ? "<p style='color:#666;font-size:12px'>vorher: " + oldStatus + "</p>" : "") +
-      "<p>Liebe Gruesse<br>LEXORD Engineering</p>";
+    const html = buildEmailTemplate({
+      subject,
+      customerName: order.name,
+      headerTitle: "Status-Update",
+      body: '<p style="margin:0 0 14px 0">der Status deiner Bestellung <strong>' + escapeHtml(orderNr) + '</strong> wurde aktualisiert:</p>'
+        + '<div style="text-align:center;margin:20px 0;padding:16px;background:#111;border:1px solid #00f2ff;border-radius:8px"><span style="font-size:20px;font-weight:900;letter-spacing:2px;color:#00f2ff">' + escapeHtml(body.status) + '</span></div>'
+        + (oldStatus ? '<p style="margin:0 0 14px 0;color:#666;font-size:12px;text-align:center">vorher: ' + escapeHtml(oldStatus) + '</p>' : '')
+        + '<p style="margin:0;color:#888">Liebe Gruesse<br><strong style="color:#fff">LEXORD Engineering</strong></p>'
+    });
     await sendBrevoMail(env, order.email, subject, html, { orderNr, kind: "status", from: oldStatus, to: body.status });
   }
   return json({ success: true });
@@ -1613,11 +1621,17 @@ async function admin2OrderTracking(request, env, orderNr) {
   if (body.notify !== false && order.email && env.BREVO_API_KEY) {
     const trackUrl = "https://www.dhl.de/de/privatkunden/dhl-sendungsverfolgung.html?piececode=" + encodeURIComponent(body.tracking);
     const subject = "Deine Bestellung " + orderNr + " ist unterwegs!";
-    const html = "<p>Hallo " + (order.name || "Kunde") + ",</p>" +
-      "<p>deine Bestellung <strong>" + orderNr + "</strong> wurde verschickt!</p>" +
-      "<p><strong>Tracking-Nummer:</strong> <a href='" + trackUrl + "'>" + escapeHtml(body.tracking) + "</a></p>" +
-      "<p>Lieferzeit: in der Regel 1-3 Werktage</p>" +
-      "<p>Liebe Gruesse<br>LEXORD Engineering</p>";
+    const html = buildEmailTemplate({
+      subject,
+      customerName: order.name,
+      headerTitle: "Versandbestaetigung",
+      body: '<p style="margin:0 0 14px 0">deine Bestellung <strong>' + escapeHtml(orderNr) + '</strong> wurde verschickt!</p>'
+        + '<p style="margin:0 0 14px 0"><strong>Tracking-Nummer:</strong> <a href="' + escapeHtml(trackUrl) + '" style="color:#00f2ff;text-decoration:none">' + escapeHtml(body.tracking) + '</a></p>'
+        + '<p style="margin:0 0 14px 0">Lieferzeit: in der Regel 1-3 Werktage</p>'
+        + '<p style="margin:0;color:#888">Liebe Gruesse<br><strong style="color:#fff">LEXORD Engineering</strong></p>',
+      ctaButton: "Sendung verfolgen",
+      ctaUrl: trackUrl
+    });
     await sendBrevoMail(env, order.email, subject, html, { orderNr, kind: "tracking", tracking: body.tracking });
   }
   return json({ success: true });
@@ -1631,8 +1645,15 @@ async function admin2OrderEmail(request, env, orderNr) {
   if (!orderRaw) return json({ success: false, error: "Order not found" }, 404);
   const order = JSON.parse(orderRaw);
   if (!order.email) return json({ success: false, error: "Keine Kundenmail" }, 400);
-  const html = "<p>" + escapeHtml(body.body || "").replace(/\n/g, "<br>") + "</p>";
-  const ok = await sendBrevoMail(env, order.email, body.subject || "Nachricht von LEXORD", html, { orderNr, kind: "custom" });
+  const emailSubject = body.subject || "Nachricht von LEXORD";
+  const html = buildEmailTemplate({
+    subject: emailSubject,
+    customerName: order.name,
+    headerTitle: emailSubject,
+    body: '<div style="margin:0 0 14px 0">' + escapeHtml(body.body || "").replace(/\n/g, "<br>") + '</div>'
+      + '<p style="margin:0;color:#888">Liebe Gruesse<br><strong style="color:#fff">LEXORD Engineering</strong></p>'
+  });
+  const ok = await sendBrevoMail(env, order.email, emailSubject, html, { orderNr, kind: "custom" });
   return json({ success: ok });
 }
 
@@ -2093,5 +2114,53 @@ async function admin2PushGenKeys(request, env){
     subject: 'mailto:kontakt@lexord.de',
     instructions: 'In Cloudflare → Worker Settings → Variables and Secrets: VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT setzen'
   });
+}
+
+// ════════════════════════════════════════════════════════════════
+// PROFESSIONELLES EMAIL-TEMPLATE (LEXORD Design)
+// ════════════════════════════════════════════════════════════════
+function buildEmailTemplate(opts) {
+  const { subject, customerName, body, ctaButton, ctaUrl, headerTitle } = opts || {};
+  const name = escapeHtml(customerName || "Kunde");
+  const header = escapeHtml(headerTitle || subject || "");
+  const ctaHtml = (ctaButton && ctaUrl)
+    ? '<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:28px auto 0 auto"><tr><td align="center" style="border-radius:8px;background:linear-gradient(135deg,#00f2ff,#00c4cc)" bgcolor="#00f2ff"><a href="' + escapeHtml(ctaUrl) + '" target="_blank" style="display:inline-block;padding:14px 36px;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:900;letter-spacing:2px;color:#000;text-decoration:none;text-transform:uppercase">' + escapeHtml(ctaButton) + '</a></td></tr></table>'
+    : '';
+  return '<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>' + escapeHtml(subject || '') + '</title></head>'
+    + '<body style="margin:0;padding:0;background-color:#0a0a0a;font-family:Arial,Helvetica,sans-serif">'
+    + '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#0a0a0a">'
+    + '<tr><td align="center" style="padding:30px 16px">'
+    // Inner container
+    + '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;width:100%">'
+    // Header
+    + '<tr><td style="background:#000;padding:32px 40px;border-radius:14px 14px 0 0;border-bottom:3px solid #00f2ff;text-align:center">'
+    + '<div style="font-size:26px;font-weight:900;letter-spacing:6px;color:#fff;font-family:Arial,Helvetica,sans-serif">LEXORD<span style="color:#00f2ff;font-size:16px;vertical-align:super">&reg;</span></div>'
+    + '<div style="font-size:10px;letter-spacing:4px;color:#555;text-transform:uppercase;margin-top:4px">ENGINEERING</div>'
+    + '</td></tr>'
+    // Header title bar
+    + (header ? '<tr><td style="background:#111;padding:18px 40px;text-align:center"><div style="font-size:14px;font-weight:700;letter-spacing:2px;color:#00f2ff;text-transform:uppercase">' + header + '</div></td></tr>' : '')
+    // Body
+    + '<tr><td style="background:#1a1a1a;padding:36px 40px;color:#e0e0e0;font-size:15px;line-height:1.7">'
+    + '<p style="margin:0 0 16px 0;color:#fff;font-size:16px">Hallo <strong>' + name + '</strong>,</p>'
+    + body
+    + ctaHtml
+    + '</td></tr>'
+    // Divider
+    + '<tr><td style="background:#1a1a1a;padding:0 40px"><div style="border-top:1px solid #333"></div></td></tr>'
+    // Footer
+    + '<tr><td style="background:#1a1a1a;padding:28px 40px 36px;border-radius:0 0 14px 14px">'
+    + '<div style="font-size:11px;color:#666;line-height:1.8;text-align:center">'
+    + '<div style="font-weight:700;color:#888;letter-spacing:2px;margin-bottom:6px">LEXORD ENGINEERING</div>'
+    + 'Leon Schulz<br>'
+    + 'An Der Domsuehler Str. 2, 19374 Domsuhl<br>'
+    + '<a href="mailto:kontakt@lexord.de" style="color:#00f2ff;text-decoration:none">kontakt@lexord.de</a>'
+    + ' &middot; <a href="tel:+4915204718720" style="color:#00f2ff;text-decoration:none">0152 047 18720</a><br>'
+    + '<br>'
+    + '<span style="color:#555">Kleinunternehmer gem. &sect; 19 UStG &mdash; kein Ausweis der Umsatzsteuer.</span>'
+    + '</div>'
+    + '</td></tr>'
+    + '</table>'
+    + '</td></tr></table>'
+    + '</body></html>';
 }
 

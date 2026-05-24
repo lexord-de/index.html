@@ -567,9 +567,9 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
   <div class="crumbs"><a href="/">Home</a><span>/</span><span style="color:#888" id="crumb-cat">Alle Produkte</span></div>
   <div class="hero-content">
     <div class="hero-left">
-      <div class="eyebrow">🛒 PREMIUM KATALOG · 11+ PRODUKTE</div>
-      <h1>Custom Controller<span class="accent">made in Germany.</span></h1>
-      <p class="lead">Jeder Controller handgefertigt in Domsühl. TMR &amp; Hall Effect Sticks · Clicky Trigger · Paddle Systeme · Made-in-Germany Qualität ab 5 € (Werkzeug) bis 280 € (Elite Pro).</p>
+      <div class="eyebrow">🛒 PREMIUM KATALOG · 9 PRODUKTE</div>
+      <h1>Zubehör &amp; Ersatzteile<span class="accent">made in Germany.</span></h1>
+      <p class="lead">Controller-Zubehör &amp; Ersatzteile für PS5 DualSense. Akku Upgrades · Hall &amp; TMR Sticks · Paddle Systeme · Rückschalen · Werkzeug — Made-in-Germany Qualität ab 4,90 € bis 59,90 €.</p>
       <div class="hero-stats">
         <div class="hs-item"><div class="hs-num">91+</div><div class="hs-lbl">BEWERTUNGEN</div></div>
         <div class="hs-item"><div class="hs-num">4.9★</div><div class="hs-lbl">DURCHSCHNITT</div></div>
@@ -806,26 +806,24 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
 const CF_WORKER_URL = 'https://lexord-api.leonschulz1420.workers.dev';
 
 const PRODUCTS = [
-  {slug:'lxrd-elite-pro',     name:'LXRD Elite Pro',           cat:'Controller',    price:280, oldPrice:0,   rating:4.9, reviews:8,  badge:'NEU',       badgeType:'new',   img:'Photoroom_20260306_112425.png', img2:'Photoroom_20260305_123705.png', stock:'in',  features:['hall','tmr','paddle','clicky','grip','rgb'], variants:['#0a0a0a','#1e3a8a','#bc13fe'], color:'#0a0a0a', desc:'Unser Flaggschiff — TMR Pro Sticks, Clicky Trigger Pro, Carbon-Gehäuse, 4× Paddles V3, RGB-Beleuchtung, Custom Gravur inklusive. Handgefertigt.', created:'2026-04-01', bestseller:false},
-  {slug:'lxrd-performance',   name:'LXRD Performance Black',   cat:'Controller',    price:240, oldPrice:0,   rating:4.9, reviews:42, badge:'BESTSELLER',badgeType:'best',  img:'Photoroom_20260305_123705.png', img2:'Photoroom_20260306_112425.png', stock:'in',  features:['hall','paddle','clicky','grip'],            variants:['#0a0a0a','#ffffff','#e60012'], color:'#0a0a0a', desc:'Unser Bestseller mit 42+ Bewertungen. TMR Hall-Effect Sticks, Clicky Trigger, GRIP Gehäuse, 2× Paddles V2.', created:'2025-12-15', bestseller:true},
-  {slug:'lxrd-stealth',       name:'LXRD Stealth Edition',     cat:'Controller',    price:220, oldPrice:249, rating:4.8, reviews:5,  badge:'LIMITED',   badgeType:'limited',img:'Photoroom_20260501_094506.png', img2:'Photoroom_20260305_140346.png', stock:'low', features:['hall','paddle','clicky'],                   variants:['#1a1a1a'], color:'#1a1a1a', desc:'Limited Edition mit Stealth-Matt-Finish, Hall-Effect Sticks, Soft-Touch Coating, 2× Paddle V2.', created:'2026-04-15', bestseller:false},
-  {slug:'lxrd-plus',          name:'LXRD Plus Black',          cat:'Controller',    price:180, oldPrice:0,   rating:4.9, reviews:31, badge:'',          badgeType:'',      img:'Photoroom_20260305_140346.png', img2:'Photoroom_20260306_112425.png', stock:'in',  features:['hall','paddle','clicky','grip'],           variants:['#0a0a0a','#ffffff','#3aa3ff'], color:'#0a0a0a', desc:'Power-Paket: Hall-Effect Sticks, Clicky Trigger, GRIP Gehäuse, 2× Paddles V2.', created:'2025-10-01', bestseller:true},
-  {slug:'lxrd-basic',         name:'LXRD Basic Black',         cat:'Controller',    price:105, oldPrice:0,   rating:4.8, reviews:18, badge:'',          badgeType:'',      img:'Photoroom_20260402_014813.png', img2:'Photoroom_20260402_014150.png', stock:'in',  features:['paddle'],                                   variants:['#0a0a0a','#ffffff'], color:'#0a0a0a', desc:'Der perfekte Einstieg: 2× Paddle-System, Standard-Gehäuse.', created:'2025-08-15', bestseller:false},
-  {slug:'tmr-upgrade-kit',    name:'TMR Stick Upgrade Kit',    cat:'Upgrade-Kits',  price:55,  oldPrice:0,   rating:4.9, reviews:23, badge:'',          badgeType:'',      img:'Photoroom_20260305_123705.png', img2:'Photoroom_20260305_140346.png', stock:'in',  features:['tmr'],                                      variants:['#00f2ff'], color:'#00f2ff', desc:'TMR-Sensoren für deinen DualSense — magnetisch, drift-frei, ein Leben lang haltbar.', created:'2026-02-01', bestseller:true},
-  {slug:'hall-effect-kit',    name:'Hall Effect Upgrade Kit',  cat:'Upgrade-Kits',  price:35,  oldPrice:0,   rating:4.9, reviews:29, badge:'',          badgeType:'',      img:'Photoroom_20260305_140346.png', img2:'Photoroom_20260305_123705.png', stock:'in',  features:['hall'],                                     variants:['#bc13fe'], color:'#bc13fe', desc:'Hall-Effect Sticks für PS5/PS4 — magnetische Sensoren statt Schleifkontakte. Drift adé.', created:'2026-01-15', bestseller:true},
-  {slug:'paddle-system-v2',   name:'Paddle System V2',         cat:'Upgrade-Kits',  price:40,  oldPrice:0,   rating:4.8, reviews:34, badge:'',          badgeType:'',      img:'Photoroom_20260304_212902.png', img2:'Photoroom_20260305_123705.png', stock:'in',  features:['paddle'],                                   variants:['#0a0a0a'], color:'#0a0a0a', desc:'2× Back-Paddles · frei programmierbar · magnetische Befestigung.', created:'2025-09-01', bestseller:true},
-  {slug:'clicky-trigger',     name:'Clicky Trigger Kit',       cat:'Upgrade-Kits',  price:22,  oldPrice:0,   rating:4.8, reviews:19, badge:'',          badgeType:'',      img:'Photoroom_20260304_212902.png', img2:'Photoroom_20260305_140346.png', stock:'in',  features:['clicky'],                                   variants:['#0a0a0a'], color:'#0a0a0a', desc:'Mouse-Click-Trigger · 1mm Auslöseweg · taktiles Feedback.', created:'2025-11-01', bestseller:false},
-  {slug:'grip-housing',       name:'GRIP Gehäuse Set',         cat:'Gehäuse',       price:28,  oldPrice:0,   rating:4.7, reviews:14, badge:'',          badgeType:'',      img:'Photoroom_20260402_014813.png', img2:'Photoroom_20260402_014150.png', stock:'in',  features:['grip'],                                     variants:['#0a0a0a','#ffffff','#888'], color:'#0a0a0a', desc:'Soft-Touch Anti-Rutsch-Beschichtung an allen Kontaktflächen.', created:'2025-07-01', bestseller:false},
-  {slug:'stickzange-pro',     name:'Stickzange Pro',           cat:'Werkzeug',      price:5,   oldPrice:0,   rating:4.6, reviews:11, badge:'',          badgeType:'',      img:'Stickzange.PNG',                  img2:'Stickzange.PNG',                stock:'in',  features:[],                                           variants:['#888888'], color:'#888888', desc:'Profi-Werkzeug zum rückstandslosen Abziehen von Stick-Caps.', created:'2025-06-01', bestseller:false}
+  {slug:'ps5-akku-upgrade-3000',  name:'PS5 Akku Upgrade 3000mAh',  cat:'Upgrade',     price:49.90, oldPrice:0, rating:4.9, reviews:27, badge:'NEU',       badgeType:'new',  img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:[], variants:['#0a0a0a'], color:'#0a0a0a', desc:'+90% Laufzeit · bis zu 16h Spielzeit', created:'2026-05-01', bestseller:true},
+  {slug:'stickzange-controller',  name:'Stickzange Controller',     cat:'Werkzeug',    price:4.90,  oldPrice:0, rating:4.6, reviews:14, badge:'',          badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:[], variants:['#888888'], color:'#888888', desc:'Profi-Werkzeug zum einfachen Stickwechsel', created:'2025-06-01', bestseller:false},
+  {slug:'ps5-tmr-hallstick-hes',  name:'PS5 TMR Hallstick HES',     cat:'Ersatzteil',  price:34.90, oldPrice:0, rating:4.9, reviews:31, badge:'',          badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['tmr'], variants:['#00f2ff'], color:'#00f2ff', desc:'Präzisions-Ersatzteil gegen Stickdrift · TMR-Technologie', created:'2026-03-01', bestseller:true},
+  {slug:'ps5-skull-paddle',       name:'PS5 SKULL Paddle',          cat:'Paddle',      price:29.90, oldPrice:0, rating:4.8, reviews:19, badge:'',          badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['paddle'], variants:['#0a0a0a'], color:'#0a0a0a', desc:'Custom Back Buttons für DualSense · Scull-Design', created:'2026-01-15', bestseller:false},
+  {slug:'ps5-analogstick',        name:'PS5 Analogstick',           cat:'Ersatzteil',  price:9.90,  oldPrice:0, rating:4.7, reviews:22, badge:'',          badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:[], variants:['#0a0a0a'], color:'#0a0a0a', desc:'Original-Ersatz Analogstick für DualSense', created:'2025-10-01', bestseller:false},
+  {slug:'ps5-4er-paddle-spritzguss', name:'PS5 4er Paddle Spritzguss', cat:'Paddle',  price:59.90, oldPrice:0, rating:4.9, reviews:16, badge:'BESTSELLER',badgeType:'best', img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['paddle'], variants:['#0a0a0a'], color:'#0a0a0a', desc:'mit Softtouch-Lackierung · 4 programmierbare Buttons', created:'2026-04-01', bestseller:true},
+  {slug:'skull-v3-rueckschale',   name:'SKULL V3 Rückschale',       cat:'Gehäuse',     price:39.90, oldPrice:0, rating:4.8, reviews:12, badge:'',          badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['grip'], variants:['#0a0a0a'], color:'#0a0a0a', desc:'Grip schwarz mit Paddle-Slots · Anti-Rutsch', created:'2026-02-01', bestseller:false},
+  {slug:'ps5-hall-sticks',        name:'PS5 Hall Sticks',           cat:'Ersatzteil',  price:24.90, oldPrice:0, rating:4.8, reviews:35, badge:'',          badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['hall'], variants:['#bc13fe'], color:'#bc13fe', desc:'Hall Effect Stickdrift Fix · 2er-Set', created:'2026-01-01', bestseller:true},
+  {slug:'ps5-tmr-ersatz-sticks',  name:'PS5 TMR Ersatz-Sticks',     cat:'Ersatzteil',  price:44.90, oldPrice:0, rating:4.9, reviews:18, badge:'NEU',       badgeType:'new',  img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['tmr'], variants:['#00f2ff'], color:'#00f2ff', desc:'TMR Pro Sticks · Premium Drift-Free · 2er-Set', created:'2026-05-10', bestseller:true}
 ];
 
 const CATEGORIES_DATA = [
   {key:'Alle',         ico:'🎯'},
-  {key:'Controller',   ico:'🎮'},
-  {key:'Upgrade-Kits', ico:'⚡'},
+  {key:'Ersatzteil',   ico:'🔩'},
+  {key:'Paddle',       ico:'🎮'},
+  {key:'Upgrade',      ico:'⚡'},
   {key:'Gehäuse',      ico:'🛡️'},
   {key:'Werkzeug',     ico:'🔧'},
-  {key:'Reparatur',    ico:'🛠️',link:'/#repair-sec'},
   {key:'Konfigurator', ico:'🎨',link:'konfigurator.html'},
   {key:'B2B',          ico:'🏢',link:'b2b.html'}
 ];
@@ -939,7 +937,7 @@ function renderBestsellerStrip(){
 function renderCategories(){
   const counts = {};
   PRODUCTS.forEach(p=>{counts[p.cat]=(counts[p.cat]||0)+1;});
-  const cats = ['Alle','Controller','Upgrade-Kits','Gehäuse','Werkzeug'];
+  const cats = ['Alle','Ersatzteil','Paddle','Upgrade','Gehäuse','Werkzeug'];
   document.getElementById('cat-list').innerHTML = cats.map(c=>{
     const cnt = c==='Alle'?PRODUCTS.length:(counts[c]||0);
     return `<li><button class="${c===state.cat?'active':''}" onclick="setCat('${c}')">${c}<span class="cnt">${cnt}</span></button></li>`;
@@ -1534,7 +1532,7 @@ function toast(msg, type){
 
 /* INIT */
 const urlP = new URLSearchParams(location.search);
-if(urlP.get('cat') && ['Controller','Upgrade-Kits','Gehäuse','Werkzeug'].includes(urlP.get('cat'))) state.cat = urlP.get('cat');
+if(urlP.get('cat') && ['Ersatzteil','Paddle','Upgrade','Gehäuse','Werkzeug'].includes(urlP.get('cat'))) state.cat = urlP.get('cat');
 
 (async ()=>{
   try{

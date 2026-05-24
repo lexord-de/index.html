@@ -353,7 +353,11 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
 
   <!-- PANEL: REPAIRS -->
   <div class="dash-panel" id="panel-repairs">
-    <div class="dash-actions"><button class="dash-action" onclick="loadRepairs()">↻ AKTUALISIEREN</button></div>
+    <div class="dash-actions">
+      <button class="dash-action" onclick="loadRepairs()">↻ AKTUALISIEREN</button>
+      <input type="text" class="search-input" id="repair-search" placeholder="🔍 Suche Reparatur-Nr/Name/Email …" oninput="filterRepairs()">
+      <button class="dash-action" onclick="exportData('repairs')">⤓ EXPORT JSON</button>
+    </div>
     <div id="repairs-container"></div>
   </div>
 
@@ -473,6 +477,7 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
 const WORKER_URL = 'https://lexord-api.leonschulz1420.workers.dev';
 const TOKEN_KEY = 'lxrd_admin_token';
 let ALL_ORDERS = [];
+let ALL_REPAIRS = [];
 let LIVE_POLL = null;
 
 /* ════════ AUTH ════════ */
@@ -866,8 +871,24 @@ async function loadRepairs(){
   c.innerHTML = '<div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div>';
   const d = await api('/admin/repairs');
   if(!d || !d.repairs){ c.innerHTML = empty('⚠','VERBINDUNGSFEHLER'); return; }
-  if(!d.repairs.length){ c.innerHTML = empty('🔧','KEINE REPARATUREN'); return; }
-  c.innerHTML = d.repairs.map(r => {
+  if(!d.repairs.length){ c.innerHTML = empty('🔧','KEINE REPARATUREN'); ALL_REPAIRS=[]; return; }
+  ALL_REPAIRS = d.repairs;
+  renderRepairs(d.repairs);
+}
+function filterRepairs(){
+  const q = document.getElementById('repair-search').value.toLowerCase();
+  const f = !q ? ALL_REPAIRS : ALL_REPAIRS.filter(r =>
+    (r.repNr||'').toLowerCase().includes(q) ||
+    (r.name||r.fname||'').toLowerCase().includes(q) ||
+    (r.lname||'').toLowerCase().includes(q) ||
+    (r.email||'').toLowerCase().includes(q) ||
+    (r.damage||'').toLowerCase().includes(q));
+  renderRepairs(f);
+}
+function renderRepairs(repairs){
+  const c = document.getElementById('repairs-container');
+  if(!repairs.length){ c.innerHTML = empty('🔧','KEINE TREFFER'); return; }
+  c.innerHTML = repairs.map(r => {
     const status = (r.status||'received').toLowerCase();
     const statusMap = {received:'EINGANG',diagnosed:'DIAGNOSE',repairing:'IN REPARATUR',shipped:'VERSANDT',done:'ABGESCHLOSSEN',cancelled:'STORNIERT'};
     const statusCls = {received:'s-neu',diagnosed:'s-bearbeitung',repairing:'s-bearbeitung',shipped:'s-versandt',done:'s-geliefert',cancelled:'s-storniert'};
@@ -895,6 +916,7 @@ async function loadRepairs(){
     <div class="order-actions">
       <button class="oa-btn" onclick="emailRepairCustomer('${esc(r.repNr)}','${esc(r.email||'')}','${esc((r.name||r.fname||'Kunde').replace(/'/g,''))}')">✉ EMAIL AN KUNDEN</button>
       <button class="oa-btn warn" onclick="sendRepairQuote('${esc(r.repNr)}','${esc(r.email||'')}','${esc((r.name||r.fname||'Kunde').replace(/'/g,''))}')">📋 KOSTENVORANSCHLAG</button>
+      <button class="oa-btn warn" onclick="repairInvoice('${esc(r.repNr)}')">📄 RECHNUNG</button>
       <button class="oa-btn success" onclick="sendRepairDone('${esc(r.repNr)}','${esc(r.email||'')}','${esc((r.name||r.fname||'Kunde').replace(/'/g,''))}')">✓ FERTIG-MAIL</button>
       ${status!=='cancelled'?`<button class="oa-btn danger" onclick="cancelRepair('${esc(r.repNr)}','${esc(r.email||'')}','${esc((r.name||r.fname||'Kunde').replace(/'/g,''))}')">✕ STORNIEREN</button>`:'<span style="font-family:Orbitron;font-size:9px;color:var(--err);letter-spacing:1.5px;padding:7px 12px">STORNIERT ✓</span>'}
     </div>
@@ -997,6 +1019,12 @@ function sendRepairDone(repNr, email, name){
       else toast('Fehler','error');
     }
   });
+}
+
+/* ──── Reparatur-Rechnung ──── */
+function repairInvoice(repNr){
+  const url = WORKER_URL + '/admin/repair/' + encodeURIComponent(repNr) + '/invoice?token=' + encodeURIComponent(localStorage.getItem(TOKEN_KEY));
+  window.open(url, '_blank');
 }
 
 /* ──── Reparatur stornieren ──── */

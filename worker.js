@@ -199,6 +199,9 @@ async function test(){
       }
 
       // REPARATUR-AKTIONEN (Status/Tracking/Email/KV/Storno)
+      if (path.startsWith("/admin/repair/") && path.endsWith("/invoice") && request.method === "GET") {
+        return await admin2RepairInvoice(request, env, decodeURIComponent(path.split("/")[3]), url);
+      }
       if (path.startsWith("/admin/repair/") && path.endsWith("/email") && request.method === "POST") {
         return await admin2RepairEmail(request, env, decodeURIComponent(path.split("/")[3]));
       }
@@ -2231,4 +2234,32 @@ async function admin2RepairQuote(request, env, repNr) {
   });
   const ok = await sendBrevoMail(env, to, "Kostenvoranschlag Reparatur " + repNr + " — LEXORD", html, { repNr, kind: "repair-quote", price: body.price });
   return json({ success: ok });
+}
+
+// ──── REPARATUR: Rechnung/Quittung als HTML ────
+async function admin2RepairInvoice(request, env, repNr, url) {
+  const queryToken = url.searchParams.get("token");
+  if (queryToken) request = new Request(request.url, { headers: { Authorization: "Bearer " + queryToken } });
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  const repRaw = await env.LEXORD_DATA.get("repair:" + repNr);
+  if (!repRaw) return new Response("Reparatur not found", { status: 404 });
+  const r = JSON.parse(repRaw);
+  const name = r.name || ((r.fname||'') + ' ' + (r.lname||'')).trim() || 'Kunde';
+  const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Reparatur-Rechnung ' + repNr + '</title>' +
+    '<style>body{font-family:sans-serif;padding:40px;max-width:680px;margin:auto;color:#222}h1{font-size:24px;letter-spacing:3px}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{padding:10px;border-bottom:1px solid #ddd;text-align:left}th{background:#f5f5f5}.tot{font-size:18px;font-weight:700;text-align:right;padding-top:14px}.head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:30px}.head .brand{font-weight:900;color:#00bdd6}.print{padding:10px 20px;background:#000;color:#fff;border:none;border-radius:6px;cursor:pointer;margin-bottom:20px}@media print{.print{display:none}}</style></head>' +
+    '<body><button class="print" onclick="window.print()">PDF / Drucken</button>' +
+    '<div class="head"><div><h1 class="brand">LEXORD ENGINEERING</h1><div>Domsuehl, Deutschland</div><div>kontakt@lexord.de</div></div><div><div>Reparatur-Rechnung</div><strong>' + escapeHtml(repNr) + '</strong><div>' + new Date(r.date||r.created||Date.now()).toLocaleDateString("de-DE") + '</div></div></div>' +
+    '<div><strong>' + escapeHtml(name) + '</strong><br>' + escapeHtml(r.email||'') + '<br>' + escapeHtml((r.addr||'') + ' ' + (r.zip||'') + ' ' + (r.city||'')) + '</div>' +
+    '<table><thead><tr><th>Beschreibung</th><th>Details</th></tr></thead><tbody>' +
+    '<tr><td>Controller-Modell</td><td>' + escapeHtml(r.model||'PS5 DualSense') + '</td></tr>' +
+    '<tr><td>Schaden / Diagnose</td><td>' + escapeHtml(r.damage||r.damageKey||'-') + '</td></tr>' +
+    '<tr><td>Beschreibung</td><td>' + escapeHtml(r.desc||'-') + '</td></tr>' +
+    '<tr><td>Status</td><td>' + escapeHtml(r.status||'received') + '</td></tr>' +
+    (r.tracking?'<tr><td>Tracking</td><td>' + escapeHtml(r.tracking) + '</td></tr>':'') +
+    '</tbody></table>' +
+    '<div class="tot">Reparaturkosten: ' + escapeHtml(r.finalPrice||r.estPrice||'nach Aufwand') + '</div>' +
+    '<p style="margin-top:30px;font-size:11px;color:#888">Kleinunternehmer gemaess Para 19 UStG — kein Ausweis der Umsatzsteuer.</p>' +
+    '</body></html>';
+  try { await archiveStore(env, "invoice", { repNr, html, repair: r }); } catch(e){}
+  return new Response(html, { headers: { "Content-Type": "text/html;charset=UTF-8", ...CORS } });
 }

@@ -814,12 +814,17 @@ main{position:relative;z-index:1}
 <div class="c-overlay" onclick="closeCart()" aria-hidden="true"></div>
 <div id="toasts" aria-live="polite"></div>
 
-<!-- COOKIE BANNER -->
+<!-- COOKIE BANNER (DSGVO + TDDDG konform) -->
 <div id="cookie-banner" role="dialog">
-  <div class="ck-text">Wir nutzen ausschließlich technisch notwendige Cookies für Warenkorb, Sprachwahl &amp; Zahlungsabwicklung (PayPal). Keine Werbe-Cookies, kein Tracking. Details: <a href="#" onclick="openLegal('datenschutz');return false;">Datenschutz</a>.</div>
+  <div class="ck-text">
+    <strong style="color:#fff">🍪 Cookie- &amp; Datenschutzhinweis</strong><br>
+    Wir nutzen <strong>technisch notwendige Cookies</strong> (Warenkorb, Sprachwahl, Zahlungsabwicklung).<br>
+    Zusätzlich verwenden wir <strong>anonymisiertes Besuchertracking</strong> (keine Werbe-Cookies, IP maskiert, keine Weitergabe an Dritte) zur Verbesserung unseres Angebots.<br>
+    Details: <a href="#" onclick="openLegal('datenschutz');return false;">Datenschutzerklärung</a>.
+  </div>
   <div class="ck-btns">
-    <button class="ck-accept" onclick="ckAccept()">AKZEPTIEREN</button>
-    <button class="ck-reject" onclick="ckReject()">NUR NOTWENDIGE</button>
+    <button class="ck-accept" onclick="ckAccept(true)">✓ ALLE AKZEPTIEREN</button>
+    <button class="ck-reject" onclick="ckAccept(false)">NUR NOTWENDIGE</button>
   </div>
 </div>
 
@@ -1935,7 +1940,12 @@ main{position:relative;z-index:1}
       </div>
     </div>
 
-    <div class="footer-bottom">LEXORD® · ALL RIGHTS RESERVED · 2026 · MADE IN GERMANY · www.lexord.de</div>
+    <div class="footer-bottom">
+      © 2026 LEXORD® Engineering · Leon Schulz · An Der Domsühler Str. 2 · 19374 Domsühl · Deutschland<br>
+      <a href="mailto:Kontakt@Lexord.de" style="color:var(--neon);text-decoration:none">Kontakt@Lexord.de</a> ·
+      <a href="tel:+4915204718720" style="color:var(--neon);text-decoration:none">0152 047 18720</a> ·
+      Kleinunternehmer gem. § 19 UStG · USt-Befreit
+    </div>
   </div>
 </footer>
 
@@ -2796,8 +2806,17 @@ createLightning();
 function trackRecent(n,p,i){recentlyViewed=recentlyViewed.filter(r=>r.name!==n);recentlyViewed.unshift({name:n,price:p,img:i});if(recentlyViewed.length>5)recentlyViewed.pop();const sec=document.getElementById('recently'),grid=document.getElementById('rec-grid');if(!sec||!grid)return;sec.style.display=recentlyViewed.length?'block':'none';grid.innerHTML=recentlyViewed.map(r=>`<div class="rec-card" onclick="addToCart('${esc(r.name)}',${r.price},'${r.img}')"><img src="${r.img}" alt="${esc(r.name)}"><div class="rec-name">${esc(r.name)}</div><div class="rec-price">${r.price.toFixed(2)} €</div></div>`).join('');}
 function toggleWish(btn,name){btn.classList.toggle('on');toast(btn.classList.contains('on')?'♥ '+name+' zur Wunschliste':name+' entfernt','ok');}
 function showCookieBanner(){if(localStorage.getItem('ck'))return;const b=document.getElementById('cookie-banner');if(!b)return;b.style.display='flex';setTimeout(()=>b.classList.add('show'),50);}
-function ckAccept(){localStorage.setItem('ck','1');document.getElementById('cookie-banner').style.display='none';}
-function ckReject(){localStorage.setItem('ck','0');document.getElementById('cookie-banner').style.display='none';}
+function ckAccept(analytics){
+  localStorage.setItem('ck','1');
+  localStorage.setItem('ck_analytics', analytics ? '1' : '0');
+  document.getElementById('cookie-banner').style.display='none';
+  if(analytics) loadTracker();
+}
+function loadTracker(){
+  if(document.getElementById('lxrd-trk-loaded')) return;
+  var s=document.createElement('script');s.src='lxrd-tracker.js';s.defer=true;s.id='lxrd-trk-loaded';
+  document.body.appendChild(s);
+}
 function openLegal(id){const el=document.getElementById(id);if(el){el.classList.add('open');el.scrollIntoView({behavior:'smooth',block:'center'});}}
 function toast(msg,type){type=type||'ok';const t=document.createElement('div');t.className='toast '+type;t.innerText=msg;document.getElementById('toasts').appendChild(t);setTimeout(()=>{t.style.cssText='opacity:0;transform:translateX(60px);transition:.4s';setTimeout(()=>t.remove(),400);},3000);}
 function setDelivery(){let d=new Date();d.setDate(d.getDate()+3);while(d.getDay()===0||d.getDay()===6)d.setDate(d.getDate()+1);const s=d.toLocaleDateString('de-DE',{day:'2-digit',month:'long'});document.querySelectorAll('.delivery-date').forEach(el=>el.innerText=s);}
@@ -2902,6 +2921,6 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLogin();closeA
   </div>
 </div>
 
-<script src="lxrd-tracker.js" defer></script>
+<script>if(localStorage.getItem('ck_analytics')==='1')loadTracker();</script>
 </body>
 </html>

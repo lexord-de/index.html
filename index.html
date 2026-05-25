@@ -2317,7 +2317,9 @@ function renderCustomerOrders(orders){
   const c=document.getElementById('lm-pane-orders');
   if(!orders.length){c.innerHTML='<div class="lm-empty"><div class="lm-empty-icon">📦</div><div class="lm-empty-txt">KEINE BESTELLUNGEN GEFUNDEN</div></div>';return;}
   c.innerHTML=orders.map(o=>{
-    const stat=o.status||'paid';
+    const raw=(o.status||'paid').toLowerCase();
+    const statMap={'neu':'paid','bezahlt':'paid','paid':'paid','bearbeitung':'processing','processing':'processing','in bearbeitung':'processing','versandt':'shipped','shipped':'shipped','versendet':'shipped','geliefert':'delivered','delivered':'delivered','storniert':'cancelled','cancelled':'cancelled'};
+    const stat=statMap[raw]||raw;
     const itemsHtml=(o.items||[]).map(i=>`<div>${esc(i.name)} × ${i.qty} - ${(i.price*i.qty).toFixed(2)} €</div>`).join('');
     const stages=['paid','processing','shipped','delivered'];const idx=stages.indexOf(stat);
     const tracker=stages.map((s,i)=>`<div class="lm-tr-step ${i<idx?'done':i===idx?'active':''}"><div class="lm-tr-dot">${i<idx?'✓':i+1}</div><div class="lm-tr-lbl">${['BEZAHLT','VERPACKEN','VERSAND','GELIEFERT'][i]}</div></div>`).join('');
@@ -2329,11 +2331,13 @@ function renderCustomerRepairs(reps){
   const c=document.getElementById('lm-pane-repairs');
   if(!reps.length){c.innerHTML='<div class="lm-empty"><div class="lm-empty-icon">🔧</div><div class="lm-empty-txt">KEINE REPARATUREN</div></div>';return;}
   c.innerHTML=reps.map(r=>{
-    const stat=r.status||'received';
+    const raw=(r.status||'received').toLowerCase();
+    const statMap={'received':'received','eingegangen':'received','eingang':'received','diagnosed':'diagnosed','diagnose':'diagnosed','repairing':'repaired','in reparatur':'repaired','repaired':'repaired','repariert':'repaired','shipped':'completed','versandt':'completed','done':'completed','abgeschlossen':'completed','cancelled':'cancelled','storniert':'cancelled'};
+    const stat=statMap[raw]||raw;
     const stages=['received','diagnosed','repaired','completed'];const idx=stages.indexOf(stat);
     const tracker=stages.map((s,i)=>`<div class="lm-tr-step ${i<idx?'done':i===idx?'active':''}"><div class="lm-tr-dot">${i<idx?'✓':i+1}</div><div class="lm-tr-lbl">${['EINGANG','DIAGNOSE','REPARIERT','ZURÜCK'][i]}</div></div>`).join('');
-    const statTxt={received:'EINGEGANGEN',diagnosed:'DIAGNOSE',repaired:'REPARIERT',completed:'ABGESCHLOSSEN'}[stat]||stat.toUpperCase();
-    return `<div class="lm-order-card"><div class="lm-oc-head"><div><div class="lm-oc-nr">${esc(r.repNr||r.id)}</div><div class="lm-oc-date">${new Date(r.created||Date.now()).toLocaleDateString('de-DE')}</div></div><span class="lm-oc-status ${stat}">${statTxt}</span></div><div class="lm-oc-items"><strong>Schaden:</strong> ${esc(r.damage||'-')}<br><strong>Modell:</strong> ${esc(r.model||'-')}<br><strong>Geschätzt:</strong> ${esc(r.estPrice||'-')}</div><div class="lm-tracker"><div class="lm-tracker-row">${tracker}</div></div></div>`;
+    const statTxt={received:'EINGEGANGEN',diagnosed:'DIAGNOSE',repaired:'REPARIERT',completed:'ABGESCHLOSSEN',cancelled:'STORNIERT'}[stat]||stat.toUpperCase();
+    return `<div class="lm-order-card"><div class="lm-oc-head"><div><div class="lm-oc-nr">${esc(r.repNr||r.id)}</div><div class="lm-oc-date">${new Date(r.created||Date.now()).toLocaleDateString('de-DE')}</div></div><span class="lm-oc-status ${stat}">${statTxt}</span></div><div class="lm-oc-items"><strong>Schaden:</strong> ${esc(r.damage||'-')}<br><strong>Modell:</strong> ${esc(r.model||'-')}<br><strong>Geschätzt:</strong> ${esc(r.estPrice||'-')}${r.finalPrice?'<br><strong>Endpreis:</strong> '+esc(r.finalPrice):''}</div>${r.tracking?`<div style="margin:10px 0"><a href="https://www.dhl.de/de/privatkunden/dhl-sendungsverfolgung.html?piececode=${esc(r.tracking)}" target="_blank" rel="noopener" class="lm-track">📍 SENDUNG VERFOLGEN · ${esc(r.tracking)}</a></div>`:''}<div class="lm-tracker"><div class="lm-tracker-row">${tracker}</div></div></div>`;
   }).join('');
 }
 

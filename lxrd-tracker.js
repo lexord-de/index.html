@@ -34,8 +34,8 @@
   }
   /* Initial Page-View */
   send('view');
-  /* Heartbeat alle 2min damit Visitor in der KV "live" bleibt (TTL 5min) */
-  setInterval(function(){send('view');}, 2*60*1000);
+  /* Heartbeat alle 10min (statt 2min — spart 80% KV-Writes) */
+  setInterval(function(){send('view');}, 10*60*1000);
   /* Sichtbarkeit (Tab-Switch) */
   document.addEventListener('visibilitychange', function(){
     if(!document.hidden) send('view');

@@ -1369,21 +1369,26 @@ async function trackVisitor(request, env) {
       lastSeen: Date.now(),
       event: body.event || "view" // view | config_start | cart_add | checkout
     };
-    // Live-Visitor mit 5-Minuten-TTL
-    await env.LEXORD_DATA.put("visitor:" + sid, JSON.stringify(data), { expirationTtl: 300 });
+    // Live-Visitor: nur schreiben wenn noch nicht vorhanden ODER echtes Event (spart ~80% Writes)
+    const existingVisitor = await env.LEXORD_DATA.get("visitor:" + sid);
+    if (!existingVisitor || data.event !== "view") {
+      await env.LEXORD_DATA.put("visitor:" + sid, JSON.stringify(data), { expirationTtl: 900 });
+    }
 
-    // Heute-Aggregation
-    const today = new Date().toISOString().slice(0, 10);
-    const aggKey = "agg:" + today;
-    const aggRaw = await env.LEXORD_DATA.get(aggKey);
-    const agg = aggRaw ? JSON.parse(aggRaw) : { visitors: {}, views: 0, configurators: 0, carts: 0, checkouts: 0, orders: 0 };
-    agg.visitors[sid] = 1;
-    agg.views++;
-    if (data.event === "config_start") agg.configurators++;
-    if (data.event === "cart_add") agg.carts++;
-    if (data.event === "checkout") agg.checkouts++;
-    if (data.event === "order_complete") agg.orders++;
-    await env.LEXORD_DATA.put(aggKey, JSON.stringify(agg), { expirationTtl: 60 * 60 * 24 * 31 });
+    // Heute-Aggregation: nur beim ERSTEN Besuch oder bei echten Events (nicht bei Heartbeats)
+    if (!existingVisitor || data.event !== "view") {
+      const today = new Date().toISOString().slice(0, 10);
+      const aggKey = "agg:" + today;
+      const aggRaw = await env.LEXORD_DATA.get(aggKey);
+      const agg = aggRaw ? JSON.parse(aggRaw) : { visitors: {}, views: 0, configurators: 0, carts: 0, checkouts: 0, orders: 0 };
+      agg.visitors[sid] = 1;
+      if (!existingVisitor) agg.views++;
+      if (data.event === "config_start") agg.configurators++;
+      if (data.event === "cart_add") agg.carts++;
+      if (data.event === "checkout") agg.checkouts++;
+      if (data.event === "order_complete") agg.orders++;
+      await env.LEXORD_DATA.put(aggKey, JSON.stringify(agg), { expirationTtl: 60 * 60 * 24 * 31 });
+    }
 
     return json({ success: true });
   } catch (e) {

@@ -23,8 +23,43 @@ export default {
 
     const url = new URL(request.url);
     const path = url.pathname;
+    const clientIP = request.headers.get("CF-Connecting-IP") || "0.0.0.0";
+
+    // ════════ SECURITY: Rate-Limiting + Brute-Force-Schutz ════════
+    if (env.LEXORD_DATA) {
+      // Admin-Login Brute-Force: max 5 Versuche pro IP in 15 Minuten
+      if ((path === "/admin/login" || path === "/api/admin/login") && request.method === "POST") {
+        const rlKey = "ratelimit:login:" + clientIP;
+        const rlRaw = await env.LEXORD_DATA.get(rlKey);
+        const rl = rlRaw ? JSON.parse(rlRaw) : { count: 0, first: Date.now() };
+        if (rl.count >= 5 && (Date.now() - rl.first) < 15 * 60 * 1000) {
+          return json({ success: false, error: "Zu viele Login-Versuche. Bitte warte 15 Minuten." }, 429);
+        }
+        if ((Date.now() - rl.first) >= 15 * 60 * 1000) { rl.count = 0; rl.first = Date.now(); }
+        rl.count++;
+        await env.LEXORD_DATA.put(rlKey, JSON.stringify(rl), { expirationTtl: 900 });
+      }
+      // API Rate-Limiting: max 120 Requests pro IP pro Minute
+      if (path.startsWith("/api/") || path.startsWith("/admin/") || path === "/track/visitor") {
+        const rlKey = "ratelimit:api:" + clientIP + ":" + Math.floor(Date.now() / 60000);
+        const count = parseInt(await env.LEXORD_DATA.get(rlKey) || "0");
+        if (count > 120) {
+          return json({ error: "Rate limit exceeded. Max 120 requests/minute." }, 429);
+        }
+        await env.LEXORD_DATA.put(rlKey, String(count + 1), { expirationTtl: 120 });
+      }
+    }
 
     try {
+      // Security-Headers fuer alle Responses
+      const SECURITY_HEADERS = {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "X-XSS-Protection": "1; mode=block",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Permissions-Policy": "camera=(), microphone=(), geolocation=()"
+      };
+
       // Status / Healthcheck
       if (path === "/" || path === "") {
         return json({
@@ -230,7 +265,14 @@ async function test(){
 function json(data, status) {
   return new Response(JSON.stringify(data), {
     status: status || 200,
-    headers: { "Content-Type": "application/json", ...CORS }
+    headers: {
+      "Content-Type": "application/json",
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "X-XSS-Protection": "1; mode=block",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+      ...CORS
+    }
   });
 }
 
@@ -1343,6 +1385,9 @@ async function admin2Login(request, env) {
   if (!env.ADMIN_PASSWORD) return json({ success: false, error: "ADMIN_PASSWORD not set" }, 500);
   if (!input || input !== env.ADMIN_PASSWORD) return json({ success: false, error: "Falscher Code" }, 401);
   const token = btoa("admin:" + Date.now() + ":" + (env.JWT_SECRET || "x").slice(0, 8));
+  // Brute-Force-Counter bei Erfolg zuruecksetzen
+  const clientIP = request.headers.get("CF-Connecting-IP") || "0.0.0.0";
+  if (env.LEXORD_DATA) try { await env.LEXORD_DATA.delete("ratelimit:login:" + clientIP); } catch(e){}
   return json({ success: true, token });
 }
 

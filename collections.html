@@ -1119,7 +1119,7 @@ document.getElementById('hdr-search-input').addEventListener('input',e=>{
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('mobile-overlay').classList.toggle('show');}
 function closeSidebarMobile(){if(window.innerWidth<=1000){document.getElementById('sidebar').classList.remove('open');document.getElementById('mobile-overlay').classList.remove('show');}}
 
-function goToProduct(slug){trackRecent(slug);location.href=slug+'.html';}
+function goToProduct(slug){trackRecent(slug);openProductDetail(slug);}
 
 /* ════════ FULL PRODUCT DETAIL OVERLAY (inline) ════════ */
 const PRODUCT_DETAILS = {

@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>LEXORD® Admin Panel</title>
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="IMG_7023.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LEXORD">
+<meta name="theme-color" content="#00f2ff">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--neon:#00f2ff;--neon2:#bc13fe;--green:#00b67a;--err:#ff4d4f;--warn:#ffa500;--bg:#020207;--card:rgba(12,12,16,.7);--bord:rgba(255,255,255,.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-height:100vh}
+.aurora{position:fixed;inset:0;z-index:-2;background:linear-gradient(180deg,#020207,#04040a)}
+.aurora::before,.aurora::after{content:'';position:absolute;width:60%;height:60%;border-radius:50%;filter:blur(80px);opacity:.4}
+.aurora::before{background:radial-gradient(circle,rgba(0,242,255,.4),transparent 70%);top:-20%;left:-10%}
+.aurora::after{background:radial-gradient(circle,rgba(188,19,254,.35),transparent 70%);bottom:-20%;right:-10%}
+
+/* LOGIN */
+.login-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;z-index:10}
+.login-box{background:rgba(8,8,12,.92);border:1px solid rgba(0,242,255,.25);border-radius:20px;padding:40px 30px;max-width:380px;width:100%;backdrop-filter:blur(20px);text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.login-logo{font-family:'Orbitron';font-weight:900;font-size:22px;letter-spacing:5px;color:#fff;margin-bottom:6px}
+.login-logo span{color:var(--neon)}
+.login-sub{font-family:'Orbitron';font-size:9px;color:#888;letter-spacing:3px;margin-bottom:30px}
+.login-icon{width:64px;height:64px;border-radius:50%;background:rgba(0,242,255,.08);border:2px solid rgba(0,242,255,.3);display:inline-flex;align-items:center;justify-content:center;font-size:30px;margin-bottom:20px}
+.login-input{width:100%;padding:14px 16px;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);color:#fff;font-family:'Orbitron';font-size:14px;letter-spacing:3px;border-radius:11px;outline:none;text-align:center;margin-bottom:14px;transition:.25s}
+.login-input:focus{border-color:var(--neon);background:rgba(0,242,255,.04)}
+.login-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:11px;letter-spacing:2px;border-radius:11px;cursor:pointer;box-shadow:0 6px 18px rgba(0,242,255,.3)}
+.login-btn:hover{transform:translateY(-2px)}
+.login-err{font-family:'Orbitron';font-size:9px;color:var(--err);letter-spacing:1.5px;margin-top:10px;display:none}
+.login-back{margin-top:18px;font-family:'Orbitron';font-size:9px;color:#666;letter-spacing:1.5px;text-decoration:none;display:inline-block}
+
+/* DASHBOARD */
+.dashboard{display:none;min-height:100vh;padding:20px 5% 40px}
+.dashboard.active{display:block}
+.dash-header{display:flex;justify-content:space-between;align-items:center;padding:14px 0 22px;border-bottom:1px solid var(--bord);margin-bottom:24px;gap:10px;flex-wrap:wrap}
+.dash-title{font-family:'Orbitron';font-weight:900;font-size:18px;letter-spacing:4px;color:#fff}
+.dash-title span{color:var(--neon)}
+.dash-header-r{display:flex;gap:10px;align-items:center}
+.live-pill{display:inline-flex;align-items:center;gap:6px;font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;color:var(--green);background:rgba(0,182,122,.1);border:1px solid rgba(0,182,122,.3);padding:6px 10px;border-radius:99px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:livePulse 1.5s ease-in-out infinite}
+@keyframes livePulse{0%,100%{opacity:1}50%{opacity:.4}}
+.dash-logout{font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;font-weight:700;color:#888;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:9px 14px;border-radius:9px;cursor:pointer}
+.dash-logout:hover{color:var(--err);border-color:var(--err)}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:30px}
+.stat-card{background:var(--card);border:1px solid var(--bord);border-radius:14px;padding:18px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,242,255,.3),transparent)}
+.stat-lbl{font-family:'Orbitron';font-size:8px;color:#666;letter-spacing:2px;margin-bottom:6px}
+.stat-val{font-family:'Orbitron';font-size:24px;font-weight:900;color:#fff}
+.stat-val.neon{color:var(--neon)}
+.stat-val.green{color:var(--green)}
+.stat-val.warn{color:var(--warn)}
+.stat-sub{font-size:10px;color:#666;margin-top:4px;font-family:Inter}
+.stat-sub.up{color:var(--green)}.stat-sub.down{color:var(--err)}
+
+/* TABS */
+.dash-tabs{display:flex;gap:6px;margin-bottom:20px;background:rgba(12,12,16,.5);padding:4px;border-radius:11px;border:1px solid rgba(255,255,255,.05);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.dash-tab{flex:1;min-width:120px;font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;font-weight:700;background:transparent;border:none;color:#888;padding:10px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.dash-tab.active{background:rgba(0,242,255,.12);color:var(--neon)}
+.dash-panel{display:none}
+.dash-panel.active{display:block;animation:panelFade .3s ease}
+@keyframes panelFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ORDER CARDS */
+.order-card{background:var(--card);border:1px solid var(--bord);border-radius:14px;padding:18px;margin-bottom:10px;transition:.25s}
+.order-card:hover{border-color:rgba(0,242,255,.25)}
+.order-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.order-nr{font-family:'Orbitron';font-size:11px;font-weight:900;color:var(--neon);letter-spacing:1.5px}
+.order-date{font-family:'Inter';font-size:11px;color:#666}
+.order-status{font-family:'Orbitron';font-size:8px;letter-spacing:1.5px;font-weight:700;padding:5px 10px;border-radius:5px;background:rgba(0,182,122,.12);color:var(--green);border:1px solid rgba(0,182,122,.3);cursor:pointer}
+.order-status.s-neu{background:rgba(0,242,255,.12);color:var(--neon);border-color:rgba(0,242,255,.3)}
+.order-status.s-bearbeitung{background:rgba(255,165,0,.12);color:var(--warn);border-color:rgba(255,165,0,.3)}
+.order-status.s-versandt{background:rgba(188,19,254,.15);color:var(--neon2);border-color:rgba(188,19,254,.4)}
+.order-status.s-geliefert{background:rgba(0,182,122,.12);color:var(--green);border-color:rgba(0,182,122,.3)}
+.order-status.s-storniert{background:rgba(255,77,79,.12);color:var(--err);border-color:rgba(255,77,79,.3)}
+.order-info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:12px;font-size:11px}
+.order-info-grid div{color:#888}
+.order-info-grid strong{color:#fff;display:block;margin-top:2px;font-family:'Orbitron';font-size:10px;word-break:break-word}
+.order-items{padding:0;border-radius:8px;font-size:11px;color:#aaa}
+/* Bestell-Items mit Bild + Konfig-Tags */
+.oi-item{display:flex;gap:12px;padding:12px;background:rgba(255,255,255,.02);border-radius:10px;margin-bottom:6px;border:1px solid rgba(255,255,255,.03);transition:.2s}
+.oi-item:hover{border-color:rgba(0,242,255,.15);background:rgba(0,242,255,.02)}
+.oi-img{width:64px;height:64px;object-fit:contain;border-radius:8px;background:#080808;border:1px solid #1a1a1a;flex-shrink:0;padding:4px}
+.oi-detail{flex:1;min-width:0}
+.oi-name{font-family:Orbitron;font-size:11px;font-weight:700;color:#fff;letter-spacing:.5px;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.oi-qty{font-size:10.5px;color:#888;margin-bottom:6px}
+.oi-config{display:flex;flex-wrap:wrap;gap:4px}
+.oi-tag{font-family:Orbitron;font-size:7.5px;letter-spacing:.5px;padding:3px 7px;border-radius:4px;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.2);color:var(--neon);white-space:nowrap}
+.order-total{display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--bord)}
+.order-total-lbl{font-family:'Orbitron';font-size:9px;color:#666;letter-spacing:1.5px}
+.order-total-val{font-family:'Orbitron';font-size:14px;font-weight:900;color:var(--neon)}
+
+/* ACTION BUTTONS auf Bestellungen */
+.order-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--bord)}
+.oa-btn{font-family:'Orbitron';font-size:8.5px;letter-spacing:1.3px;font-weight:700;padding:7px 12px;border-radius:7px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:#bbb;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:5px}
+.oa-btn:hover{border-color:var(--neon);color:var(--neon);background:rgba(0,242,255,.05)}
+.oa-btn.danger:hover{border-color:var(--err);color:var(--err);background:rgba(255,77,79,.05)}
+.oa-btn.warn:hover{border-color:var(--warn);color:var(--warn);background:rgba(255,165,0,.05)}
+.oa-btn.success:hover{border-color:var(--green);color:var(--green);background:rgba(0,182,122,.05)}
+.oa-btn[disabled]{opacity:.4;cursor:not-allowed;pointer-events:none}
+
+/* TRACKING-INPUT inline */
+.track-row{display:flex;gap:6px;margin-top:8px;align-items:center;flex-wrap:wrap}
+.track-input{flex:1;min-width:140px;padding:7px 10px;background:rgba(0,0,0,.4);border:1px solid var(--bord);color:#fff;font-family:'Inter';font-size:11px;border-radius:6px;outline:none;letter-spacing:.5px}
+.track-input:focus{border-color:var(--neon)}
+
+/* EMPTY STATE */
+.no-orders{text-align:center;padding:60px 20px;color:#444}
+.no-orders-icon{font-size:50px;opacity:.3;margin-bottom:14px}
+.no-orders-text{font-family:'Orbitron';font-size:10px;letter-spacing:2px}
+
+/* TOOLBAR */
+.dash-actions{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;align-items:center}
+.dash-action{font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;font-weight:700;padding:9px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:#bbb;cursor:pointer}
+.dash-action:hover{border-color:var(--neon);color:var(--neon)}
+.dash-action.primary{background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;border-color:transparent}
+.search-input{flex:1;min-width:180px;max-width:300px;padding:9px 12px;background:rgba(0,0,0,.3);border:1px solid var(--bord);color:#fff;font-family:Inter;font-size:11px;border-radius:8px;outline:none}
+.search-input:focus{border-color:var(--neon)}
+
+.dash-loading{text-align:center;padding:40px;color:#666;font-family:'Orbitron';font-size:10px;letter-spacing:2px}
+.spinner{display:inline-block;width:30px;height:30px;border:2px solid rgba(0,242,255,.15);border-top-color:var(--neon);border-radius:50%;animation:spinL 1s linear infinite;margin-bottom:14px}
+@keyframes spinL{to{transform:rotate(360deg)}}
+
+/* === LIVE-PANEL: GLOBE === */
+.live-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;margin-bottom:18px}
+@media(max-width:900px){.live-grid{grid-template-columns:1fr}}
+.globe-wrap{background:radial-gradient(ellipse at 50% 40%,#06121a 0%,#020207 80%);border:1px solid var(--bord);border-radius:18px;padding:18px;position:relative;overflow:hidden;min-height:460px;display:flex;flex-direction:column}
+.globe-wrap::before{content:'';position:absolute;width:80%;height:80%;left:10%;top:10%;background:radial-gradient(circle,rgba(0,242,255,.08),transparent 70%);filter:blur(40px);pointer-events:none}
+.globe-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;font-family:Orbitron;font-size:10px;letter-spacing:2px;color:#888;position:relative;z-index:2}
+.globe-h .live-pill{font-size:9px}
+.globe-canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;position:relative;cursor:grab;user-select:none;min-height:340px}
+.globe-canvas-wrap:active{cursor:grabbing}
+#globe-canvas{max-width:100%;max-height:100%;display:block;touch-action:none}
+.globe-hint{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-family:Orbitron;font-size:8px;letter-spacing:2px;color:#3a3a3a}
+.live-side{display:flex;flex-direction:column;gap:14px}
+.live-card{background:var(--card);border:1px solid var(--bord);border-radius:14px;padding:14px}
+.live-card-h{font-family:Orbitron;font-size:9.5px;letter-spacing:2px;color:#999;margin-bottom:10px}
+.country-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:11px;color:#ccc;border-bottom:1px dashed rgba(255,255,255,.04)}
+.country-row:last-child{border:0}
+.country-row .flag{font-size:14px;margin-right:8px}
+.country-row .ct{color:var(--neon);font-family:Orbitron;font-weight:700;font-size:10px}
+.session-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,.04);font-size:10.5px;gap:8px}
+.session-row:last-child{border:0}
+.session-row .src{color:#999;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.session-row .ago{color:#555;font-family:Orbitron;font-size:9px;letter-spacing:.5px}
+
+/* === MODAL === */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-bg.show{display:flex;animation:modalFade .25s ease}
+@keyframes modalFade{from{opacity:0}to{opacity:1}}
+.modal-box{background:#0a0a10;border:1px solid var(--bord);border-radius:18px;padding:28px;max-width:480px;width:100%;box-shadow:0 30px 80px rgba(0,0,0,.7);max-height:90vh;overflow-y:auto}
+.modal-h{font-family:Orbitron;font-weight:900;font-size:13px;letter-spacing:2px;color:#fff;margin-bottom:12px}
+.modal-h span{color:var(--neon)}
+.modal-p{font-size:12px;color:#aaa;line-height:1.6;margin-bottom:18px}
+.modal-input,.modal-textarea,.modal-select{width:100%;padding:11px 13px;background:rgba(0,0,0,.4);border:1px solid var(--bord);color:#fff;font-family:Inter;font-size:12px;border-radius:8px;outline:none;margin-bottom:10px}
+.modal-input:focus,.modal-textarea:focus,.modal-select:focus{border-color:var(--neon)}
+.modal-textarea{resize:vertical;min-height:90px;font-family:Inter}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px;flex-wrap:wrap}
+.modal-btn{padding:11px 18px;border-radius:9px;font-family:Orbitron;font-size:10px;letter-spacing:1.5px;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:#bbb}
+.modal-btn.primary{background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;border-color:transparent}
+.modal-btn.danger{border-color:var(--err);color:var(--err)}
+.modal-btn.danger.primary{background:linear-gradient(135deg,var(--err),#c73032);color:#fff}
+
+/* === TOAST === */
+.toast{position:fixed;bottom:24px;right:24px;background:#0a0a10;border-left:3px solid var(--neon);padding:13px 18px;border-radius:8px;font-family:Orbitron;font-size:10px;letter-spacing:1.5px;z-index:9999;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.7);animation:toastSlide .3s}
+.toast.success{border-left-color:var(--green)}.toast.error{border-left-color:var(--err)}.toast.warn{border-left-color:var(--warn)}
+@keyframes toastSlide{from{transform:translateX(40px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* === ARCHIV === */
+.arch-banner{background:linear-gradient(90deg,rgba(0,242,255,.08),rgba(188,19,254,.06));border:1px solid rgba(0,242,255,.25);border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:11px;color:#bbb;line-height:1.6}
+.arch-banner strong{color:#fff}
+.arch-banner code{font-family:monospace;background:rgba(0,0,0,.4);padding:1px 6px;border-radius:4px;color:var(--neon)}
+.arch-count{font-family:Orbitron;font-size:9px;color:#666;letter-spacing:1.5px;margin-left:auto}
+.arch-row{background:var(--card);border:1px solid var(--bord);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:.2s}
+.arch-row:hover{border-color:rgba(0,242,255,.3);background:rgba(0,242,255,.03)}
+.arch-icon{font-size:18px;width:34px;text-align:center;flex-shrink:0}
+.arch-main{flex:1;min-width:0;overflow:hidden}
+.arch-title{font-family:Orbitron;font-size:11px;color:#fff;font-weight:700;letter-spacing:.5px;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arch-sub{font-size:10.5px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arch-meta{display:flex;flex-direction:column;align-items:flex-end;font-family:Orbitron;font-size:9px;color:#666;letter-spacing:.5px;flex-shrink:0;text-align:right}
+.arch-meta .badge{background:rgba(0,182,122,.12);color:var(--green);padding:2px 7px;border-radius:4px;font-size:8.5px;margin-bottom:4px}
+.arch-meta .badge.bad{background:rgba(255,77,79,.12);color:var(--err)}
+.arch-meta .hash{color:#3a3a3a;font-size:8px}
+
+.arch-detail-content{padding:14px;background:rgba(0,0,0,.4);border-radius:8px;margin:10px 0;font-family:monospace;font-size:10.5px;color:#ccc;line-height:1.6;max-height:340px;overflow:auto;word-break:break-word;white-space:pre-wrap}
+.arch-html-preview{background:#fff;color:#000;padding:16px;border-radius:8px;margin:10px 0;max-height:400px;overflow:auto}
+
+/* === FINANZEN (Steuer-Aufstellung) === */
+.fin-toolbar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;align-items:center}
+.fin-sel{padding:9px 12px;background:rgba(0,0,0,.4);border:1px solid var(--bord);color:#fff;font-family:Orbitron;font-size:10px;border-radius:8px;outline:none;letter-spacing:.5px;cursor:pointer}
+.fin-sel:focus{border-color:var(--neon)}
+.fin-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+.fin-sum-card{background:var(--card);border:1px solid var(--bord);border-radius:12px;padding:14px}
+.fin-sum-lbl{font-family:Orbitron;font-size:8px;color:#666;letter-spacing:2px;margin-bottom:6px}
+.fin-sum-val{font-family:Orbitron;font-size:20px;font-weight:900;color:#fff}
+.fin-sum-val.neon{color:var(--neon)}.fin-sum-val.green{color:var(--green)}.fin-sum-val.warn{color:var(--warn)}.fin-sum-val.err{color:var(--err)}
+.fin-sum-sub{font-size:10px;color:#888;margin-top:4px}
+
+.fin-table-wrap{background:var(--card);border:1px solid var(--bord);border-radius:12px;overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:14px}
+.fin-table{width:100%;border-collapse:collapse;font-size:11px;min-width:880px}
+.fin-table thead{background:rgba(0,242,255,.05);position:sticky;top:0}
+.fin-table th{text-align:left;padding:11px 10px;font-family:Orbitron;font-size:9px;letter-spacing:1.2px;color:#999;border-bottom:1px solid var(--bord);white-space:nowrap}
+.fin-table td{padding:10px;border-bottom:1px solid rgba(255,255,255,.03);color:#ccc;vertical-align:top}
+.fin-table tbody tr:hover{background:rgba(0,242,255,.03)}
+.fin-table .nr{font-family:Orbitron;color:var(--neon);font-size:10px;font-weight:700;white-space:nowrap}
+.fin-table .dt{color:#888;font-size:10px;white-space:nowrap}
+.fin-table .land{font-family:Orbitron;font-size:10px;color:#bbb}
+.fin-table .brutto{font-family:Orbitron;font-weight:700;color:#fff;text-align:right;white-space:nowrap}
+.fin-table .netto{font-family:Orbitron;color:var(--green);text-align:right;white-space:nowrap}
+.fin-table .ust{font-family:Orbitron;color:var(--warn);text-align:right;white-space:nowrap}
+.fin-table .ustp{color:#666;font-size:10px;text-align:center}
+.fin-table .stat{font-family:Orbitron;font-size:8.5px;letter-spacing:1px;padding:3px 7px;border-radius:4px;background:rgba(0,182,122,.12);color:var(--green);display:inline-block}
+.fin-table .stat.cancel{background:rgba(255,77,79,.12);color:var(--err)}
+.fin-table tr.cancelled{opacity:.5}
+.fin-table tr.cancelled .brutto,.fin-table tr.cancelled .netto,.fin-table tr.cancelled .ust{text-decoration:line-through}
+.fin-table tfoot tr{background:rgba(0,242,255,.05);font-weight:700}
+.fin-table tfoot td{padding:12px 10px;font-family:Orbitron;color:#fff;border-top:2px solid var(--neon);border-bottom:none}
+.fin-note{font-size:11px;color:#666;line-height:1.6;background:rgba(255,255,255,.02);border-left:3px solid rgba(0,242,255,.3);padding:12px 14px;border-radius:6px;margin-top:10px}
+.fin-note strong{color:#aaa}
+
+/* Print-Optimierung fuer Finanzamt-PDF */
+@media print{
+  body *{visibility:hidden}
+  #panel-finanzen, #panel-finanzen *{visibility:visible}
+  #panel-finanzen{position:absolute;left:0;top:0;width:100%;background:#fff;color:#000;padding:20px}
+  .fin-toolbar{display:none}
+  .fin-table{color:#000;font-size:10px}
+  .fin-table th{color:#000;background:#eee;border-bottom:2px solid #000}
+  .fin-table td{color:#000;border-bottom:1px solid #ddd}
+  .fin-table .nr{color:#0066cc}
+  .fin-table .brutto,.fin-table .netto,.fin-table .ust{color:#000}
+  .fin-table tfoot td{color:#000;background:#eee;border-top:2px solid #000}
+  .fin-sum-card{background:#fff;border:1px solid #000;color:#000}
+  .fin-sum-val{color:#000}
+  .fin-note{color:#333;background:#f5f5f5;border-color:#999}
+}
+
+/* === DISCOUNT === */
+.disc-form{background:var(--card);border:1px solid var(--bord);border-radius:14px;padding:18px;margin-bottom:14px;display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr auto;gap:8px;align-items:end}
+@media(max-width:780px){.disc-form{grid-template-columns:1fr 1fr}}
+.disc-field label{display:block;font-family:Orbitron;font-size:8px;letter-spacing:1.5px;color:#666;margin-bottom:5px}
+.disc-field input,.disc-field select{width:100%;padding:9px 11px;background:rgba(0,0,0,.4);border:1px solid var(--bord);color:#fff;font-family:Orbitron;font-size:11px;border-radius:7px;outline:none;letter-spacing:.5px}
+.disc-field input:focus,.disc-field select:focus{border-color:var(--neon)}
+.disc-code{font-family:Orbitron;font-weight:900;color:var(--neon);font-size:14px;letter-spacing:2px}
+
+/* === STATS PANEL === */
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:780px){.stats-row{grid-template-columns:1fr}}
+.stat-block{background:var(--card);border:1px solid var(--bord);border-radius:14px;padding:18px}
+.stat-block-h{font-family:Orbitron;font-size:10px;letter-spacing:2px;color:#999;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.bar-row{margin-bottom:10px}
+.bar-row .lbl{display:flex;justify-content:space-between;font-size:11px;color:#bbb;margin-bottom:4px}
+.bar-row .lbl b{color:#fff;font-family:Orbitron;font-size:10px}
+.bar{height:6px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--neon),var(--neon2));border-radius:3px;transition:width .8s ease}
+
+</style>
+</head>
+<body>
+
+<div class="aurora"></div>
+
+<!-- LOGIN -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="login-icon">🔐</div>
+    <div class="login-logo">LEXORD<span>®</span></div>
+    <div class="login-sub">⟫ ADMIN PANEL ⟪</div>
+    <input type="password" class="login-input" id="login-code" placeholder="ZUGANGSCODE" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">EINLOGGEN</button>
+    <div class="login-err" id="login-err">⚠ FALSCHER CODE</div>
+    <a href="index.html" class="login-back">← ZURÜCK ZUR WEBSITE</a>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+  <div class="dash-header">
+    <div class="dash-title">LEXORD<span>®</span> ADMIN</div>
+    <div class="dash-header-r">
+      <span class="live-pill"><span class="live-dot"></span><span id="live-count">0</span> LIVE</span>
+      <button class="dash-logout" onclick="testPush()" title="Test-Push an dein Handy">📲 TEST</button>
+      <button class="dash-logout" id="notif-toggle" onclick="toggleNotifications()" title="Sound + Push-Benachrichtigungen">🔔 ON</button>
+      <button class="dash-logout" onclick="doLogout()">↩ LOGOUT</button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-lbl">⟫ BESTELLUNGEN</div><div class="stat-val neon" id="stat-orders">–</div><div class="stat-sub" id="stat-orders-sub"></div></div>
+    <div class="stat-card"><div class="stat-lbl">⟫ UMSATZ</div><div class="stat-val green" id="stat-revenue">–</div><div class="stat-sub" id="stat-revenue-sub"></div></div>
+    <div class="stat-card"><div class="stat-lbl">⟫ HEUTE</div><div class="stat-val warn" id="stat-today">–</div><div class="stat-sub">Bestellungen heute</div></div>
+    <div class="stat-card"><div class="stat-lbl">⟫ KUNDEN</div><div class="stat-val neon" id="stat-customers">–</div></div>
+    <div class="stat-card"><div class="stat-lbl">⟫ DIESEN MONAT</div><div class="stat-val" id="stat-month">–</div></div>
+    <div class="stat-card"><div class="stat-lbl">⟫ AKTIV (LIVE)</div><div class="stat-val green" id="stat-live">0</div><div class="stat-sub up" id="stat-live-sub">Live-Besucher</div></div>
+  </div>
+
+  <!-- TABS -->
+  <div class="dash-tabs">
+    <button class="dash-tab active" onclick="switchTab('live',this)">📍 LIVE</button>
+    <button class="dash-tab" onclick="switchTab('orders',this)">📦 BESTELLUNGEN</button>
+    <button class="dash-tab" onclick="switchTab('repairs',this)">🔧 REPARATUREN</button>
+    <button class="dash-tab" onclick="switchTab('users',this)">👥 KUNDEN</button>
+    <button class="dash-tab" onclick="switchTab('discounts',this)">🎟️ RABATTCODES</button>
+    <button class="dash-tab" onclick="switchTab('stats',this)">📊 STATS</button>
+    <button class="dash-tab" onclick="switchTab('finanzen',this)">📋 FINANZEN</button>
+    <button class="dash-tab" onclick="switchTab('archiv',this)">🗄️ ARCHIV</button>
+  </div>
+
+  <!-- PANEL: LIVE -->
+  <div class="dash-panel active" id="panel-live">
+    <div class="live-grid">
+      <div class="globe-wrap">
+        <div class="globe-h">
+          <span>🌍 LIVE-BESUCHER · WELTKARTE</span>
+          <span class="live-pill"><span class="live-dot"></span><span id="globe-count">0</span></span>
+        </div>
+        <div class="globe-canvas-wrap" id="globe-canvas-wrap">
+          <canvas id="globe-canvas" width="600" height="600"></canvas>
+          <div class="globe-hint">↺ Zum Drehen ziehen</div>
+        </div>
+      </div>
+      <div class="live-side">
+        <div class="live-card">
+          <div class="live-card-h">🏳️ TOP-LÄNDER (Live)</div>
+          <div id="top-countries"><div style="color:#444;font-size:11px;padding:8px 0">Keine Live-Daten</div></div>
+        </div>
+        <div class="live-card">
+          <div class="live-card-h">📱 AKTUELLE SESSIONS</div>
+          <div id="active-sessions"><div style="color:#444;font-size:11px;padding:8px 0">Warten auf Daten…</div></div>
+        </div>
+        <div class="live-card">
+          <div class="live-card-h">📈 HEUTE</div>
+          <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:11px"><span style="color:#888">Besucher</span><span style="color:#fff;font-family:Orbitron;font-weight:700" id="today-visitors">–</span></div>
+          <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:11px"><span style="color:#888">Seitenaufrufe</span><span style="color:#fff;font-family:Orbitron;font-weight:700" id="today-views">–</span></div>
+          <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:11px"><span style="color:#888">Konfigurator-Starts</span><span style="color:var(--neon);font-family:Orbitron;font-weight:700" id="today-config">–</span></div>
+          <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:11px"><span style="color:#888">In den Warenkorb</span><span style="color:var(--warn);font-family:Orbitron;font-weight:700" id="today-cart">–</span></div>
+          <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:11px"><span style="color:#888">Conversion-Rate</span><span style="color:var(--green);font-family:Orbitron;font-weight:700" id="today-conv">–</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL: ORDERS -->
+  <div class="dash-panel" id="panel-orders">
+    <div class="dash-actions">
+      <button class="dash-action" onclick="loadOrders()">↻ AKTUALISIEREN</button>
+      <input type="text" class="search-input" id="order-search" placeholder="🔍 Suche Bestellnr/Name/Email …" oninput="filterOrders()">
+      <button class="dash-action" onclick="exportData('orders')">⤓ EXPORT JSON</button>
+    </div>
+    <div id="orders-container"><div class="dash-loading"><div class="spinner"></div><div>LADE BESTELLUNGEN…</div></div></div>
+  </div>
+
+  <!-- PANEL: REPAIRS -->
+  <div class="dash-panel" id="panel-repairs">
+    <div class="dash-actions">
+      <button class="dash-action" onclick="loadRepairs()">↻ AKTUALISIEREN</button>
+      <input type="text" class="search-input" id="repair-search" placeholder="🔍 Suche Reparatur-Nr/Name/Email …" oninput="filterRepairs()">
+      <button class="dash-action" onclick="exportData('repairs')">⤓ EXPORT JSON</button>
+    </div>
+    <div id="repairs-container"></div>
+  </div>
+
+  <!-- PANEL: USERS -->
+  <div class="dash-panel" id="panel-users">
+    <div class="dash-actions"><button class="dash-action" onclick="loadUsers()">↻ AKTUALISIEREN</button></div>
+    <div id="users-container"></div>
+  </div>
+
+  <!-- PANEL: DISCOUNTS -->
+  <div class="dash-panel" id="panel-discounts">
+    <div class="disc-form">
+      <div class="disc-field"><label>CODE</label><input type="text" id="disc-code" placeholder="z.B. SOMMER25" style="text-transform:uppercase"></div>
+      <div class="disc-field"><label>TYP</label><select id="disc-type"><option value="percent">% Rabatt</option><option value="fixed">€ Rabatt</option><option value="shipping">Free Shipping</option></select></div>
+      <div class="disc-field"><label>WERT</label><input type="number" id="disc-value" placeholder="z.B. 15" min="0" step="0.01"></div>
+      <div class="disc-field"><label>GÜLTIG BIS</label><input type="date" id="disc-expires"></div>
+      <button class="dash-action primary" onclick="createDiscount()">+ CODE ANLEGEN</button>
+    </div>
+    <div id="discounts-container"><div class="dash-loading"><div class="spinner"></div><div>LADE CODES…</div></div></div>
+  </div>
+
+  <!-- PANEL: ARCHIV (verschluesselte Mail-/Rechnungs-Historie) -->
+  <div class="dash-panel" id="panel-archiv">
+    <div class="arch-banner">
+      🔒 <strong>Verschlüsseltes Archiv</strong> · alle Mails, Rechnungen, Refunds &amp; Status-Änderungen werden
+      <strong>AES-256-GCM-verschlüsselt</strong> im Cloudflare-KV gespeichert. Nur mit deinem <code>ARCHIVE_KEY</code> lesbar.
+      <strong>Append-Only</strong> — Einträge können nicht gelöscht oder geändert werden (GoBD-konform).
+    </div>
+    <div class="dash-actions">
+      <select class="fin-sel" id="arch-filter" onchange="loadArchive()">
+        <option value="">Alle Typen</option>
+        <option value="email">✉ Mails</option>
+        <option value="invoice">📄 Rechnungen</option>
+        <option value="refund">💸 Refunds/Stornos</option>
+        <option value="status">📦 Status-Änderungen</option>
+        <option value="tracking">📮 Tracking</option>
+      </select>
+      <button class="dash-action" onclick="loadArchive()">↻ AKTUALISIEREN</button>
+      <span class="arch-count" id="arch-count"></span>
+    </div>
+    <div id="archive-container"><div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div></div>
+  </div>
+
+  <!-- PANEL: FINANZEN / STEUERAUFSTELLUNG -->
+  <div class="dash-panel" id="panel-finanzen">
+    <div class="fin-toolbar">
+      <select class="fin-sel" id="fin-year" onchange="loadFinanzen()"></select>
+      <select class="fin-sel" id="fin-period" onchange="loadFinanzen()">
+        <option value="year">Ganzes Jahr</option>
+        <option value="q1">Q1 (Jan-Mär)</option>
+        <option value="q2">Q2 (Apr-Jun)</option>
+        <option value="q3">Q3 (Jul-Sep)</option>
+        <option value="q4">Q4 (Okt-Dez)</option>
+        <option value="m1">Januar</option><option value="m2">Februar</option><option value="m3">März</option>
+        <option value="m4">April</option><option value="m5">Mai</option><option value="m6">Juni</option>
+        <option value="m7">Juli</option><option value="m8">August</option><option value="m9">September</option>
+        <option value="m10">Oktober</option><option value="m11">November</option><option value="m12">Dezember</option>
+      </select>
+      <select class="fin-sel" id="fin-mode" onchange="loadFinanzen()">
+        <option value="kleinunt">§ 19 UStG (Kleinunternehmer · keine USt)</option>
+        <option value="regular">Regelbesteuerung (19 % USt)</option>
+      </select>
+      <button class="dash-action" onclick="loadFinanzen()">↻ AKTUALISIEREN</button>
+      <button class="dash-action primary" onclick="exportFinanzenCSV()">⤓ CSV-EXPORT</button>
+      <button class="dash-action" onclick="printFinanzen()">🖨️ DRUCKEN / PDF</button>
+    </div>
+
+    <!-- Summary-Karten -->
+    <div class="fin-summary" id="fin-summary"></div>
+
+    <!-- Steuer-Tabelle (GoBD-konform fuer Finanzamt) -->
+    <div class="fin-table-wrap" id="fin-table-wrap">
+      <div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div>
+    </div>
+    <p class="fin-note">
+      📌 <strong>Hinweis Finanzamt:</strong> Diese Aufstellung ist nach GoBD strukturiert (chronologisch, lueckenlos, unveraenderlich).
+      Beim § 19 UStG-Modus werden keine Umsatzsteuer-Anteile ausgewiesen. Stornos sind als negative Eintraege markiert.
+      Fuer eine offizielle Steuererklaerung empfiehlt sich der CSV-Export an deinen Steuerberater.
+    </p>
+  </div>
+
+  <!-- PANEL: STATS -->
+  <div class="dash-panel" id="panel-stats">
+    <div class="dash-actions"><button class="dash-action" onclick="loadDeepStats()">↻ AKTUALISIEREN</button></div>
+    <div class="stats-row">
+      <div class="stat-block">
+        <div class="stat-block-h">🏆 TOP PRODUKTE (30 Tage)</div>
+        <div id="top-products"><div style="color:#444;font-size:11px">Lade…</div></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-block-h">🎨 BELIEBTESTE KONFIGURATIONEN</div>
+        <div id="top-configs"><div style="color:#444;font-size:11px">Lade…</div></div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-block">
+        <div class="stat-block-h">🛒 CART-ABANDONMENT</div>
+        <div id="abandonment"><div style="color:#444;font-size:11px">Lade…</div></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-block-h">👑 TOP-KUNDEN</div>
+        <div id="top-customers"><div style="color:#444;font-size:11px">Lade…</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal-box" id="modal-box"></div>
+</div>
+
+<script>
+'use strict';
+
+const WORKER_URL = 'https://lexord-api.leonschulz1420.workers.dev';
+const TOKEN_KEY = 'lxrd_admin_token';
+let ALL_ORDERS = [];
+let ALL_REPAIRS = [];
+let LIVE_POLL = null;
+
+/* ════════ AUTH ════════ */
+async function doLogin(){
+  const code = document.getElementById('login-code').value;
+  if(!code) return showErr();
+  try{
+    /* Versuche neuen Endpoint, Fallback auf alten */
+    let r = await fetch(WORKER_URL + '/admin/login', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({code})});
+    let d = await r.json();
+    if(d.error && d.error.includes('Not found')){
+      /* Alter Worker: /api/admin/login mit {password} */
+      r = await fetch(WORKER_URL + '/api/admin/login', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({password:code})});
+      d = await r.json();
+    }
+    if(!d.success) return showErr();
+    localStorage.setItem(TOKEN_KEY, d.token);
+    showDashboard();
+  }catch(e){ showErr('Server-Fehler'); }
+}
+function showErr(msg){
+  const e = document.getElementById('login-err');
+  e.innerText = '⚠ ' + (msg || 'FALSCHER CODE');
+  e.style.display = 'block';
+  document.getElementById('login-code').value = '';
+  if('vibrate' in navigator) navigator.vibrate([100,50,100]);
+  setTimeout(()=>e.style.display='none', 2500);
+}
+async function doLogout(){
+  const t = localStorage.getItem(TOKEN_KEY);
+  if(t){ try{ await fetch(WORKER_URL + '/admin/logout', {method:'POST', headers:{'Authorization':'Bearer '+t}}); }catch(_){} }
+  localStorage.removeItem(TOKEN_KEY);
+  if(LIVE_POLL){clearInterval(LIVE_POLL);LIVE_POLL=null;}
+  document.getElementById('dashboard').classList.remove('active');
+  document.getElementById('login-screen').style.display = 'flex';
+}
+function showDashboard(){
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('dashboard').classList.add('active');
+  loadStats(); loadLive(); initGlobe();
+  /* Live-Polling alle 15s */
+  LIVE_POLL = setInterval(loadLive, 15000);
+}
+
+/* ════════ API ════════ */
+/* API-Helper mit automatischem Fallback: /admin/* -> /api/admin/* */
+const PATH_MAP = {
+  '/admin/orders':'/api/admin/all',
+  '/admin/repairs':'/api/admin/all',
+  '/admin/users':'/api/admin/all',
+  '/admin/stats':'/api/admin/all'
+};
+async function api(path, opts){
+  const t = localStorage.getItem(TOKEN_KEY);
+  if(!t){ doLogout(); return null; }
+  try{
+    const headers = {'Authorization':'Bearer '+t};
+    if(opts && opts.body) headers['Content-Type'] = 'application/json';
+    let r = await fetch(WORKER_URL + path, {...(opts||{}), headers:{...headers,...(opts&&opts.headers||{})}});
+    if(r.status === 401){ doLogout(); return null; }
+    let d = await r.json();
+    /* Fallback auf alten Endpoint wenn "Not found" */
+    if(d && d.error && (d.error==='Not found' || d.path)){
+      const altPath = PATH_MAP[path] || path.replace('/admin/','/api/admin/');
+      if(altPath !== path){
+        r = await fetch(WORKER_URL + altPath, {...(opts||{}), headers:{...headers,...(opts&&opts.headers||{})}});
+        if(r.status === 401){ doLogout(); return null; }
+        d = await r.json();
+        /* /api/admin/all gibt {orders,repairs,customers} — muss je nach Original-Pfad umgemappt werden */
+        if(d && !d.error){
+          if(path==='/admin/orders' && d.orders) return {orders:d.orders};
+          if(path==='/admin/repairs' && d.repairs) return {repairs:d.repairs};
+          if(path==='/admin/users' && d.customers) return {users:d.customers};
+          if(path==='/admin/stats' && d.orders){
+            const orders=d.orders||[];const now=new Date();const month=now.toISOString().slice(0,7);const today=now.toISOString().slice(0,10);
+            return {stats:{orders:orders.length,revenue:orders.reduce((s,o)=>s+(o.total||0),0),customers:Object.keys(orders.reduce((m,o)=>{if(o.email)m[o.email]=1;return m;},{})).length,thisMonth:orders.filter(o=>(o.created||'').slice(0,7)===month).length,today:orders.filter(o=>(o.created||'').slice(0,10)===today).length}};
+          }
+        }
+      }
+      return d;
+    }
+    return d;
+  }catch(e){ return null; }
+}
+
+/* ════════ STATS ════════ */
+async function loadStats(){
+  const d = await api('/admin/stats');
+  if(!d || !d.stats) return;
+  const s = d.stats;
+  setText('stat-orders', s.orders);
+  setText('stat-revenue', (s.revenue||0).toFixed(0) + ' €');
+  setText('stat-customers', s.customers);
+  setText('stat-month', s.thisMonth);
+  setText('stat-today', s.today || 0);
+  if(s.ordersDelta) setText('stat-orders-sub', (s.ordersDelta>0?'↑ +':'↓ ')+s.ordersDelta+' vs Vorwoche').classList.toggle('up', s.ordersDelta>0);
+  if(s.revenueDelta) setText('stat-revenue-sub', (s.revenueDelta>0?'↑ +':'↓ ')+s.revenueDelta+' €');
+}
+function setText(id, val){ const e=document.getElementById(id); if(e) e.innerText = val; return e; }
+
+/* ════════ LIVE-DATA + GLOBE ════════ */
+async function loadLive(){
+  const d = await api('/admin/visitors');
+  if(!d){ return; }
+  const visitors = d.visitors || [];
+  const byCountry = d.byCountry || {};
+  const today = d.today || {};
+
+  setText('live-count', visitors.length);
+  setText('stat-live', visitors.length);
+  setText('globe-count', visitors.length);
+  setText('today-visitors', today.visitors || 0);
+  setText('today-views', today.views || 0);
+  setText('today-config', today.configurators || 0);
+  setText('today-cart', today.carts || 0);
+  setText('today-conv', (today.conversion!=null?today.conversion.toFixed(1):'0')+ ' %');
+
+  /* Top Countries */
+  const tc = document.getElementById('top-countries');
+  const cs = Object.entries(byCountry).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  tc.innerHTML = cs.length ? cs.map(([code,ct])=>
+    `<div class="country-row"><span><span class="flag">${flagEmoji(code)}</span>${countryName(code)}</span><span class="ct">${ct}</span></div>`
+  ).join('') : '<div style="color:#444;font-size:11px;padding:8px 0">Noch keine Live-Daten</div>';
+
+  /* Active Sessions */
+  const ss = document.getElementById('active-sessions');
+  ss.innerHTML = visitors.length ? visitors.slice(0,10).map(v =>
+    `<div class="session-row"><span class="flag">${flagEmoji(v.country)}</span><span class="src">${esc(v.page||'/')} · ${esc(v.city||'?')}</span><span class="ago">${ago(v.lastSeen)}</span></div>`
+  ).join('') : '<div style="color:#444;font-size:11px;padding:8px 0">Warten auf Daten…</div>';
+
+  /* Globe-Pins setzen */
+  GLOBE.pins = visitors.filter(v => v.lat!=null && v.lng!=null).map(v=>({lat:+v.lat, lng:+v.lng, label:countryName(v.country)}));
+}
+
+/* ════════ 3D GLOBE (Canvas, Vanilla) ════════ */
+const GLOBE = {
+  canvas:null, ctx:null, rotation:0, tilt:-0.35,
+  pins:[],
+  dragging:false, dragX:0, dragRot:0, dragTilt:0,
+  auto:true, raf:null
+};
+function initGlobe(){
+  const c = document.getElementById('globe-canvas');
+  if(!c) return;
+  GLOBE.canvas = c; GLOBE.ctx = c.getContext('2d');
+  /* High-DPI */
+  resizeGlobe();
+  window.addEventListener('resize', resizeGlobe);
+  /* Drag */
+  const wrap = document.getElementById('globe-canvas-wrap');
+  const start = (x,y)=>{GLOBE.dragging=true;GLOBE.auto=false;GLOBE.dragX=x;GLOBE.dragY=y;GLOBE.dragRot=GLOBE.rotation;GLOBE.dragTilt=GLOBE.tilt;};
+  const move = (x,y)=>{if(!GLOBE.dragging)return;GLOBE.rotation = GLOBE.dragRot + (x-GLOBE.dragX)*0.008;GLOBE.tilt = Math.max(-1.2, Math.min(1.2, GLOBE.dragTilt + (y-GLOBE.dragY)*0.005));};
+  const end = ()=>{GLOBE.dragging=false;setTimeout(()=>GLOBE.auto=true, 3500);};
+  wrap.addEventListener('mousedown', e=>start(e.clientX,e.clientY));
+  window.addEventListener('mousemove', e=>move(e.clientX,e.clientY));
+  window.addEventListener('mouseup', end);
+  wrap.addEventListener('touchstart', e=>{const t=e.touches[0];start(t.clientX,t.clientY);},{passive:true});
+  window.addEventListener('touchmove', e=>{const t=e.touches[0];move(t.clientX,t.clientY);},{passive:true});
+  window.addEventListener('touchend', end);
+  /* Render-Loop */
+  renderGlobe();
+}
+function resizeGlobe(){
+  const c = GLOBE.canvas; if(!c) return;
+  const wrap = document.getElementById('globe-canvas-wrap');
+  const size = Math.min(wrap.clientWidth, wrap.clientHeight) - 20;
+  const dpr = window.devicePixelRatio||1;
+  c.style.width = size+'px'; c.style.height = size+'px';
+  c.width = size*dpr; c.height = size*dpr;
+  GLOBE.ctx.scale(dpr,dpr);
+  GLOBE.size = size;
+}
+/* Sehr vereinfachte Continent-Outlines (lat,lng) — als sichtbare Cluster-Punkte */
+const CONTINENT_DOTS = (function(){
+  const dots=[];
+  /* Generiere ein Grid von Punkten und filtere auf Land-Bereiche (rohe Approximation) */
+  const land = [
+    /* [latMin, latMax, lngMin, lngMax] grob für die Kontinente */
+    [10,72,-170,-50],   /* Nordamerika */
+    [-55,12,-82,-35],   /* Südamerika */
+    [-35,72,-12,55],    /* Europa+Afrika */
+    [-12,80,55,180],    /* Asien */
+    [-45,-10,110,155],  /* Australien */
+    [-90,-65,-180,180]  /* Antarktis */
+  ];
+  for(let lat=-85;lat<=85;lat+=4){
+    for(let lng=-180;lng<=180;lng+=4){
+      for(const [a,b,c,d] of land){
+        if(lat>=a&&lat<=b&&lng>=c&&lng<=d){dots.push([lat,lng]);break;}
+      }
+    }
+  }
+  return dots;
+})();
+
+function project(lat, lng, R, rot, tilt){
+  const a = (lng * Math.PI/180) + rot;
+  const b = (lat * Math.PI/180);
+  /* Tilt around X-axis */
+  let x = Math.cos(b) * Math.sin(a);
+  let y = Math.sin(b);
+  let z = Math.cos(b) * Math.cos(a);
+  const ct = Math.cos(tilt), st = Math.sin(tilt);
+  const ny = y*ct - z*st;
+  const nz = y*st + z*ct;
+  return {x: x*R, y: ny*R, z: nz, visible: nz > -0.1};
+}
+function renderGlobe(){
+  const ctx = GLOBE.ctx; if(!ctx){GLOBE.raf=requestAnimationFrame(renderGlobe);return;}
+  const W = GLOBE.size, R = W*0.42, cx = W/2, cy = W/2;
+  ctx.clearRect(0,0,W,W);
+  /* Hintergrund-Glow */
+  const grad = ctx.createRadialGradient(cx,cy,R*0.6,cx,cy,R*1.4);
+  grad.addColorStop(0,'rgba(0,242,255,0.04)');
+  grad.addColorStop(1,'rgba(0,242,255,0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,W,W);
+  /* Sphere base */
+  const sg = ctx.createRadialGradient(cx-R*0.3, cy-R*0.3, R*0.1, cx, cy, R);
+  sg.addColorStop(0,'rgba(20,40,55,1)');
+  sg.addColorStop(0.6,'rgba(8,20,30,1)');
+  sg.addColorStop(1,'rgba(2,8,15,1)');
+  ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.fillStyle=sg; ctx.fill();
+  /* Gitter Linien (Latitude) */
+  ctx.strokeStyle = 'rgba(0,242,255,0.08)'; ctx.lineWidth = 0.6;
+  for(let lat=-60;lat<=60;lat+=30){
+    ctx.beginPath();
+    for(let lng=-180;lng<=180;lng+=4){
+      const p = project(lat,lng,R,GLOBE.rotation,GLOBE.tilt);
+      if(!p.visible) continue;
+      const X=cx+p.x, Y=cy+p.y;
+      if(lng===-180) ctx.moveTo(X,Y); else ctx.lineTo(X,Y);
+    }
+    ctx.stroke();
+  }
+  /* Longitude */
+  for(let lng=-180;lng<180;lng+=30){
+    ctx.beginPath();
+    for(let lat=-85;lat<=85;lat+=4){
+      const p = project(lat,lng,R,GLOBE.rotation,GLOBE.tilt);
+      if(!p.visible) continue;
+      const X=cx+p.x, Y=cy+p.y;
+      if(lat===-85) ctx.moveTo(X,Y); else ctx.lineTo(X,Y);
+    }
+    ctx.stroke();
+  }
+  /* Continent dots */
+  ctx.fillStyle = 'rgba(0,242,255,0.5)';
+  for(const [lat,lng] of CONTINENT_DOTS){
+    const p = project(lat,lng,R,GLOBE.rotation,GLOBE.tilt);
+    if(!p.visible) continue;
+    const fade = Math.max(0, p.z);
+    ctx.fillStyle = 'rgba(80,200,230,'+(0.25 + fade*0.55)+')';
+    ctx.fillRect(cx+p.x - 1, cy+p.y - 1, 2, 2);
+  }
+  /* Visitor pins */
+  const t = Date.now()/1000;
+  for(const pin of GLOBE.pins){
+    const p = project(pin.lat, pin.lng, R, GLOBE.rotation, GLOBE.tilt);
+    if(!p.visible) continue;
+    const X=cx+p.x, Y=cy+p.y;
+    /* pulsing halo */
+    const pulse = (Math.sin(t*2 + pin.lat*0.1)+1)/2;
+    ctx.beginPath();
+    ctx.arc(X,Y, 4 + pulse*5, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(0,242,255,'+(0.15 - pulse*0.1)+')';
+    ctx.fill();
+    /* solid dot */
+    ctx.beginPath();
+    ctx.arc(X,Y, 3, 0, Math.PI*2);
+    ctx.fillStyle = '#00f2ff';
+    ctx.fill();
+    /* glow */
+    ctx.shadowColor = '#00f2ff'; ctx.shadowBlur = 12;
+    ctx.beginPath(); ctx.arc(X,Y, 1.5, 0, Math.PI*2); ctx.fillStyle='#fff'; ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+  /* Rim light */
+  ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2);
+  ctx.strokeStyle = 'rgba(0,242,255,0.2)'; ctx.lineWidth = 1;
+  ctx.stroke();
+
+  /* Auto-rotation */
+  if(GLOBE.auto) GLOBE.rotation += 0.003;
+  GLOBE.raf = requestAnimationFrame(renderGlobe);
+}
+
+/* ════════ ORDERS ════════ */
+async function loadOrders(){
+  const c = document.getElementById('orders-container');
+  c.innerHTML = '<div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div>';
+  const d = await api('/admin/orders');
+  if(!d || !d.orders){ c.innerHTML = empty('⚠','VERBINDUNGSFEHLER'); return; }
+  ALL_ORDERS = d.orders;
+  renderOrders(ALL_ORDERS);
+}
+function filterOrders(){
+  const q = document.getElementById('order-search').value.toLowerCase();
+  const f = !q ? ALL_ORDERS : ALL_ORDERS.filter(o =>
+    (o.orderNr||'').toLowerCase().includes(q) ||
+    (o.name||'').toLowerCase().includes(q) ||
+    (o.email||'').toLowerCase().includes(q));
+  renderOrders(f);
+}
+function renderOrders(orders){
+  const c = document.getElementById('orders-container');
+  if(!orders.length){ c.innerHTML = empty('📦','KEINE BESTELLUNGEN'); return; }
+  c.innerHTML = orders.map(o => orderCard(o)).join('');
+}
+function orderCard(o){
+  const items = (o.items || []).map(i => {
+    const img = i.image || i.img || 'IMG_7023.png';
+    const config = i.config || i.configuration || i.details || null;
+    let configHtml = '';
+    if(config){
+      if(typeof config === 'string') configHtml = '<div class="oi-config">'+esc(config)+'</div>';
+      else if(typeof config === 'object'){
+        const parts = [];
+        if(config.front) parts.push('Front: '+config.front);
+        if(config.back) parts.push('Back: '+config.back);
+        if(config.buttons) parts.push('Buttons: '+config.buttons);
+        if(config.dpad) parts.push('D-Pad: '+config.dpad);
+        if(config.sticks) parts.push('Sticks: '+config.sticks);
+        if(config.triggers) parts.push('Trigger: '+config.triggers);
+        if(config.paddles) parts.push('Paddles: '+config.paddles);
+        if(config.grip) parts.push('Grip: '+config.grip);
+        if(config.akku) parts.push('Akku: '+config.akku);
+        if(config.stick_tech) parts.push('Stick-Tech: '+config.stick_tech);
+        if(config.trigger_tech) parts.push('Trigger-Tech: '+config.trigger_tech);
+        Object.keys(config).forEach(k=>{if(!['front','back','buttons','dpad','sticks','triggers','paddles','grip','akku','stick_tech','trigger_tech'].includes(k))parts.push(k+': '+config[k]);});
+        if(parts.length) configHtml = '<div class="oi-config">'+parts.map(p=>'<span class="oi-tag">'+esc(p)+'</span>').join('')+'</div>';
+      }
+    }
+    return `<div class="oi-item">
+      <img class="oi-img" src="${esc(img)}" alt="${esc(i.name)}" onerror="this.src='IMG_7023.png'">
+      <div class="oi-detail">
+        <div class="oi-name">${esc(i.name)}</div>
+        <div class="oi-qty">${i.qty}× · ${(i.price * i.qty).toFixed(2)} €</div>
+        ${configHtml}
+      </div>
+    </div>`;
+  }).join('');
+  const status = (o.status||'NEU').toLowerCase();
+  const cancelled = status==='storniert'||status==='cancelled';
+  const shipped = status==='versandt' || status==='geliefert'||status==='shipped'||status==='delivered';
+  return `<div class="order-card" id="ord-${esc(o.orderNr)}">
+    <div class="order-hd">
+      <div><div class="order-nr">${esc(o.orderNr)}</div><div class="order-date">${new Date(o.date).toLocaleString('de-DE')}</div></div>
+      <div class="order-status s-${status}" onclick="changeStatus('${esc(o.orderNr)}','${esc(o.status||'NEU')}')" title="Klicken zum Ändern">${esc(o.status || 'NEU')}</div>
+    </div>
+    <div class="order-info-grid">
+      <div>KUNDE<strong>${esc(o.name || '?')}</strong></div>
+      <div>E-MAIL<strong>${esc(o.email || '?')}</strong></div>
+      <div>LAND<strong>${flagEmoji(o.land)} ${esc(o.land || 'DE')}</strong></div>
+      <div>ZAHLUNG<strong>${esc(o.payment || 'PayPal')}</strong></div>
+      ${o.tracking?`<div>TRACKING<strong>${esc(o.tracking)}</strong></div>`:''}
+      ${o.address?`<div>ADRESSE<strong>${esc(o.address)}</strong></div>`:''}
+    </div>
+    <div class="order-items">${items || 'Keine Items'}</div>
+    <div class="order-total"><span class="order-total-lbl">GESAMT</span><span class="order-total-val">${parseFloat(o.total || 0).toFixed(2)} €</span></div>
+    ${!shipped?`<div class="track-row">
+      <input class="track-input" id="tn-${esc(o.orderNr)}" placeholder="Tracking-Nummer (DHL/UPS) …" value="${esc(o.tracking||'')}">
+      <button class="oa-btn success" onclick="saveTracking('${esc(o.orderNr)}')">📮 SPEICHERN + MAIL</button>
+    </div>`:''}
+    <div class="order-actions">
+      <button class="oa-btn" onclick="emailCustomer('${esc(o.orderNr)}')">✉ EMAIL AN KUNDEN</button>
+      <button class="oa-btn warn" onclick="invoiceOrder('${esc(o.orderNr)}')">📄 RECHNUNG</button>
+      ${!cancelled?`<button class="oa-btn danger" onclick="cancelOrder('${esc(o.orderNr)}', ${parseFloat(o.total||0)}, '${esc(o.payment||'PayPal')}')">✕ STORNIEREN + REFUND</button>`:'<span style="font-family:Orbitron;font-size:9px;color:var(--err);letter-spacing:1.5px;padding:7px 12px">STORNIERT ✓</span>'}
+    </div>
+  </div>`;
+}
+function changeStatus(orderNr, current){
+  modal({
+    title: 'STATUS <span>ÄNDERN</span>',
+    body: `<div class="modal-p">Bestellung <strong style="color:var(--neon)">${esc(orderNr)}</strong> · aktueller Status: <strong>${esc(current)}</strong></div>
+      <select class="modal-select" id="m-status">
+        <option value="NEU">NEU</option>
+        <option value="BEARBEITUNG">IN BEARBEITUNG</option>
+        <option value="VERSANDT">VERSANDT</option>
+        <option value="GELIEFERT">GELIEFERT</option>
+        <option value="STORNIERT">STORNIERT</option>
+      </select>
+      <label style="display:flex;gap:6px;font-size:11px;color:#aaa;margin-top:6px;cursor:pointer">
+        <input type="checkbox" id="m-mail" checked> Kunden per E-Mail informieren
+      </label>`,
+    primary: 'STATUS SETZEN',
+    onok: async ()=>{
+      const newStatus = document.getElementById('m-status').value;
+      const mail = document.getElementById('m-mail').checked;
+      const r = await api('/admin/orders/'+encodeURIComponent(orderNr)+'/status', {method:'POST',body:JSON.stringify({status:newStatus, notify:mail})});
+      if(r && r.success){ toast('Status: '+newStatus,'success'); loadOrders(); }
+      else toast('Fehler beim Setzen','error');
+    }
+  });
+  /* Set current */
+  setTimeout(()=>{document.getElementById('m-status').value = (current||'NEU').toUpperCase();},0);
+}
+async function saveTracking(orderNr){
+  const tn = document.getElementById('tn-'+orderNr).value.trim();
+  if(!tn) return toast('Tracking-Nr. fehlt','warn');
+  const r = await api('/admin/orders/'+encodeURIComponent(orderNr)+'/tracking', {method:'POST',body:JSON.stringify({tracking:tn, notify:true})});
+  if(r && r.success){ toast('Tracking gespeichert + Mail versendet','success'); loadOrders(); }
+  else toast('Fehler','error');
+}
+function cancelOrder(orderNr, total, payment){
+  modal({
+    title: 'STORNO <span>+ RÜCKERSTATTUNG</span>',
+    body: `<div class="modal-p">
+      Bestellung <strong style="color:var(--neon)">${esc(orderNr)}</strong> wird storniert.<br>
+      Rückerstattung über <strong>${esc(payment)}</strong>: <strong style="color:var(--err)">${total.toFixed(2)} €</strong><br><br>
+      Die Erstattung geht <strong style="color:var(--green)">automatisch</strong> auf das Original-Zahlungskonto des Kunden.</div>
+      <textarea class="modal-textarea" id="m-reason" placeholder="Grund (optional, geht in die Storno-Mail)"></textarea>
+      <label style="display:flex;gap:6px;font-size:11px;color:#aaa;margin-top:6px;cursor:pointer">
+        <input type="checkbox" id="m-mail" checked> Kunden per E-Mail benachrichtigen
+      </label>`,
+    primary: '✕ STORNIEREN + REFUND',
+    danger: true,
+    onok: async ()=>{
+      const reason = document.getElementById('m-reason').value;
+      const mail = document.getElementById('m-mail').checked;
+      const r = await api('/admin/orders/'+encodeURIComponent(orderNr)+'/refund', {method:'POST',body:JSON.stringify({reason, notify:mail, amount:total})});
+      if(r && r.success){
+        toast('Refund: '+(r.refundId||'OK')+' · '+total.toFixed(2)+' € erstattet','success');
+        loadOrders();
+      } else {
+        toast('Refund fehlgeschlagen — manuell prüfen','error');
+      }
+    }
+  });
+}
+function emailCustomer(orderNr){
+  modal({
+    title: 'EMAIL AN <span>KUNDEN</span>',
+    body: `<div class="modal-p">Bestellung <strong style="color:var(--neon)">${esc(orderNr)}</strong></div>
+      <input class="modal-input" id="m-subject" placeholder="Betreff" value="Update zu deiner Bestellung ${esc(orderNr)}">
+      <textarea class="modal-textarea" id="m-body" placeholder="Nachricht …" rows="6"></textarea>`,
+    primary: '✉ SENDEN',
+    onok: async ()=>{
+      const subject = document.getElementById('m-subject').value;
+      const body = document.getElementById('m-body').value;
+      if(!body.trim()) return toast('Nachricht leer','warn');
+      const r = await api('/admin/orders/'+encodeURIComponent(orderNr)+'/email', {method:'POST',body:JSON.stringify({subject, body})});
+      if(r && r.success) toast('E-Mail versendet','success');
+      else toast('Fehler beim Versand','error');
+    }
+  });
+}
+async function invoiceOrder(orderNr){
+  const url = WORKER_URL + '/admin/orders/' + encodeURIComponent(orderNr) + '/invoice?token=' + encodeURIComponent(localStorage.getItem(TOKEN_KEY));
+  window.open(url, '_blank');
+}
+
+/* ════════ REPAIRS ════════ */
+async function loadRepairs(){
+  const c = document.getElementById('repairs-container');
+  c.innerHTML = '<div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div>';
+  const d = await api('/admin/repairs');
+  if(!d || !d.repairs){ c.innerHTML = empty('⚠','VERBINDUNGSFEHLER'); return; }
+  if(!d.repairs.length){ c.innerHTML = empty('🔧','KEINE REPARATUREN'); ALL_REPAIRS=[]; return; }
+  ALL_REPAIRS = d.repairs;
+  renderRepairs(d.repairs);
+}
+function filterRepairs(){
+  const q = document.getElementById('repair-search').value.toLowerCase();
+  const f = !q ? ALL_REPAIRS : ALL_REPAIRS.filter(r =>
+    (r.repNr||'').toLowerCase().includes(q) ||
+    (r.name||r.fname||'').toLowerCase().includes(q) ||
+    (r.lname||'').toLowerCase().includes(q) ||
+    (r.email||'').toLowerCase().includes(q) ||
+    (r.damage||'').toLowerCase().includes(q));
+  renderRepairs(f);
+}
+function renderRepairs(repairs){
+  const c = document.getElementById('repairs-container');
+  if(!repairs.length){ c.innerHTML = empty('🔧','KEINE TREFFER'); return; }
+  c.innerHTML = repairs.map(r => {
+    const status = (r.status||'received').toLowerCase();
+    const statusMap = {received:'EINGANG',diagnosed:'DIAGNOSE',repairing:'IN REPARATUR',shipped:'VERSANDT',done:'ABGESCHLOSSEN',cancelled:'STORNIERT'};
+    const statusCls = {received:'s-neu',diagnosed:'s-bearbeitung',repairing:'s-bearbeitung',shipped:'s-versandt',done:'s-geliefert',cancelled:'s-storniert'};
+    const isDone = status==='done'||status==='cancelled';
+    return `<div class="order-card">
+    <div class="order-hd">
+      <div><div class="order-nr">${esc(r.repNr)}</div><div class="order-date">${new Date(r.date||r.created).toLocaleString('de-DE')}</div></div>
+      <div class="order-status ${statusCls[status]||'s-bearbeitung'}" onclick="changeRepairStatus('${esc(r.repNr)}','${esc(r.status||'received')}')" title="Klicken zum Ändern">${statusMap[status]||'REPARATUR'}</div>
+    </div>
+    <div class="order-info-grid">
+      <div>KUNDE<strong>${esc(r.name || ((r.fname||'')+' '+(r.lname||'')).trim())}</strong></div>
+      <div>E-MAIL<strong>${esc(r.email)}</strong></div>
+      <div>TELEFON<strong>${esc(r.phone||'–')}</strong></div>
+      <div>CONTROLLER<strong>${esc(r.model||'PS5 DualSense')}</strong></div>
+      <div>SCHADEN<strong>${esc(r.damage||r.damageKey||'–')}</strong></div>
+      <div>KOSTEN<strong>${r.estPrice?esc(r.estPrice):'Noch offen'}</strong></div>
+      ${r.tracking?`<div>TRACKING<strong>${esc(r.tracking)}</strong></div>`:''}
+      ${r.addr?`<div>ADRESSE<strong>${esc(r.addr)}, ${esc(r.zip||'')} ${esc(r.city||'')}</strong></div>`:''}
+    </div>
+    <div class="order-items">${esc(r.desc||'Keine Beschreibung')}</div>
+    ${!isDone?`<div class="track-row">
+      <input class="track-input" id="rtn-${esc(r.repNr)}" placeholder="Tracking-Nummer (DHL/UPS) …" value="${esc(r.tracking||'')}">
+      <button class="oa-btn success" onclick="saveRepairTracking('${esc(r.repNr)}')">📮 TRACKING + MAIL</button>
+    </div>`:''}
+    <div class="order-actions">
+      <button class="oa-btn" onclick="emailRepairCustomer('${esc(r.repNr)}','${esc(r.email||'')}','${esc((r.name||r.fname||'Kunde').replace(/'/g,''))}')">✉ EMAIL AN KUNDEN</button>
+      <button class="oa-btn warn" onclick="sendRepairQuote('${esc(r.repNr)}','${esc(r.email||'')}','${esc((r.name||r.fname||'Kunde').replace(/'/g,''))}')">📋 KOSTENVORANSCHLAG</button>
+      <button class="oa-btn warn" onclick="repairInvoice('${esc(r.repNr)}')">📄 RECHNUNG</button>
+      <button class="oa-btn success" onclick="sendRepairDone('${esc(r.repNr)}','${esc(r.email||'')}','${esc((r.name||r.fname||'Kunde').replace(/'/g,''))}')">✓ FERTIG-MAIL</button>
+      ${status!=='cancelled'?`<button class="oa-btn danger" onclick="cancelRepair('${esc(r.repNr)}','${esc(r.email||'')}','${esc((r.name||r.fname||'Kunde').replace(/'/g,''))}')">✕ STORNIEREN</button>`:'<span style="font-family:Orbitron;font-size:9px;color:var(--err);letter-spacing:1.5px;padding:7px 12px">STORNIERT ✓</span>'}
+    </div>
+  </div>`;
+  }).join('');
+}
+
+/* ──── Reparatur-Status aendern ──── */
+function changeRepairStatus(repNr, current){
+  modal({
+    title:'STATUS <span>REPARATUR</span>',
+    body:`<div class="modal-p">Reparatur <strong style="color:var(--neon)">${esc(repNr)}</strong></div>
+      <select class="modal-select" id="m-rep-status">
+        <option value="received">EINGANG</option>
+        <option value="diagnosed">DIAGNOSE</option>
+        <option value="repairing">IN REPARATUR</option>
+        <option value="shipped">VERSANDT</option>
+        <option value="done">ABGESCHLOSSEN</option>
+        <option value="cancelled">STORNIERT</option>
+      </select>
+      <label style="display:flex;gap:6px;font-size:11px;color:#aaa;margin-top:6px;cursor:pointer">
+        <input type="checkbox" id="m-rep-mail" checked> Kunden per E-Mail informieren
+      </label>`,
+    primary:'STATUS SETZEN',
+    onok:async()=>{
+      const s=document.getElementById('m-rep-status').value;
+      const mail=document.getElementById('m-rep-mail').checked;
+      const r=await api('/admin/repair/'+encodeURIComponent(repNr),{method:'PATCH',body:JSON.stringify({status:s,notify:mail})});
+      if(r&&(r.success||r.updated)){toast('Reparatur: '+s,'success');loadRepairs();}
+      else toast('Fehler','error');
+    }
+  });
+  setTimeout(()=>{const sel=document.getElementById('m-rep-status');if(sel)sel.value=current;},0);
+}
+
+/* ──── Reparatur Tracking-Nr speichern + Mail ──── */
+async function saveRepairTracking(repNr){
+  const tn=document.getElementById('rtn-'+repNr).value.trim();
+  if(!tn) return toast('Tracking-Nr. fehlt','warn');
+  const r=await api('/admin/repair/'+encodeURIComponent(repNr),{method:'PATCH',body:JSON.stringify({tracking:tn,status:'shipped',notify:true})});
+  if(r&&(r.success||r.updated)){toast('Tracking gespeichert + Mail versendet','success');loadRepairs();}
+  else toast('Fehler','error');
+}
+
+/* ──── Email an Reparatur-Kunden ──── */
+function emailRepairCustomer(repNr, email, name){
+  modal({
+    title:'EMAIL AN <span>KUNDEN</span>',
+    body:`<div class="modal-p">Reparatur <strong style="color:var(--neon)">${esc(repNr)}</strong> · ${esc(name)}</div>
+      <input class="modal-input" id="m-rep-subj" placeholder="Betreff" value="Update zu deiner Reparatur ${esc(repNr)}">
+      <textarea class="modal-textarea" id="m-rep-body" placeholder="Nachricht …" rows="6"></textarea>`,
+    primary:'✉ SENDEN',
+    onok:async()=>{
+      const subject=document.getElementById('m-rep-subj').value;
+      const body=document.getElementById('m-rep-body').value;
+      if(!body.trim()) return toast('Nachricht leer','warn');
+      const r=await api('/admin/repair/'+encodeURIComponent(repNr)+'/email',{method:'POST',body:JSON.stringify({subject,body,to:email,name})});
+      if(r&&r.success) toast('E-Mail versendet','success');
+      else toast('Fehler beim Versand','error');
+    }
+  });
+}
+
+/* ──── Kostenvoranschlag senden ──── */
+function sendRepairQuote(repNr, email, name){
+  modal({
+    title:'KOSTENVORANSCHLAG <span>SENDEN</span>',
+    body:`<div class="modal-p">Reparatur <strong style="color:var(--neon)">${esc(repNr)}</strong> · ${esc(name)}</div>
+      <input class="modal-input" id="m-kv-damage" placeholder="Schaden / Diagnose (z.B. Stick-Drift links)">
+      <input class="modal-input" id="m-kv-price" placeholder="Kosten (z.B. 35,00 €)" type="text">
+      <input class="modal-input" id="m-kv-time" placeholder="Bearbeitungszeit (z.B. 3-5 Werktage)" value="3-5 Werktage">
+      <textarea class="modal-textarea" id="m-kv-note" placeholder="Zusätzliche Hinweise (optional)" rows="3"></textarea>`,
+    primary:'📋 KV SENDEN',
+    onok:async()=>{
+      const damage=document.getElementById('m-kv-damage').value;
+      const price=document.getElementById('m-kv-price').value;
+      const time=document.getElementById('m-kv-time').value;
+      const note=document.getElementById('m-kv-note').value;
+      if(!price) return toast('Kosten fehlen','warn');
+      const r=await api('/admin/repair/'+encodeURIComponent(repNr)+'/quote',{method:'POST',body:JSON.stringify({to:email,name,damage,price,time,note})});
+      if(r&&r.success){toast('KV versendet an '+email,'success');loadRepairs();}
+      else toast('Fehler','error');
+    }
+  });
+}
+
+/* ──── Reparatur fertig — Abholungs-/Versand-Mail ──── */
+function sendRepairDone(repNr, email, name){
+  modal({
+    title:'REPARATUR <span>ABGESCHLOSSEN</span>',
+    body:`<div class="modal-p">Reparatur <strong style="color:var(--neon)">${esc(repNr)}</strong> · ${esc(name)}</div>
+      <textarea class="modal-textarea" id="m-done-note" placeholder="Nachricht an Kunden (z.B. Controller ist fertig, wird heute verschickt)" rows="4">Deine Reparatur ist abgeschlossen! Der Controller wird heute per DHL verschickt.</textarea>
+      <input class="modal-input" id="m-done-track" placeholder="Tracking-Nummer (optional)">`,
+    primary:'✓ FERTIG-MAIL SENDEN',
+    onok:async()=>{
+      const note=document.getElementById('m-done-note').value;
+      const tracking=document.getElementById('m-done-track').value;
+      const r=await api('/admin/repair/'+encodeURIComponent(repNr),{method:'PATCH',body:JSON.stringify({status:'done',tracking:tracking||undefined,notify:true,doneNote:note})});
+      if(r&&(r.success||r.updated)){toast('Fertig-Mail versendet','success');loadRepairs();}
+      else toast('Fehler','error');
+    }
+  });
+}
+
+/* ──── Reparatur-Rechnung ──── */
+function repairInvoice(repNr){
+  const url = WORKER_URL + '/admin/repair/' + encodeURIComponent(repNr) + '/invoice?token=' + encodeURIComponent(localStorage.getItem(TOKEN_KEY));
+  window.open(url, '_blank');
+}
+
+/* ──── Reparatur stornieren ──── */
+function cancelRepair(repNr, email, name){
+  modal({
+    title:'REPARATUR <span>STORNIEREN</span>',
+    body:`<div class="modal-p">Reparatur <strong style="color:var(--neon)">${esc(repNr)}</strong> · ${esc(name)}</div>
+      <textarea class="modal-textarea" id="m-cancel-reason" placeholder="Grund (optional)" rows="3"></textarea>
+      <label style="display:flex;gap:6px;font-size:11px;color:#aaa;margin-top:6px;cursor:pointer">
+        <input type="checkbox" id="m-cancel-mail" checked> Kunden per E-Mail benachrichtigen
+      </label>`,
+    primary:'✕ STORNIEREN',
+    danger:true,
+    onok:async()=>{
+      const reason=document.getElementById('m-cancel-reason').value;
+      const mail=document.getElementById('m-cancel-mail').checked;
+      const r=await api('/admin/repair/'+encodeURIComponent(repNr),{method:'PATCH',body:JSON.stringify({status:'cancelled',note:reason,notify:mail})});
+      if(r&&(r.success||r.updated)){toast('Reparatur storniert','success');loadRepairs();}
+      else toast('Fehler','error');
+    }
+  });
+}
+
+/* ════════ USERS ════════ */
+async function loadUsers(){
+  const c = document.getElementById('users-container');
+  c.innerHTML = '<div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div>';
+  const d = await api('/admin/users');
+  if(!d || !d.users){ c.innerHTML = empty('⚠','VERBINDUNGSFEHLER'); return; }
+  if(!d.users.length){ c.innerHTML = empty('👥','KEINE KUNDEN'); return; }
+  c.innerHTML = d.users.map(u => `<div class="order-card">
+    <div class="order-hd"><div><div class="order-nr">${esc(u.name)}</div><div class="order-date">${esc(u.email)}</div></div></div>
+    <div style="font-size:10px;color:#666">Registriert: ${new Date(u.created).toLocaleDateString('de-DE')} · ${u.orderCount||0} Bestellungen · Umsatz ${(u.totalSpent||0).toFixed(2)} €</div>
+  </div>`).join('');
+}
+
+/* ════════ DISCOUNT CODES ════════ */
+async function createDiscount(){
+  const code = document.getElementById('disc-code').value.trim().toUpperCase();
+  const type = document.getElementById('disc-type').value;
+  const value = parseFloat(document.getElementById('disc-value').value);
+  const expires = document.getElementById('disc-expires').value;
+  if(!code) return toast('Code fehlt','warn');
+  if(type!=='shipping' && !value) return toast('Wert fehlt','warn');
+  const r = await api('/admin/discounts', {method:'POST', body:JSON.stringify({code,type,value:value||0,expires})});
+  if(r && r.success){ toast('Code angelegt','success'); loadDiscounts(); document.getElementById('disc-code').value=''; document.getElementById('disc-value').value=''; }
+  else toast('Code existiert bereits','error');
+}
+async function loadDiscounts(){
+  const c = document.getElementById('discounts-container');
+  c.innerHTML = '<div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div>';
+  const d = await api('/admin/discounts');
+  if(!d || !d.discounts){ c.innerHTML = empty('⚠','VERBINDUNGSFEHLER'); return; }
+  if(!d.discounts.length){ c.innerHTML = empty('🎟️','NOCH KEINE CODES'); return; }
+  c.innerHTML = d.discounts.map(x => `<div class="order-card">
+    <div class="order-hd">
+      <div><div class="disc-code">${esc(x.code)}</div><div class="order-date">Gültig bis ${x.expires?new Date(x.expires).toLocaleDateString('de-DE'):'unbegrenzt'}</div></div>
+      <div class="order-status s-${x.active?'neu':'storniert'}">${x.active?'AKTIV':'INAKTIV'}</div>
+    </div>
+    <div class="order-info-grid">
+      <div>TYP<strong>${x.type==='percent'?x.value+' % Rabatt':x.type==='fixed'?x.value+' € Rabatt':'Free Shipping'}</strong></div>
+      <div>VERWENDUNGEN<strong>${x.uses||0}</strong></div>
+      <div>UMSATZ<strong>${(x.totalDiscount||0).toFixed(2)} €</strong></div>
+    </div>
+    <div class="order-actions">
+      <button class="oa-btn" onclick="copyText('${esc(x.code)}')">📋 KOPIEREN</button>
+      <button class="oa-btn ${x.active?'warn':'success'}" onclick="toggleDiscount('${esc(x.code)}',${!x.active})">${x.active?'⏸ DEAKTIVIEREN':'▶ AKTIVIEREN'}</button>
+      <button class="oa-btn danger" onclick="deleteDiscount('${esc(x.code)}')">✕ LÖSCHEN</button>
+    </div>
+  </div>`).join('');
+}
+async function toggleDiscount(code,active){
+  const r = await api('/admin/discounts/'+encodeURIComponent(code),{method:'PATCH',body:JSON.stringify({active})});
+  if(r && r.success){toast(active?'Aktiviert':'Deaktiviert','success');loadDiscounts();}
+}
+async function deleteDiscount(code){
+  if(!confirm('Code "'+code+'" wirklich löschen?')) return;
+  const r = await api('/admin/discounts/'+encodeURIComponent(code),{method:'DELETE'});
+  if(r && r.success){toast('Gelöscht','success');loadDiscounts();}
+}
+function copyText(t){ navigator.clipboard.writeText(t); toast('Kopiert: '+t,'success'); }
+
+/* ════════ DEEP STATS ════════ */
+async function loadDeepStats(){
+  const d = await api('/admin/stats/deep');
+  if(!d) return;
+  /* Top Produkte */
+  const tp = document.getElementById('top-products');
+  if(d.products && d.products.length){
+    const max = Math.max(...d.products.map(p=>p.count));
+    tp.innerHTML = d.products.slice(0,8).map(p=>barRow(p.name, p.count + ' verkauft', (p.count/max)*100)).join('');
+  } else tp.innerHTML = '<div style="color:#444;font-size:11px">Keine Daten</div>';
+
+  /* Top Konfigurationen */
+  const tc = document.getElementById('top-configs');
+  if(d.configurations && d.configurations.length){
+    const max = Math.max(...d.configurations.map(p=>p.count));
+    tc.innerHTML = d.configurations.slice(0,8).map(c=>barRow(c.name, c.count+'×', (c.count/max)*100)).join('');
+  } else tc.innerHTML = '<div style="color:#444;font-size:11px">Keine Daten</div>';
+
+  /* Abandonment */
+  const ab = document.getElementById('abandonment');
+  if(d.abandonment){
+    ab.innerHTML = `
+      <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="color:#888;font-size:11px">Warenkorb gestartet</span><span style="font-family:Orbitron;color:#fff">${d.abandonment.started||0}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="color:#888;font-size:11px">Checkout begonnen</span><span style="font-family:Orbitron;color:var(--warn)">${d.abandonment.checkout||0}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0"><span style="color:#888;font-size:11px">Bestellung abgeschickt</span><span style="font-family:Orbitron;color:var(--green)">${d.abandonment.completed||0}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-top:1px solid rgba(255,255,255,.05);margin-top:6px"><span style="color:#aaa;font-size:11px">Abbruch-Rate</span><span style="font-family:Orbitron;color:var(--err);font-weight:700">${((1-(d.abandonment.completed||0)/(d.abandonment.started||1))*100).toFixed(1)} %</span></div>`;
+  }
+  /* Top Customers */
+  const tcu = document.getElementById('top-customers');
+  if(d.topCustomers && d.topCustomers.length){
+    tcu.innerHTML = d.topCustomers.slice(0,8).map((c,i)=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,.04);font-size:11px"><span style="color:#bbb">${i+1}. ${esc(c.name)}</span><span style="color:var(--green);font-family:Orbitron;font-weight:700">${(c.totalSpent||0).toFixed(0)} €</span></div>`).join('');
+  } else tcu.innerHTML = '<div style="color:#444;font-size:11px">Keine Daten</div>';
+}
+function barRow(name, lbl, pct){
+  return `<div class="bar-row"><div class="lbl"><b>${esc(name)}</b><span>${esc(lbl)}</span></div><div class="bar"><div class="bar-fill" style="width:${pct}%"></div></div></div>`;
+}
+
+/* ════════ ARCHIV (verschluesselte Historie) ════════ */
+const ARCH_ICONS = { email:'✉', invoice:'📄', refund:'💸', status:'📦', tracking:'📮' };
+const ARCH_LABELS = { email:'Mail-Versand', invoice:'Rechnung', refund:'Refund/Storno', status:'Status-Änderung', tracking:'Tracking' };
+
+async function loadArchive(){
+  const c = document.getElementById('archive-container');
+  c.innerHTML = '<div class="dash-loading"><div class="spinner"></div><div>LADE ARCHIV…</div></div>';
+  const filter = document.getElementById('arch-filter').value;
+  const path = '/admin/archive' + (filter ? '?type='+encodeURIComponent(filter) : '');
+  const d = await api(path);
+  if(!d || !d.entries){ c.innerHTML = empty('⚠','VERBINDUNGSFEHLER'); return; }
+  document.getElementById('arch-count').innerText = (d.entries.length + (d.total > d.entries.length ? ' / '+d.total+' insgesamt' : ''));
+  if(!d.entries.length){ c.innerHTML = empty('🗄️','NOCH KEINE EINTRAEGE'); return; }
+  c.innerHTML = d.entries.map(e => `
+    <div class="arch-row" onclick="openArchive('${esc(e.key)}')">
+      <div class="arch-icon">${ARCH_ICONS[e.type]||'•'}</div>
+      <div class="arch-main">
+        <div class="arch-title">${ARCH_LABELS[e.type]||e.type}</div>
+        <div class="arch-sub">${new Date(e.time).toLocaleString('de-DE')}</div>
+      </div>
+      <div class="arch-meta">
+        <span class="badge">🔒 ENC</span>
+        <span class="hash">SHA: ${esc(e.hash)}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function openArchive(key){
+  const d = await api('/admin/archive/'+encodeURIComponent(key));
+  if(!d || !d.entry){ toast('Konnte nicht laden / entschluesseln','error'); return; }
+  const e = d.entry;
+  const intactBadge = e._intact
+    ? '<span class="badge">✓ Integritaet OK</span>'
+    : '<span class="badge bad">⚠ Hash-Mismatch!</span>';
+  const data = e.data || {};
+  let body = '';
+  if(e.type === 'email'){
+    body = `
+      <div style="margin-bottom:10px;font-size:11px;color:#888">An: <strong style="color:#fff;font-family:Orbitron">${esc(data.to||'')}</strong></div>
+      <div style="margin-bottom:10px;font-size:11px;color:#888">Betreff: <strong style="color:#fff">${esc(data.subject||'')}</strong></div>
+      ${data.orderNr?`<div style="margin-bottom:10px;font-size:11px;color:#888">Bestell-Nr.: <strong style="color:var(--neon);font-family:Orbitron">${esc(data.orderNr)}</strong></div>`:''}
+      ${data.kind?`<div style="margin-bottom:10px;font-size:11px;color:#888">Typ: <strong style="color:#fff">${esc(data.kind)}</strong></div>`:''}
+      <div style="margin-bottom:10px;font-size:11px;color:#888">Versand: <strong style="color:${data.ok?'var(--green)':'var(--err)'}">${data.ok?'✓ erfolgreich':'⚠ fehlgeschlagen'}</strong></div>
+      <div style="font-family:Orbitron;font-size:9px;color:#999;letter-spacing:1.5px;margin:14px 0 6px">VOLLSTAENDIGER INHALT (HTML-Vorschau)</div>
+      <div class="arch-html-preview">${data.html||''}</div>
+      <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+        <button class="oa-btn" id="arch-resend">↻ Nochmal senden</button>
+        <button class="oa-btn" id="arch-download">⤓ HTML</button>
+      </div>`;
+    setTimeout(()=>{
+      const rs = document.getElementById('arch-resend');
+      const dl = document.getElementById('arch-download');
+      if(rs) rs.onclick = ()=>reSendArchivMail(data.to||'', data.subject||'', data.html||'');
+      if(dl) dl.onclick = ()=>downloadHtml(key, data.html||'');
+    }, 0);
+  } else if(e.type === 'invoice'){
+    body = `
+      <div style="margin-bottom:10px;font-size:11px;color:#888">Bestell-Nr.: <strong style="color:var(--neon);font-family:Orbitron">${esc(data.orderNr||'')}</strong></div>
+      <div style="margin-bottom:10px;font-size:11px;color:#888">Betrag: <strong style="color:#fff;font-family:Orbitron">${parseFloat(data.total||0).toFixed(2)} €</strong></div>
+      <div style="font-family:Orbitron;font-size:9px;color:#999;letter-spacing:1.5px;margin:14px 0 6px">RECHNUNGS-SNAPSHOT</div>
+      <div class="arch-html-preview">${data.html||''}</div>`;
+  } else {
+    body = `<div class="arch-detail-content">${esc(JSON.stringify(data, null, 2))}</div>`;
+  }
+  modal({
+    title: (ARCH_ICONS[e.type]||'•') + ' <span>' + (ARCH_LABELS[e.type]||e.type).toUpperCase() + '</span>',
+    body: `
+      <div style="display:flex;gap:8px;margin-bottom:14px;font-family:Orbitron;font-size:9px;color:#666;flex-wrap:wrap">
+        <span>${new Date(e.time).toLocaleString('de-DE')}</span>
+        ${intactBadge}
+      </div>
+      ${body}
+    `,
+    primary: 'SCHLIESSEN',
+    onok: ()=>{}
+  });
+}
+function reSendArchivMail(to, subject, html){
+  // Nutzt vorhandenen Custom-Email-Endpoint
+  modal({
+    title: 'MAIL NOCHMAL <span>SENDEN</span>',
+    body: `<div class="modal-p">Mail wird erneut an <strong>${esc(to)}</strong> versendet.</div>
+      <input class="modal-input" id="rs-to" value="${esc(to)}">
+      <input class="modal-input" id="rs-subject" value="${esc(subject)}">`,
+    primary: '✉ SENDEN',
+    onok: async ()=>{
+      const r = await api('/api/send-email', {method:'POST', body:JSON.stringify({
+        to: document.getElementById('rs-to').value,
+        subject: document.getElementById('rs-subject').value,
+        html
+      })});
+      if(r) toast('Mail erneut versendet','success');
+      else toast('Fehler beim Versand','error');
+    }
+  });
+}
+function downloadHtml(name, html){
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name.replace(/[^a-z0-9]/gi,'-')+'.html';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+/* ════════ FINANZEN / STEUER-AUFSTELLUNG (GoBD-konform) ════════ */
+let FIN_ROWS = [];
+function finFillYears(){
+  const sel = document.getElementById('fin-year'); if(!sel) return;
+  const now = new Date().getFullYear();
+  if(sel.options.length) return;
+  for(let y=now;y>=now-5;y--){
+    const opt = document.createElement('option');
+    opt.value = y; opt.textContent = y;
+    sel.appendChild(opt);
+  }
+}
+function finPeriodFilter(date){
+  const year = parseInt(document.getElementById('fin-year').value);
+  const period = document.getElementById('fin-period').value;
+  const d = new Date(date);
+  if(d.getFullYear() !== year) return false;
+  if(period === 'year') return true;
+  const m = d.getMonth() + 1;
+  if(period.startsWith('q')){
+    const q = parseInt(period.slice(1));
+    return m >= (q-1)*3 + 1 && m <= q*3;
+  }
+  if(period.startsWith('m')) return m === parseInt(period.slice(1));
+  return true;
+}
+async function loadFinanzen(){
+  finFillYears();
+  const wrap = document.getElementById('fin-table-wrap');
+  wrap.innerHTML = '<div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div>';
+  const d = await api('/admin/orders');
+  if(!d || !d.orders){ wrap.innerHTML = empty('⚠','VERBINDUNGSFEHLER'); return; }
+  const mode = document.getElementById('fin-mode').value; // kleinunt | regular
+  const ustRate = mode === 'regular' ? 0.19 : 0;
+  const filtered = d.orders.filter(o => finPeriodFilter(o.date || o.created));
+  filtered.sort((a,b) => new Date(a.date||a.created) - new Date(b.date||b.created));
+  FIN_ROWS = filtered.map((o,i) => {
+    const brutto = parseFloat(o.total || 0);
+    const cancelled = (o.status||'').toUpperCase() === 'STORNIERT';
+    const sign = cancelled ? -1 : 1;
+    const netto = mode === 'regular' ? brutto / (1 + ustRate) : brutto;
+    const ust = mode === 'regular' ? brutto - netto : 0;
+    return {
+      lfd: i+1,
+      date: o.date || o.created,
+      orderNr: o.orderNr || '',
+      name: o.name || '',
+      email: o.email || '',
+      land: (o.land || 'DE').toUpperCase(),
+      payment: o.payment || '',
+      status: o.status || 'NEU',
+      cancelled,
+      brutto: sign * brutto,
+      netto: sign * netto,
+      ust: sign * ust,
+      ustRate: mode === 'regular' ? '19%' : '–'
+    };
+  });
+  renderFinTable(FIN_ROWS, mode);
+}
+function renderFinTable(rows, mode){
+  // Summary
+  const totals = rows.reduce((acc,r) => {
+    acc.brutto += r.brutto; acc.netto += r.netto; acc.ust += r.ust;
+    if(r.cancelled) acc.storno++; else acc.gueltig++;
+    acc.byLand[r.land] = (acc.byLand[r.land] || 0) + r.brutto;
+    return acc;
+  }, {brutto:0, netto:0, ust:0, gueltig:0, storno:0, byLand:{}});
+  const sumEl = document.getElementById('fin-summary');
+  const topLand = Object.entries(totals.byLand).sort((a,b)=>b[1]-a[1])[0];
+  sumEl.innerHTML = `
+    <div class="fin-sum-card"><div class="fin-sum-lbl">⟫ BESTELLUNGEN</div><div class="fin-sum-val neon">${totals.gueltig}</div><div class="fin-sum-sub">${totals.storno} storniert</div></div>
+    <div class="fin-sum-card"><div class="fin-sum-lbl">⟫ BRUTTO-UMSATZ</div><div class="fin-sum-val green">${totals.brutto.toFixed(2)} €</div></div>
+    <div class="fin-sum-card"><div class="fin-sum-lbl">⟫ NETTO-UMSATZ</div><div class="fin-sum-val">${totals.netto.toFixed(2)} €</div></div>
+    <div class="fin-sum-card"><div class="fin-sum-lbl">⟫ UMSATZSTEUER</div><div class="fin-sum-val warn">${totals.ust.toFixed(2)} €</div><div class="fin-sum-sub">${mode==='regular'?'19 % USt':'§ 19 UStG – keine USt'}</div></div>
+    ${topLand?`<div class="fin-sum-card"><div class="fin-sum-lbl">⟫ TOP-LAND</div><div class="fin-sum-val">${flagEmoji(topLand[0])} ${topLand[0]}</div><div class="fin-sum-sub">${topLand[1].toFixed(2)} €</div></div>`:''}
+  `;
+  // Tabelle
+  const tableHtml = rows.length ? `
+    <table class="fin-table">
+      <thead><tr>
+        <th>#</th><th>Datum</th><th>Bestell-Nr.</th><th>Kunde</th><th>E-Mail</th>
+        <th>Land</th><th>Zahlung</th><th>Status</th>
+        <th style="text-align:right">Brutto</th><th style="text-align:center">USt %</th>
+        <th style="text-align:right">USt-Betrag</th><th style="text-align:right">Netto</th>
+      </tr></thead>
+      <tbody>
+        ${rows.map(r => `<tr class="${r.cancelled?'cancelled':''}">
+          <td>${r.lfd}</td>
+          <td class="dt">${new Date(r.date).toLocaleDateString('de-DE')}</td>
+          <td class="nr">${esc(r.orderNr)}</td>
+          <td>${esc(r.name)}</td>
+          <td style="color:#888;font-size:10px">${esc(r.email)}</td>
+          <td class="land">${flagEmoji(r.land)} ${esc(r.land)}</td>
+          <td style="color:#999;font-size:10px">${esc(r.payment)}</td>
+          <td><span class="stat ${r.cancelled?'cancel':''}">${esc(r.status)}</span></td>
+          <td class="brutto">${r.brutto.toFixed(2)} €</td>
+          <td class="ustp">${r.ustRate}</td>
+          <td class="ust">${r.ust.toFixed(2)} €</td>
+          <td class="netto">${r.netto.toFixed(2)} €</td>
+        </tr>`).join('')}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="8" style="text-align:right">SUMME</td>
+          <td style="text-align:right;color:var(--green)">${totals.brutto.toFixed(2)} €</td>
+          <td></td>
+          <td style="text-align:right;color:var(--warn)">${totals.ust.toFixed(2)} €</td>
+          <td style="text-align:right">${totals.netto.toFixed(2)} €</td>
+        </tr>
+      </tfoot>
+    </table>` : empty('📋','KEINE BESTELLUNGEN IM ZEITRAUM');
+  document.getElementById('fin-table-wrap').innerHTML = tableHtml;
+}
+function exportFinanzenCSV(){
+  if(!FIN_ROWS.length) return toast('Keine Daten zum Export','warn');
+  const year = document.getElementById('fin-year').value;
+  const period = document.getElementById('fin-period').options[document.getElementById('fin-period').selectedIndex].text;
+  const mode = document.getElementById('fin-mode').value;
+  // Header (DATEV-kompatibel light)
+  const header = ['Lfd-Nr','Datum','Bestell-Nr','Kunde','E-Mail','Land','Zahlung','Status','Brutto','USt-%','USt-Betrag','Netto'];
+  const rows = FIN_ROWS.map(r => [
+    r.lfd, new Date(r.date).toLocaleDateString('de-DE'), r.orderNr, r.name, r.email,
+    r.land, r.payment, r.status,
+    r.brutto.toFixed(2).replace('.',','),
+    r.ustRate,
+    r.ust.toFixed(2).replace('.',','),
+    r.netto.toFixed(2).replace('.',',')
+  ]);
+  // Totals
+  const totals = FIN_ROWS.reduce((a,r)=>{a.b+=r.brutto;a.n+=r.netto;a.u+=r.ust;return a;},{b:0,n:0,u:0});
+  rows.push([]);
+  rows.push(['','','','','','','','SUMME', totals.b.toFixed(2).replace('.',','), '', totals.u.toFixed(2).replace('.',','), totals.n.toFixed(2).replace('.',',')]);
+  const csv = [header, ...rows].map(r => r.map(c => {
+    const s = String(c==null?'':c);
+    return /[";,\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+  }).join(';')).join('\r\n');
+  // BOM fuer Excel
+  const blob = new Blob(['﻿' + csv], {type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'LEXORD-Steueraufstellung-'+year+'-'+document.getElementById('fin-period').value+'-'+mode+'.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('CSV exportiert','success');
+}
+function printFinanzen(){
+  if(!FIN_ROWS.length) return toast('Keine Daten zum Drucken','warn');
+  window.print();
+}
+
+/* ════════ HELPERS ════════ */
+function empty(icon,text){return `<div class="no-orders"><div class="no-orders-icon">${icon}</div><div class="no-orders-text">${text}</div></div>`;}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function flagEmoji(code){if(!code)return'🌐';code=code.toUpperCase();if(code.length!==2)return'🌐';return String.fromCodePoint(...[...code].map(c=>0x1F1E6 - 65 + c.charCodeAt(0)));}
+function countryName(c){const m={DE:'Deutschland',AT:'Österreich',CH:'Schweiz',US:'USA',GB:'UK',FR:'Frankreich',IT:'Italien',ES:'Spanien',NL:'Niederlande',PL:'Polen',CZ:'Tschechien',SE:'Schweden',NO:'Norwegen',DK:'Dänemark',FI:'Finnland',BE:'Belgien',IE:'Irland',CA:'Kanada',AU:'Australien',JP:'Japan',CN:'China',IN:'Indien',BR:'Brasilien',MX:'Mexiko',TR:'Türkei',RU:'Russland'};return m[c]||c||'Unbekannt';}
+function ago(t){if(!t)return'jetzt';const s=Math.floor((Date.now()-t)/1000);if(s<60)return s+'s';if(s<3600)return Math.floor(s/60)+'min';return Math.floor(s/3600)+'h';}
+
+/* ════════ TOAST + MODAL ════════ */
+function toast(msg, type){
+  document.querySelectorAll('.toast').forEach(t=>t.remove());
+  const t = document.createElement('div'); t.className='toast '+(type||''); t.innerText=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 3500);
+}
+function modal({title, body, primary, onok, danger}){
+  const bg = document.getElementById('modal-bg');
+  const box = document.getElementById('modal-box');
+  box.innerHTML = `<div class="modal-h">${title}</div>${body}<div class="modal-actions"><button class="modal-btn" onclick="closeModal()">ABBRECHEN</button><button class="modal-btn primary ${danger?'danger':''}" id="modal-ok">${primary||'OK'}</button></div>`;
+  bg.classList.add('show');
+  document.getElementById('modal-ok').onclick = async ()=>{ closeModal(); if(onok) await onok(); };
+}
+function closeModal(){ document.getElementById('modal-bg').classList.remove('show'); }
+
+/* ════════ TABS ════════ */
+function switchTab(tab, btn){
+  document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  if(tab === 'orders') loadOrders();
+  if(tab === 'repairs') loadRepairs();
+  if(tab === 'users') loadUsers();
+  if(tab === 'discounts') loadDiscounts();
+  if(tab === 'stats') loadDeepStats();
+  if(tab === 'finanzen') loadFinanzen();
+  if(tab === 'archiv') loadArchive();
+  if(tab === 'live') { loadLive(); resizeGlobe(); }
+}
+async function exportData(type){
+  const d = await api('/admin/'+type);
+  if(!d) return;
+  const data = d[type] || [];
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'lexord-'+type+'-'+new Date().toISOString().slice(0,10)+'.json';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+/* ════════ NOTIFICATIONS: SOUND + PUSH + PWA ════════ */
+const NOTIF_KEY = 'lxrd_admin_notif';
+let NOTIF_ON = localStorage.getItem(NOTIF_KEY) !== '0';
+let KNOWN_ORDERS = new Set();
+let KNOWN_REPAIRS = new Set();
+let NOTIF_FIRST_LOAD = true;
+let AUDIO_CTX = null;
+
+function notifBtn(){const b=document.getElementById('notif-toggle');if(b)b.innerText = NOTIF_ON?'🔔 ON':'🔕 OFF';}
+
+/* ════════ WEB PUSH (Service Worker + VAPID) — Lockscreen-Push wie Shopify ════════ */
+const VAPID_PUBLIC_KEY_FALLBACK = ''; // wird vom Worker zurueckgegeben
+let SW_REG = null;
+let VAPID_PUB = null;
+
+function urlBase64ToUint8(s){
+  const pad = '='.repeat((4 - s.length % 4) % 4);
+  const b64 = (s + pad).replace(/-/g,'+').replace(/_/g,'/');
+  const raw = atob(b64);
+  const arr = new Uint8Array(raw.length);
+  for(let i=0;i<raw.length;i++) arr[i] = raw.charCodeAt(i);
+  return arr;
+}
+
+async function setupServiceWorker(){
+  if(!('serviceWorker' in navigator) || !('PushManager' in window)) return null;
+  try{
+    SW_REG = await navigator.serviceWorker.register('sw.js', { scope: '/' });
+    return SW_REG;
+  }catch(e){ console.warn('SW reg failed:', e); return null; }
+}
+
+async function subscribePush(){
+  if(!SW_REG) await setupServiceWorker();
+  if(!SW_REG) return false;
+  /* Public Key vom Worker holen (cached) */
+  if(!VAPID_PUB){
+    const d = await api('/admin/push/key');
+    if(d && d.publicKey) VAPID_PUB = d.publicKey;
+    else { toast('VAPID-Key fehlt im Worker','error'); return false; }
+  }
+  let sub = await SW_REG.pushManager.getSubscription();
+  if(!sub){
+    try{
+      sub = await SW_REG.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8(VAPID_PUB)
+      });
+    }catch(e){
+      toast('Push-Subscribe abgelehnt: '+e.message,'error');
+      return false;
+    }
+  }
+  /* Sub an Backend schicken */
+  const r = await api('/admin/push/subscribe', { method:'POST', body: JSON.stringify({ subscription: sub.toJSON ? sub.toJSON() : sub }) });
+  if(r && r.success){
+    toast('🔔 Lockscreen-Push aktiv','success');
+    return true;
+  }
+  return false;
+}
+
+async function unsubscribePush(){
+  if(!SW_REG) return;
+  const sub = await SW_REG.pushManager.getSubscription();
+  if(sub){
+    await sub.unsubscribe();
+    await api('/admin/push/unsubscribe', { method:'POST', body: JSON.stringify({ endpoint: sub.endpoint }) });
+  }
+}
+
+async function testPush(){
+  const r = await api('/admin/push/test', { method:'POST', body: JSON.stringify({}) });
+  if(r && r.success) toast('Test-Push gesendet — schau auf dein Handy 📱','success');
+  else toast('Test-Push fehlgeschlagen — VAPID-Keys im Worker setzen','error');
+}
+
+async function toggleNotifications(){
+  NOTIF_ON = !NOTIF_ON;
+  localStorage.setItem(NOTIF_KEY, NOTIF_ON?'1':'0');
+  notifBtn();
+  if(NOTIF_ON){
+    /* Browser-Permission anfordern */
+    if('Notification' in window && Notification.permission !== 'granted'){
+      const p = await Notification.requestPermission();
+      if(p !== 'granted'){toast('Browser hat Benachrichtigungen blockiert','warn');}
+    }
+    /* Service Worker + Web Push fuer Lockscreen-Notifications */
+    if(Notification.permission === 'granted') await subscribePush();
+    /* AudioContext starten (Geste benötigt) */
+    if(!AUDIO_CTX) try{ AUDIO_CTX = new (window.AudioContext||window.webkitAudioContext)(); }catch(_){}
+    if(AUDIO_CTX && AUDIO_CTX.state==='suspended') AUDIO_CTX.resume();
+    playSound('test');
+    toast('Benachrichtigungen AN','success');
+  } else toast('Benachrichtigungen AUS','warn');
+}
+
+/* Web-Audio: synthetisierte Kasse-Klingel ohne externe Dateien */
+function playSound(kind){
+  if(!NOTIF_ON) return;
+  try{
+    if(!AUDIO_CTX) AUDIO_CTX = new (window.AudioContext||window.webkitAudioContext)();
+    if(AUDIO_CTX.state==='suspended') AUDIO_CTX.resume();
+    const ctx = AUDIO_CTX, now = ctx.currentTime;
+    /* Kasse-Klingel "ka-ching": 2 Sinus-Töne hoch+tief mit kurzem Decay */
+    const tones = kind==='order' ? [[880,0],[1320,0.08],[1760,0.16]] :
+                  kind==='repair' ? [[660,0],[990,0.1]] :
+                  kind==='test' ? [[523,0],[784,0.1]] :
+                  [[440,0],[660,0.08]];
+    tones.forEach(([freq,delay])=>{
+      const osc = ctx.createOscillator(), gain = ctx.createGain();
+      osc.type='sine'; osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, now+delay);
+      gain.gain.linearRampToValueAtTime(0.18, now+delay+0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, now+delay+0.45);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(now+delay); osc.stop(now+delay+0.5);
+    });
+  }catch(_){}
+}
+
+/* Browser-/System-Notification (Push auf Startbildschirm) */
+function pushNotification(title, body, tag){
+  if(!NOTIF_ON || !('Notification' in window) || Notification.permission !== 'granted') return;
+  try{
+    const n = new Notification(title, {
+      body, tag: tag||'lxrd', icon: '/IMG_7023.png', badge: '/IMG_7023.png',
+      requireInteraction: true, silent: false
+    });
+    n.onclick = ()=>{ window.focus(); n.close(); };
+  }catch(_){}
+}
+
+/* Erkennen neuer Bestellungen / Reparaturen — wird nach jedem loadOrders/loadRepairs aufgerufen */
+function detectNewOrders(orders){
+  if(NOTIF_FIRST_LOAD){
+    orders.forEach(o => KNOWN_ORDERS.add(o.orderNr));
+    return;
+  }
+  const news = orders.filter(o => !KNOWN_ORDERS.has(o.orderNr));
+  news.forEach(o => {
+    KNOWN_ORDERS.add(o.orderNr);
+    playSound('order');
+    pushNotification(
+      '💰 Neue Bestellung · ' + (o.orderNr||''),
+      (o.name||'Kunde') + ' · ' + parseFloat(o.total||0).toFixed(2) + ' € · ' + (o.email||''),
+      'order-' + o.orderNr
+    );
+    toast('💰 NEUE BESTELLUNG: '+o.orderNr+' · '+parseFloat(o.total||0).toFixed(2)+' €','success');
+  });
+}
+function detectNewRepairs(repairs){
+  if(NOTIF_FIRST_LOAD){
+    repairs.forEach(r => KNOWN_REPAIRS.add(r.repNr));
+    return;
+  }
+  const news = repairs.filter(r => !KNOWN_REPAIRS.has(r.repNr));
+  news.forEach(r => {
+    KNOWN_REPAIRS.add(r.repNr);
+    playSound('repair');
+    pushNotification(
+      '🔧 Neue Reparatur · ' + (r.repNr||''),
+      (r.name||'Kunde') + ' · ' + (r.damage||r.model||''),
+      'repair-' + r.repNr
+    );
+    toast('🔧 NEUE REPARATUR: '+r.repNr,'warn');
+  });
+}
+
+/* Hooks an loadOrders / loadRepairs damit Benachrichtigungen automatisch laufen */
+const _origLoadOrders = loadOrders;
+loadOrders = async function(){
+  const c = document.getElementById('orders-container');
+  if(c) c.innerHTML = '<div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div>';
+  const d = await api('/admin/orders');
+  if(!d || !d.orders){ if(c) c.innerHTML = empty('⚠','VERBINDUNGSFEHLER'); return; }
+  ALL_ORDERS = d.orders;
+  detectNewOrders(d.orders);
+  renderOrders(d.orders);
+};
+const _origLoadRepairs = loadRepairs;
+loadRepairs = async function(){
+  const c = document.getElementById('repairs-container');
+  if(c) c.innerHTML = '<div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div>';
+  const d = await api('/admin/repairs');
+  if(!d || !d.repairs){ if(c) c.innerHTML = empty('⚠','VERBINDUNGSFEHLER'); return; }
+  if(!d.repairs.length){ if(c) c.innerHTML = empty('🔧','KEINE REPARATUREN'); detectNewRepairs(d.repairs); return; }
+  detectNewRepairs(d.repairs);
+  c.innerHTML = d.repairs.map(r => `<div class="order-card">
+    <div class="order-hd">
+      <div><div class="order-nr">${esc(r.repNr)}</div><div class="order-date">${new Date(r.date).toLocaleString('de-DE')}</div></div>
+      <div class="order-status s-bearbeitung">REPARATUR</div>
+    </div>
+    <div class="order-info-grid">
+      <div>KUNDE<strong>${esc(r.name)}</strong></div>
+      <div>E-MAIL<strong>${esc(r.email)}</strong></div>
+      <div>SCHADEN<strong>${esc(r.damage)}</strong></div>
+      <div>CONTROLLER<strong>${esc(r.model)}</strong></div>
+    </div>
+    <div class="order-items">${esc(r.desc)}</div>
+  </div>`).join('');
+};
+
+/* Hintergrund-Polling: prüft alle 30s ob neue Bestellungen / Reparaturen reingekommen sind */
+let ORDER_POLL = null;
+function startOrderPolling(){
+  if(ORDER_POLL) clearInterval(ORDER_POLL);
+  ORDER_POLL = setInterval(async ()=>{
+    /* Lautloser Check ohne UI-Refresh wenn man auf anderem Tab ist */
+    const onOrders = document.getElementById('panel-orders').classList.contains('active');
+    const onRepairs = document.getElementById('panel-repairs').classList.contains('active');
+    if(!onOrders){
+      const d = await api('/admin/orders');
+      if(d && d.orders){ ALL_ORDERS = d.orders; detectNewOrders(d.orders); }
+    }
+    if(!onRepairs){
+      const d = await api('/admin/repairs');
+      if(d && d.repairs){ detectNewRepairs(d.repairs); }
+    }
+    /* Nach 1. Polling-Runde nicht mehr als first-load behandeln */
+    NOTIF_FIRST_LOAD = false;
+    /* Stats refresh */
+    loadStats();
+  }, 30000);
+}
+
+/* PWA-Install-Hint (Startbildschirm) */
+let DEFERRED_INSTALL = null;
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault();
+  DEFERRED_INSTALL = e;
+  setTimeout(()=>{
+    if(document.getElementById('dashboard').classList.contains('active')){
+      toast('💡 Tippe 🔔 oben rechts → Admin auf Startbildschirm installieren','warn');
+    }
+  }, 3000);
+});
+
+/* showDashboard erweitern: Notification-Permission + Polling starten */
+const _origShowDashboard = showDashboard;
+showDashboard = function(){
+  _origShowDashboard();
+  notifBtn();
+  /* Permission proaktiv anfragen wenn Notifs an aber noch nicht erlaubt */
+  if(NOTIF_ON && 'Notification' in window && Notification.permission === 'default'){
+    setTimeout(()=>{
+      Notification.requestPermission().then(async p=>{
+        if(p==='granted'){
+          toast('Push-Benachrichtigungen aktiv','success');
+          await subscribePush();
+        }
+      });
+    }, 1500);
+  }
+  /* Service Worker registrieren + Sub erneuern wenn Permission schon da */
+  if(NOTIF_ON && 'Notification' in window && Notification.permission === 'granted'){
+    setupServiceWorker().then(()=>subscribePush());
+  }
+  /* Initial-Load: Bestehende Bestellungen merken, OHNE Sound */
+  setTimeout(async ()=>{
+    const d = await api('/admin/orders');
+    if(d && d.orders) detectNewOrders(d.orders);
+    const r = await api('/admin/repairs');
+    if(r && r.repairs) detectNewRepairs(r.repairs);
+    NOTIF_FIRST_LOAD = false;
+    startOrderPolling();
+  }, 1000);
+};
+
+window.addEventListener('DOMContentLoaded', ()=>{
+  if(localStorage.getItem(TOKEN_KEY)) showDashboard();
+  else document.getElementById('login-code').focus();
+  notifBtn();
+});
+</script>
+
+</body>
+</html>

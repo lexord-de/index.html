@@ -875,42 +875,8 @@ main{position:relative;z-index:1}
   </div>
 </div>
 
-<!-- ADMIN-PANEL MODAL -->
-<div id="admin-modal" role="dialog">
-  <div class="lm-box admin">
-    <button class="lm-x" onclick="closeAdmin()" aria-label="Schließen">×</button>
-    <div class="lm-view" id="adm-login-view">
-      <div class="lm-icon-wrap" style="border-color:var(--neon2)">🔐</div>
-      <h2 class="lm-title" style="color:var(--neon2)">ADMIN-PANEL</h2>
-      <p class="lm-sub">NUR FÜR LEXORD ADMIN</p>
-      <div class="lm-err" id="adm-err"></div>
-      <div class="lm-input-grp">
-        <label class="lm-input-lbl">ADMIN-PASSWORT</label>
-        <input type="password" class="lm-input" id="adm-pw" placeholder="••••••••" autocomplete="current-password">
-      </div>
-      <button class="lm-btn" id="adm-login-btn" onclick="doAdminLogin()" style="background:var(--neon2);color:#fff">EINLOGGEN →</button>
-    </div>
-    <div class="lm-dash" id="adm-dash-view">
-      <div class="lm-greet-row" style="background:linear-gradient(135deg,rgba(188,19,254,.06),rgba(0,242,255,.04))">
-        <div class="lm-greet" style="color:var(--neon2)">🔐 ADMIN-PANEL<small>LEXORD® ENGINEERING — VERWALTUNG</small></div>
-        <button class="lm-logout" onclick="doAdminLogout()">↩ LOGOUT</button>
-      </div>
-      <div class="adm-stats" id="adm-stats"></div>
-      <div class="lm-tabs">
-        <button class="lm-tab active" onclick="switchAdmTab('orders')">📦 BESTELLUNGEN</button>
-        <button class="lm-tab" onclick="switchAdmTab('repairs')">🔧 REPARATUREN</button>
-        <button class="lm-tab" onclick="switchAdmTab('customers')">👥 KUNDEN</button>
-        <button class="lm-tab" onclick="switchAdmTab('tax')">💰 STEUER</button>
-        <button class="lm-tab" onclick="switchAdmTab('products')">🛒 PRODUKTE</button>
-      </div>
-      <div class="lm-pane active" id="adm-pane-orders"></div>
-      <div class="lm-pane" id="adm-pane-repairs"></div>
-      <div class="lm-pane" id="adm-pane-customers"></div>
-      <div class="lm-pane" id="adm-pane-tax"></div>
-      <div class="lm-pane" id="adm-pane-products"></div>
-    </div>
-  </div>
-</div>
+<!-- ADMIN-PANEL: deaktiviert — nutze /admin.html -->
+<div id="admin-modal" role="dialog" style="display:none!important"></div>
 
 <!-- REVIEW MODAL -->
 <div id="review-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:60000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(12px);padding:20px" role="dialog">
@@ -2352,8 +2318,8 @@ function renderCustomerRepairs(reps){
 }
 
 /* ═══ ADMIN-PANEL ═══ */
-function openAdmin(){document.getElementById('admin-modal').classList.add('show');document.getElementById('adm-login-view').style.display='block';document.getElementById('adm-dash-view').classList.remove('active');}
-function closeAdmin(){document.getElementById('admin-modal').classList.remove('show');}
+function openAdmin(){window.location.href='admin.html';}
+function closeAdmin(){}
 async function doAdminLogin(){
   const pw=document.getElementById('adm-pw').value;const err=document.getElementById('adm-err');
   err.style.display='none';

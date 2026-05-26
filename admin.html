@@ -485,8 +485,14 @@ async function doLogin(){
   const code = document.getElementById('login-code').value;
   if(!code) return showErr();
   try{
-    const r = await fetch(WORKER_URL + '/admin/login', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({code})});
-    const d = await r.json();
+    /* Versuche neuen Endpoint, Fallback auf alten */
+    let r = await fetch(WORKER_URL + '/admin/login', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({code})});
+    let d = await r.json();
+    if(d.error && d.error.includes('Not found')){
+      /* Alter Worker: /api/admin/login mit {password} */
+      r = await fetch(WORKER_URL + '/api/admin/login', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({password:code})});
+      d = await r.json();
+    }
     if(!d.success) return showErr();
     localStorage.setItem(TOKEN_KEY, d.token);
     showDashboard();
@@ -517,15 +523,43 @@ function showDashboard(){
 }
 
 /* ════════ API ════════ */
+/* API-Helper mit automatischem Fallback: /admin/* -> /api/admin/* */
+const PATH_MAP = {
+  '/admin/orders':'/api/admin/all',
+  '/admin/repairs':'/api/admin/all',
+  '/admin/users':'/api/admin/all',
+  '/admin/stats':'/api/admin/all'
+};
 async function api(path, opts){
   const t = localStorage.getItem(TOKEN_KEY);
   if(!t){ doLogout(); return null; }
   try{
     const headers = {'Authorization':'Bearer '+t};
     if(opts && opts.body) headers['Content-Type'] = 'application/json';
-    const r = await fetch(WORKER_URL + path, {...(opts||{}), headers:{...headers,...(opts&&opts.headers||{})}});
+    let r = await fetch(WORKER_URL + path, {...(opts||{}), headers:{...headers,...(opts&&opts.headers||{})}});
     if(r.status === 401){ doLogout(); return null; }
-    return await r.json();
+    let d = await r.json();
+    /* Fallback auf alten Endpoint wenn "Not found" */
+    if(d && d.error && (d.error==='Not found' || d.path)){
+      const altPath = PATH_MAP[path] || path.replace('/admin/','/api/admin/');
+      if(altPath !== path){
+        r = await fetch(WORKER_URL + altPath, {...(opts||{}), headers:{...headers,...(opts&&opts.headers||{})}});
+        if(r.status === 401){ doLogout(); return null; }
+        d = await r.json();
+        /* /api/admin/all gibt {orders,repairs,customers} — muss je nach Original-Pfad umgemappt werden */
+        if(d && !d.error){
+          if(path==='/admin/orders' && d.orders) return {orders:d.orders};
+          if(path==='/admin/repairs' && d.repairs) return {repairs:d.repairs};
+          if(path==='/admin/users' && d.customers) return {users:d.customers};
+          if(path==='/admin/stats' && d.orders){
+            const orders=d.orders||[];const now=new Date();const month=now.toISOString().slice(0,7);const today=now.toISOString().slice(0,10);
+            return {stats:{orders:orders.length,revenue:orders.reduce((s,o)=>s+(o.total||0),0),customers:Object.keys(orders.reduce((m,o)=>{if(o.email)m[o.email]=1;return m;},{})).length,thisMonth:orders.filter(o=>(o.created||'').slice(0,7)===month).length,today:orders.filter(o=>(o.created||'').slice(0,10)===today).length}};
+          }
+        }
+      }
+      return d;
+    }
+    return d;
   }catch(e){ return null; }
 }
 

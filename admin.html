@@ -94,7 +94,11 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
 .oi-name{font-family:Orbitron;font-size:11px;font-weight:700;color:#fff;letter-spacing:.5px;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .oi-qty{font-size:10.5px;color:#888;margin-bottom:6px}
 .oi-config{display:flex;flex-wrap:wrap;gap:4px}
-.oi-tag{font-family:Orbitron;font-size:7.5px;letter-spacing:.5px;padding:3px 7px;border-radius:4px;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.2);color:var(--neon);white-space:nowrap}
+.oi-tag{font-family:Orbitron;font-size:7.5px;letter-spacing:.5px;padding:3px 7px;border-radius:4px;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.2);color:var(--neon);white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+.oi-dot{width:10px;height:10px;border-radius:50%;border:1px solid rgba(255,255,255,.2);flex-shrink:0;box-shadow:inset 0 1px 2px rgba(255,255,255,.2)}
+.oi-colors{display:flex;gap:3px;margin-bottom:6px;flex-wrap:wrap}
+.oi-cdot{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.15);box-shadow:0 2px 6px rgba(0,0,0,.4),inset 0 1px 2px rgba(255,255,255,.2);cursor:help;transition:.2s}
+.oi-cdot:hover{transform:scale(1.3);box-shadow:0 0 12px rgba(0,242,255,.4)}
 .order-total{display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--bord)}
 .order-total-lbl{font-family:'Orbitron';font-size:9px;color:#666;letter-spacing:1.5px}
 .order-total-val{font-family:'Orbitron';font-size:14px;font-weight:900;color:var(--neon)}
@@ -805,26 +809,29 @@ function orderCard(o){
       if(typeof config === 'string') configHtml = '<div class="oi-config">'+esc(config)+'</div>';
       else if(typeof config === 'object'){
         const parts = [];
-        if(config.front) parts.push('Front: '+config.front);
-        if(config.back) parts.push('Back: '+config.back);
-        if(config.buttons) parts.push('Buttons: '+config.buttons);
-        if(config.dpad) parts.push('D-Pad: '+config.dpad);
-        if(config.sticks) parts.push('Sticks: '+config.sticks);
-        if(config.triggers) parts.push('Trigger: '+config.triggers);
-        if(config.paddles) parts.push('Paddles: '+config.paddles);
-        if(config.grip) parts.push('Grip: '+config.grip);
-        if(config.akku) parts.push('Akku: '+config.akku);
-        if(config.stick_tech) parts.push('Stick-Tech: '+config.stick_tech);
-        if(config.trigger_tech) parts.push('Trigger-Tech: '+config.trigger_tech);
-        Object.keys(config).forEach(k=>{if(!['front','back','buttons','dpad','sticks','triggers','paddles','grip','akku','stick_tech','trigger_tech'].includes(k))parts.push(k+': '+config[k]);});
-        if(parts.length) configHtml = '<div class="oi-config">'+parts.map(p=>'<span class="oi-tag">'+esc(p)+'</span>').join('')+'</div>';
+        Object.keys(config).forEach(k=>{
+          const v = config[k];
+          if(!v) return;
+          if(typeof v === 'object' && v.hex){
+            parts.push('<span class="oi-tag"><span class="oi-dot" style="background:'+esc(v.hex)+'"></span>'+esc(k)+': '+esc(v.name||v.hex)+'</span>');
+          } else {
+            parts.push('<span class="oi-tag">'+esc(k)+': '+esc(String(v))+'</span>');
+          }
+        });
+        if(parts.length) configHtml = '<div class="oi-config">'+parts.join('')+'</div>';
       }
+    }
+    /* Farb-Vorschau: kleine Kreise mit den Controller-Farben */
+    let colorPreview = '';
+    if(i.colors && Array.isArray(i.colors)){
+      colorPreview = '<div class="oi-colors">' + i.colors.map(c=>'<span class="oi-cdot" style="background:'+esc(c)+'" title="'+esc(c)+'"></span>').join('') + '</div>';
     }
     return `<div class="oi-item">
       <img class="oi-img" src="${esc(img)}" alt="${esc(i.name)}" onerror="this.src='IMG_7023.png'">
       <div class="oi-detail">
         <div class="oi-name">${esc(i.name)}</div>
         <div class="oi-qty">${i.qty}× · ${(i.price * i.qty).toFixed(2)} €</div>
+        ${colorPreview}
         ${configHtml}
       </div>
     </div>`;

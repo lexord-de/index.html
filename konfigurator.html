@@ -1711,24 +1711,44 @@ function addToCart(){
   const p = calcPrice();
   const desc = [
     PARTS.map(part=>{const c = state.customColors[part]?'Custom '+state.customColors[part]:COLORS[state[part]].name;return PART_LABELS[part]+': '+c;}).join(' · '),
-    'LED: '+LED_COLORS[state.led].name,
     state.hw_stick!=='standard'?'Sticks: '+state.hw_stick.toUpperCase():'',
     state.hw_trigger==='clicky'?'Clicky Trigger':'',
-    state.hw_paddles?(state.hw_paddles+'× Paddles'):'',
+    state.hw_paddles_meta&&state.hw_paddles_meta.count>0?state.hw_paddles_meta.label:'',
     state.hw_grip==='grip'?'GRIP Coating':'',
     state.hw_rumble==='strong'?'Strong Rumble+':'',
-    state.hw_led_rgb?'RGB-Modul':'',
-    state.hw_warranty>24?'+12M Garantie':'',
-    state.engr_enabled&&state.engr_text?'Gravur: "'+state.engr_text+'"':'',
-    state.sticker>0?'Sticker: '+STICKERS[state.sticker].name:''
+    state.hw_akku!=='standard'?'Akku: '+state.hw_akku:'',
+    state.engr_enabled&&state.engr_text?'Gravur: "'+state.engr_text+'"':''
   ].filter(Boolean).join(' · ');
 
+  /* Konfig mit lesbaren Namen + HEX-Codes (fuer Admin-Panel Farb-Tags) */
+  const colorConfig = {};
+  PARTS.forEach(part=>{
+    const c = state.customColors[part] ? {name:'Custom '+state.customColors[part], hex:state.customColors[part]} : COLORS[state[part]];
+    colorConfig[PART_LABELS[part]] = { name: c.name, hex: c.hex };
+  });
+  const configReadable = {
+    ...colorConfig,
+    stick_tech: state.hw_stick!=='standard' ? state.hw_stick.toUpperCase() : null,
+    trigger_tech: state.hw_trigger==='clicky' ? 'Clicky' : null,
+    paddles: state.hw_paddles_meta && state.hw_paddles_meta.count>0 ? state.hw_paddles_meta.label : null,
+    grip: state.hw_grip==='grip' ? 'Grip Coating' : null,
+    rumble: state.hw_rumble==='strong' ? 'Strong Rumble+' : null,
+    akku: state.hw_akku!=='standard' ? state.hw_akku : null,
+    buildName: state.buildName || null
+  };
+  /* Nulls entfernen */
+  Object.keys(configReadable).forEach(k=>{ if(!configReadable[k]) delete configReadable[k]; });
+
   const item = {
-    name: 'LXRD Custom Controller',
+    name: state.buildName ? 'LXRD '+state.buildName : 'LXRD Custom Controller',
     price: p,
-    img: 'Photoroom_20260305_123705.png',
+    img: 'Photoroom_20260501_094506.png',
     qty: 1,
-    config: JSON.parse(JSON.stringify(state)),
+    config: configReadable,
+    colors: PARTS.map(part=>{
+      const c = state.customColors[part] ? {hex:state.customColors[part]} : COLORS[state[part]];
+      return c.hex;
+    }),
     desc: desc
   };
 

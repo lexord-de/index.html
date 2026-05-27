@@ -500,16 +500,16 @@ async function doLogin(){
   try{
     /* Versuche neuen Endpoint, Fallback auf alten */
     let r = await fetch(WORKER_URL + '/admin/login', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({code})});
-    let d = await r.json();
-    if(d.error && d.error.includes('Not found')){
+    let d = await r.json().catch(()=>({error:'Keine JSON-Antwort'}));
+    if(d.error && (d.error==='Not found' || d.path)){
       /* Alter Worker: /api/admin/login mit {password} */
       r = await fetch(WORKER_URL + '/api/admin/login', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({password:code})});
-      d = await r.json();
+      d = await r.json().catch(()=>({error:'Keine JSON-Antwort'}));
     }
-    if(!d.success) return showErr();
+    if(!d.success) return showErr(d.error || 'Falscher Code');
     localStorage.setItem(TOKEN_KEY, d.token);
     showDashboard();
-  }catch(e){ showErr('Server-Fehler'); }
+  }catch(e){ showErr('Server nicht erreichbar: '+e.message); }
 }
 function showErr(msg){
   const e = document.getElementById('login-err');

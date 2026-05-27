@@ -804,6 +804,7 @@ footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e
 <script>
 'use strict';
 const CF_WORKER_URL = 'https://lexord-api.leonschulz1420.workers.dev';
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 const PRODUCTS = [
   {slug:'ps5-akku-upgrade-3000',  name:'PS5 Akku Upgrade 3000mAh',  cat:'Upgrade',     price:49.90, oldPrice:0, rating:4.9, reviews:27, badge:'NEU',       badgeType:'new',  img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:[], variants:['#0a0a0a'], color:'#0a0a0a', desc:'+90% Laufzeit · bis zu 16h Spielzeit', created:'2026-05-01', bestseller:true},

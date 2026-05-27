@@ -808,18 +808,34 @@ const CF_WORKER_URL = 'https://lexord-api.leonschulz1420.workers.dev';
 const PRODUCTS = [
   {slug:'ps5-akku-upgrade-3000',  name:'PS5 Akku Upgrade 3000mAh',  cat:'Upgrade',     price:49.90, oldPrice:0, rating:4.9, reviews:27, badge:'NEU',       badgeType:'new',  img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:[], variants:['#0a0a0a'], color:'#0a0a0a', desc:'+90% Laufzeit · bis zu 16h Spielzeit', created:'2026-05-01', bestseller:true},
   {slug:'stickzange-controller',  name:'Stickzange Controller',     cat:'Werkzeug',    price:4.90,  oldPrice:0, rating:4.6, reviews:14, badge:'',          badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:[], variants:['#888888'], color:'#888888', desc:'Profi-Werkzeug zum einfachen Stickwechsel', created:'2025-06-01', bestseller:false},
-  {slug:'ps5-tmr-hallstick-hes',  name:'PS5 TMR Hallstick HES',     cat:'Ersatzteil',  price:34.90, oldPrice:0, rating:4.9, reviews:31, badge:'',          badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['tmr'], variants:['#00f2ff'], color:'#00f2ff', desc:'Präzisions-Ersatzteil gegen Stickdrift · TMR-Technologie', created:'2026-03-01', bestseller:true},
-  {slug:'ps5-skull-paddle',       name:'PS5 SKULL Paddle',          cat:'Paddle',      price:29.90, oldPrice:0, rating:4.8, reviews:19, badge:'',          badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['paddle'], variants:['#0a0a0a'], color:'#0a0a0a', desc:'Custom Back Buttons für DualSense · Scull-Design', created:'2026-01-15', bestseller:false},
+  {slug:'ps5-tmr-hallstick-hes',  name:'PS5 TMR Hallstick HES + Umbau',cat:'Ersatzteil',price:34.90, oldPrice:0, rating:4.9, reviews:31, badge:'',          badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['tmr'], variants:['#00f2ff'], color:'#00f2ff', desc:'Präzisions-Ersatzteil gegen Stickdrift · TMR · inkl. Umbau-Service', created:'2026-03-01', bestseller:true},
+  {slug:'ps5-skull-paddle',       name:'PS5 SKULL Paddle 2er',      cat:'Paddle',      price:12.90, oldPrice:0, rating:4.8, reviews:19, badge:'',          badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['paddle'], variants:['#0a0a0a'], color:'#0a0a0a', desc:'Custom Back Buttons für DualSense · Skull-Design', created:'2026-01-15', bestseller:false},
+  {slug:'ps5-4er-paddle',         name:'PS5 4er Paddles',           cat:'Paddle',      price:19.90, oldPrice:0, rating:4.9, reviews:24, badge:'BESTSELLER',badgeType:'best', img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['paddle'], variants:['#0a0a0a'], color:'#0a0a0a', desc:'4 programmierbare Back Buttons · PS5 DualSense', created:'2026-04-01', bestseller:true},
+  {slug:'ps5-4er-paddle-spritzguss', name:'PS5 4er Paddle Spritzguss Softtouch', cat:'Paddle', price:11.90, oldPrice:0, rating:4.9, reviews:16, badge:'',badgeType:'', img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['paddle'], variants:['#0a0a0a'], color:'#0a0a0a', desc:'Spritzguss mit Softtouch-Lackierung · 4 Buttons', created:'2026-04-01', bestseller:false},
   {slug:'ps5-analogstick',        name:'PS5 Analogstick',           cat:'Ersatzteil',  price:9.90,  oldPrice:0, rating:4.7, reviews:22, badge:'',          badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:[], variants:['#0a0a0a'], color:'#0a0a0a', desc:'Original-Ersatz Analogstick für DualSense', created:'2025-10-01', bestseller:false},
-  {slug:'ps5-4er-paddle-spritzguss', name:'PS5 4er Paddle Spritzguss', cat:'Paddle',  price:11.90, oldPrice:0, rating:4.9, reviews:16, badge:'BESTSELLER',badgeType:'best', img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['paddle'], variants:['#0a0a0a'], color:'#0a0a0a', desc:'mit Softtouch-Lackierung · 4 programmierbare Buttons', created:'2026-04-01', bestseller:true},
-  {slug:'skull-v3-rueckschale',   name:'SKULL V3 Rückschale',       cat:'Gehäuse',     price:39.90, oldPrice:0, rating:4.8, reviews:12, badge:'',          badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['grip'], variants:['#0a0a0a'], color:'#0a0a0a', desc:'Grip schwarz mit Paddle-Slots · Anti-Rutsch', created:'2026-02-01', bestseller:false},
-  {slug:'ps5-hall-sticks',        name:'PS5 Hall Sticks',           cat:'Ersatzteil',  price:24.90, oldPrice:0, rating:4.8, reviews:35, badge:'',          badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['hall'], variants:['#bc13fe'], color:'#bc13fe', desc:'Hall Effect Stickdrift Fix · 2er-Set', created:'2026-01-01', bestseller:true},
-  {slug:'ps5-tmr-ersatz-sticks',  name:'PS5 TMR Ersatz-Sticks',     cat:'Ersatzteil',  price:44.90, oldPrice:0, rating:4.9, reviews:18, badge:'NEU',       badgeType:'new',  img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['tmr'], variants:['#00f2ff'], color:'#00f2ff', desc:'TMR Pro Sticks · Premium Drift-Free · 2er-Set', created:'2026-05-10', bestseller:true}
+  {slug:'ps5-tmr-stick-einzeln',  name:'PS5 TMR Stick einzeln + Umbau', cat:'Ersatzteil',price:19.90, oldPrice:0, rating:4.9, reviews:11, badge:'NEU',    badgeType:'new',  img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['tmr'], variants:['#00f2ff'], color:'#00f2ff', desc:'TMR Präzisions-Stick · einzeln · inkl. Umbau-Service · Stückzahl wählbar', created:'2026-05-20', bestseller:false},
+  {slug:'ps5-hall-stick-einzeln', name:'PS5 Hall Effect Stick einzeln + Umbau', cat:'Ersatzteil',price:14.90, oldPrice:0, rating:4.8, reviews:15, badge:'',badgeType:'', img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['hall'], variants:['#bc13fe'], color:'#bc13fe', desc:'Hall Effect Stick · einzeln · inkl. Umbau-Service · Stückzahl wählbar', created:'2026-05-20', bestseller:false},
+  {slug:'ps5-hall-sticks',        name:'PS5 Hall Sticks 2er-Set + Umbau', cat:'Ersatzteil',price:24.90, oldPrice:0, rating:4.8, reviews:35, badge:'',    badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['hall'], variants:['#bc13fe'], color:'#bc13fe', desc:'Hall Effect Stickdrift Fix · 2er-Set · inkl. Umbau', created:'2026-01-01', bestseller:true},
+  {slug:'ps5-tmr-ersatz-sticks',  name:'PS5 TMR Ersatz-Sticks 2er + Umbau', cat:'Ersatzteil',price:44.90, oldPrice:0, rating:4.9, reviews:18, badge:'NEU',badgeType:'new', img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['tmr'], variants:['#00f2ff'], color:'#00f2ff', desc:'TMR Pro Sticks · Premium Drift-Free · 2er-Set · inkl. Umbau', created:'2026-05-10', bestseller:true},
+  {slug:'ps5-sticks-hoehenverstellbar', name:'PS5 Sticks Höhenverstellbar', cat:'Ersatzteil',price:12.90, oldPrice:0, rating:4.7, reviews:9, badge:'NEU',badgeType:'new', img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:[], variants:['#0a0a0a'], color:'#0a0a0a', desc:'Höhenverstellbare Analogstick-Aufsätze · mehr Kontrolle · FPS-Vorteil', created:'2026-05-25', bestseller:false},
+  {slug:'skull-v3-rueckschale',   name:'SKULL V3 Rückschale Grip',  cat:'Gehäuse',     price:39.90, oldPrice:0, rating:4.8, reviews:12, badge:'',          badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['grip'], variants:['#0a0a0a'], color:'#0a0a0a', desc:'Grip schwarz mit Paddle-Slots · Anti-Rutsch', created:'2026-02-01', bestseller:false},
+  {slug:'ps5-soft-touch-grip-case', name:'PS5 Controller Soft-Touch Grip Case', cat:'Gehäuse',price:29.90, oldPrice:0, rating:4.8, reviews:8, badge:'NEU',badgeType:'new', img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['grip'], variants:['#0a0a0a','#ffffff','#ff0000','#0000ff'], color:'#0a0a0a', desc:'Premium Soft-Touch Gehäuse · samtweiche Oberfläche · mehrere Farben', created:'2026-05-22', bestseller:false},
+  {slug:'lexord-remapper-set-v2', name:'Lexord Gaming Remapper Set V2', cat:'Umbau',    price:34.90, oldPrice:0, rating:4.9, reviews:21, badge:'BESTSELLER',badgeType:'best', img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['paddle'], variants:['#0a0a0a'], color:'#0a0a0a', desc:'PS5 DualSense Paddle Scuf Umbau Mod · BDM-030/040/050 kompatibel', created:'2026-03-15', bestseller:true},
+  {slug:'ps5-joystick-set-8teilig', name:'PS5 Joystick Set 8-teilig', cat:'Ersatzteil',price:14.90, oldPrice:0, rating:4.7, reviews:29, badge:'',        badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:[], variants:['#0a0a0a'], color:'#0a0a0a', desc:'Daumensticks Ersatz & Tuning Grip-Kappen · 8 Stück', created:'2026-02-10', bestseller:false},
+  {slug:'ps5-carbon-grip-set',   name:'AimControllers V3 Carbon Grip Set', cat:'Gehäuse',price:24.90, oldPrice:0, rating:4.8, reviews:13, badge:'',      badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['grip'], variants:['#0a0a0a'], color:'#0a0a0a', desc:'PS5 Carbon Grip Set · professioneller Halt · Anti-Rutsch', created:'2026-04-15', bestseller:false},
+  {slug:'ps4-4er-paddle-v2',     name:'PS4 4er Paddle V2',          cat:'Paddle',      price:16.90, oldPrice:0, rating:4.6, reviews:11, badge:'',        badgeType:'',     img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in',  features:['paddle'], variants:['#0a0a0a'], color:'#0a0a0a', desc:'4 programmierbare Paddles für PS4 Controller · V2 Design', created:'2026-01-20', bestseller:false},
+  /* ═══ PLATZHALTER (unsichtbar bis im Code aktiviert) ═══ */
+  {slug:'platzhalter-1', name:'Neues Produkt 1', cat:'Ersatzteil', price:0, oldPrice:0, rating:0, reviews:0, badge:'', badgeType:'', img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in', features:[], variants:['#0a0a0a'], color:'#0a0a0a', desc:'Beschreibung hier einfügen', created:'2026-01-01', bestseller:false, hidden:true},
+  {slug:'platzhalter-2', name:'Neues Produkt 2', cat:'Ersatzteil', price:0, oldPrice:0, rating:0, reviews:0, badge:'', badgeType:'', img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in', features:[], variants:['#0a0a0a'], color:'#0a0a0a', desc:'Beschreibung hier einfügen', created:'2026-01-01', bestseller:false, hidden:true},
+  {slug:'platzhalter-3', name:'Neues Produkt 3', cat:'Ersatzteil', price:0, oldPrice:0, rating:0, reviews:0, badge:'', badgeType:'', img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in', features:[], variants:['#0a0a0a'], color:'#0a0a0a', desc:'Beschreibung hier einfügen', created:'2026-01-01', bestseller:false, hidden:true},
+  {slug:'platzhalter-4', name:'Neues Produkt 4', cat:'Ersatzteil', price:0, oldPrice:0, rating:0, reviews:0, badge:'', badgeType:'', img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in', features:[], variants:['#0a0a0a'], color:'#0a0a0a', desc:'Beschreibung hier einfügen', created:'2026-01-01', bestseller:false, hidden:true},
+  {slug:'platzhalter-5', name:'Neues Produkt 5', cat:'Ersatzteil', price:0, oldPrice:0, rating:0, reviews:0, badge:'', badgeType:'', img:'Photoroom_20260305_122914.png', img2:'Photoroom_20260305_122914.png', stock:'in', features:[], variants:['#0a0a0a'], color:'#0a0a0a', desc:'Beschreibung hier einfügen', created:'2026-01-01', bestseller:false, hidden:true}
 ];
 
 const CATEGORIES_DATA = [
   {key:'Alle',         ico:'🎯'},
   {key:'Ersatzteil',   ico:'🔩'},
+  {key:'Umbau',        ico:'🛠️'},
   {key:'Paddle',       ico:'🎮'},
   {key:'Upgrade',      ico:'⚡'},
   {key:'Gehäuse',      ico:'🛡️'},
@@ -847,7 +863,7 @@ let featuredIdx = 0;
 let featuredTimer = null;
 
 function getFiltered(){
-  let list = PRODUCTS.slice();
+  let list = PRODUCTS.filter(p=>!p.hidden);
   if(state.cat!=='Alle') list = list.filter(p=>p.cat===state.cat);
   if(state.minPrice!==null) list = list.filter(p=>p.price>=state.minPrice);
   if(state.maxPrice!==null) list = list.filter(p=>p.price<=state.maxPrice);
@@ -869,7 +885,7 @@ function getFiltered(){
 }
 
 function renderFeaturedHero(){
-  const featured = PRODUCTS.filter(p=>p.bestseller||p.badge==='BESTSELLER'||p.badge==='NEU').slice(0,3);
+  const featured = PRODUCTS.filter(p=>!p.hidden&&(p.bestseller||p.badge==='BESTSELLER'||p.badge==='NEU')).slice(0,3);
   if(!featured.length) featured.push(PRODUCTS[0]);
   document.getElementById('hf-slides').innerHTML = featured.map((p,i)=>{
     const stars = '★'.repeat(Math.round(p.rating))+'☆'.repeat(5-Math.round(p.rating));
@@ -917,7 +933,7 @@ function renderCategoryChips(){
 }
 
 function renderBestsellerStrip(){
-  const best = PRODUCTS.filter(p=>p.bestseller).slice(0,6);
+  const best = PRODUCTS.filter(p=>!p.hidden&&p.bestseller).slice(0,6);
   document.getElementById('bs-track').innerHTML = best.map((p,i)=>{
     const stars = '★'.repeat(Math.round(p.rating));
     return `<div class="bs-card" onclick="goToProduct('${p.slug}')">
@@ -1184,7 +1200,70 @@ const PRODUCT_DETAILS = {
     images:['Photoroom_20260305_122914.png','Photoroom_20260305_122914.png','Photoroom_20260305_122914.png'],
     features:['2× TMR Pro Sticks','Premium Drift-Free Technologie','Höchste Präzision','PS5 DualSense kompatibel','Made in Germany'],
     specs:[['Inhalt','2× TMR Pro Sticks'],['Technologie','TMR (Tunnel-Magnetoresistiv)'],['Kompatibilität','PS5 DualSense'],['Schwierigkeit','Fortgeschritten · Löten'],['Dauer','30–45 Minuten'],['Garantie','24 Monate']],
-    longDesc:'<h3>🏅 TMR Pro — Premium Drift-Free</h3><p>Die <strong>PS5 TMR Ersatz-Sticks</strong> sind die Spitzenklasse der Stick-Technologie — kontaktlose TMR-Sensoren für maximale Präzision und null Drift.</p><h3>⚡ Warum TMR?</h3><p>TMR-Sensoren (Tunnel-Magnetoresistiv) bieten eine noch höhere Auflösung und Linearität als klassische Hall-Effect-Sensoren.</p>'
+    longDesc:'<h3>🏅 TMR Pro — Premium Drift-Free</h3><p>Die <strong>PS5 TMR Ersatz-Sticks</strong> sind die Spitzenklasse der Stick-Technologie — kontaktlose TMR-Sensoren für maximale Präzision und null Drift.</p><h3>⚡ Warum TMR?</h3><p>TMR-Sensoren (Tunnel-Magnetoresistiv) bieten eine noch höhere Auflösung und Linearität als klassische Hall-Effect-Sensoren.</p><h3>🔧 Inkl. Umbau-Service</h3><p>Du sendest uns deinen Controller, wir bauen die TMR-Sticks professionell ein und senden ihn zurück — fertig.</p>'
+  },
+  'ps5-4er-paddle':{
+    desc:'4 programmierbare Back Buttons für den PS5 DualSense Controller.',
+    images:['Photoroom_20260305_122914.png'],
+    features:['4× programmierbare Paddles','Frei belegbar (X, O, L3, R3 etc.)','Schnellere Reaktionszeit','PS5 DualSense kompatibel','Einfacher Einbau · 15 Min'],
+    specs:[['Inhalt','4× Paddle Buttons + Halterung'],['Material','ABS Premium'],['Kompatibilität','PS5 DualSense BDM-010/020/030/040/050'],['Schwierigkeit','Einfach'],['Dauer','ca. 15 Min']],
+    longDesc:'<h3>🎮 4 Paddles — maximale Kontrolle</h3><p>Mit <strong>4 Back Buttons</strong> springst, rutschst, nachladest und wechselst Waffen — ohne jemals den rechten Stick loszulassen. Das verschafft dir in jedem Shooter einen Vorteil.</p><h3>⚡ Frei programmierbar</h3><p>Jedes Paddle ist einzeln belegbar: X, O, △, □, L3, R3, D-Pad oder Touchpad.</p>'
+  },
+  'ps5-tmr-stick-einzeln':{
+    desc:'Einzelner TMR Präzisions-Stick mit professionellem Umbau-Service.',
+    images:['Photoroom_20260305_122914.png'],
+    features:['TMR-Technologie (kontaktlos)','Einzeln bestellbar (1-4 Stück)','Inkl. professionellem Umbau','Gegen Stickdrift','Lebenslange Präzision'],
+    specs:[['Inhalt','1× TMR Stick + Umbau'],['Technologie','TMR (Tunnel-Magnetoresistiv)'],['Kompatibilität','PS5 DualSense'],['Umbau','Professionell durch LEXORD'],['Garantie','24 Monate']],
+    longDesc:'<h3>🎯 TMR Stick einzeln</h3><p>Du brauchst nur <strong>einen Stick</strong> getauscht? Kein Problem — bestelle einzeln und wähle die gewünschte Stückzahl. Wir bauen professionell um.</p><h3>🔧 Umbau-Service inklusive</h3><p>Sende uns deinen Controller → wir tauschen den Stick → du bekommst ihn drift-frei zurück.</p>'
+  },
+  'ps5-hall-stick-einzeln':{
+    desc:'Einzelner Hall Effect Stick mit professionellem Umbau-Service.',
+    images:['Photoroom_20260305_122914.png'],
+    features:['Hall-Effect-Technologie (magnetisch)','Einzeln bestellbar (1-4 Stück)','Inkl. professionellem Umbau','Drift-resistent','Langlebig'],
+    specs:[['Inhalt','1× Hall Effect Stick + Umbau'],['Technologie','Hall-Effect (magnetisch)'],['Kompatibilität','PS5 DualSense'],['Umbau','Professionell durch LEXORD'],['Garantie','24 Monate']],
+    longDesc:'<h3>⚡ Hall Effect Stick einzeln</h3><p>Magnetische Hall-Effect-Sensoren sind <strong>praktisch unzerstörbar</strong> — kein mechanischer Verschleiß, kein Drift.</p><h3>🔧 Umbau inklusive</h3><p>Controller einsenden → Umbau durch LEXORD → drift-frei zurück. Stückzahl frei wählbar.</p>'
+  },
+  'ps5-sticks-hoehenverstellbar':{
+    desc:'Höhenverstellbare Analogstick-Aufsätze für mehr Kontrolle und Präzision.',
+    images:['Photoroom_20260305_122914.png'],
+    features:['Höhenverstellbar (3 Stufen)','Mehr Präzision in FPS-Games','Anti-Rutsch Oberfläche','PS5 DualSense kompatibel','Einfach aufstecken'],
+    specs:[['Inhalt','2× Höhenverstellbare Aufsätze'],['Stufen','3 Höhenstufen'],['Material','Silikon + ABS'],['Kompatibilität','PS5 / PS4 / Xbox'],['Einbau','Aufstecken · keine Werkzeuge']],
+    longDesc:'<h3>📐 Höhenverstellbar — dein Vorteil</h3><p>Mit <strong>höheren Sticks</strong> hast du mehr Hebelweg = feinere Aim-Kontrolle. Profi-Spieler schwören darauf.</p><h3>🎯 3 Stufen</h3><p>Finde deine perfekte Höhe — niedrig für Racing, mittel für Allround, hoch für FPS-Präzision.</p>'
+  },
+  'ps5-soft-touch-grip-case':{
+    desc:'Premium Soft-Touch Gehäuse für den PS5 DualSense — samtweiche Oberfläche in mehreren Farben.',
+    images:['Photoroom_20260305_122914.png'],
+    features:['Soft-Touch Oberfläche','Anti-Rutsch Beschichtung','Mehrere Farben verfügbar','PS5 DualSense kompatibel','Komplettes Gehäuse (Front + Back)'],
+    specs:[['Typ','Komplettes Gehäuse (Front + Back)'],['Finish','Soft-Touch Matt'],['Farben','Schwarz · Weiß · Rot · Blau'],['Kompatibilität','PS5 DualSense BDM-030/040/050'],['Schwierigkeit','Mittel · Schraubendreher'],['Dauer','ca. 25 Min']],
+    longDesc:'<h3>✨ Soft-Touch Premium</h3><p>Das <strong>Soft-Touch Grip Case</strong> verwandelt deinen DualSense in ein Handschmeichler-Erlebnis — samtweiche, matte Oberfläche die nie abrutscht.</p><h3>🎨 Mehrere Farben</h3><p>Schwarz, Weiß, Rot oder Blau — wähle deinen Style.</p>'
+  },
+  'lexord-remapper-set-v2':{
+    desc:'Komplettes Remapper-Set für PS5 DualSense Paddle-Umbau · BDM-030/040/050.',
+    images:['Photoroom_20260305_122914.png'],
+    features:['Komplettes Umbau-Kit','BDM-030 / 040 / 050 kompatibel','Paddles + Adapter + Kabel','Scuf-ähnliche Funktionalität','Anleitung inklusive'],
+    specs:[['Inhalt','Remapper Board + 4× Paddle + Kabel + Adapter'],['Kompatibilität','PS5 DualSense BDM-030, 040, 050'],['Schwierigkeit','Mittel · Löten empfohlen'],['Dauer','ca. 45 Min'],['Garantie','24 Monate']],
+    longDesc:'<h3>🛠️ Komplettes Umbau-Kit</h3><p>Das <strong>Lexord Gaming Remapper Set V2</strong> enthält alles was du brauchst um deinen PS5 DualSense mit programmierbaren Back-Paddles auszustatten — wie ein Scuf-Controller, nur günstiger.</p><h3>📦 Inhalt</h3><ul><li>Remapper-Board V2</li><li>4× Paddle Buttons</li><li>Flex-Kabel</li><li>Adapter für BDM-030/040/050</li><li>Einbauanleitung</li></ul>'
+  },
+  'ps5-joystick-set-8teilig':{
+    desc:'8-teiliges Joystick-Set: Ersatz-Daumensticks + Tuning Grip-Kappen für PS5.',
+    images:['Photoroom_20260305_122914.png'],
+    features:['8 Teile im Set','4× Ersatz-Daumensticks','4× Tuning Grip-Kappen','Verschiedene Höhen und Texturen','PS5 / PS4 / Xbox kompatibel'],
+    specs:[['Inhalt','4× Daumensticks + 4× Grip-Kappen'],['Material','Silikon + TPU'],['Kompatibilität','PS5 · PS4 · Xbox Series · Switch Pro'],['Einbau','Aufstecken'],['Farbe','Schwarz']],
+    longDesc:'<h3>🎮 8 Teile — maximale Auswahl</h3><p>Das <strong>PS5 Joystick Set</strong> enthält 4 Ersatz-Daumensticks und 4 verschiedene Tuning-Kappen — konvex, konkav, hoch und niedrig. Finde dein perfektes Setup.</p>'
+  },
+  'ps5-carbon-grip-set':{
+    desc:'AimControllers V3 Carbon Grip Set für professionellen Halt am PS5 DualSense.',
+    images:['Photoroom_20260305_122914.png'],
+    features:['Carbon-Optik','Professioneller Anti-Rutsch-Halt','Selbstklebend','PS5 DualSense kompatibel','Rückstandslos entfernbar'],
+    specs:[['Typ','Selbstklebende Grip-Pads'],['Material','Carbon-Faser-Optik · Strukturiert'],['Kompatibilität','PS5 DualSense'],['Einbau','Aufkleben · 2 Min'],['Garantie','12 Monate']],
+    longDesc:'<h3>🏁 Carbon Grip — Pro-Level</h3><p>Das <strong>AimControllers V3 Carbon Grip Set</strong> gibt deinem Controller den Halt eines Rennlenkrads — strukturierte Carbon-Oberfläche, selbstklebend, rückstandslos entfernbar.</p>'
+  },
+  'ps4-4er-paddle-v2':{
+    desc:'4 programmierbare Paddles für PS4 Controller · V2 Design.',
+    images:['Photoroom_20260305_122914.png'],
+    features:['4× programmierbare Paddles','PS4 DualShock 4 kompatibel','V2 Design (verbessert)','Frei belegbar','Einfacher Einbau'],
+    specs:[['Inhalt','4× Paddle Buttons + Halterung'],['Kompatibilität','PS4 DualShock 4 (alle Revisionen)'],['Material','ABS Premium'],['Schwierigkeit','Einfach · 15 Min']],
+    longDesc:'<h3>🎮 PS4 Paddles — V2</h3><p>Das <strong>PS4 4er Paddle V2</strong> bringt Pro-Controller-Funktionalität auf deinen DualShock 4 — vier frei belegbare Back Buttons im verbesserten V2-Design.</p>'
   }
 };
 

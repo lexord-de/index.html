@@ -1226,6 +1226,12 @@ function barRow(name, lbl, pct){
 }
 
 /* ════════ ARCHIV (verschluesselte Historie) ════════ */
+async function deleteArchiveEntry(key){
+  if(!confirm('Archiv-Eintrag wirklich löschen?')) return;
+  const r = await api('/admin/archive/'+encodeURIComponent(key), {method:'DELETE'});
+  if(r && r.success){ toast('Gelöscht','success'); loadArchive(); }
+  else toast('Fehler beim Löschen','error');
+}
 const ARCH_ICONS = { email:'✉', invoice:'📄', refund:'💸', status:'📦', tracking:'📮' };
 const ARCH_LABELS = { email:'Mail-Versand', invoice:'Rechnung', refund:'Refund/Storno', status:'Status-Änderung', tracking:'Tracking' };
 
@@ -1239,15 +1245,16 @@ async function loadArchive(){
   document.getElementById('arch-count').innerText = (d.entries.length + (d.total > d.entries.length ? ' / '+d.total+' insgesamt' : ''));
   if(!d.entries.length){ c.innerHTML = empty('🗄️','NOCH KEINE EINTRAEGE'); return; }
   c.innerHTML = d.entries.map(e => `
-    <div class="arch-row" onclick="openArchive('${esc(e.key)}')">
-      <div class="arch-icon">${ARCH_ICONS[e.type]||'•'}</div>
-      <div class="arch-main">
+    <div class="arch-row">
+      <div class="arch-icon" onclick="openArchive('${esc(e.key)}')">${ARCH_ICONS[e.type]||'•'}</div>
+      <div class="arch-main" onclick="openArchive('${esc(e.key)}')">
         <div class="arch-title">${ARCH_LABELS[e.type]||e.type}</div>
         <div class="arch-sub">${new Date(e.time).toLocaleString('de-DE')}</div>
       </div>
       <div class="arch-meta">
         <span class="badge">🔒 ENC</span>
         <span class="hash">SHA: ${esc(e.hash)}</span>
+        <button class="oa-btn danger" style="margin-top:4px;font-size:7px;padding:3px 6px" onclick="event.stopPropagation();deleteArchiveEntry('${esc(e.key)}')">✕</button>
       </div>
     </div>
   `).join('');

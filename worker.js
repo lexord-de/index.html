@@ -232,6 +232,12 @@ async function test(){
         const key = decodeURIComponent(path.replace("/admin/archive/", ""));
         return await admin2ArchiveGet(request, env, key);
       }
+      if (path.startsWith("/admin/archive/") && request.method === "DELETE") {
+        if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+        const key = decodeURIComponent(path.replace("/admin/archive/", ""));
+        if (env.LEXORD_DATA) await env.LEXORD_DATA.delete(key);
+        return json({ success: true });
+      }
 
       // REPARATUR-AKTIONEN (Status/Tracking/Email/KV/Storno)
       if (path.startsWith("/admin/repair/") && path.endsWith("/invoice") && request.method === "GET") {

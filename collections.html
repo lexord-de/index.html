@@ -1135,7 +1135,10 @@ document.getElementById('hdr-search-input').addEventListener('input',e=>{
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('mobile-overlay').classList.toggle('show');}
 function closeSidebarMobile(){if(window.innerWidth<=1000){document.getElementById('sidebar').classList.remove('open');document.getElementById('mobile-overlay').classList.remove('show');}}
 
-function goToProduct(slug){trackRecent(slug);openProductDetail(slug);}
+function goToProduct(slug){
+  try{ trackRecent(slug); }catch(e){}
+  try{ openProductDetail(slug); }catch(e){ console.error('Overlay-Fehler:',e); alert('Produkt: '+slug+' — Overlay konnte nicht geöffnet werden. Fehler: '+e.message); }
+}
 
 /* ════════ FULL PRODUCT DETAIL OVERLAY (inline) ════════ */
 const PRODUCT_DETAILS = {

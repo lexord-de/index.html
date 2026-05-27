@@ -1717,21 +1717,10 @@ loadRepairs = async function(){
   if(c) c.innerHTML = '<div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div>';
   const d = await api('/admin/repairs');
   if(!d || !d.repairs){ if(c) c.innerHTML = empty('⚠','VERBINDUNGSFEHLER'); return; }
-  if(!d.repairs.length){ if(c) c.innerHTML = empty('🔧','KEINE REPARATUREN'); detectNewRepairs(d.repairs); return; }
+  if(!d.repairs.length){ if(c) c.innerHTML = empty('🔧','KEINE REPARATUREN'); ALL_REPAIRS=[]; detectNewRepairs(d.repairs); return; }
+  ALL_REPAIRS = d.repairs;
   detectNewRepairs(d.repairs);
-  c.innerHTML = d.repairs.map(r => `<div class="order-card">
-    <div class="order-hd">
-      <div><div class="order-nr">${esc(r.repNr)}</div><div class="order-date">${new Date(r.date).toLocaleString('de-DE')}</div></div>
-      <div class="order-status s-bearbeitung">REPARATUR</div>
-    </div>
-    <div class="order-info-grid">
-      <div>KUNDE<strong>${esc(r.name)}</strong></div>
-      <div>E-MAIL<strong>${esc(r.email)}</strong></div>
-      <div>SCHADEN<strong>${esc(r.damage)}</strong></div>
-      <div>CONTROLLER<strong>${esc(r.model)}</strong></div>
-    </div>
-    <div class="order-items">${esc(r.desc)}</div>
-  </div>`).join('');
+  renderRepairs(d.repairs);
 };
 
 /* Hintergrund-Polling: prüft alle 30s ob neue Bestellungen / Reparaturen reingekommen sind */

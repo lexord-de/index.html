@@ -1045,11 +1045,14 @@ function productCard(p){
         <img src="${p.img}" alt="${p.name}" class="product-img main" loading="lazy">
         <img src="${p.img2}" alt="" class="product-img alt" loading="lazy">
         <div class="img-dots"><div class="img-dot on"></div><div class="img-dot"></div></div>
-        <div class="product-quick-add"><button class="qa-btn" onclick="event.stopPropagation();addToCart('${p.slug}')">+ IN DEN WARENKORB</button></div>
+        <div class="product-quick-add">
+          <button class="qa-btn detail-btn" onclick="event.stopPropagation();goToProduct('${p.slug}')">📖 DETAILS ANSEHEN</button>
+          <button class="qa-btn cart-btn" onclick="event.stopPropagation();addToCart('${p.slug}')" style="background:rgba(0,242,255,.15);color:var(--neon);box-shadow:none;border:1px solid var(--neon);margin-top:6px">+ IN DEN WARENKORB</button>
+        </div>
       </div>
       <div class="product-info">
         <div class="product-cat">${p.cat}</div>
-        <div class="product-name">${p.name}</div>
+        <div class="product-name" onclick="event.stopPropagation();goToProduct('${p.slug}')" style="cursor:pointer">${p.name}</div>
         <p class="product-desc">${p.desc}</p>
         ${variantHtml}
         <div class="product-rating">${stars}<span class="num">${p.rating} (${p.reviews})</span></div>

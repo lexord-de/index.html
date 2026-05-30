@@ -368,7 +368,22 @@ header{position:fixed;top:30px;width:100%;z-index:9400;padding:11px 5%;display:f
 .kit-banner .kb-head .lg{display:block;font-size:30px}
 .kit-banner .kb-sub{display:inline-block;background:linear-gradient(90deg,#00f2ff,#bc13fe);color:#000;font-family:'Orbitron';font-size:9px;font-weight:900;letter-spacing:1.5px;padding:5px 10px;border-radius:5px;margin-top:6px;box-shadow:0 4px 12px rgba(0,242,255,.4)}
 .kit-banner .kb-sub::after{content:' ✓';color:#000;font-weight:900}
-.kit-banner .kb-skull{position:absolute;top:-4px;right:0;font-size:28px;filter:drop-shadow(0 0 8px rgba(0,242,255,.6))}
+
+/* Varianten-Auswahl (Pattern + Farben) */
+.kit-variants{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:8px 0 4px}
+.kit-var{width:30px;height:30px;border-radius:50%;border:2px solid #1a1a1a;cursor:pointer;transition:.2s;position:relative;background-size:cover;background-position:center}
+.kit-var:hover{transform:scale(1.15);border-color:#444}
+.kit-var.sel{border-color:var(--neon);box-shadow:0 0 12px rgba(0,242,255,.5);transform:scale(1.1)}
+.kit-var.splatter{background:radial-gradient(circle at 30% 30%,#fff 2px,transparent 3px),radial-gradient(circle at 70% 60%,#fff 2px,transparent 3px),radial-gradient(circle at 50% 80%,#fff 1.5px,transparent 2.5px),radial-gradient(circle at 20% 70%,#fff 1.5px,transparent 2.5px),#000}
+.kit-var.splatter-blue{background:radial-gradient(circle at 30% 30%,#00f2ff 2px,transparent 3px),radial-gradient(circle at 70% 60%,#00f2ff 2px,transparent 3px),radial-gradient(circle at 50% 80%,#00f2ff 1.5px,transparent 2.5px),#000}
+.kit-var.splatter-red{background:radial-gradient(circle at 30% 30%,#ff2030 2px,transparent 3px),radial-gradient(circle at 70% 60%,#ff2030 2px,transparent 3px),radial-gradient(circle at 50% 80%,#ff2030 1.5px,transparent 2.5px),#000}
+.kit-var.carbon{background:repeating-linear-gradient(45deg,#0a0a0a,#0a0a0a 3px,#1a1a1a 3px,#1a1a1a 6px)}
+.kit-var.chrome{background:linear-gradient(135deg,#ccc 0%,#fff 40%,#aaa 60%,#fff 100%)}
+.kit-var.black{background:#0a0a0a}
+.kit-var.white{background:#fff}
+.kit-var.skull-splatter{background:radial-gradient(circle at 30% 30%,#fff 2px,transparent 3px),radial-gradient(circle at 70% 60%,#fff 2px,transparent 3px),radial-gradient(circle at 50% 80%,#fff 1.5px,transparent 2.5px),radial-gradient(circle at 20% 70%,#fff 1.5px,transparent 2.5px),#000;position:relative}
+.kit-var.skull-splatter::after{content:'💀';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:10px}
+.kit-var-lbl{display:block;text-align:center;font-family:Orbitron;font-size:7px;color:#666;letter-spacing:1px;margin-top:2px}
 .card h3{font-family:'Orbitron';margin-top:13px;font-size:10px;letter-spacing:2px}
 .c-price{color:var(--neon);font-family:'Orbitron';font-size:14px;font-weight:700;margin:8px 0}
 .wish-btn{position:absolute;top:13px;right:13px;width:30px;height:30px;border:1px solid #1a1a1a;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(0,0,0,.7);transition:.3s;z-index:2}
@@ -1284,7 +1299,7 @@ main{position:relative;z-index:1}
   <div class="grid">
     <article class="card kit-card">
       <button class="wish-btn" onclick="toggleWish(this,'Stickzange Pro')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-      <div class="kit-banner"><div class="kb-skull">💀</div><div class="kb-head">STICK<span class="lg">ZANGE</span></div><div class="kb-sub">PROFI-WERKZEUG</div></div>
+      <div class="kit-banner"><div class="kb-head">STICK<span class="lg">ZANGE</span></div><div class="kb-sub">PROFI-WERKZEUG</div></div>
       <img src="stickzange-pro.PNG" alt="Stickzange Pro" loading="lazy" onerror="this.onerror=function(){this.onerror=function(){this.src='Stickzange.PNG'};this.src='stickzange-pro.png'};">
       <h3>STICKZANGE PRO</h3>
       <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
@@ -1294,9 +1309,17 @@ main{position:relative;z-index:1}
     </article>
     <article class="card kit-card">
       <button class="wish-btn" onclick="toggleWish(this,'Paddle System V2')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-      <div class="kit-banner"><div class="kb-skull">💀</div><div class="kb-head">PADDLE<span class="lg">SYSTEM</span></div><div class="kb-sub">MAXIMALE KONTROLLE</div></div>
+      <div class="kit-banner"><div class="kb-head">PADDLE<span class="lg">SYSTEM</span></div><div class="kb-sub">MAXIMALE KONTROLLE</div></div>
       <img src="paddle-system-v2.PNG" alt="Paddle System V2" loading="lazy" onerror="this.onerror=function(){this.onerror=function(){this.src='Photoroom_20260304_212902.png'};this.src='paddle-system-v2.png'};">
       <h3>PADDLE SYSTEM V2</h3>
+      <div class="kit-variants" data-product="Paddle System V2">
+        <div class="kit-var black sel" data-name="Schwarz" onclick="selVariant(this,'Schwarz')"></div>
+        <div class="kit-var white" data-name="Weiss" onclick="selVariant(this,'Weiss')"></div>
+        <div class="kit-var carbon" data-name="Carbon" onclick="selVariant(this,'Carbon')"></div>
+        <div class="kit-var chrome" data-name="Chrome" onclick="selVariant(this,'Chrome')"></div>
+        <div class="kit-var splatter" data-name="Splatter" onclick="selVariant(this,'Splatter')"></div>
+        <div class="kit-var skull-splatter" data-name="Skull Splatter" onclick="selVariant(this,'Skull Splatter')"></div>
+      </div>
       <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
       <p class="c-price">40,00 €</p>
       <div class="dbox"><span class="truck">🚚</span><div><div class="dbox-lbl">Premium Versand</div><div class="dbox-date">Ankunft: <span class="delivery-date">–</span></div></div></div>
@@ -1304,7 +1327,7 @@ main{position:relative;z-index:1}
     </article>
     <article class="card kit-card">
       <button class="wish-btn" onclick="toggleWish(this,'TMR Stick Upgrade Kit')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-      <div class="kit-banner"><div class="kb-skull">💀</div><div class="kb-head">TMR<span class="lg">STICKS</span></div><div class="kb-sub">STICKDRIFT ADE</div></div>
+      <div class="kit-banner"><div class="kb-head">TMR<span class="lg">STICKS</span></div><div class="kb-sub">STICKDRIFT ADE</div></div>
       <img src="tmr-upgrade-kit.PNG" alt="TMR Stick Kit" loading="lazy" onerror="this.onerror=function(){this.onerror=function(){this.src='Photoroom_20260305_123705.png';this.style.filter='brightness(.7) sepia(1) hue-rotate(160deg) saturate(3)'};this.src='tmr-upgrade-kit.png'};">
       <h3>TMR STICK UPGRADE KIT</h3>
       <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
@@ -1314,7 +1337,7 @@ main{position:relative;z-index:1}
     </article>
     <article class="card kit-card">
       <button class="wish-btn" onclick="toggleWish(this,'Hall Effect Upgrade Kit')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-      <div class="kit-banner"><div class="kb-skull">💀</div><div class="kb-head">HALL<span class="lg">EFFECT</span></div><div class="kb-sub">DRIFT-FREI</div></div>
+      <div class="kit-banner"><div class="kb-head">HALL<span class="lg">EFFECT</span></div><div class="kb-sub">DRIFT-FREI</div></div>
       <img src="hall-effect-kit.PNG" alt="Hall Effect Kit" loading="lazy" onerror="this.onerror=function(){this.onerror=function(){this.src='tmr-upgrade-kit.PNG';this.style.filter='hue-rotate(140deg) saturate(1.6)'};this.src='hall-effect-kit.png'};">
       <h3>HALL EFFECT UPGRADE KIT</h3>
       <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
@@ -1324,9 +1347,18 @@ main{position:relative;z-index:1}
     </article>
     <article class="card kit-card">
       <button class="wish-btn" onclick="toggleWish(this,'GRIP Gehäuse Set')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-      <div class="kit-banner"><div class="kb-skull">💀</div><div class="kb-head">GRIP<span class="lg">UMBAU</span></div><div class="kb-sub">ANTI-RUTSCH</div></div>
+      <div class="kit-banner"><div class="kb-head">GRIP<span class="lg">UMBAU</span></div><div class="kb-sub">ANTI-RUTSCH</div></div>
       <img src="grip-housing-set.PNG" alt="GRIP Set" loading="lazy" onerror="this.onerror=function(){this.onerror=function(){this.src='Photoroom_20260402_014813.png';this.style.filter='brightness(.6) sepia(1) hue-rotate(90deg) saturate(2)'};this.src='grip-housing-set.png'};">
       <h3>GRIP GEHÄUSE SET</h3>
+      <div class="kit-variants" data-product="GRIP Gehäuse Set">
+        <div class="kit-var black sel" data-name="Schwarz Matt" onclick="selVariant(this,'Schwarz Matt')"></div>
+        <div class="kit-var white" data-name="Weiss" onclick="selVariant(this,'Weiss')"></div>
+        <div class="kit-var carbon" data-name="Carbon" onclick="selVariant(this,'Carbon')"></div>
+        <div class="kit-var splatter" data-name="Splatter Schwarz/Weiss" onclick="selVariant(this,'Splatter')"></div>
+        <div class="kit-var splatter-blue" data-name="Splatter Cyan" onclick="selVariant(this,'Splatter Cyan')"></div>
+        <div class="kit-var splatter-red" data-name="Splatter Rot" onclick="selVariant(this,'Splatter Rot')"></div>
+        <div class="kit-var skull-splatter" data-name="Skull Splatter" onclick="selVariant(this,'Skull Splatter')"></div>
+      </div>
       <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
       <p class="c-price">28,00 €</p>
       <div class="dbox"><span class="truck">🚚</span><div><div class="dbox-lbl">Premium Versand</div><div class="dbox-date">Ankunft: <span class="delivery-date">–</span></div></div></div>
@@ -1334,13 +1366,23 @@ main{position:relative;z-index:1}
     </article>
     <article class="card kit-card">
       <button class="wish-btn" onclick="toggleWish(this,'Clicky Trigger Kit')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-      <div class="kit-banner"><div class="kb-skull">💀</div><div class="kb-head">CLICKY<span class="lg">TRIGGER</span></div><div class="kb-sub">MOUSE-CLICK FEEL</div></div>
+      <div class="kit-banner"><div class="kb-head">CLICKY<span class="lg">TRIGGER</span></div><div class="kb-sub">MOUSE-CLICK FEEL</div></div>
       <img src="clicky-trigger-kit.PNG" alt="Clicky Trigger Kit" loading="lazy" onerror="this.onerror=function(){this.onerror=function(){this.src='Photoroom_20260304_212902.png';this.style.filter='brightness(.6) sepia(1) hue-rotate(310deg) saturate(3)'};this.src='clicky-trigger-kit.png'};">
       <h3>CLICKY TRIGGER KIT</h3>
       <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
       <p class="c-price">22,00 €</p>
       <div class="dbox"><span class="truck">🚚</span><div><div class="dbox-lbl">Premium Versand</div><div class="dbox-date">Ankunft: <span class="delivery-date">–</span></div></div></div>
       <button class="btn" onclick="addToCart('Clicky Trigger Kit',22.00,'clicky-trigger-kit.PNG')">IN DEN WARENKORB</button>
+    </article>
+    <article class="card kit-card">
+      <button class="wish-btn" onclick="toggleWish(this,'Power Akku Umbau')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+      <div class="kit-banner"><div class="kb-head">POWER<span class="lg">AKKU</span></div><div class="kb-sub">+90% LAUFZEIT</div></div>
+      <img src="power-akku-umbau.PNG" alt="Power Akku Umbau" loading="lazy" onerror="this.onerror=function(){this.onerror=function(){this.src='Photoroom_20260305_122914.png';this.style.filter='brightness(.7) sepia(1) hue-rotate(40deg) saturate(3)'};this.src='power-akku-umbau.png'};">
+      <h3>POWER AKKU UMBAU</h3>
+      <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
+      <p class="c-price">45,00 €</p>
+      <div class="dbox"><span class="truck">🚚</span><div><div class="dbox-lbl">Premium Versand</div><div class="dbox-date">Ankunft: <span class="delivery-date">–</span></div></div></div>
+      <button class="btn" onclick="addToCart('Power Akku Umbau',45.00,'power-akku-umbau.PNG')">IN DEN WARENKORB</button>
     </article>
   </div>
 </section>
@@ -2556,7 +2598,9 @@ function toggleCart(){document.getElementById('cart-drawer').classList.toggle('o
 function closeCart(){document.getElementById('cart-drawer').classList.remove('open');document.querySelector('.c-overlay').style.display='none';}
 function openCart(){document.getElementById('cart-drawer').classList.add('open');document.querySelector('.c-overlay').style.display='block';}
 function toggleMenu(){document.getElementById('full-nav').classList.toggle('active');}
-function addToCart(name,price,img){const ex=cart.find(i=>i.name===name);if(ex)ex.qty++;else cart.push({name,price,img,qty:1});updateCart();if(!document.getElementById('cart-drawer').classList.contains('open'))openCart();toast('✓ '+name+' hinzugefügt','ok');trackRecent(name,price,img);}
+function selVariant(el,name){const grp=el.parentElement;grp.querySelectorAll('.kit-var').forEach(v=>v.classList.remove('sel'));el.classList.add('sel');grp.dataset.selected=name;toast('Variante: '+name,'ok');}
+function addToCart(name,price,img){const ex=cart.find(i=>i.name===name);if(ex)ex.qty++;else cart.push({name,price,img,qty:1,variant:getProductVariant(name)});updateCart();if(!document.getElementById('cart-drawer').classList.contains('open'))openCart();toast('✓ '+name+' hinzugefügt','ok');trackRecent(name,price,img);}
+function getProductVariant(name){const grp=document.querySelector('.kit-variants[data-product="'+name+'"]');return grp?(grp.dataset.selected||grp.querySelector('.sel')?.dataset.name||''):'';}
 function remFromCart(i){cart.splice(i,1);updateCart();}
 function changeQty(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);updateCart();}
 

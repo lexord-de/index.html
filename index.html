@@ -361,6 +361,9 @@ header{position:fixed;top:30px;width:100%;z-index:9400;padding:11px 5%;display:f
 .card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(0,242,255,.03),transparent 70%);pointer-events:none}
 .card:hover{border-color:var(--neon);box-shadow:0 0 35px rgba(0,242,255,.18);transform:translateY(-5px)}
 .card img{width:100%;border-radius:10px;object-fit:contain;max-height:340px;min-height:240px;background:#0a0a0a;padding:12px}
+/* Variant-Image-Flip */
+.kit-card img{transition:opacity .3s,transform .5s cubic-bezier(.4,0,.2,1)}
+.kit-card img.flipping{transform:rotateY(180deg);opacity:0}
 /* Marketing-Banner-Overlay über Produktbild (TMR-Style) */
 .kit-card{position:relative}
 .kit-banner{position:absolute;top:18px;left:18px;right:18px;pointer-events:none;z-index:2}
@@ -2589,7 +2592,36 @@ function toggleCart(){document.getElementById('cart-drawer').classList.toggle('o
 function closeCart(){document.getElementById('cart-drawer').classList.remove('open');document.querySelector('.c-overlay').style.display='none';}
 function openCart(){document.getElementById('cart-drawer').classList.add('open');document.querySelector('.c-overlay').style.display='block';}
 function toggleMenu(){document.getElementById('full-nav').classList.toggle('active');}
-function selVariant(el,name){const grp=el.parentElement;grp.querySelectorAll('.kit-var').forEach(v=>v.classList.remove('sel'));el.classList.add('sel');grp.dataset.selected=name;toast('Variante: '+name,'ok');}
+const VAR_IMAGES = {
+  'Paddle System V2':{
+    'Schwarz Matt':'paddle-system-v2.PNG',
+    'Schwarz Splatter':'paddle-system-v2-splatter.PNG'
+  },
+  'GRIP Gehäuse Set':{
+    'Schwarz Matt':'grip-housing-set.PNG',
+    'Schwarz Splatter':'grip-housing-set-splatter.PNG'
+  }
+};
+function selVariant(el,name){
+  const grp=el.parentElement;
+  grp.querySelectorAll('.kit-var').forEach(v=>v.classList.remove('sel'));
+  el.classList.add('sel');
+  grp.dataset.selected=name;
+  /* Bild mit Flip-Effekt wechseln */
+  const card=grp.closest('.kit-card');
+  const img=card?card.querySelector('img'):null;
+  const product=grp.dataset.product;
+  const newSrc=VAR_IMAGES[product]&&VAR_IMAGES[product][name];
+  if(img&&newSrc){
+    img.classList.add('flipping');
+    setTimeout(()=>{
+      img.src=newSrc;
+      img.onerror=function(){this.onerror=function(){this.src=VAR_IMAGES[product]['Schwarz Matt']};this.src=newSrc.replace('.PNG','.png');};
+      img.classList.remove('flipping');
+    },250);
+  }
+  toast('Variante: '+name,'ok');
+}
 function addToCart(name,price,img){const ex=cart.find(i=>i.name===name);if(ex)ex.qty++;else cart.push({name,price,img,qty:1,variant:getProductVariant(name)});updateCart();if(!document.getElementById('cart-drawer').classList.contains('open'))openCart();toast('✓ '+name+' hinzugefügt','ok');trackRecent(name,price,img);}
 function getProductVariant(name){const grp=document.querySelector('.kit-variants[data-product="'+name+'"]');return grp?(grp.dataset.selected||grp.querySelector('.sel')?.dataset.name||''):'';}
 function remFromCart(i){cart.splice(i,1);updateCart();}

@@ -148,6 +148,7 @@ async function test(){
       if (path === "/api/send-email" && request.method === "POST") return await sendEmail(request, env);
       if (path === "/api/order" && request.method === "POST") return await saveOrder(request, env);
       if (path === "/api/repair" && request.method === "POST") return await saveRepair(request, env);
+      if (path === "/api/widerruf" && request.method === "POST") return await saveWiderruf(request, env);
       if (path === "/api/customer/login" && request.method === "POST") return await customerLogin(request, env);
       if (path === "/api/admin/login" && request.method === "POST") return await adminLogin(request, env);
       if (path === "/api/admin/all" && request.method === "GET") return await adminAll(request, env);
@@ -197,6 +198,7 @@ async function test(){
       if (path === "/admin/orders" && request.method === "GET") return await admin2Orders(request, env);
       if (path === "/admin/repairs" && request.method === "GET") return await admin2Repairs(request, env);
       if (path === "/admin/users" && request.method === "GET") return await admin2Users(request, env);
+      if (path === "/admin/widerrufe" && request.method === "GET") return await admin2Widerrufe(request, env);
       if (path === "/admin/discounts" && request.method === "GET") return await admin2DiscountsList(request, env);
       if (path === "/admin/discounts" && request.method === "POST") return await admin2DiscountsCreate(request, env);
       if (path === "/admin/stats/deep" && request.method === "GET") return await admin2DeepStats(request, env);
@@ -2318,4 +2320,90 @@ async function admin2RepairInvoice(request, env, repNr, url) {
     '</body></html>';
   try { await archiveStore(env, "invoice", { repNr, html, repair: r }); } catch(e){}
   return new Response(html, { headers: { "Content-Type": "text/html;charset=UTF-8", ...CORS } });
+}
+
+// ────────────────────────────────────────────────────
+// EU-WIDERRUF (Verbraucherrechte-Richtlinie 2023/2673)
+// ────────────────────────────────────────────────────
+async function saveWiderruf(request, env) {
+  if (!env.LEXORD_DATA) return json({ success: false, error: "DB nicht konfiguriert" }, 500);
+  const body = await request.json().catch(() => ({}));
+  if (!body.orderNr || !body.email || !body.name) return json({ success: false, error: "Pflichtfelder fehlen" }, 400);
+
+  const wfNr = "WF-" + Date.now().toString(36).toUpperCase().slice(-8);
+  const entry = {
+    wfNr,
+    orderNr: body.orderNr,
+    email: body.email.toLowerCase(),
+    name: body.name,
+    orderDate: body.orderDate,
+    address: body.address,
+    items: body.items,
+    reason: body.reason || "",
+    status: "received",
+    submitted: body.submitted || new Date().toISOString(),
+    ip: request.headers.get("CF-Connecting-IP") || ""
+  };
+  await env.LEXORD_DATA.put("widerruf:" + wfNr, JSON.stringify(entry));
+  await env.LEXORD_DATA.put("byemail:" + entry.email + ":widerruf:" + wfNr, wfNr);
+
+  // Push-Notification an Admin
+  try {
+    await broadcastPush(env, {
+      title: "🛡 EU-Widerruf eingegangen",
+      body: entry.name + " · " + entry.orderNr,
+      tag: "widerruf-" + wfNr,
+      url: "/admin.html",
+      type: "widerruf"
+    });
+  } catch (e) {}
+
+  // Bestätigungsmail an Kunden
+  if (env.BREVO_API_KEY) {
+    const html = buildEmailTemplate ? buildEmailTemplate({
+      headerTitle: "Widerruf eingegangen",
+      customerName: entry.name,
+      body: "<p>vielen Dank — dein Widerruf gemäß EU-Richtlinie 2023/2673 wurde erfolgreich eingegangen.</p>" +
+        "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='margin:20px 0'>" +
+        "<tr><td style='padding:14px;background:#f9f9fb;border-left:4px solid #0066ff;border-radius:6px'>" +
+        "<div style='font-size:11px;color:#666;letter-spacing:1.5px'>WIDERRUFS-NR.</div>" +
+        "<div style='font-size:18px;font-weight:900;color:#0066ff;margin:4px 0'>" + escapeHtml(wfNr) + "</div>" +
+        "<div style='font-size:11px;color:#666;margin-top:8px'>Bestellung: " + escapeHtml(entry.orderNr) + "</div>" +
+        "</td></tr></table>" +
+        "<p><strong>Nächste Schritte:</strong></p>" +
+        "<ol style='padding-left:20px'>" +
+        "<li>Sende die Ware <strong>innerhalb von 14 Tagen</strong> zurück an:<br>LEXORD Engineering · An Der Domsühler Str. 2 · 19374 Domsühl</li>" +
+        "<li>Bitte gut verpackt und versichert versenden (Rücksendekosten trägt der Kunde)</li>" +
+        "<li>Nach Eingang der Ware erfolgt die Rückerstattung innerhalb von 14 Tagen auf das ursprüngliche Zahlungsmittel</li>" +
+        "</ol>" +
+        "<p style='margin-top:20px;color:#666;font-size:11px'>Bei Fragen: <a href='mailto:Kontakt@Lexord.de'>Kontakt@Lexord.de</a></p>"
+    }) : "<p>Widerruf " + wfNr + " eingegangen. Du erhältst weitere Anweisungen.</p>";
+    await sendBrevoMail(env, entry.email, "Widerruf " + wfNr + " eingegangen — LEXORD", html, { wfNr, kind: "widerruf" });
+    // Admin-Benachrichtigung
+    await sendBrevoMail(env, "Kontakt@Lexord.de",
+      "🛡 NEUER EU-WIDERRUF · " + wfNr,
+      "<p><strong>Neuer EU-Widerruf eingegangen</strong></p>" +
+      "<p>Widerrufs-Nr.: <strong>" + escapeHtml(wfNr) + "</strong><br>" +
+      "Kunde: " + escapeHtml(entry.name) + " (" + escapeHtml(entry.email) + ")<br>" +
+      "Bestellung: " + escapeHtml(entry.orderNr) + "<br>" +
+      "Bestelldatum: " + escapeHtml(entry.orderDate) + "<br>" +
+      "Adresse: " + escapeHtml(entry.address) + "</p>" +
+      "<p><strong>Widerrufene Artikel:</strong><br>" + escapeHtml(entry.items).replace(/\n/g, "<br>") + "</p>" +
+      (entry.reason ? "<p><strong>Grund (freiwillig):</strong><br>" + escapeHtml(entry.reason).replace(/\n/g, "<br>") + "</p>" : ""),
+      { wfNr, kind: "widerruf-admin" });
+  }
+  return json({ success: true, wfNr });
+}
+
+async function admin2Widerrufe(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ widerrufe: [] });
+  const list = await env.LEXORD_DATA.list({ prefix: "widerruf:" });
+  const arr = [];
+  for (const k of list.keys) {
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if (raw) arr.push(JSON.parse(raw));
+  }
+  arr.sort((a, b) => new Date(b.submitted) - new Date(a.submitted));
+  return json({ widerrufe: arr });
 }

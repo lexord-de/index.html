@@ -199,6 +199,12 @@ async function test(){
       if (path === "/admin/repairs" && request.method === "GET") return await admin2Repairs(request, env);
       if (path === "/admin/users" && request.method === "GET") return await admin2Users(request, env);
       if (path === "/admin/widerrufe" && request.method === "GET") return await admin2Widerrufe(request, env);
+      if (path.startsWith("/admin/widerruf/") && path.endsWith("/email") && request.method === "POST") {
+        return await admin2WiderrufEmail(request, env, decodeURIComponent(path.split("/")[3]));
+      }
+      if (path.startsWith("/admin/widerruf/") && request.method === "PATCH") {
+        return await admin2WiderrufUpdate(request, env, decodeURIComponent(path.split("/").pop()));
+      }
       if (path === "/admin/discounts" && request.method === "GET") return await admin2DiscountsList(request, env);
       if (path === "/admin/discounts" && request.method === "POST") return await admin2DiscountsCreate(request, env);
       if (path === "/admin/stats/deep" && request.method === "GET") return await admin2DeepStats(request, env);
@@ -2406,4 +2412,72 @@ async function admin2Widerrufe(request, env) {
   }
   arr.sort((a, b) => new Date(b.submitted) - new Date(a.submitted));
   return json({ widerrufe: arr });
+}
+
+async function admin2WiderrufUpdate(request, env, wfNr) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  const body = await request.json().catch(() => ({}));
+  const raw = await env.LEXORD_DATA.get("widerruf:" + wfNr);
+  if (!raw) return json({ success: false, error: "Nicht gefunden" }, 404);
+  const w = JSON.parse(raw);
+  const oldStatus = w.status;
+  if (body.status) w.status = body.status;
+  if (body.note) w.adminNote = body.note;
+  w.updated = new Date().toISOString();
+  await env.LEXORD_DATA.put("widerruf:" + wfNr, JSON.stringify(w));
+
+  // Auto-Refund triggern
+  if (body.triggerRefund && body.orderNr) {
+    try {
+      const orderRaw = await env.LEXORD_DATA.get("order:" + body.orderNr);
+      if (orderRaw) {
+        const order = JSON.parse(orderRaw);
+        // Refund nutzt admin2OrderRefund-Logik (Stripe/PayPal)
+        const fakeReq = new Request("https://x/admin/orders/" + body.orderNr + "/refund", {
+          method: "POST",
+          headers: { Authorization: request.headers.get("Authorization") },
+          body: JSON.stringify({ reason: "EU-Widerruf " + wfNr, notify: false, amount: order.total })
+        });
+        await admin2OrderRefund(fakeReq, env, body.orderNr);
+        w.status = "refunded";
+        await env.LEXORD_DATA.put("widerruf:" + wfNr, JSON.stringify(w));
+      }
+    } catch (e) {}
+  }
+
+  // Mail an Kunden
+  if (body.notify !== false && w.email && env.BREVO_API_KEY && body.status && body.status !== oldStatus) {
+    const titles = {
+      received: "Widerruf eingegangen",
+      processing: "Widerruf in Bearbeitung",
+      approved: "Widerruf genehmigt",
+      refunded: "Rückerstattung erfolgt",
+      rejected: "Widerruf abgelehnt"
+    };
+    const html = buildEmailTemplate ? buildEmailTemplate({
+      headerTitle: titles[body.status] || "Widerruf-Update",
+      customerName: w.name,
+      body: "<p>Status-Update zu deinem Widerruf <strong>" + escapeHtml(wfNr) + "</strong>:</p>" +
+        "<p style='font-size:18px;font-weight:900;color:#0066ff'>" + (titles[body.status] || body.status) + "</p>" +
+        (body.note ? "<p style='margin-top:14px;padding:12px;background:#f5f5f5;border-radius:8px'>" + escapeHtml(body.note).replace(/\n/g, "<br>") + "</p>" : "")
+    }) : "<p>Widerruf-Status: " + body.status + "</p>";
+    await sendBrevoMail(env, w.email, titles[body.status] + " · " + wfNr + " — LEXORD", html, { wfNr, kind: "widerruf-status" });
+  }
+  return json({ success: true });
+}
+
+async function admin2WiderrufEmail(request, env, wfNr) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  const body = await request.json().catch(() => ({}));
+  const raw = await env.LEXORD_DATA.get("widerruf:" + wfNr);
+  if (!raw) return json({ success: false, error: "Nicht gefunden" }, 404);
+  const w = JSON.parse(raw);
+  const html = buildEmailTemplate ? buildEmailTemplate({
+    headerTitle: body.subject || "Update zu deinem Widerruf",
+    customerName: body.name || w.name,
+    body: "<p>" + escapeHtml(body.body || "").replace(/\n/g, "<br>") + "</p>" +
+      "<p style='margin-top:18px;padding:12px;background:#f5f5f5;border-radius:8px;font-size:12px;color:#666'>Widerruf-Nr.: <strong>" + escapeHtml(wfNr) + "</strong></p>"
+  }) : "<p>" + escapeHtml(body.body) + "</p>";
+  const ok = await sendBrevoMail(env, body.to || w.email, body.subject || "Widerruf " + wfNr, html, { wfNr, kind: "widerruf-email" });
+  return json({ success: ok });
 }

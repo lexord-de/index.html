@@ -318,6 +318,7 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
     <button class="dash-tab" onclick="switchTab('stats',this)">📊 STATS</button>
     <button class="dash-tab" onclick="switchTab('finanzen',this)">📋 FINANZEN</button>
     <button class="dash-tab" onclick="switchTab('archiv',this)">🗄️ ARCHIV</button>
+    <button class="dash-tab" onclick="switchTab('widerrufe',this)">🛡️ WIDERRUFE</button>
   </div>
 
   <!-- PANEL: LIVE -->
@@ -412,6 +413,19 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
       <span class="arch-count" id="arch-count"></span>
     </div>
     <div id="archive-container"><div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div></div>
+  </div>
+
+  <!-- PANEL: WIDERRUFE (EU-Verbraucherrechte 2023/2673) -->
+  <div class="dash-panel" id="panel-widerrufe">
+    <div class="arch-banner">
+      🛡️ <strong>EU-Widerrufs-Verwaltung</strong> · Verbraucherrechte-Richtlinie 2023/2673 · 14 Tage Widerrufsfrist · Erstattung innerhalb 14 Tagen auf Original-Zahlungsmittel.
+    </div>
+    <div class="dash-actions">
+      <button class="dash-action" onclick="loadWiderrufe()">↻ AKTUALISIEREN</button>
+      <input type="text" class="search-input" id="wf-search" placeholder="🔍 Suche WF-Nr / Bestellnr / Name / Email …" oninput="filterWiderrufe()">
+      <button class="dash-action" onclick="exportData('widerrufe')">⤓ EXPORT JSON</button>
+    </div>
+    <div id="widerrufe-container"></div>
   </div>
 
   <!-- PANEL: FINANZEN / STEUERAUFSTELLUNG -->
@@ -1225,6 +1239,129 @@ function barRow(name, lbl, pct){
   return `<div class="bar-row"><div class="lbl"><b>${esc(name)}</b><span>${esc(lbl)}</span></div><div class="bar"><div class="bar-fill" style="width:${pct}%"></div></div></div>`;
 }
 
+/* ════════ EU-WIDERRUFE ════════ */
+let ALL_WIDERRUFE = [];
+const WF_STATUS = {received:'EINGEGANGEN',processing:'IN BEARBEITUNG',approved:'GENEHMIGT',refunded:'ERSTATTET',rejected:'ABGELEHNT'};
+const WF_STATUS_CLS = {received:'s-neu',processing:'s-bearbeitung',approved:'s-versandt',refunded:'s-geliefert',rejected:'s-storniert'};
+async function loadWiderrufe(){
+  const c=document.getElementById('widerrufe-container');
+  c.innerHTML='<div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div>';
+  const d=await api('/admin/widerrufe');
+  if(!d||!d.widerrufe){c.innerHTML=empty('⚠','VERBINDUNGSFEHLER');return;}
+  if(!d.widerrufe.length){c.innerHTML=empty('🛡️','NOCH KEINE WIDERRUFE');ALL_WIDERRUFE=[];return;}
+  ALL_WIDERRUFE=d.widerrufe;
+  renderWiderrufe(d.widerrufe);
+}
+function filterWiderrufe(){
+  const q=document.getElementById('wf-search').value.toLowerCase();
+  const f=!q?ALL_WIDERRUFE:ALL_WIDERRUFE.filter(w=>
+    (w.wfNr||'').toLowerCase().includes(q)||
+    (w.orderNr||'').toLowerCase().includes(q)||
+    (w.name||'').toLowerCase().includes(q)||
+    (w.email||'').toLowerCase().includes(q));
+  renderWiderrufe(f);
+}
+function renderWiderrufe(arr){
+  const c=document.getElementById('widerrufe-container');
+  if(!arr.length){c.innerHTML=empty('🛡️','KEINE TREFFER');return;}
+  c.innerHTML=arr.map(w=>{
+    const st=(w.status||'received').toLowerCase();
+    const days=Math.floor((Date.now()-new Date(w.submitted).getTime())/(86400000));
+    return `<div class="order-card">
+    <div class="order-hd">
+      <div><div class="order-nr">🛡 ${esc(w.wfNr)}</div><div class="order-date">${new Date(w.submitted).toLocaleString('de-DE')} · vor ${days} Tag${days!==1?'en':''}</div></div>
+      <div class="order-status ${WF_STATUS_CLS[st]||'s-neu'}" onclick="changeWiderrufStatus('${esc(w.wfNr)}','${esc(w.status||'received')}')" title="Klicken zum Ändern">${WF_STATUS[st]||'EINGEGANGEN'}</div>
+    </div>
+    <div class="order-info-grid">
+      <div>KUNDE<strong>${esc(w.name)}</strong></div>
+      <div>E-MAIL<strong>${esc(w.email)}</strong></div>
+      <div>BESTELL-NR<strong>${esc(w.orderNr)}</strong></div>
+      <div>BESTELLDATUM<strong>${w.orderDate?new Date(w.orderDate).toLocaleDateString('de-DE'):'–'}</strong></div>
+      <div>ADRESSE<strong style="font-size:9.5px">${esc(w.address||'–')}</strong></div>
+      <div>FRIST<strong style="color:${days>14?'var(--err)':days>10?'var(--warn)':'var(--green)'}">${Math.max(0,14-days)} Tag${(14-days)!==1?'e':''} verbleibend</strong></div>
+    </div>
+    <div class="order-items"><strong>Widerrufene Artikel:</strong><br>${esc(w.items||'–').replace(/\n/g,'<br>')}${w.reason?'<br><br><strong>Grund:</strong><br>'+esc(w.reason).replace(/\n/g,'<br>'):''}</div>
+    <div class="order-actions">
+      <button class="oa-btn" onclick="emailWiderrufCustomer('${esc(w.wfNr)}','${esc(w.email)}','${esc((w.name||'').replace(/'/g,''))}')">✉ EMAIL AN KUNDEN</button>
+      <button class="oa-btn success" onclick="approveWiderruf('${esc(w.wfNr)}','${esc(w.email)}','${esc(w.orderNr)}','${esc((w.name||'').replace(/'/g,''))}')">✓ GENEHMIGEN + REFUND</button>
+      <button class="oa-btn danger" onclick="rejectWiderruf('${esc(w.wfNr)}','${esc(w.email)}','${esc((w.name||'').replace(/'/g,''))}')">✕ ABLEHNEN</button>
+    </div>
+  </div>`;
+  }).join('');
+}
+function changeWiderrufStatus(wfNr,current){
+  modal({
+    title:'WIDERRUF <span>STATUS</span>',
+    body:`<div class="modal-p">Widerruf <strong style="color:var(--neon)">${esc(wfNr)}</strong></div>
+      <select class="modal-select" id="m-wf-status">
+        <option value="received">EINGEGANGEN</option>
+        <option value="processing">IN BEARBEITUNG</option>
+        <option value="approved">GENEHMIGT</option>
+        <option value="refunded">ERSTATTET</option>
+        <option value="rejected">ABGELEHNT</option>
+      </select>
+      <label style="display:flex;gap:6px;font-size:11px;color:#aaa;margin-top:6px;cursor:pointer">
+        <input type="checkbox" id="m-wf-mail" checked> Kunden per E-Mail informieren
+      </label>`,
+    primary:'STATUS SETZEN',
+    onok:async()=>{
+      const s=document.getElementById('m-wf-status').value;
+      const mail=document.getElementById('m-wf-mail').checked;
+      const r=await api('/admin/widerruf/'+encodeURIComponent(wfNr),{method:'PATCH',body:JSON.stringify({status:s,notify:mail})});
+      if(r&&(r.success||r.updated)){toast('Status: '+s,'success');loadWiderrufe();}
+      else toast('Fehler','error');
+    }
+  });
+  setTimeout(()=>{const sel=document.getElementById('m-wf-status');if(sel)sel.value=current;},0);
+}
+function emailWiderrufCustomer(wfNr,email,name){
+  modal({
+    title:'EMAIL AN <span>KUNDEN</span>',
+    body:`<div class="modal-p">Widerruf <strong style="color:var(--neon)">${esc(wfNr)}</strong> · ${esc(name)}</div>
+      <input class="modal-input" id="m-wfe-subj" value="Update zu deinem Widerruf ${esc(wfNr)}">
+      <textarea class="modal-textarea" id="m-wfe-body" rows="6" placeholder="Nachricht …"></textarea>`,
+    primary:'✉ SENDEN',
+    onok:async()=>{
+      const subject=document.getElementById('m-wfe-subj').value;
+      const body=document.getElementById('m-wfe-body').value;
+      if(!body.trim())return toast('Nachricht leer','warn');
+      const r=await api('/admin/widerruf/'+encodeURIComponent(wfNr)+'/email',{method:'POST',body:JSON.stringify({subject,body,to:email,name})});
+      if(r&&r.success)toast('Mail versendet','success');
+      else toast('Fehler','error');
+    }
+  });
+}
+function approveWiderruf(wfNr,email,orderNr,name){
+  modal({
+    title:'WIDERRUF <span>GENEHMIGEN</span>',
+    body:`<div class="modal-p">Widerruf <strong style="color:var(--neon)">${esc(wfNr)}</strong> wird genehmigt. Die Rückerstattung wird automatisch über das Original-Zahlungsmittel ausgelöst.</div>
+      <textarea class="modal-textarea" id="m-wfa-note" placeholder="Notiz für Kunden (optional)" rows="3">Dein Widerruf wurde genehmigt. Die Rückerstattung erfolgt innerhalb von 14 Tagen.</textarea>`,
+    primary:'✓ GENEHMIGEN + REFUND',
+    onok:async()=>{
+      const note=document.getElementById('m-wfa-note').value;
+      const r=await api('/admin/widerruf/'+encodeURIComponent(wfNr),{method:'PATCH',body:JSON.stringify({status:'approved',note,notify:true,triggerRefund:true,orderNr})});
+      if(r&&(r.success||r.updated)){toast('Genehmigt + Refund ausgelöst','success');loadWiderrufe();}
+      else toast('Fehler','error');
+    }
+  });
+}
+function rejectWiderruf(wfNr,email,name){
+  modal({
+    title:'WIDERRUF <span>ABLEHNEN</span>',
+    body:`<div class="modal-p">Widerruf <strong style="color:var(--err)">${esc(wfNr)}</strong> ablehnen (z.B. weil Ausnahme nach § 312g BGB greift).</div>
+      <textarea class="modal-textarea" id="m-wfr-reason" placeholder="Begründung — wird dem Kunden mitgeteilt" rows="4" required></textarea>`,
+    primary:'✕ ABLEHNEN',
+    danger:true,
+    onok:async()=>{
+      const reason=document.getElementById('m-wfr-reason').value;
+      if(!reason.trim())return toast('Begründung erforderlich','warn');
+      const r=await api('/admin/widerruf/'+encodeURIComponent(wfNr),{method:'PATCH',body:JSON.stringify({status:'rejected',note:reason,notify:true})});
+      if(r&&(r.success||r.updated)){toast('Widerruf abgelehnt','warn');loadWiderrufe();}
+      else toast('Fehler','error');
+    }
+  });
+}
+
 /* ════════ ARCHIV (verschluesselte Historie) ════════ */
 async function deleteArchiveEntry(key){
   if(!confirm('Archiv-Eintrag wirklich löschen?')) return;
@@ -1525,6 +1662,7 @@ function switchTab(tab, btn){
   if(tab === 'stats') loadDeepStats();
   if(tab === 'finanzen') loadFinanzen();
   if(tab === 'archiv') loadArchive();
+  if(tab === 'widerrufe') loadWiderrufe();
   if(tab === 'live') { loadLive(); resizeGlobe(); }
 }
 async function exportData(type){

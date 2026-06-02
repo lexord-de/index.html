@@ -50,6 +50,51 @@ button{font-family:inherit}
 .aurora::after{background:radial-gradient(circle,rgba(188,19,254,.35),transparent 70%);bottom:-30%;right:-12%}
 .stars{position:fixed;inset:0;z-index:-1;background-image:radial-gradient(2px 2px at 20% 30%,rgba(255,255,255,.4),transparent),radial-gradient(1px 1px at 60% 70%,rgba(255,255,255,.3),transparent),radial-gradient(1px 1px at 80% 20%,rgba(0,242,255,.4),transparent);background-size:200px 200px}
 
+/* ═══ DEVICE SHOWCASE ═══ */
+.r-showcase{padding:30px 0 10px;max-width:1280px;margin:0 auto;position:relative}
+.r-showcase-h{font-family:'Orbitron';font-size:10px;letter-spacing:3px;color:var(--neon);text-align:center;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:14px}
+.r-showcase-h::before,.r-showcase-h::after{content:'';flex:0 0 60px;height:1px;background:linear-gradient(90deg,transparent,rgba(0,242,255,.5))}
+.r-showcase-h::after{background:linear-gradient(90deg,rgba(0,242,255,.5),transparent)}
+.r-showcase-sub{text-align:center;font-size:13px;color:#888;margin-bottom:30px;font-weight:300}
+.r-showcase-sub strong{color:var(--neon);font-weight:600}
+
+.r-dev-scroll{position:relative;overflow:hidden;padding:10px 0 20px}
+.r-dev-track{display:flex;gap:18px;padding:10px 5%;animation:devScroll 60s linear infinite;width:max-content;will-change:transform}
+.r-dev-track:hover{animation-play-state:paused}
+@keyframes devScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.r-dev-scroll::before,.r-dev-scroll::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:3;pointer-events:none}
+.r-dev-scroll::before{left:0;background:linear-gradient(90deg,#000,transparent)}
+.r-dev-scroll::after{right:0;background:linear-gradient(270deg,#000,transparent)}
+
+.r-dev-tile{flex:0 0 220px;background:linear-gradient(180deg,var(--panel) 0%,#040404 100%);border:1px solid var(--border);border-radius:18px;padding:22px 18px 18px;text-align:center;cursor:pointer;transition:.35s cubic-bezier(.2,.8,.2,1);position:relative;overflow:hidden;text-decoration:none;color:inherit}
+.r-dev-tile::before{content:'';position:absolute;top:-2px;left:-2px;right:-2px;bottom:-2px;background:linear-gradient(135deg,transparent,rgba(0,242,255,.3),rgba(188,19,254,.3),transparent);border-radius:18px;opacity:0;z-index:-1;transition:.4s}
+.r-dev-tile:hover{transform:translateY(-8px) scale(1.02);border-color:rgba(0,242,255,.4);box-shadow:0 24px 50px rgba(0,242,255,.15),0 0 60px rgba(0,242,255,.08)}
+.r-dev-tile:hover::before{opacity:1}
+.r-dev-tile:hover .r-dev-svg{transform:translateY(-4px) scale(1.05)}
+.r-dev-tile .badge{position:absolute;top:12px;right:12px;font-family:'Orbitron';font-size:7.5px;letter-spacing:1.2px;padding:4px 8px;border-radius:5px;background:rgba(0,182,122,.12);color:var(--green);border:1px solid rgba(0,182,122,.3);font-weight:700;z-index:2}
+.r-dev-tile .badge.new{background:rgba(188,19,254,.12);color:var(--neon2);border-color:rgba(188,19,254,.3)}
+.r-dev-tile .badge.hot{background:rgba(255,174,0,.12);color:var(--amber);border-color:rgba(255,174,0,.3)}
+
+.r-dev-svg-wrap{height:100px;display:flex;align-items:center;justify-content:center;margin:6px 0 14px;position:relative}
+.r-dev-svg-wrap::before{content:'';position:absolute;width:80%;height:8px;background:radial-gradient(ellipse,rgba(0,242,255,.25),transparent 70%);bottom:0;border-radius:50%;filter:blur(4px);animation:floatY 4s ease-in-out infinite}
+.r-dev-svg{width:140px;height:90px;transition:transform .4s cubic-bezier(.2,.8,.2,1);animation:floatY 4s ease-in-out infinite;filter:drop-shadow(0 8px 16px rgba(0,242,255,.18))}
+.r-dev-tile:nth-child(2n) .r-dev-svg{animation-delay:.5s}
+.r-dev-tile:nth-child(3n) .r-dev-svg{animation-delay:1s}
+.r-dev-tile:nth-child(4n) .r-dev-svg{animation-delay:1.5s}
+
+.r-dev-cat{font-family:'Orbitron';font-size:8px;color:#666;letter-spacing:2px;margin-bottom:4px}
+.r-dev-name{font-family:'Orbitron';font-weight:900;font-size:11px;color:#fff;letter-spacing:1.5px;margin-bottom:8px;line-height:1.3;min-height:30px;display:flex;align-items:center;justify-content:center}
+.r-dev-meta{display:flex;justify-content:space-around;gap:8px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06)}
+.r-dev-meta-item{font-family:'Orbitron';font-size:8px;letter-spacing:1px;color:#888;text-align:center}
+.r-dev-meta-item strong{display:block;color:var(--neon);font-size:11px;letter-spacing:.5px;margin-bottom:2px}
+
+/* Mobile: single device fills more */
+@media(max-width:560px){
+  .r-dev-tile{flex:0 0 180px;padding:18px 14px 14px}
+  .r-dev-svg{width:120px;height:75px}
+  .r-dev-svg-wrap{height:85px}
+}
+
 /* ═══ PREMIUM ANIMATIONS ═══ */
 @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
 @keyframes spin360{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
@@ -559,6 +604,258 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
         <animate attributeName="opacity" values="0;1;0" dur="5s" repeatCount="indefinite"/>
       </line>
     </svg>
+  </div>
+
+  <!-- Device Showcase -->
+  <div class="r-showcase rv rv-d4">
+    <div class="r-showcase-h">⟫ WIR REPARIEREN ALLE GERÄTE ⟪</div>
+    <div class="r-showcase-sub">Über <strong>10 Plattformen</strong> · Controller, Konsolen, Joy-Cons, Elite-Modelle · Klick auf dein Gerät für Preise</div>
+
+    <div class="r-dev-scroll">
+      <div class="r-dev-track">
+
+        <!-- PS5 DualSense -->
+        <a class="r-dev-tile" onclick="showDev('ps5');document.getElementById('preise').scrollIntoView({behavior:'smooth'});return false;" href="#preise">
+          <span class="badge hot">#1 BELIEBT</span>
+          <div class="r-dev-cat">PLAYSTATION 5</div>
+          <div class="r-dev-svg-wrap">
+            <svg class="r-dev-svg" viewBox="0 0 140 90">
+              <defs><linearGradient id="ps5g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#aaa"/></linearGradient></defs>
+              <path d="M22 32 Q12 32 10 50 Q8 75 30 78 L45 72 Q58 78 82 78 L95 72 L110 78 Q132 75 130 50 Q128 32 118 32 L95 36 Q82 28 58 28 L45 36 Z" fill="url(#ps5g)" stroke="#333" stroke-width=".7"/>
+              <rect x="55" y="38" width="30" height="13" rx="2" fill="#1a1a1f"/>
+              <circle cx="50" cy="60" r="7" fill="#0a0a0a" stroke="#222" stroke-width=".5"/><circle cx="50" cy="60" r="2" fill="#00f2ff"><animate attributeName="opacity" values=".4;1;.4" dur="2s" repeatCount="indefinite"/></circle>
+              <circle cx="90" cy="60" r="7" fill="#0a0a0a" stroke="#222" stroke-width=".5"/><circle cx="90" cy="60" r="2" fill="#bc13fe"><animate attributeName="opacity" values=".4;1;.4" dur="2s" begin="1s" repeatCount="indefinite"/></circle>
+              <g fill="#1a1a1f" stroke="#222" stroke-width=".4"><circle cx="105" cy="45" r="2.5"/><circle cx="111" cy="51" r="2.5"/><circle cx="105" cy="57" r="2.5"/><circle cx="99" cy="51" r="2.5"/></g>
+              <g fill="#1a1a1f"><rect x="30" y="49" width="3" height="6" rx=".5"/><rect x="27.5" y="51.5" width="8" height="3" rx=".5"/></g>
+            </svg>
+          </div>
+          <div class="r-dev-name">DUALSENSE</div>
+          <div class="r-dev-meta"><div class="r-dev-meta-item"><strong>25 €</strong>STICK</div><div class="r-dev-meta-item"><strong>20+</strong>SERVICES</div></div>
+        </a>
+
+        <!-- PS5 Edge -->
+        <a class="r-dev-tile" onclick="showDev('ps5edge');document.getElementById('preise').scrollIntoView({behavior:'smooth'});return false;" href="#preise">
+          <span class="badge new">PREMIUM</span>
+          <div class="r-dev-cat">PLAYSTATION 5 EDGE</div>
+          <div class="r-dev-svg-wrap">
+            <svg class="r-dev-svg" viewBox="0 0 140 90">
+              <defs><linearGradient id="edg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#bbb"/></linearGradient></defs>
+              <path d="M22 32 Q12 32 10 50 Q8 75 30 78 L45 72 Q58 78 82 78 L95 72 L110 78 Q132 75 130 50 Q128 32 118 32 L95 36 Q82 28 58 28 L45 36 Z" fill="url(#edg)" stroke="#333" stroke-width=".7"/>
+              <path d="M22 65 Q15 70 18 75" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M118 65 Q125 70 122 75" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
+              <rect x="55" y="38" width="30" height="13" rx="2" fill="#1a1a1f"/>
+              <circle cx="50" cy="60" r="8" fill="#0a0a0a" stroke="#333" stroke-width=".5"/><circle cx="50" cy="60" r="3" fill="#1a1a1f"/><circle cx="50" cy="60" r="1.5" fill="#00f2ff"><animate attributeName="opacity" values=".4;1;.4" dur="1.8s" repeatCount="indefinite"/></circle>
+              <circle cx="90" cy="60" r="8" fill="#0a0a0a" stroke="#333" stroke-width=".5"/><circle cx="90" cy="60" r="3" fill="#1a1a1f"/><circle cx="90" cy="60" r="1.5" fill="#bc13fe"><animate attributeName="opacity" values=".4;1;.4" dur="1.8s" begin=".9s" repeatCount="indefinite"/></circle>
+              <g fill="#1a1a1f" stroke="#333" stroke-width=".4"><circle cx="105" cy="45" r="2.8"/><circle cx="111" cy="51" r="2.8"/><circle cx="105" cy="57" r="2.8"/><circle cx="99" cy="51" r="2.8"/></g>
+              <text x="70" y="46.5" font-family="Orbitron" font-size="3.5" font-weight="900" fill="#d4af37" text-anchor="middle">EDGE</text>
+            </svg>
+          </div>
+          <div class="r-dev-name">DUALSENSE<br>EDGE</div>
+          <div class="r-dev-meta"><div class="r-dev-meta-item"><strong>30 €</strong>STICK</div><div class="r-dev-meta-item"><strong>15+</strong>SERVICES</div></div>
+        </a>
+
+        <!-- PS4 DualShock -->
+        <a class="r-dev-tile" onclick="showDev('ps4');document.getElementById('preise').scrollIntoView({behavior:'smooth'});return false;" href="#preise">
+          <span class="badge">VERFÜGBAR</span>
+          <div class="r-dev-cat">PLAYSTATION 4</div>
+          <div class="r-dev-svg-wrap">
+            <svg class="r-dev-svg" viewBox="0 0 140 90">
+              <defs><linearGradient id="ps4g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3a4a"/><stop offset="1" stop-color="#1a1a24"/></linearGradient></defs>
+              <path d="M18 38 Q10 42 12 60 Q14 76 32 76 L46 70 Q60 76 80 76 L94 70 Q112 76 122 60 Q124 42 116 38 L96 42 Q80 32 60 32 L40 42 Z" fill="url(#ps4g)" stroke="#444" stroke-width=".6"/>
+              <rect x="56" y="40" width="28" height="11" rx="2" fill="#0a0a14"/>
+              <rect x="50" y="34" width="40" height="2" rx="1" fill="#0099ff" opacity=".7"><animate attributeName="opacity" values=".4;1;.4" dur="3s" repeatCount="indefinite"/></rect>
+              <circle cx="52" cy="58" r="7" fill="#0a0a14" stroke="#333" stroke-width=".5"/><circle cx="52" cy="58" r="2" fill="#0099ff"/>
+              <circle cx="88" cy="58" r="7" fill="#0a0a14" stroke="#333" stroke-width=".5"/><circle cx="88" cy="58" r="2" fill="#0099ff"/>
+              <g fill="#0a0a14" stroke="#333" stroke-width=".4"><circle cx="104" cy="44" r="2.5"/><circle cx="110" cy="50" r="2.5"/><circle cx="104" cy="56" r="2.5"/><circle cx="98" cy="50" r="2.5"/></g>
+            </svg>
+          </div>
+          <div class="r-dev-name">DUALSHOCK 4</div>
+          <div class="r-dev-meta"><div class="r-dev-meta-item"><strong>22 €</strong>STICK</div><div class="r-dev-meta-item"><strong>18+</strong>SERVICES</div></div>
+        </a>
+
+        <!-- Xbox Series -->
+        <a class="r-dev-tile" onclick="showDev('xbox');document.getElementById('preise').scrollIntoView({behavior:'smooth'});return false;" href="#preise">
+          <span class="badge">VERFÜGBAR</span>
+          <div class="r-dev-cat">XBOX SERIES X|S</div>
+          <div class="r-dev-svg-wrap">
+            <svg class="r-dev-svg" viewBox="0 0 140 90">
+              <defs><linearGradient id="xbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#888"/></linearGradient></defs>
+              <path d="M22 36 Q14 38 12 56 Q10 74 28 76 L48 70 Q60 76 80 76 L92 70 Q110 74 128 56 Q126 38 118 36 L98 40 Q80 30 60 30 L42 40 Z" fill="url(#xbg)" stroke="#444" stroke-width=".6"/>
+              <circle cx="58" cy="52" r="9" fill="#0a0a0a" stroke="#222" stroke-width=".5"/><circle cx="58" cy="52" r="3" fill="#107c10"/>
+              <circle cx="82" cy="62" r="9" fill="#0a0a0a" stroke="#222" stroke-width=".5"/><circle cx="82" cy="62" r="3" fill="#107c10"/>
+              <circle cx="105" cy="52" r="3" fill="#107c10"/><animate xmlns="http://www.w3.org/2000/svg" attributeName="opacity" values=".5;1;.5" dur="2s" repeatCount="indefinite"/>
+              <g fill="#1a1a1f" stroke="#222" stroke-width=".4"><circle cx="100" cy="46" r="2"/><circle cx="111" cy="46" r="2"/><circle cx="100" cy="58" r="2"/><circle cx="111" cy="58" r="2"/></g>
+              <g><circle cx="38" cy="62" r="4" fill="#0a0a0a"/><path d="M36 62 h4 M38 60 v4" stroke="#444" stroke-width=".5"/></g>
+            </svg>
+          </div>
+          <div class="r-dev-name">SERIES X|S<br>CONTROLLER</div>
+          <div class="r-dev-meta"><div class="r-dev-meta-item"><strong>25 €</strong>STICK</div><div class="r-dev-meta-item"><strong>20+</strong>SERVICES</div></div>
+        </a>
+
+        <!-- Xbox Elite -->
+        <a class="r-dev-tile" onclick="showDev('xbone');document.getElementById('preise').scrollIntoView({behavior:'smooth'});return false;" href="#preise">
+          <span class="badge new">PREMIUM</span>
+          <div class="r-dev-cat">XBOX ELITE / ONE</div>
+          <div class="r-dev-svg-wrap">
+            <svg class="r-dev-svg" viewBox="0 0 140 90">
+              <defs><linearGradient id="elg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2a2a"/><stop offset="1" stop-color="#000"/></linearGradient></defs>
+              <path d="M22 36 Q14 38 12 56 Q10 74 28 76 L48 70 Q60 76 80 76 L92 70 Q110 74 128 56 Q126 38 118 36 L98 40 Q80 30 60 30 L42 40 Z" fill="url(#elg)" stroke="#444" stroke-width=".6"/>
+              <path d="M22 60 Q18 70 26 74" fill="none" stroke="#0a0a0a" stroke-width="2" stroke-linecap="round"/>
+              <path d="M118 60 Q122 70 114 74" fill="none" stroke="#0a0a0a" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="58" cy="52" r="9" fill="#0c0c0c" stroke="#444" stroke-width=".5"/><circle cx="58" cy="52" r="4" fill="#1a1a1f"/><circle cx="58" cy="52" r="1.5" fill="#107c10"/>
+              <circle cx="82" cy="62" r="9" fill="#0c0c0c" stroke="#444" stroke-width=".5"/><circle cx="82" cy="62" r="4" fill="#1a1a1f"/><circle cx="82" cy="62" r="1.5" fill="#107c10"/>
+              <g fill="#1a1a1f" stroke="#444" stroke-width=".4"><circle cx="100" cy="46" r="2.2"/><circle cx="111" cy="46" r="2.2"/><circle cx="100" cy="58" r="2.2"/><circle cx="111" cy="58" r="2.2"/></g>
+              <g><circle cx="38" cy="62" r="4.5" fill="#0a0a0a" stroke="#444" stroke-width=".4"/><path d="M36 62 h4 M38 60 v4" stroke="#666" stroke-width=".5"/></g>
+              <text x="70" y="44" font-family="Orbitron" font-size="3.5" font-weight="900" fill="#d4af37" text-anchor="middle">ELITE</text>
+            </svg>
+          </div>
+          <div class="r-dev-name">ELITE / ONE</div>
+          <div class="r-dev-meta"><div class="r-dev-meta-item"><strong>30 €</strong>STICK</div><div class="r-dev-meta-item"><strong>17+</strong>SERVICES</div></div>
+        </a>
+
+        <!-- Switch Pro -->
+        <a class="r-dev-tile" onclick="showDev('switch');document.getElementById('preise').scrollIntoView({behavior:'smooth'});return false;" href="#preise">
+          <span class="badge">VERFÜGBAR</span>
+          <div class="r-dev-cat">NINTENDO SWITCH</div>
+          <div class="r-dev-svg-wrap">
+            <svg class="r-dev-svg" viewBox="0 0 140 90">
+              <defs><linearGradient id="prg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2a2a"/><stop offset="1" stop-color="#0a0a0a"/></linearGradient></defs>
+              <path d="M22 36 Q12 38 10 58 Q8 76 28 78 L46 72 Q60 78 80 78 L94 72 Q114 76 130 58 Q128 38 118 36 L96 42 Q80 30 60 30 L44 42 Z" fill="url(#prg)" stroke="#444" stroke-width=".6"/>
+              <circle cx="48" cy="52" r="9" fill="#000" stroke="#333" stroke-width=".5"/><circle cx="48" cy="52" r="3.5" fill="#1a1a1f"/>
+              <circle cx="88" cy="62" r="9" fill="#000" stroke="#333" stroke-width=".5"/><circle cx="88" cy="62" r="3.5" fill="#1a1a1f"/>
+              <g fill="#1a1a1f" stroke="#333" stroke-width=".4"><circle cx="103" cy="46" r="2.5"/><circle cx="109" cy="52" r="2.5"/><circle cx="103" cy="58" r="2.5"/><circle cx="97" cy="52" r="2.5"/></g>
+              <g><circle cx="32" cy="62" r="4" fill="#0a0a0a"/><path d="M30 62 h4 M32 60 v4" stroke="#666" stroke-width=".5"/></g>
+              <rect x="58" y="42" width="22" height="6" rx="1" fill="#0a0a0a"/>
+              <circle cx="62" cy="45" r="1" fill="#e60012"/>
+            </svg>
+          </div>
+          <div class="r-dev-name">SWITCH PRO</div>
+          <div class="r-dev-meta"><div class="r-dev-meta-item"><strong>25 €</strong>STICK</div><div class="r-dev-meta-item"><strong>15+</strong>SERVICES</div></div>
+        </a>
+
+        <!-- Joy-Con -->
+        <a class="r-dev-tile" onclick="showDev('switch');document.getElementById('preise').scrollIntoView({behavior:'smooth'});return false;" href="#preise">
+          <span class="badge hot">DRIFT-FIX</span>
+          <div class="r-dev-cat">NINTENDO JOY-CON</div>
+          <div class="r-dev-svg-wrap">
+            <svg class="r-dev-svg" viewBox="0 0 140 90">
+              <defs>
+                <linearGradient id="jcl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0099ff"/><stop offset="1" stop-color="#0066cc"/></linearGradient>
+                <linearGradient id="jcr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff3a3a"/><stop offset="1" stop-color="#cc0000"/></linearGradient>
+              </defs>
+              <path d="M30 22 L62 22 L62 78 L46 80 Q30 80 28 64 L28 38 Q28 22 30 22 Z" fill="url(#jcl)" stroke="#003366" stroke-width=".6"/>
+              <path d="M78 22 L110 22 Q112 22 112 38 L112 64 Q110 80 94 80 L78 78 Z" fill="url(#jcr)" stroke="#660000" stroke-width=".6"/>
+              <circle cx="46" cy="40" r="7" fill="#0a0a0a"/><circle cx="46" cy="40" r="2" fill="#fff"/>
+              <g fill="#0a0a0a"><rect x="44" y="56" width="4" height="3" rx=".5"/><rect x="44" y="61" width="4" height="3" rx=".5"/><rect x="44" y="66" width="4" height="3" rx=".5"/><rect x="44" y="71" width="4" height="3" rx=".5"/></g>
+              <g fill="#0a0a0a"><circle cx="94" cy="40" r="2"/><circle cx="100" cy="34" r="2"/><circle cx="94" cy="28" r="2"/><circle cx="88" cy="34" r="2"/></g>
+              <circle cx="94" cy="60" r="7" fill="#0a0a0a"/><circle cx="94" cy="60" r="2" fill="#fff"/>
+              <text x="46" y="78" font-family="Orbitron" font-size="3" font-weight="700" fill="rgba(255,255,255,.5)" text-anchor="middle">L</text>
+              <text x="94" y="78" font-family="Orbitron" font-size="3" font-weight="700" fill="rgba(255,255,255,.5)" text-anchor="middle">R</text>
+            </svg>
+          </div>
+          <div class="r-dev-name">JOY-CON L &amp; R</div>
+          <div class="r-dev-meta"><div class="r-dev-meta-item"><strong>22 €</strong>DRIFT</div><div class="r-dev-meta-item"><strong>10+</strong>SERVICES</div></div>
+        </a>
+
+        <!-- PS5 Konsole -->
+        <a class="r-dev-tile" onclick="showDev('console');document.getElementById('preise').scrollIntoView({behavior:'smooth'});return false;" href="#preise">
+          <span class="badge new">KONSOLE</span>
+          <div class="r-dev-cat">PLAYSTATION 5</div>
+          <div class="r-dev-svg-wrap">
+            <svg class="r-dev-svg" viewBox="0 0 140 90">
+              <defs><linearGradient id="ps5c" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff"/><stop offset=".4" stop-color="#1a1a1f"/><stop offset=".6" stop-color="#1a1a1f"/><stop offset="1" stop-color="#fff"/></linearGradient></defs>
+              <path d="M30 28 L40 22 Q50 18 70 18 Q90 18 100 22 L110 28 L112 64 L100 70 Q90 74 70 74 Q50 74 40 70 L28 64 Z" fill="url(#ps5c)" stroke="#444" stroke-width=".6"/>
+              <rect x="45" y="34" width="50" height="22" rx="2" fill="#000" stroke="#1a1a1f" stroke-width=".5"/>
+              <circle cx="70" cy="45" r="3.5" fill="#0a0a0a" stroke="#222" stroke-width=".5"/>
+              <line x1="48" y1="60" x2="92" y2="60" stroke="#00f2ff" stroke-width=".5" opacity=".7"><animate attributeName="opacity" values=".3;1;.3" dur="3s" repeatCount="indefinite"/></line>
+              <text x="70" y="69" font-family="Orbitron" font-size="3.5" font-weight="900" fill="#888" text-anchor="middle">PS5</text>
+            </svg>
+          </div>
+          <div class="r-dev-name">PS5 KONSOLE</div>
+          <div class="r-dev-meta"><div class="r-dev-meta-item"><strong>65 €</strong>HDMI</div><div class="r-dev-meta-item"><strong>10+</strong>SERVICES</div></div>
+        </a>
+
+        <!-- Xbox Series X Konsole -->
+        <a class="r-dev-tile" onclick="showDev('console');document.getElementById('preise').scrollIntoView({behavior:'smooth'});return false;" href="#preise">
+          <span class="badge new">KONSOLE</span>
+          <div class="r-dev-cat">XBOX SERIES X</div>
+          <div class="r-dev-svg-wrap">
+            <svg class="r-dev-svg" viewBox="0 0 140 90">
+              <defs><linearGradient id="xsx" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2a2a"/><stop offset="1" stop-color="#0a0a0a"/></linearGradient></defs>
+              <rect x="48" y="14" width="44" height="64" rx="3" fill="url(#xsx)" stroke="#444" stroke-width=".6"/>
+              <circle cx="70" cy="22" r="9" fill="#0a0a0a" stroke="#222" stroke-width=".5"/>
+              <g opacity=".6"><circle cx="70" cy="22" r="6" fill="none" stroke="#107c10" stroke-width=".4"/><circle cx="70" cy="22" r="3" fill="#107c10"/></g>
+              <g fill="#000"><circle cx="62" cy="22" r=".5"/><circle cx="78" cy="22" r=".5"/></g>
+              <line x1="52" y1="38" x2="88" y2="38" stroke="#1a1a1f" stroke-width=".5"/>
+              <g fill="#000" opacity=".6"><circle cx="56" cy="46" r=".5"/><circle cx="60" cy="46" r=".5"/><circle cx="64" cy="46" r=".5"/><circle cx="56" cy="50" r=".5"/><circle cx="60" cy="50" r=".5"/><circle cx="64" cy="50" r=".5"/><circle cx="56" cy="54" r=".5"/><circle cx="60" cy="54" r=".5"/><circle cx="64" cy="54" r=".5"/></g>
+              <rect x="54" y="68" width="32" height="3" rx=".5" fill="#000"/>
+              <circle cx="84" cy="74" r="1.5" fill="#107c10"><animate attributeName="opacity" values=".4;1;.4" dur="2.5s" repeatCount="indefinite"/></circle>
+            </svg>
+          </div>
+          <div class="r-dev-name">SERIES X</div>
+          <div class="r-dev-meta"><div class="r-dev-meta-item"><strong>65 €</strong>HDMI</div><div class="r-dev-meta-item"><strong>8+</strong>SERVICES</div></div>
+        </a>
+
+        <!-- Switch OLED -->
+        <a class="r-dev-tile" onclick="showDev('console');document.getElementById('preise').scrollIntoView({behavior:'smooth'});return false;" href="#preise">
+          <span class="badge new">KONSOLE</span>
+          <div class="r-dev-cat">NINTENDO SWITCH OLED</div>
+          <div class="r-dev-svg-wrap">
+            <svg class="r-dev-svg" viewBox="0 0 140 90">
+              <rect x="14" y="22" width="112" height="50" rx="4" fill="#0a0a0a" stroke="#1a1a1f" stroke-width=".6"/>
+              <rect x="34" y="26" width="72" height="42" rx="2" fill="#0099ff" opacity=".4"/>
+              <rect x="34" y="26" width="72" height="42" rx="2" fill="url(#scl)" opacity=".7"/>
+              <defs><linearGradient id="scl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00f2ff" stop-opacity=".4"/><stop offset="1" stop-color="#bc13fe" stop-opacity=".3"/></linearGradient></defs>
+              <rect x="14" y="26" width="20" height="42" rx="2" fill="#0099ff"/>
+              <rect x="106" y="26" width="20" height="42" rx="2" fill="#ff3a3a"/>
+              <circle cx="24" cy="38" r="2.5" fill="#0a0a0a"/>
+              <g fill="#0a0a0a"><circle cx="116" cy="32" r="1.2"/><circle cx="120" cy="36" r="1.2"/><circle cx="116" cy="40" r="1.2"/><circle cx="112" cy="36" r="1.2"/></g>
+              <circle cx="116" cy="60" r="2.5" fill="#0a0a0a"/>
+            </svg>
+          </div>
+          <div class="r-dev-name">SWITCH OLED</div>
+          <div class="r-dev-meta"><div class="r-dev-meta-item"><strong>50 €</strong>USB-C</div><div class="r-dev-meta-item"><strong>8+</strong>SERVICES</div></div>
+        </a>
+
+        <!-- DUPLIKATE für seamless loop -->
+        <a class="r-dev-tile" onclick="showDev('ps5');document.getElementById('preise').scrollIntoView({behavior:'smooth'});return false;" href="#preise">
+          <span class="badge hot">#1 BELIEBT</span>
+          <div class="r-dev-cat">PLAYSTATION 5</div>
+          <div class="r-dev-svg-wrap"><svg class="r-dev-svg" viewBox="0 0 140 90"><path d="M22 32 Q12 32 10 50 Q8 75 30 78 L45 72 Q58 78 82 78 L95 72 L110 78 Q132 75 130 50 Q128 32 118 32 L95 36 Q82 28 58 28 L45 36 Z" fill="url(#ps5g)" stroke="#333" stroke-width=".7"/><rect x="55" y="38" width="30" height="13" rx="2" fill="#1a1a1f"/><circle cx="50" cy="60" r="7" fill="#0a0a0a"/><circle cx="50" cy="60" r="2" fill="#00f2ff"/><circle cx="90" cy="60" r="7" fill="#0a0a0a"/><circle cx="90" cy="60" r="2" fill="#bc13fe"/><g fill="#1a1a1f"><circle cx="105" cy="45" r="2.5"/><circle cx="111" cy="51" r="2.5"/><circle cx="105" cy="57" r="2.5"/><circle cx="99" cy="51" r="2.5"/></g></svg></div>
+          <div class="r-dev-name">DUALSENSE</div>
+          <div class="r-dev-meta"><div class="r-dev-meta-item"><strong>25 €</strong>STICK</div><div class="r-dev-meta-item"><strong>20+</strong>SERVICES</div></div>
+        </a>
+        <a class="r-dev-tile" onclick="showDev('ps5edge');document.getElementById('preise').scrollIntoView({behavior:'smooth'});return false;" href="#preise">
+          <span class="badge new">PREMIUM</span>
+          <div class="r-dev-cat">PLAYSTATION 5 EDGE</div>
+          <div class="r-dev-svg-wrap"><svg class="r-dev-svg" viewBox="0 0 140 90"><path d="M22 32 Q12 32 10 50 Q8 75 30 78 L45 72 Q58 78 82 78 L95 72 L110 78 Q132 75 130 50 Q128 32 118 32 L95 36 Q82 28 58 28 L45 36 Z" fill="url(#edg)" stroke="#333" stroke-width=".7"/><rect x="55" y="38" width="30" height="13" rx="2" fill="#1a1a1f"/><circle cx="50" cy="60" r="8" fill="#0a0a0a"/><circle cx="50" cy="60" r="1.5" fill="#00f2ff"/><circle cx="90" cy="60" r="8" fill="#0a0a0a"/><circle cx="90" cy="60" r="1.5" fill="#bc13fe"/><text x="70" y="46.5" font-family="Orbitron" font-size="3.5" font-weight="900" fill="#d4af37" text-anchor="middle">EDGE</text></svg></div>
+          <div class="r-dev-name">DUALSENSE<br>EDGE</div>
+          <div class="r-dev-meta"><div class="r-dev-meta-item"><strong>30 €</strong>STICK</div><div class="r-dev-meta-item"><strong>15+</strong>SERVICES</div></div>
+        </a>
+        <a class="r-dev-tile" onclick="showDev('ps4');document.getElementById('preise').scrollIntoView({behavior:'smooth'});return false;" href="#preise">
+          <span class="badge">VERFÜGBAR</span>
+          <div class="r-dev-cat">PLAYSTATION 4</div>
+          <div class="r-dev-svg-wrap"><svg class="r-dev-svg" viewBox="0 0 140 90"><path d="M18 38 Q10 42 12 60 Q14 76 32 76 L46 70 Q60 76 80 76 L94 70 Q112 76 122 60 Q124 42 116 38 L96 42 Q80 32 60 32 L40 42 Z" fill="url(#ps4g)" stroke="#444" stroke-width=".6"/><rect x="56" y="40" width="28" height="11" rx="2" fill="#0a0a14"/><rect x="50" y="34" width="40" height="2" rx="1" fill="#0099ff" opacity=".7"/><circle cx="52" cy="58" r="7" fill="#0a0a14"/><circle cx="52" cy="58" r="2" fill="#0099ff"/><circle cx="88" cy="58" r="7" fill="#0a0a14"/><circle cx="88" cy="58" r="2" fill="#0099ff"/></svg></div>
+          <div class="r-dev-name">DUALSHOCK 4</div>
+          <div class="r-dev-meta"><div class="r-dev-meta-item"><strong>22 €</strong>STICK</div><div class="r-dev-meta-item"><strong>18+</strong>SERVICES</div></div>
+        </a>
+        <a class="r-dev-tile" onclick="showDev('xbox');document.getElementById('preise').scrollIntoView({behavior:'smooth'});return false;" href="#preise">
+          <span class="badge">VERFÜGBAR</span>
+          <div class="r-dev-cat">XBOX SERIES X|S</div>
+          <div class="r-dev-svg-wrap"><svg class="r-dev-svg" viewBox="0 0 140 90"><path d="M22 36 Q14 38 12 56 Q10 74 28 76 L48 70 Q60 76 80 76 L92 70 Q110 74 128 56 Q126 38 118 36 L98 40 Q80 30 60 30 L42 40 Z" fill="url(#xbg)" stroke="#444" stroke-width=".6"/><circle cx="58" cy="52" r="9" fill="#0a0a0a"/><circle cx="58" cy="52" r="3" fill="#107c10"/><circle cx="82" cy="62" r="9" fill="#0a0a0a"/><circle cx="82" cy="62" r="3" fill="#107c10"/></svg></div>
+          <div class="r-dev-name">SERIES X|S<br>CONTROLLER</div>
+          <div class="r-dev-meta"><div class="r-dev-meta-item"><strong>25 €</strong>STICK</div><div class="r-dev-meta-item"><strong>20+</strong>SERVICES</div></div>
+        </a>
+        <a class="r-dev-tile" onclick="showDev('switch');document.getElementById('preise').scrollIntoView({behavior:'smooth'});return false;" href="#preise">
+          <span class="badge hot">DRIFT-FIX</span>
+          <div class="r-dev-cat">NINTENDO JOY-CON</div>
+          <div class="r-dev-svg-wrap"><svg class="r-dev-svg" viewBox="0 0 140 90"><path d="M30 22 L62 22 L62 78 L46 80 Q30 80 28 64 L28 38 Q28 22 30 22 Z" fill="url(#jcl)" stroke="#003366" stroke-width=".6"/><path d="M78 22 L110 22 Q112 22 112 38 L112 64 Q110 80 94 80 L78 78 Z" fill="url(#jcr)" stroke="#660000" stroke-width=".6"/><circle cx="46" cy="40" r="7" fill="#0a0a0a"/><circle cx="46" cy="40" r="2" fill="#fff"/><circle cx="94" cy="60" r="7" fill="#0a0a0a"/><circle cx="94" cy="60" r="2" fill="#fff"/></svg></div>
+          <div class="r-dev-name">JOY-CON L &amp; R</div>
+          <div class="r-dev-meta"><div class="r-dev-meta-item"><strong>22 €</strong>DRIFT</div><div class="r-dev-meta-item"><strong>10+</strong>SERVICES</div></div>
+        </a>
+
+      </div>
+    </div>
   </div>
 
   <div class="r-hero-cta rv rv-d4">

@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Reparatur-Service · Controller & Konsolen | LEXORD® Engineering</title>
+<meta name="description" content="Professioneller Reparatur-Service für PS5, PS4, Xbox, Nintendo Switch — Stick-Drift, Trigger, USB-C, Akku, HDMI, Mainboard. Transparente Preise. 3-5 Werktage. 6 Monate Garantie. Made in Germany.">
+<meta name="keywords" content="controller reparatur, ps5 stick drift, joy-con drift, xbox reparatur, hdmi port reparatur, hall effect, tmr upgrade, konsolen reparatur deutschland">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#00f2ff">
+<meta property="og:title" content="Reparatur-Service · LEXORD®">
+<meta property="og:description" content="Alle Reparaturen aus einer Hand — Controller, Konsolen, Upgrades. Transparente Preise. 6 Monate Garantie.">
+<meta property="og:image" content="https://lexord.de/IMG_7023.png">
+<meta property="og:url" content="https://lexord.de/reparatur.html">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link rel="canonical" href="https://lexord.de/reparatur.html">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Service","serviceType":"Controller- und Konsolen-Reparatur","provider":{"@type":"Organization","name":"LEXORD Engineering","address":{"@type":"PostalAddress","streetAddress":"An Der Domsühler Str. 2","postalCode":"19374","addressLocality":"Domsühl","addressCountry":"DE"}},"areaServed":{"@type":"Country","name":"Deutschland"},"hasOfferCatalog":{"@type":"OfferCatalog","name":"Reparatur-Leistungen","itemListElement":[{"@type":"Offer","name":"Stick-Drift Reparatur","price":"25","priceCurrency":"EUR"},{"@type":"Offer","name":"Trigger-Reparatur","price":"22","priceCurrency":"EUR"},{"@type":"Offer","name":"USB-C Buchse Tausch","price":"35","priceCurrency":"EUR"},{"@type":"Offer","name":"Akku-Tausch","price":"25","priceCurrency":"EUR"},{"@type":"Offer","name":"HDMI-Port Reparatur","price":"65","priceCurrency":"EUR"}]}}
+</script>
+<style>
+/* ═══════════════════════════════════════════════
+   LEXORD REPARATUR — Premium Service Catalogue
+═══════════════════════════════════════════════ */
+:root{
+  --neon:#00f2ff;
+  --neon2:#bc13fe;
+  --bg:#000;
+  --panel:#080808;
+  --panel2:#0c0c0c;
+  --border:#161616;
+  --text:#e8e8ec;
+  --muted:#888;
+  --gold:#d4af37;
+  --green:#00b67a;
+  --amber:#ffae00;
+  --red:#ff4d6d;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+a{color:var(--neon);text-decoration:none}
+button{font-family:inherit}
+
+/* Background */
+.aurora{position:fixed;inset:0;z-index:-2;background:linear-gradient(180deg,#000 0%,#040410 50%,#000 100%)}
+.aurora::before,.aurora::after{content:'';position:absolute;width:70%;height:70%;border-radius:50%;filter:blur(110px);opacity:.22;pointer-events:none}
+.aurora::before{background:radial-gradient(circle,rgba(0,242,255,.45),transparent 70%);top:-30%;left:-12%}
+.aurora::after{background:radial-gradient(circle,rgba(188,19,254,.35),transparent 70%);bottom:-30%;right:-12%}
+.stars{position:fixed;inset:0;z-index:-1;background-image:radial-gradient(2px 2px at 20% 30%,rgba(255,255,255,.4),transparent),radial-gradient(1px 1px at 60% 70%,rgba(255,255,255,.3),transparent),radial-gradient(1px 1px at 80% 20%,rgba(0,242,255,.4),transparent);background-size:200px 200px}
+
+/* ═══ HEADER ═══ */
+header{padding:18px 6%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:rgba(0,0,0,.88);backdrop-filter:blur(16px);z-index:1000;border-bottom:1px solid rgba(255,255,255,.06);min-height:64px}
+.brand{display:flex;align-items:center;gap:18px;text-decoration:none}
+.brand-logo{font-family:'Orbitron';font-weight:900;font-size:1.15rem;letter-spacing:7px;color:#fff;line-height:1;white-space:nowrap;padding-right:3px}
+.brand-logo i{color:var(--neon);font-style:normal}
+.brand-logo sup{font-size:.5rem;letter-spacing:0;margin-left:1px;color:var(--neon);vertical-align:super;font-weight:700}
+.brand .tag{color:var(--neon);font-family:'Orbitron';font-weight:700;font-size:.58rem;letter-spacing:3px;border:1px solid rgba(0,242,255,.5);padding:5px 10px 4px;border-radius:5px;background:rgba(0,242,255,.06);line-height:1;display:inline-flex;align-items:center}
+.header-r{display:flex;gap:18px;align-items:center}
+.back-link{font-family:'Orbitron';font-size:.68rem;color:#888;letter-spacing:2.5px;text-decoration:none;transition:.25s;display:flex;align-items:center;gap:6px;font-weight:600}
+.back-link:hover{color:var(--neon)}
+.header-cta{font-family:'Orbitron';font-weight:900;font-size:9.5px;letter-spacing:2px;padding:10px 18px;background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;border:none;border-radius:8px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:.25s}
+.header-cta:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,242,255,.4)}
+@media(max-width:680px){
+  header{padding:14px 5%}
+  .brand{gap:12px}
+  .brand-logo{font-size:1rem;letter-spacing:5px}
+  .brand .tag{font-size:.52rem;padding:4px 8px 3px;letter-spacing:2.5px}
+  .back-link{display:none}
+  .header-cta{padding:9px 12px;font-size:8.5px;letter-spacing:1.5px}
+  .header-r{gap:10px}
+}
+
+/* ═══ HERO ═══ */
+.r-hero{padding:80px 5% 50px;text-align:center;position:relative;overflow:hidden}
+.r-eyebrow{display:inline-block;padding:7px 17px;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.3);border-radius:30px;font-family:'Orbitron';font-size:9px;color:var(--neon);letter-spacing:3px;margin-bottom:20px;animation:pulseEy 3s ease-in-out infinite}
+@keyframes pulseEy{0%,100%{box-shadow:0 0 0 0 rgba(0,242,255,.4)}50%{box-shadow:0 0 0 10px rgba(0,242,255,0)}}
+.r-headline{font-family:'Orbitron';font-weight:900;font-size:clamp(2.2rem,6vw,4rem);letter-spacing:5px;line-height:1.05;margin-bottom:18px;color:#fff}
+.r-headline .accent{background:linear-gradient(90deg,var(--neon),var(--neon2),var(--neon));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;background-size:200%;animation:neonShift 4s ease-in-out infinite;display:inline-block}
+@keyframes neonShift{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
+.r-sub{font-family:'Inter';font-size:clamp(.95rem,1.6vw,1.1rem);color:#aaa;max-width:680px;margin:0 auto 24px;line-height:1.65;font-weight:300}
+.r-hero-cta{display:inline-flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+.r-hero-cta a{padding:14px 24px;border-radius:10px;font-family:'Orbitron';font-weight:900;font-size:10px;letter-spacing:2.5px;text-decoration:none;transition:.25s;display:inline-flex;align-items:center;gap:8px}
+.r-hero-cta .p{background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;box-shadow:0 6px 18px rgba(0,242,255,.3)}
+.r-hero-cta .p:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(0,242,255,.5)}
+.r-hero-cta .s{background:transparent;color:#ccc;border:1px solid #222}
+.r-hero-cta .s:hover{border-color:var(--neon);color:var(--neon)}
+
+/* ═══ STATS BAR ═══ */
+.r-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--border);max-width:1200px;margin:30px auto 0;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.r-stat{background:var(--panel);padding:24px 18px;text-align:center}
+.r-stat-n{font-family:'Orbitron';font-weight:900;font-size:1.8rem;background:linear-gradient(135deg,var(--neon),var(--neon2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px}
+.r-stat-l{font-family:'Orbitron';font-size:8.5px;color:#777;letter-spacing:2px;margin-top:8px}
+
+/* ═══ QUICK CATEGORIES ═══ */
+.r-section{padding:60px 5%;max-width:1280px;margin:0 auto}
+.r-section-h{font-family:'Orbitron';font-size:11px;letter-spacing:4px;color:var(--neon);margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.r-section-h::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(0,242,255,.4),transparent)}
+.r-section-title{font-family:'Orbitron';font-weight:900;font-size:clamp(1.4rem,3vw,2rem);letter-spacing:3px;color:#fff;margin-bottom:14px;line-height:1.2}
+.r-section-desc{font-family:'Inter';font-size:14px;color:#888;line-height:1.7;max-width:680px;margin-bottom:36px;font-weight:300}
+
+.r-cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:30px}
+.r-cat{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:24px 22px;cursor:pointer;transition:.3s;text-align:left;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden}
+.r-cat::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 20%,rgba(0,242,255,.08),transparent 60%);opacity:0;transition:.3s}
+.r-cat:hover{border-color:rgba(0,242,255,.4);transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,0,0,.4)}
+.r-cat:hover::before{opacity:1}
+.r-cat-icon{width:48px;height:48px;border-radius:12px;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.2);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:6px;position:relative;z-index:1}
+.r-cat-name{font-family:'Orbitron';font-weight:900;font-size:.95rem;letter-spacing:1.5px;color:#fff;position:relative;z-index:1}
+.r-cat-price{font-family:'Orbitron';font-size:10px;color:var(--neon);letter-spacing:1.5px;position:relative;z-index:1}
+.r-cat-desc{font-size:12px;color:#888;line-height:1.55;position:relative;z-index:1;margin-top:2px}
+
+/* ═══ DEVICE TABS ═══ */
+.r-devices{margin-bottom:28px}
+.r-dev-tabs{display:flex;flex-wrap:wrap;gap:8px;padding:8px;background:var(--panel);border:1px solid var(--border);border-radius:14px;margin-bottom:24px}
+.r-dev-tab{flex:1;min-width:140px;background:transparent;border:1px solid transparent;color:#888;font-family:'Orbitron';font-weight:700;font-size:9px;letter-spacing:1.8px;padding:14px 14px;border-radius:10px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;line-height:1.2;text-align:center}
+.r-dev-tab:hover{color:#ccc;background:rgba(255,255,255,.02)}
+.r-dev-tab.active{background:linear-gradient(135deg,rgba(0,242,255,.12),rgba(188,19,254,.08));color:var(--neon);border-color:rgba(0,242,255,.3);box-shadow:inset 0 0 12px rgba(0,242,255,.1)}
+.r-dev-tab .icn{font-size:14px}
+
+.r-dev-panel{display:none;animation:fadeIn .35s ease}
+.r-dev-panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ PRICE TABLES ═══ */
+.r-price-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
+.r-price-group{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:22px;transition:.25s}
+.r-price-group:hover{border-color:rgba(0,242,255,.25)}
+.r-pg-h{font-family:'Orbitron';font-weight:900;font-size:11px;letter-spacing:2.5px;color:var(--neon);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.r-pg-h .pgi{font-size:14px}
+.r-price-row{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px dashed rgba(255,255,255,.04)}
+.r-price-row:last-child{border-bottom:none}
+.r-price-row .pl{flex:1;min-width:0}
+.r-price-row .pl strong{display:block;font-size:13px;color:#e8e8ec;font-weight:500;line-height:1.4;margin-bottom:3px}
+.r-price-row .pl small{font-size:11px;color:#777;line-height:1.5;display:block}
+.r-price-row .pp{font-family:'Orbitron';font-weight:900;font-size:14px;color:#fff;white-space:nowrap;letter-spacing:.5px}
+.r-price-row .pp .ab{font-size:9px;color:#666;letter-spacing:1px;display:block;font-weight:400;margin-bottom:2px}
+.r-price-row.upgrade .pp{color:var(--neon2)}
+.r-price-row.featured{background:linear-gradient(90deg,rgba(0,242,255,.04),transparent);padding-left:10px;padding-right:10px;margin:0 -10px;border-radius:8px;border-bottom:1px dashed rgba(0,242,255,.1)}
+.r-price-row .badge-new{display:inline-block;background:rgba(0,182,122,.15);color:var(--green);font-family:'Orbitron';font-size:7.5px;letter-spacing:1.2px;padding:2px 6px;border-radius:4px;margin-left:6px;vertical-align:middle;font-weight:700}
+.r-price-row .badge-pop{display:inline-block;background:rgba(255,174,0,.15);color:var(--amber);font-family:'Orbitron';font-size:7.5px;letter-spacing:1.2px;padding:2px 6px;border-radius:4px;margin-left:6px;vertical-align:middle;font-weight:700}
+
+/* ═══ PROCESS STEPS ═══ */
+.r-process{background:linear-gradient(180deg,var(--panel) 0%,#040404 100%);border:1px solid var(--border);border-radius:20px;padding:42px 32px;margin-top:20px}
+.r-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px;position:relative}
+.r-step{text-align:center;position:relative;padding:24px 16px;background:rgba(0,0,0,.5);border:1px solid var(--border);border-radius:14px;transition:.25s}
+.r-step:hover{border-color:rgba(0,242,255,.3);transform:translateY(-3px)}
+.r-step-n{font-family:'Orbitron';font-weight:900;font-size:2.4rem;background:linear-gradient(135deg,var(--neon),var(--neon2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1;letter-spacing:1px;margin-bottom:8px}
+.r-step-h{font-family:'Orbitron';font-weight:900;font-size:11px;letter-spacing:2px;color:#fff;margin-bottom:10px}
+.r-step-d{font-size:12px;color:#888;line-height:1.65;font-weight:300}
+.r-step-d strong{color:#ccc;font-weight:500}
+
+/* ═══ WHAT'S INCLUDED ═══ */
+.r-inc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:6px}
+.r-inc{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px 20px;display:flex;align-items:flex-start;gap:14px;transition:.25s}
+.r-inc:hover{border-color:rgba(0,242,255,.25);background:rgba(0,242,255,.02)}
+.r-inc-ico{width:36px;height:36px;border-radius:9px;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.2);color:var(--neon);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.r-inc-t{flex:1}
+.r-inc-t strong{display:block;font-family:'Orbitron';font-size:10px;letter-spacing:1.5px;color:#fff;margin-bottom:4px}
+.r-inc-t span{font-size:12px;color:#888;line-height:1.55}
+
+/* ═══ ADD-ONS / PREMIUM SERVICES ═══ */
+.r-addon-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:6px}
+.r-addon{background:linear-gradient(135deg,rgba(188,19,254,.04),rgba(0,242,255,.04));border:1px solid rgba(188,19,254,.2);border-radius:14px;padding:22px 22px;transition:.25s;position:relative;overflow:hidden}
+.r-addon:hover{border-color:rgba(188,19,254,.5);transform:translateY(-3px)}
+.r-addon-h{font-family:'Orbitron';font-weight:900;font-size:11px;letter-spacing:2px;color:#fff;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.r-addon-h .ico{font-size:16px}
+.r-addon-d{font-size:12px;color:#aaa;line-height:1.65;margin-bottom:12px;font-weight:300}
+.r-addon-p{font-family:'Orbitron';font-weight:900;font-size:1.4rem;color:var(--neon2);letter-spacing:1px}
+.r-addon-p .pre{font-size:10px;color:#666;letter-spacing:1px;display:block;font-weight:400}
+
+/* ═══ WARRANTY BLOCK ═══ */
+.r-warranty{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:6px}
+.r-warr{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:28px;position:relative;overflow:hidden}
+.r-warr.standard{border-color:rgba(0,242,255,.25)}
+.r-warr.premium{border-color:rgba(212,175,55,.3);background:linear-gradient(135deg,rgba(212,175,55,.04),transparent)}
+.r-warr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.r-warr-ribbon{font-family:'Orbitron';font-size:8px;letter-spacing:2px;padding:5px 10px;border-radius:5px}
+.r-warr.standard .r-warr-ribbon{background:rgba(0,242,255,.1);color:var(--neon);border:1px solid rgba(0,242,255,.3)}
+.r-warr.premium .r-warr-ribbon{background:rgba(212,175,55,.1);color:var(--gold);border:1px solid rgba(212,175,55,.4)}
+.r-warr-icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.r-warr.standard .r-warr-icon{background:rgba(0,242,255,.08);color:var(--neon);border:1px solid rgba(0,242,255,.25)}
+.r-warr.premium .r-warr-icon{background:rgba(212,175,55,.08);color:var(--gold);border:1px solid rgba(212,175,55,.3)}
+.r-warr-h{font-family:'Orbitron';font-weight:900;font-size:1.2rem;letter-spacing:2px;color:#fff;margin-bottom:10px}
+.r-warr-p{font-family:'Orbitron';font-weight:900;font-size:1.6rem;color:#fff;margin-bottom:14px;letter-spacing:1px}
+.r-warr.standard .r-warr-p{color:var(--neon)}
+.r-warr.premium .r-warr-p{color:var(--gold)}
+.r-warr-p .month{font-size:.95rem;color:#888;font-weight:400;letter-spacing:2px}
+.r-warr ul{list-style:none;padding:0}
+.r-warr li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#aaa;padding:5px 0;line-height:1.55}
+.r-warr li::before{content:'✓';color:var(--green);font-weight:900;font-size:13px;flex-shrink:0}
+@media(max-width:700px){.r-warranty{grid-template-columns:1fr}}
+
+/* ═══ TRUST / REVIEWS ═══ */
+.r-trust-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:6px}
+.r-review{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:22px;position:relative}
+.r-review-stars{color:var(--amber);letter-spacing:2px;font-size:14px;margin-bottom:10px}
+.r-review-txt{font-size:13px;color:#ccc;line-height:1.65;margin-bottom:14px;font-style:italic;font-weight:300}
+.r-review-meta{display:flex;align-items:center;gap:10px}
+.r-review-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--neon),var(--neon2));display:flex;align-items:center;justify-content:center;color:#000;font-family:'Orbitron';font-weight:900;font-size:13px;flex-shrink:0}
+.r-review-who{flex:1}
+.r-review-who strong{display:block;font-family:'Orbitron';font-size:10px;color:#fff;letter-spacing:1px}
+.r-review-who span{font-size:10px;color:#666}
+
+/* ═══ FAQ ═══ */
+.r-faq{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.r-faq-item{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:.25s}
+.r-faq-item.open{border-color:rgba(0,242,255,.3)}
+.r-faq-q{padding:18px 22px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:14px;font-family:'Inter';font-weight:500;font-size:14px;color:#fff;transition:.2s;user-select:none}
+.r-faq-q:hover{background:rgba(0,242,255,.02);color:var(--neon)}
+.r-faq-q .arr{font-family:'Orbitron';font-weight:900;color:var(--neon);font-size:14px;transition:transform .3s;flex-shrink:0}
+.r-faq-item.open .r-faq-q .arr{transform:rotate(45deg)}
+.r-faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 22px;font-size:13px;color:#aaa;line-height:1.7;font-weight:300}
+.r-faq-item.open .r-faq-a{max-height:600px;padding:0 22px 20px}
+.r-faq-a strong{color:#fff;font-weight:500}
+
+/* ═══ FINAL CTA ═══ */
+.r-final{background:linear-gradient(135deg,rgba(0,242,255,.06),rgba(188,19,254,.06));border:1px solid rgba(0,242,255,.2);border-radius:22px;padding:60px 36px;text-align:center;margin:30px 0 60px;position:relative;overflow:hidden}
+.r-final::before,.r-final::after{content:'';position:absolute;width:300px;height:300px;border-radius:50%;filter:blur(80px);opacity:.3}
+.r-final::before{background:var(--neon);top:-100px;left:-100px}
+.r-final::after{background:var(--neon2);bottom:-100px;right:-100px}
+.r-final-h{font-family:'Orbitron';font-weight:900;font-size:clamp(1.6rem,4vw,2.4rem);letter-spacing:3px;color:#fff;margin-bottom:14px;position:relative;z-index:1;line-height:1.2}
+.r-final-h .acc{background:linear-gradient(90deg,var(--neon),var(--neon2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.r-final-p{font-size:14px;color:#bbb;max-width:560px;margin:0 auto 26px;line-height:1.7;position:relative;z-index:1;font-weight:300}
+.r-final-cta{display:inline-flex;gap:14px;flex-wrap:wrap;justify-content:center;position:relative;z-index:1}
+.r-final-cta a{padding:16px 28px;border-radius:10px;font-family:'Orbitron';font-weight:900;font-size:10.5px;letter-spacing:2.5px;text-decoration:none;transition:.25s;display:inline-flex;align-items:center;gap:8px}
+.r-final-cta .p{background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;box-shadow:0 8px 22px rgba(0,242,255,.4)}
+.r-final-cta .p:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(0,242,255,.6)}
+.r-final-cta .s{background:rgba(255,255,255,.05);color:#fff;border:1px solid rgba(255,255,255,.15)}
+.r-final-cta .s:hover{border-color:var(--neon);background:rgba(0,242,255,.05)}
+
+/* ═══ INFO CALLOUT ═══ */
+.r-callout{background:rgba(0,242,255,.04);border:1px solid rgba(0,242,255,.2);border-radius:12px;padding:18px 22px;display:flex;align-items:flex-start;gap:14px;margin-top:6px;font-size:12.5px;color:#bbb;line-height:1.65;font-weight:300}
+.r-callout .ci{width:32px;height:32px;border-radius:8px;background:rgba(0,242,255,.1);color:var(--neon);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.r-callout strong{color:#fff;font-weight:500}
+
+/* ═══ CONTACT / WERKSTATT ═══ */
+.r-contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:6px}
+.r-contact-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:18px}
+.r-contact-card h3{font-family:'Orbitron';font-weight:900;font-size:13px;letter-spacing:2.5px;color:#fff;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.r-contact-card h3 .i{font-size:18px}
+.r-contact-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.r-contact-item:last-child{border-bottom:none}
+.r-contact-item .ico{width:42px;height:42px;border-radius:10px;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.2);color:var(--neon);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.r-contact-item .body{flex:1;min-width:0}
+.r-contact-item .body strong{display:block;font-family:'Orbitron';font-size:9.5px;color:#888;letter-spacing:1.8px;margin-bottom:4px}
+.r-contact-item .body a,.r-contact-item .body span{display:block;font-size:14px;color:#fff;text-decoration:none;line-height:1.5;word-break:break-word}
+.r-contact-item .body a:hover{color:var(--neon)}
+.r-contact-item .body small{font-size:11px;color:#777;line-height:1.5;display:block;margin-top:2px}
+.r-hours{display:grid;grid-template-columns:1fr auto;gap:6px 18px;padding:6px 0}
+.r-hours .day{font-family:'Orbitron';font-size:10px;letter-spacing:1.5px;color:#888;padding:4px 0}
+.r-hours .time{font-family:'Orbitron';font-size:10px;letter-spacing:1px;color:#fff;text-align:right;padding:4px 0}
+.r-hours .day.today{color:var(--neon)}
+.r-hours .time.today{color:var(--neon)}
+.r-hours .time.closed{color:#666}
+.r-map-wrap{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--border);height:240px;background:#040404}
+.r-map-wrap iframe{width:100%;height:100%;border:0;filter:invert(.92) hue-rotate(180deg) saturate(.6)}
+.r-map-link{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:10px 16px;background:rgba(0,242,255,.06);border:1px solid rgba(0,242,255,.3);color:var(--neon);border-radius:8px;font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;text-decoration:none;transition:.2s}
+.r-map-link:hover{background:rgba(0,242,255,.12);transform:translateY(-2px)}
+@media(max-width:760px){.r-contact-grid{grid-template-columns:1fr}}
+
+/* ═══ SHIP & PAY ═══ */
+.r-sp-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:6px}
+.r-sp{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:28px}
+.r-sp h3{font-family:'Orbitron';font-weight:900;font-size:12px;letter-spacing:2.5px;color:#fff;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.r-sp h3 .i{font-size:18px}
+.r-sp-row{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:12px 0;border-bottom:1px dashed rgba(255,255,255,.05)}
+.r-sp-row:last-child{border-bottom:none}
+.r-sp-row .l{flex:1;min-width:0}
+.r-sp-row .l strong{display:block;font-size:13px;color:#fff;line-height:1.4;margin-bottom:3px;font-weight:500}
+.r-sp-row .l small{font-size:11px;color:#777;line-height:1.5}
+.r-sp-row .r{font-family:'Orbitron';font-weight:900;font-size:13px;color:var(--neon);white-space:nowrap;letter-spacing:.5px}
+.r-pay-badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.r-pay-badge{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:9px;font-family:'Orbitron';font-size:9.5px;letter-spacing:1.5px;color:#ccc}
+.r-pay-badge .em{font-size:16px}
+@media(max-width:760px){.r-sp-grid{grid-template-columns:1fr}}
+
+/* ═══ COMPARISON TABLE ═══ */
+.r-comp{background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow-x:auto;margin-top:6px}
+.r-comp table{width:100%;border-collapse:collapse;min-width:640px}
+.r-comp th,.r-comp td{padding:16px 18px;text-align:left;border-bottom:1px solid var(--border);font-size:13px}
+.r-comp th{font-family:'Orbitron';font-size:9.5px;letter-spacing:1.8px;color:#888;background:rgba(255,255,255,.02);font-weight:700}
+.r-comp th:not(:first-child){text-align:center}
+.r-comp td:not(:first-child){text-align:center}
+.r-comp .col-lexord{background:rgba(0,242,255,.04);color:var(--neon)}
+.r-comp tr:last-child td{border-bottom:none}
+.r-comp .check{color:var(--green);font-weight:900;font-size:16px}
+.r-comp .cross{color:#555;font-size:16px}
+.r-comp .feat{font-weight:500;color:#fff}
+.r-comp .head-lex{font-family:'Orbitron';font-weight:900;font-size:11px;color:var(--neon);letter-spacing:2px}
+
+/* ═══ WORKSHOP STATS ═══ */
+.r-workshop{background:linear-gradient(135deg,var(--panel) 0%,#040404 100%);border:1px solid var(--border);border-radius:20px;padding:42px 36px;margin-top:6px;display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center}
+.r-workshop-text h3{font-family:'Orbitron';font-weight:900;font-size:1.4rem;letter-spacing:2.5px;color:#fff;margin-bottom:14px;line-height:1.2}
+.r-workshop-text p{font-size:13.5px;color:#aaa;line-height:1.75;margin-bottom:14px;font-weight:300}
+.r-workshop-text p strong{color:#fff;font-weight:500}
+.r-workshop-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.r-ws-stat{background:rgba(0,0,0,.5);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+.r-ws-stat .n{font-family:'Orbitron';font-weight:900;font-size:1.6rem;background:linear-gradient(135deg,var(--neon),var(--neon2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1;letter-spacing:1px;margin-bottom:6px}
+.r-ws-stat .l{font-family:'Orbitron';font-size:8px;color:#777;letter-spacing:1.8px}
+@media(max-width:760px){.r-workshop{grid-template-columns:1fr;padding:28px 22px}}
+
+/* ═══ TRUST BADGES ═══ */
+.r-trust-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-top:6px}
+.r-tb{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center;transition:.25s}
+.r-tb:hover{border-color:rgba(0,242,255,.3);transform:translateY(-3px)}
+.r-tb .em{font-size:28px;display:block;margin-bottom:8px}
+.r-tb strong{display:block;font-family:'Orbitron';font-size:10px;color:#fff;letter-spacing:1.5px;margin-bottom:3px}
+.r-tb span{font-size:10.5px;color:#888;line-height:1.45}
+
+/* ═══ SYMPTOM CHECKER ═══ */
+.r-symp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:6px}
+.r-symp{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px 16px;text-align:center;cursor:pointer;transition:.25s;text-decoration:none;color:#fff;display:flex;flex-direction:column;gap:8px;align-items:center}
+.r-symp:hover{border-color:var(--neon);transform:translateY(-3px);background:rgba(0,242,255,.03)}
+.r-symp .em{font-size:32px;line-height:1}
+.r-symp .t{font-family:'Orbitron';font-size:10px;letter-spacing:1.5px;color:#fff;line-height:1.3}
+.r-symp .sub{font-size:10px;color:var(--neon);font-family:'Orbitron';letter-spacing:1px}
+
+/* ═══ PACKING GUIDE ═══ */
+.r-pack{background:linear-gradient(135deg,rgba(255,174,0,.05),rgba(255,77,109,.03));border:1px solid rgba(255,174,0,.25);border-radius:18px;padding:32px;margin-top:6px}
+.r-pack-h{font-family:'Orbitron';font-weight:900;font-size:13px;letter-spacing:2.5px;color:var(--amber);margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.r-pack-sub{font-size:13px;color:#aaa;line-height:1.65;margin-bottom:20px;font-weight:300}
+.r-pack-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.r-pack-step{background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:12px;padding:18px 16px}
+.r-pack-step .n{display:inline-block;width:26px;height:26px;border-radius:50%;background:var(--amber);color:#000;font-family:'Orbitron';font-weight:900;font-size:12px;text-align:center;line-height:26px;margin-bottom:8px}
+.r-pack-step strong{display:block;font-family:'Orbitron';font-size:10px;letter-spacing:1.5px;color:#fff;margin-bottom:6px}
+.r-pack-step p{font-size:12px;color:#aaa;line-height:1.6;font-weight:300}
+
+/* ═══ LIVE STATUS ═══ */
+.r-live{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:6px}
+.r-live-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden}
+.r-live-card .dot{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);flex-shrink:0;animation:pulse 2s infinite}
+@keyframes pulse{50%{transform:scale(1.4);opacity:.6}}
+.r-live-card .info{flex:1;min-width:0}
+.r-live-card strong{display:block;font-family:'Orbitron';font-size:9.5px;letter-spacing:1.5px;color:#888;margin-bottom:3px}
+.r-live-card span{display:block;font-family:'Orbitron';font-weight:900;font-size:14px;color:#fff;letter-spacing:.5px}
+.r-live-card .pct{color:var(--green);font-family:'Orbitron';font-weight:900;font-size:15px}
+
+/* ═══ NEWSLETTER ═══ */
+.r-news{background:linear-gradient(135deg,rgba(0,242,255,.04),rgba(188,19,254,.04));border:1px solid rgba(0,242,255,.2);border-radius:16px;padding:32px;text-align:center;margin-top:6px}
+.r-news h3{font-family:'Orbitron';font-weight:900;font-size:1.2rem;color:#fff;letter-spacing:2px;margin-bottom:8px}
+.r-news p{font-size:13px;color:#aaa;margin-bottom:20px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.65;font-weight:300}
+.r-news-form{display:flex;gap:10px;max-width:480px;margin:0 auto;flex-wrap:wrap}
+.r-news-form input{flex:1;min-width:200px;padding:14px 16px;background:#020202;border:1px solid #222;border-radius:9px;color:#fff;font-family:'Inter';font-size:14px;outline:none;transition:.2s}
+.r-news-form input:focus{border-color:var(--neon)}
+.r-news-form button{padding:14px 22px;background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;border:none;border-radius:9px;font-family:'Orbitron';font-weight:900;font-size:10px;letter-spacing:2px;cursor:pointer;transition:.2s}
+.r-news-form button:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,242,255,.4)}
+.r-news-small{font-size:11px;color:#666;margin-top:12px}
+
+/* ═══ FLOATING WHATSAPP ═══ */
+.r-fab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(37,211,102,.4);cursor:pointer;text-decoration:none;color:#fff;font-size:26px;z-index:900;transition:.25s;animation:pulseWa 3s ease-in-out infinite}
+@keyframes pulseWa{0%,100%{box-shadow:0 8px 24px rgba(37,211,102,.4)}50%{box-shadow:0 8px 24px rgba(37,211,102,.7),0 0 0 12px rgba(37,211,102,0)}}
+.r-fab:hover{transform:scale(1.1) translateY(-3px);box-shadow:0 14px 32px rgba(37,211,102,.6)}
+@media(max-width:560px){.r-fab{bottom:16px;right:16px;width:50px;height:50px;font-size:22px}}
+
+/* ═══ FOOTER ═══ */
+.r-foot{background:#020202;border-top:1px solid var(--border);padding:50px 5% 30px;text-align:center}
+.r-foot-brand{font-family:'Orbitron';font-weight:900;font-size:1rem;letter-spacing:6px;color:#fff;margin-bottom:10px}
+.r-foot-brand span{color:var(--neon)}
+.r-foot-links{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin:18px 0;font-family:'Orbitron';font-size:9px;letter-spacing:2px}
+.r-foot-links a{color:#777;text-decoration:none;transition:.2s}
+.r-foot-links a:hover{color:var(--neon)}
+.r-foot-copy{font-family:'Orbitron';font-size:8px;color:#444;letter-spacing:2px;margin-top:14px}
+
+/* Responsive */
+@media(max-width:560px){
+  .r-hero{padding:60px 5% 40px}
+  .r-section{padding:40px 5%}
+  .r-process{padding:30px 20px}
+  .r-final{padding:40px 22px}
+  .r-dev-tab{flex:1 1 calc(50% - 4px);min-width:0;padding:11px 8px;font-size:8.5px}
+}
+</style>
+</head>
+<body>
+
+<div class="aurora"></div>
+<div class="stars"></div>
+
+<!-- ═══ HEADER ═══ -->
+<header>
+  <a href="index.html" class="brand" aria-label="LEXORD Startseite">
+    <span class="brand-logo">LEX<i>O</i>RD<sup>®</sup></span>
+    <span class="tag">REPARATUR</span>
+  </a>
+  <div class="header-r">
+    <a href="index.html" class="back-link">← STARTSEITE</a>
+    <a href="index.html#repair-sec" class="header-cta">🔧 ANFRAGEN</a>
+  </div>
+</header>
+
+<!-- ═══ HERO ═══ -->
+<section class="r-hero">
+  <div class="r-eyebrow">⟫ FACHWERKSTATT · MADE IN GERMANY · 6 MONATE GARANTIE ⟪</div>
+  <h1 class="r-headline">REPARATUR <span class="accent">SERVICE</span></h1>
+  <p class="r-sub">Vom Stick-Drift bis zum HDMI-Port: Wir reparieren Controller und Konsolen aller Hersteller — schnell, transparent, fair. Mit Originalersatzteilen oder Premium-Upgrades wie TMR- und Hall-Effect-Sticks.</p>
+  <div class="r-hero-cta">
+    <a href="index.html#repair-sec" class="p">🔧 REPARATUR ANFRAGEN →</a>
+    <a href="#preise" class="s">PREISE ANSEHEN</a>
+  </div>
+
+  <div class="r-stats">
+    <div class="r-stat"><div class="r-stat-n">5.000+</div><div class="r-stat-l">REPARATUREN</div></div>
+    <div class="r-stat"><div class="r-stat-n">4,9★</div><div class="r-stat-l">DURCHSCHN. BEWERTUNG</div></div>
+    <div class="r-stat"><div class="r-stat-n">3-5</div><div class="r-stat-l">WERKTAGE BEARBEITUNG</div></div>
+    <div class="r-stat"><div class="r-stat-n">24h</div><div class="r-stat-l">KOSTENVORANSCHLAG</div></div>
+    <div class="r-stat"><div class="r-stat-n">6 / 12</div><div class="r-stat-l">MONATE GARANTIE</div></div>
+  </div>
+</section>
+
+<!-- ═══ SYMPTOM CHECKER ═══ -->
+<section class="r-section">
+  <div class="r-section-h">⟫ SYMPTOM-CHECKER</div>
+  <h2 class="r-section-title">Welches Problem hast du?</h2>
+  <p class="r-section-desc">Klick auf dein Symptom — wir führen dich direkt zur passenden Reparatur und zeigen den voraussichtlichen Preis.</p>
+  <div class="r-symp-grid">
+    <a href="#preise" class="r-symp"><span class="em">🎯</span><span class="t">CHARAKTER LÄUFT VON ALLEIN</span><span class="sub">→ Stick-Drift</span></a>
+    <a href="#preise" class="r-symp"><span class="em">⚡</span><span class="t">TRIGGER REAGIERT NICHT</span><span class="sub">→ L2/R2 Reparatur</span></a>
+    <a href="#preise" class="r-symp"><span class="em">🔌</span><span class="t">LÄDT NICHT MEHR</span><span class="sub">→ USB-C Port</span></a>
+    <a href="#preise" class="r-symp"><span class="em">🔋</span><span class="t">AKKU LEER NACH 1 STUNDE</span><span class="sub">→ Akku-Tausch</span></a>
+    <a href="#preise" class="r-symp"><span class="em">📺</span><span class="t">KONSOLE OHNE BILD</span><span class="sub">→ HDMI-Reparatur</span></a>
+    <a href="#preise" class="r-symp"><span class="em">⏺️</span><span class="t">TASTE KLEMMT</span><span class="sub">→ Button-Reparatur</span></a>
+    <a href="#preise" class="r-symp"><span class="em">📳</span><span class="t">KEINE VIBRATION MEHR</span><span class="sub">→ Motor-Tausch</span></a>
+    <a href="#preise" class="r-symp"><span class="em">💧</span><span class="t">FLÜSSIGKEIT REIN</span><span class="sub">→ Wasserschaden</span></a>
+    <a href="#preise" class="r-symp"><span class="em">🎧</span><span class="t">HEADSET-BUCHSE DEFEKT</span><span class="sub">→ Klinke-Tausch</span></a>
+    <a href="#preise" class="r-symp"><span class="em">💥</span><span class="t">CONTROLLER FALLEN GELASSEN</span><span class="sub">→ Gehäuse-Tausch</span></a>
+    <a href="#preise" class="r-symp"><span class="em">🌀</span><span class="t">LÜFTER LAUT</span><span class="sub">→ Konsolen-Service</span></a>
+    <a href="#preise" class="r-symp"><span class="em">❓</span><span class="t">UNKLARER DEFEKT</span><span class="sub">→ Diagnose</span></a>
+  </div>
+</section>
+
+<!-- ═══ LIVE STATUS ═══ -->
+<section class="r-section" style="padding-top:0">
+  <div class="r-section-h">⟫ AKTUELLER WERKSTATT-STATUS</div>
+  <h2 class="r-section-title">Live-Auslastung & Bearbeitungszeit</h2>
+  <p class="r-section-desc">Realistische Einschätzung statt Marketing-Versprechen. Aktualisiert täglich.</p>
+  <div class="r-live">
+    <div class="r-live-card"><div class="dot"></div><div class="info"><strong>WERKSTATT-AUSLASTUNG</strong><span class="pct">68 %</span></div></div>
+    <div class="r-live-card"><div class="dot"></div><div class="info"><strong>AKT. BEARBEITUNGSZEIT</strong><span>3 Werktage</span></div></div>
+    <div class="r-live-card"><div class="dot"></div><div class="info"><strong>EXPRESS VERFÜGBAR</strong><span>Ja · in 36 h</span></div></div>
+    <div class="r-live-card"><div class="dot"></div><div class="info"><strong>FREIE SLOTS DIESE WOCHE</strong><span>12 von 35</span></div></div>
+  </div>
+</section>
+
+<!-- ═══ QUICK CATEGORIES ═══ -->
+<section class="r-section">
+  <div class="r-section-h">⟫ TOP-REPARATUREN</div>
+  <h2 class="r-section-title">Das reparieren wir am häufigsten</h2>
+  <p class="r-section-desc">Die häufigsten Schäden auf einen Blick — mit Festpreis und durchschnittlicher Bearbeitungszeit. Alle Reparaturen werden in unserer Werkstatt in Domsühl durchgeführt, ausschließlich mit geprüften Komponenten.</p>
+  <div class="r-cats">
+    <a href="#preise" class="r-cat">
+      <div class="r-cat-icon">🕹️</div>
+      <div class="r-cat-name">STICK-DRIFT</div>
+      <div class="r-cat-price">AB 25 €</div>
+      <div class="r-cat-desc">Behebung von Drift, Klemmen oder Toter-Zone-Problemen am Analogstick.</div>
+    </a>
+    <a href="#preise" class="r-cat">
+      <div class="r-cat-icon">🎯</div>
+      <div class="r-cat-name">TRIGGER L2/R2</div>
+      <div class="r-cat-price">AB 22 €</div>
+      <div class="r-cat-desc">Defekte Adaptive-Trigger, Federbruch, klemmende oder schwergängige L2/R2.</div>
+    </a>
+    <a href="#preise" class="r-cat">
+      <div class="r-cat-icon">⏺️</div>
+      <div class="r-cat-name">TASTEN & D-PAD</div>
+      <div class="r-cat-price">AB 18 €</div>
+      <div class="r-cat-desc">X/O/△/□, D-Pad, Share-/Options-Button, PS-Home, Touchpad-Klick.</div>
+    </a>
+    <a href="#preise" class="r-cat">
+      <div class="r-cat-icon">🔌</div>
+      <div class="r-cat-name">USB-C BUCHSE</div>
+      <div class="r-cat-price">AB 35 €</div>
+      <div class="r-cat-desc">Lade-Port wackelt, lädt nicht mehr oder ist abgerissen — Komplett-Tausch.</div>
+    </a>
+    <a href="#preise" class="r-cat">
+      <div class="r-cat-icon">🔋</div>
+      <div class="r-cat-name">AKKU-TAUSCH</div>
+      <div class="r-cat-price">AB 25 €</div>
+      <div class="r-cat-desc">Akku hält nicht mehr, lädt nicht voll oder ist aufgebläht — neuer Markenakku.</div>
+    </a>
+    <a href="#preise" class="r-cat">
+      <div class="r-cat-icon">📺</div>
+      <div class="r-cat-name">HDMI-PORT</div>
+      <div class="r-cat-price">AB 65 €</div>
+      <div class="r-cat-desc">Konsole gibt kein Bild mehr aus — HDMI-Buchse Mikrolöt-Reparatur.</div>
+    </a>
+    <a href="#preise" class="r-cat">
+      <div class="r-cat-icon">⚙️</div>
+      <div class="r-cat-name">UPGRADES</div>
+      <div class="r-cat-price">AB 55 €</div>
+      <div class="r-cat-desc">TMR-Sticks, Hall-Effect, Clicky-Trigger, Paddle-System.</div>
+    </a>
+    <a href="#preise" class="r-cat">
+      <div class="r-cat-icon">🧼</div>
+      <div class="r-cat-name">DEEP-CLEAN</div>
+      <div class="r-cat-price">AB 15 €</div>
+      <div class="r-cat-desc">Komplette Zerlegung, Ultraschall-Reinigung und Service-Check.</div>
+    </a>
+  </div>
+  <div class="r-callout">
+    <div class="ci">ℹ️</div>
+    <div><strong>Kein passender Service dabei?</strong> Wir reparieren auch Sonderanfragen — von Original-Limited-Editions bis zu Custom-Mods. Schreib uns einfach an <a href="mailto:Kontakt@Lexord.de">Kontakt@Lexord.de</a>, wir geben dir innerhalb von 24h eine Einschätzung.</div>
+  </div>
+</section>
+
+<!-- ═══ DETAILED PRICE TABLES ═══ -->
+<section class="r-section" id="preise">
+  <div class="r-section-h">⟫ KOMPLETTE PREISLISTE</div>
+  <h2 class="r-section-title">Alle Reparaturen · Alle Geräte</h2>
+  <p class="r-section-desc">Wähle dein Gerät und sieh dir die transparente Preisliste an. Alle Preise verstehen sich inklusive Material, Arbeitszeit und 6 Monaten Garantie. Versand ab 7,50 € (versichert).</p>
+
+  <div class="r-devices">
+    <div class="r-dev-tabs" role="tablist">
+      <button class="r-dev-tab active" data-dev="ps5" onclick="showDev('ps5')"><span class="icn">🎮</span> PS5 DUALSENSE</button>
+      <button class="r-dev-tab" data-dev="ps5edge" onclick="showDev('ps5edge')"><span class="icn">⭐</span> PS5 EDGE</button>
+      <button class="r-dev-tab" data-dev="ps4" onclick="showDev('ps4')"><span class="icn">🎮</span> PS4 DUALSHOCK</button>
+      <button class="r-dev-tab" data-dev="xbox" onclick="showDev('xbox')"><span class="icn">🎮</span> XBOX SERIES X|S</button>
+      <button class="r-dev-tab" data-dev="xbone" onclick="showDev('xbone')"><span class="icn">🎮</span> XBOX ONE / ELITE</button>
+      <button class="r-dev-tab" data-dev="switch" onclick="showDev('switch')"><span class="icn">🎮</span> SWITCH PRO / JOY-CON</button>
+      <button class="r-dev-tab" data-dev="console" onclick="showDev('console')"><span class="icn">📺</span> KONSOLEN</button>
+      <button class="r-dev-tab" data-dev="other" onclick="showDev('other')"><span class="icn">🎧</span> WEITERE</button>
+    </div>
+
+    <!-- ═══ PS5 DUALSENSE ═══ -->
+    <div class="r-dev-panel active" id="dev-ps5">
+      <div class="r-price-grid">
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🕹️</span> STICKS & DRIFT</div>
+          <div class="r-price-row featured"><div class="pl"><strong>Stick-Drift Reparatur (Standard) <span class="badge-pop">BELIEBT</span></strong><small>Tausch des Original-Stick-Moduls (ALPS), inkl. Kalibrierung.</small></div><div class="pp"><span class="ab">AB</span>25 €</div></div>
+          <div class="r-price-row upgrade"><div class="pl"><strong>Stick-Upgrade · TMR <span class="badge-new">DRIFT-FREI</span></strong><small>Tunnelmagnet-Sticks — verschleißfrei, präziser, lebenslang driftfrei.</small></div><div class="pp"><span class="ab">AB</span>55 €</div></div>
+          <div class="r-price-row upgrade"><div class="pl"><strong>Stick-Upgrade · Hall-Effect</strong><small>Hall-Sensor-Sticks (Gulikit) — magnetisch, verschleißfrei, ohne Potis.</small></div><div class="pp"><span class="ab">AB</span>65 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Stick-Cap Tausch</strong><small>Einzelne Stick-Kappe ersetzen (auch Sondervarianten).</small></div><div class="pp"><span class="ab">AB</span>9 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Beide Sticks (Drift links + rechts)</strong><small>Reparatur beider Sticks im selben Auftrag — Mengenrabatt.</small></div><div class="pp"><span class="ab">AB</span>42 €</div></div>
+        </div>
+
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🎯</span> TRIGGER & SCHULTER</div>
+          <div class="r-price-row"><div class="pl"><strong>L2 / R2 Adaptive-Trigger Reparatur</strong><small>Federbruch, klemmender Trigger, Haptic-Feedback defekt.</small></div><div class="pp"><span class="ab">AB</span>22 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>L2 / R2 Komplett-Modul Tausch</strong><small>Wenn Motor-Einheit oder Sensor mechanisch defekt.</small></div><div class="pp"><span class="ab">AB</span>35 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>L1 / R1 Schulterknopf</strong><small>Klickkraft weg, ausgeschlagen oder bleibt gedrückt.</small></div><div class="pp"><span class="ab">AB</span>18 €</div></div>
+          <div class="r-price-row upgrade"><div class="pl"><strong>Clicky-Trigger Upgrade</strong><small>Mausklick-Stops für L2/R2 — perfekt für Shooter.</small></div><div class="pp"><span class="ab">AB</span>35 €</div></div>
+          <div class="r-price-row upgrade"><div class="pl"><strong>Hair-Trigger Lock</strong><small>Trigger-Weg drastisch verkürzen für schnellere Schüsse.</small></div><div class="pp"><span class="ab">AB</span>25 €</div></div>
+        </div>
+
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">⏺️</span> TASTEN & D-PAD</div>
+          <div class="r-price-row"><div class="pl"><strong>Face-Button (X / ○ / △ / □)</strong><small>Einzelne Taste klemmt, reagiert nicht oder bleibt hängen.</small></div><div class="pp"><span class="ab">AB</span>18 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Alle 4 Face-Buttons (Komplett-Tausch)</strong><small>Inkl. Silikon-Pad und Schaltflächen.</small></div><div class="pp"><span class="ab">AB</span>28 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>D-Pad Reparatur</strong><small>Klemmend, nicht reagierend, Ghost-Inputs.</small></div><div class="pp"><span class="ab">AB</span>18 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Share / Options / PS-Button</strong><small>Mute, PS-Home oder Options-Button.</small></div><div class="pp"><span class="ab">AB</span>18 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Touchpad-Klick / Touch-Sensor</strong><small>Klick weg, Touch reagiert nicht mehr.</small></div><div class="pp"><span class="ab">AB</span>30 €</div></div>
+        </div>
+
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🔌</span> LADEN & ANSCHLÜSSE</div>
+          <div class="r-price-row featured"><div class="pl"><strong>USB-C Buchse Komplett-Tausch</strong><small>Lade-Port abgerissen, wackelt, lädt nicht mehr — Mikrolöt-Reparatur.</small></div><div class="pp"><span class="ab">AB</span>35 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>3.5 mm Klinke / Headset-Buchse</strong><small>Kein Headset-Ton mehr oder ständige Aussetzer.</small></div><div class="pp"><span class="ab">AB</span>25 €</div></div>
+          <div class="r-price-row featured"><div class="pl"><strong>Akku-Tausch (1.560 mAh Markenakku) <span class="badge-pop">BELIEBT</span></strong><small>Akku hält keinen Strom mehr oder bläht sich auf — Original-Spec.</small></div><div class="pp"><span class="ab">AB</span>25 €</div></div>
+          <div class="r-price-row upgrade"><div class="pl"><strong>Power-Akku Umbau (2.000 mAh)</strong><small>Stärkerer Akku — bis zu 30 % längere Spielzeit.</small></div><div class="pp"><span class="ab">AB</span>45 €</div></div>
+        </div>
+
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">📳</span> VIBRATION & AUDIO</div>
+          <div class="r-price-row"><div class="pl"><strong>Vibrations-Motor Tausch (links oder rechts)</strong><small>Vibration einseitig weg oder klappert.</small></div><div class="pp"><span class="ab">AB</span>25 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Vibrations-Motoren Komplett (beide)</strong><small>Keine Vibration mehr — beide Aktoren neu.</small></div><div class="pp"><span class="ab">AB</span>40 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Lautsprecher-Tausch</strong><small>Built-in-Speaker ohne Ton oder verzerrt.</small></div><div class="pp"><span class="ab">AB</span>20 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Mikrofon-Reparatur</strong><small>Eingebautes Mic nimmt nichts mehr auf.</small></div><div class="pp"><span class="ab">AB</span>20 €</div></div>
+        </div>
+
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🛠️</span> GEHÄUSE & OPTIK</div>
+          <div class="r-price-row"><div class="pl"><strong>Gehäuse-Tausch komplett (Front + Back)</strong><small>Risse, Sprünge oder ausgebrochene Schraubdome.</small></div><div class="pp"><span class="ab">AB</span>40 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Frontschale / Backshell einzeln</strong><small>Nur Vorder- oder Rückseite tauschen.</small></div><div class="pp"><span class="ab">AB</span>25 €</div></div>
+          <div class="r-price-row upgrade"><div class="pl"><strong>Grip-Gehäuse Upgrade <span class="badge-new">NEW</span></strong><small>Gummierte Soft-Touch-Schale für besseren Halt.</small></div><div class="pp"><span class="ab">AB</span>30 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>LED-Lichtleiste Tausch</strong><small>Defekte Lightbar oder LED-Streifen ersetzen.</small></div><div class="pp"><span class="ab">AB</span>25 €</div></div>
+        </div>
+
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🧪</span> DIAGNOSE & SERVICE</div>
+          <div class="r-price-row"><div class="pl"><strong>Diagnose-Pauschale (verrechnet bei Auftrag)</strong><small>Vollständige Prüfung mit schriftlichem Bericht — kostenlos bei Beauftragung.</small></div><div class="pp">15 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Tiefenreinigung & Service-Check</strong><small>Ultraschall-Bad, neue Wärmeleitung, Funktionscheck.</small></div><div class="pp"><span class="ab">AB</span>15 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Mainboard-Reparatur (Mikrolöten)</strong><small>Defekte Leiterbahnen, IC-Tausch — Aufwand nach Diagnose.</small></div><div class="pp"><span class="ab">AB</span>45 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Flüssigkeitsschaden-Behandlung</strong><small>Komplettzerlegung, Ultraschall, Korrosions-Entfernung.</small></div><div class="pp"><span class="ab">AB</span>55 €</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ PS5 EDGE ═══ -->
+    <div class="r-dev-panel" id="dev-ps5edge">
+      <div class="r-price-grid">
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">⭐</span> EDGE-SPEZIFISCH</div>
+          <div class="r-price-row"><div class="pl"><strong>Stick-Modul-Tausch (Original Edge)</strong><small>Austauschbares Edge-Stick-Modul ersetzen.</small></div><div class="pp"><span class="ab">AB</span>30 €</div></div>
+          <div class="r-price-row upgrade"><div class="pl"><strong>Edge Stick → Hall-Effect Conversion</strong><small>Permanent driftfreier Umbau auf Hall-Sensoren.</small></div><div class="pp"><span class="ab">AB</span>70 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Rückseiten-Paddle Reparatur</strong><small>Paddle wackelt, fehlt Klick oder löst sich.</small></div><div class="pp"><span class="ab">AB</span>25 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>FN-Button / Profil-Wahl-Schalter</strong><small>Funktionsknopf reagiert nicht oder Profil-Wahl defekt.</small></div><div class="pp"><span class="ab">AB</span>22 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Trigger-Stops Mechanik</strong><small>Edge-Trigger-Lock klemmt oder löst sich nicht.</small></div><div class="pp"><span class="ab">AB</span>20 €</div></div>
+        </div>
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🔧</span> STANDARD-REPARATUREN</div>
+          <div class="r-price-row"><div class="pl"><strong>USB-C Buchse</strong><small>Identisch zu DualSense — Mikrolöt-Reparatur.</small></div><div class="pp"><span class="ab">AB</span>35 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Akku-Tausch</strong><small>1.560 mAh Markenakku.</small></div><div class="pp"><span class="ab">AB</span>25 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Vibration / Adaptive Trigger</strong><small>L2/R2 Adaptive-Modul tauschen.</small></div><div class="pp"><span class="ab">AB</span>35 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Gehäuse-Tausch</strong><small>Edge-Gehäuse mit Soft-Touch Beschichtung.</small></div><div class="pp"><span class="ab">AB</span>45 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Tasten / D-Pad / Touchpad</strong><small>Wie DualSense — Standard-Mechanik.</small></div><div class="pp"><span class="ab">AB</span>18 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Tiefenreinigung Edge</strong><small>Inkl. Demontage der Stick-Module.</small></div><div class="pp"><span class="ab">AB</span>20 €</div></div>
+        </div>
+      </div>
+      <div class="r-callout" style="margin-top:18px"><div class="ci">⭐</div><div>Der <strong>DualSense Edge</strong> ist mechanisch deutlich komplexer als der Standard-Controller. Wir empfehlen für Edge-Modelle immer die <strong>Tiefen-Diagnose (25 €)</strong> mit schriftlichem Bericht.</div></div>
+    </div>
+
+    <!-- ═══ PS4 DUALSHOCK ═══ -->
+    <div class="r-dev-panel" id="dev-ps4">
+      <div class="r-price-grid">
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🕹️</span> STICKS & DRIFT</div>
+          <div class="r-price-row featured"><div class="pl"><strong>Stick-Drift Reparatur (Standard) <span class="badge-pop">BELIEBT</span></strong><small>Original-ALPS Stick-Modul Tausch inkl. Kalibrierung.</small></div><div class="pp"><span class="ab">AB</span>22 €</div></div>
+          <div class="r-price-row upgrade"><div class="pl"><strong>Hall-Effect Upgrade (DS4)</strong><small>Permanent driftfreier Hall-Sensor-Stick.</small></div><div class="pp"><span class="ab">AB</span>55 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Beide Sticks gleichzeitig</strong><small>Mengenrabatt bei Reparatur beider Sticks.</small></div><div class="pp"><span class="ab">AB</span>38 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Stick-Cap Tausch</strong><small>Einzelne Stick-Kappe ersetzen.</small></div><div class="pp"><span class="ab">AB</span>8 €</div></div>
+        </div>
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🎯</span> TRIGGER & TASTEN</div>
+          <div class="r-price-row"><div class="pl"><strong>L2 / R2 Trigger-Reparatur</strong><small>Klemmender Trigger, Federbruch.</small></div><div class="pp"><span class="ab">AB</span>20 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>L1 / R1 Schulterknopf</strong><small>Klickkraft weg oder ausgeschlagen.</small></div><div class="pp"><span class="ab">AB</span>18 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Face-Buttons (X/○/△/□)</strong><small>Einzelne Taste klemmt oder hängt.</small></div><div class="pp"><span class="ab">AB</span>15 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>D-Pad / Share / Options</strong><small>Standard-Tasten-Reparatur.</small></div><div class="pp"><span class="ab">AB</span>15 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Touchpad-Klick / Touch-Sensor</strong><small>Touch reagiert nicht mehr.</small></div><div class="pp"><span class="ab">AB</span>28 €</div></div>
+        </div>
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🔌</span> LADEN & AKKU</div>
+          <div class="r-price-row"><div class="pl"><strong>Micro-USB Buchse</strong><small>Lade-Port wackelt oder ist abgerissen.</small></div><div class="pp"><span class="ab">AB</span>30 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Akku-Tausch (1.000 mAh)</strong><small>Original-Spec Markenakku.</small></div><div class="pp"><span class="ab">AB</span>22 €</div></div>
+          <div class="r-price-row upgrade"><div class="pl"><strong>Power-Akku Umbau (2.000 mAh)</strong><small>Doppelte Spielzeit.</small></div><div class="pp"><span class="ab">AB</span>40 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>3.5 mm Klinke / Headset-Buchse</strong><small>Headset-Ton weg.</small></div><div class="pp"><span class="ab">AB</span>22 €</div></div>
+        </div>
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🛠️</span> WEITERES</div>
+          <div class="r-price-row"><div class="pl"><strong>Vibrations-Motor Tausch</strong><small>Einseitig oder komplett.</small></div><div class="pp"><span class="ab">AB</span>22 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>LED-Lichtleiste</strong><small>Defekte Lightbar.</small></div><div class="pp"><span class="ab">AB</span>22 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Gehäuse-Tausch komplett</strong><small>Front + Back-Shell.</small></div><div class="pp"><span class="ab">AB</span>35 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Tiefenreinigung & Service</strong><small>Ultraschall-Bad inkl. Funktionscheck.</small></div><div class="pp"><span class="ab">AB</span>12 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Mainboard-Reparatur</strong><small>Mikrolöt-Arbeiten nach Diagnose.</small></div><div class="pp"><span class="ab">AB</span>40 €</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ XBOX SERIES X|S ═══ -->
+    <div class="r-dev-panel" id="dev-xbox">
+      <div class="r-price-grid">
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🕹️</span> STICKS & DRIFT</div>
+          <div class="r-price-row featured"><div class="pl"><strong>Stick-Drift Reparatur (Standard)</strong><small>Original Xbox-Stick-Modul Tausch.</small></div><div class="pp"><span class="ab">AB</span>25 €</div></div>
+          <div class="r-price-row upgrade"><div class="pl"><strong>Hall-Effect Upgrade</strong><small>Magnetische Sticks — driftfrei für immer.</small></div><div class="pp"><span class="ab">AB</span>60 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Beide Sticks gleichzeitig</strong><small>Beide Module im selben Auftrag.</small></div><div class="pp"><span class="ab">AB</span>42 €</div></div>
+        </div>
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🎯</span> TASTEN & TRIGGER</div>
+          <div class="r-price-row"><div class="pl"><strong>LT / RT Trigger</strong><small>Federbruch, klemmend, Rumble defekt.</small></div><div class="pp"><span class="ab">AB</span>22 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>LB / RB Bumper</strong><small>Klickkraft weg.</small></div><div class="pp"><span class="ab">AB</span>18 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>A / B / X / Y Buttons</strong><small>Einzeln oder als 4er-Set.</small></div><div class="pp"><span class="ab">AB</span>18 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Hybrid D-Pad Reparatur</strong><small>Klemmend oder Ghost-Inputs.</small></div><div class="pp"><span class="ab">AB</span>20 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>View / Menü / Share / Xbox-Home</strong><small>Standard-Tasten.</small></div><div class="pp"><span class="ab">AB</span>18 €</div></div>
+        </div>
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🔌</span> LADEN & ANSCHLÜSSE</div>
+          <div class="r-price-row featured"><div class="pl"><strong>USB-C Buchse Tausch</strong><small>Lade-Port-Reparatur.</small></div><div class="pp"><span class="ab">AB</span>35 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Akku-Fach / Kontakte reinigen</strong><small>Wackelnde AA-Akku-Kontakte.</small></div><div class="pp">15 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Akku-Pack (Play & Charge) Tausch</strong><small>Falls vorhanden — Original-Akku.</small></div><div class="pp"><span class="ab">AB</span>28 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>3.5 mm Klinke</strong><small>Headset-Buchse.</small></div><div class="pp"><span class="ab">AB</span>22 €</div></div>
+        </div>
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🛠️</span> SONSTIGES</div>
+          <div class="r-price-row"><div class="pl"><strong>Vibrations-Motor (HD-Rumble)</strong><small>Einseitig oder komplett.</small></div><div class="pp"><span class="ab">AB</span>25 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Gehäuse / Soft-Touch Grip</strong><small>Komplett-Tausch oder Grip-Sektionen.</small></div><div class="pp"><span class="ab">AB</span>35 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Tiefenreinigung & Service</strong><small>Ultraschall + Check.</small></div><div class="pp"><span class="ab">AB</span>15 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Mainboard-Reparatur</strong><small>Mikrolöten nach Diagnose.</small></div><div class="pp"><span class="ab">AB</span>45 €</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ XBOX ONE / ELITE ═══ -->
+    <div class="r-dev-panel" id="dev-xbone">
+      <div class="r-price-grid">
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🎮</span> XBOX ONE STANDARD</div>
+          <div class="r-price-row"><div class="pl"><strong>Stick-Drift Reparatur</strong><small>Original-Stick-Modul tauschen.</small></div><div class="pp"><span class="ab">AB</span>22 €</div></div>
+          <div class="r-price-row upgrade"><div class="pl"><strong>Hall-Effect Upgrade</strong><small>Driftfreie Magnet-Sticks.</small></div><div class="pp"><span class="ab">AB</span>55 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>LT / RT / LB / RB Reparatur</strong><small>Trigger oder Bumper.</small></div><div class="pp"><span class="ab">AB</span>20 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Tasten / D-Pad</strong><small>Einzelne Buttons oder D-Pad.</small></div><div class="pp"><span class="ab">AB</span>15 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Micro-USB Buchse Tausch</strong><small>Lade-Port-Reparatur.</small></div><div class="pp"><span class="ab">AB</span>30 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>3.5 mm Klinke (ab Modell 1697)</strong><small>Headset-Buchse.</small></div><div class="pp"><span class="ab">AB</span>22 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Vibrations-Motor</strong><small>Rumble-Tausch.</small></div><div class="pp"><span class="ab">AB</span>22 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Gehäuse-Tausch</strong><small>Front- + Backshell.</small></div><div class="pp"><span class="ab">AB</span>32 €</div></div>
+        </div>
+
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">⭐</span> XBOX ELITE 1 & 2</div>
+          <div class="r-price-row featured"><div class="pl"><strong>Stick-Drift Elite (Standard)</strong><small>Austauschbares Stick-Modul (Elite-Spec).</small></div><div class="pp"><span class="ab">AB</span>30 €</div></div>
+          <div class="r-price-row upgrade"><div class="pl"><strong>Stick-Drift Elite (Hall-Effect)</strong><small>Drop-In Hall-Sensor-Module für Elite.</small></div><div class="pp"><span class="ab">AB</span>70 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Paddle-Reparatur (P1-P4)</strong><small>Einzelnes oder mehrere Paddles.</small></div><div class="pp"><span class="ab">AB</span>22 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Trigger-Stops Mechanik</strong><small>Hair-Trigger-Schalter defekt.</small></div><div class="pp"><span class="ab">AB</span>20 €</div></div>
+          <div class="r-price-row featured"><div class="pl"><strong>Sync-Button Reparatur (Elite 2 Defekt!) <span class="badge-pop">HÄUFIG</span></strong><small>Sync-Button-Fehler bei Elite Series 2 — bekannter Defekt.</small></div><div class="pp"><span class="ab">AB</span>35 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Akku-Tausch Elite 2 (integriert)</strong><small>Original-Markenakku.</small></div><div class="pp"><span class="ab">AB</span>32 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>D-Pad Modul-Tausch</strong><small>Wechselbare D-Pad-Module.</small></div><div class="pp"><span class="ab">AB</span>18 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Gehäuse / Grip-Pads</strong><small>Gummi-Grip-Pads erneuern.</small></div><div class="pp"><span class="ab">AB</span>28 €</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ NINTENDO SWITCH ═══ -->
+    <div class="r-dev-panel" id="dev-switch">
+      <div class="r-price-grid">
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🎮</span> JOY-CON (L oder R)</div>
+          <div class="r-price-row featured"><div class="pl"><strong>Joy-Con Drift Reparatur (Standard) <span class="badge-pop">#1 ANFRAGE</span></strong><small>Original-Stick-Modul Tausch inkl. Kalibrierung.</small></div><div class="pp"><span class="ab">AB</span>22 €</div></div>
+          <div class="r-price-row upgrade"><div class="pl"><strong>Joy-Con Hall-Effect Upgrade <span class="badge-new">DRIFT-FREI</span></strong><small>Magnet-Sensor-Stick — nie wieder Drift.</small></div><div class="pp"><span class="ab">AB</span>45 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Beide Joy-Cons (L + R)</strong><small>Mengenrabatt bei Reparatur beider Controller.</small></div><div class="pp"><span class="ab">AB</span>38 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>SL / SR Schultertasten</strong><small>Seitliche Tasten reagieren nicht mehr.</small></div><div class="pp"><span class="ab">AB</span>18 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Akku-Tausch Joy-Con</strong><small>Originalspec Lithium-Akku.</small></div><div class="pp"><span class="ab">AB</span>22 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Gehäuse / Slider-Schiene</strong><small>Verbiegung, Bruch, klemmender Slider.</small></div><div class="pp"><span class="ab">AB</span>28 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Mainboard / IR-Sensor</strong><small>Tiefer gehende Reparaturen nach Diagnose.</small></div><div class="pp"><span class="ab">AB</span>40 €</div></div>
+        </div>
+
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🎮</span> SWITCH PRO CONTROLLER</div>
+          <div class="r-price-row"><div class="pl"><strong>Stick-Drift Reparatur</strong><small>Pro-Controller Stick-Modul-Tausch.</small></div><div class="pp"><span class="ab">AB</span>25 €</div></div>
+          <div class="r-price-row upgrade"><div class="pl"><strong>Hall-Effect Upgrade (Pro)</strong><small>Magnet-Sticks für Pro-Controller.</small></div><div class="pp"><span class="ab">AB</span>55 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>ZR / ZL / R / L Tasten</strong><small>Schulter-Tasten und Trigger.</small></div><div class="pp"><span class="ab">AB</span>20 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>A / B / X / Y Tasten</strong><small>Face-Buttons.</small></div><div class="pp"><span class="ab">AB</span>18 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>D-Pad Reparatur</strong><small>Klemmend oder Ghost-Inputs.</small></div><div class="pp"><span class="ab">AB</span>18 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>USB-C Buchse Pro</strong><small>Lade-Port-Reparatur.</small></div><div class="pp"><span class="ab">AB</span>32 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Akku-Tausch Pro Controller</strong><small>1.300 mAh Original-Spec.</small></div><div class="pp"><span class="ab">AB</span>25 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Vibrations-Motoren</strong><small>HD-Rumble-Module.</small></div><div class="pp"><span class="ab">AB</span>22 €</div></div>
+        </div>
+      </div>
+      <div class="r-callout" style="margin-top:18px"><div class="ci">💡</div><div>Wir empfehlen bei <strong>Joy-Cons</strong> grundsätzlich den <strong>Hall-Effect Umbau</strong> — die Original-ALPS-Sticks neigen prinzipbedingt zum Drift. Hall-Effect ist eine <strong>permanente Lösung</strong>.</div></div>
+    </div>
+
+    <!-- ═══ KONSOLEN ═══ -->
+    <div class="r-dev-panel" id="dev-console">
+      <div class="r-price-grid">
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">📺</span> PS5 / PS5 SLIM / PRO</div>
+          <div class="r-price-row featured"><div class="pl"><strong>HDMI-Port Reparatur <span class="badge-pop">HÄUFIG</span></strong><small>Mikrolöt-Reparatur — kein Bild mehr.</small></div><div class="pp"><span class="ab">AB</span>65 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Disc-Laufwerk Reparatur / Tausch</strong><small>Liest keine Discs mehr oder zieht nicht ein.</small></div><div class="pp"><span class="ab">AB</span>80 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Lüfter-Tausch / Reinigung</strong><small>Lauter Lüfter, Überhitzung — neuer Original-Lüfter.</small></div><div class="pp"><span class="ab">AB</span>50 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Netzteil-Tausch</strong><small>Konsole geht nicht mehr an.</small></div><div class="pp"><span class="ab">AB</span>70 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Wärmeleitpaste & Service</strong><small>Reinigung + neue Hochleistungs-Paste.</small></div><div class="pp"><span class="ab">AB</span>35 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>USB-Port Tausch (Front/Hinten)</strong><small>Mikrolöt-Reparatur USB-A / USB-C.</small></div><div class="pp"><span class="ab">AB</span>45 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>SSD-Slot Reparatur</strong><small>M.2-Slot-Probleme bei Erweiterungs-SSDs.</small></div><div class="pp"><span class="ab">AB</span>55 €</div></div>
+        </div>
+
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">📺</span> PS4 / SLIM / PRO</div>
+          <div class="r-price-row"><div class="pl"><strong>HDMI-Port Reparatur</strong><small>Häufigster PS4-Defekt — Mikrolöt-Tausch.</small></div><div class="pp"><span class="ab">AB</span>55 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Disc-Laufwerk / BluRay</strong><small>Laser-Tausch oder Riemen-Reparatur.</small></div><div class="pp"><span class="ab">AB</span>65 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Lüfter / Reinigung / Paste</strong><small>Komplettservice gegen lauten Lüfter.</small></div><div class="pp"><span class="ab">AB</span>40 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Power-Button / WLAN-Modul</strong><small>Power-Knopf defekt oder WLAN-Probleme.</small></div><div class="pp"><span class="ab">AB</span>45 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>HDD-Tausch / Datenmigration</strong><small>Neue Festplatte mit System-Reinstallation.</small></div><div class="pp"><span class="ab">AB</span>35 €</div></div>
+        </div>
+
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">📺</span> XBOX SERIES X|S / XBOX ONE</div>
+          <div class="r-price-row"><div class="pl"><strong>HDMI-Port Reparatur</strong><small>Series X|S oder Xbox One Mikrolöt-Reparatur.</small></div><div class="pp"><span class="ab">AB</span>65 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Disc-Laufwerk / Tausch</strong><small>Reparatur oder Komplett-Tausch.</small></div><div class="pp"><span class="ab">AB</span>80 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Lüfter / Reinigung / Wärmeleitpaste</strong><small>Service gegen Überhitzung.</small></div><div class="pp"><span class="ab">AB</span>45 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Netzteil-Tausch</strong><small>Original Microsoft-Netzteil.</small></div><div class="pp"><span class="ab">AB</span>60 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Power-Button / Sync-Button</strong><small>Vorderseiten-Buttons.</small></div><div class="pp"><span class="ab">AB</span>35 €</div></div>
+        </div>
+
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">📺</span> NINTENDO SWITCH / OLED / LITE</div>
+          <div class="r-price-row featured"><div class="pl"><strong>HDMI-Port Dock</strong><small>Dock gibt kein Bild mehr aus.</small></div><div class="pp"><span class="ab">AB</span>55 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>USB-C Ladebuchse Switch / OLED</strong><small>Mikrolöt-Reparatur — bekannter Defekt.</small></div><div class="pp"><span class="ab">AB</span>50 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Display-Tausch (LCD / OLED)</strong><small>Display-Bruch oder defekte Pixel.</small></div><div class="pp"><span class="ab">AB</span>85 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Touchscreen-Digitizer</strong><small>Touch reagiert nicht mehr.</small></div><div class="pp"><span class="ab">AB</span>55 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Lüfter / Reinigung / Paste</strong><small>Lüfter laut oder defekt.</small></div><div class="pp"><span class="ab">AB</span>45 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Akku-Tausch Switch</strong><small>Akku hält nicht mehr.</small></div><div class="pp"><span class="ab">AB</span>40 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Game-Card-Slot</strong><small>Modul-Slot defekt.</small></div><div class="pp"><span class="ab">AB</span>40 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Lautsprecher / Mikrofon</strong><small>Audio-Probleme.</small></div><div class="pp"><span class="ab">AB</span>35 €</div></div>
+        </div>
+      </div>
+      <div class="r-callout" style="margin-top:18px"><div class="ci">⚠️</div><div><strong>Wichtig bei Konsolen-Reparaturen:</strong> Wir geben dir <strong>vor Reparaturbeginn</strong> einen exakten Festpreis. Sollte der Aufwand höher als geschätzt sein, melden wir uns — du entscheidest. Versand-Tipp: Bei Konsolen empfehlen wir <strong>versicherten DHL-Paketversand</strong> (ab 12 €).</div></div>
+    </div>
+
+    <!-- ═══ WEITERE ═══ -->
+    <div class="r-dev-panel" id="dev-other">
+      <div class="r-price-grid">
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🎧</span> GAMING-HEADSETS</div>
+          <div class="r-price-row"><div class="pl"><strong>Kabel-Bruch / Klinke-Buchse</strong><small>Kabel ersetzen oder Buchse löten.</small></div><div class="pp"><span class="ab">AB</span>25 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Lautsprecher-Tausch</strong><small>Ein Lautsprecher tot oder verzerrt.</small></div><div class="pp"><span class="ab">AB</span>35 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Akku-Tausch Wireless-Headset</strong><small>SteelSeries, Razer, Sony Pulse, HyperX.</small></div><div class="pp"><span class="ab">AB</span>40 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Mikrofon-Bügel / Boom</strong><small>Microbügel defekt oder gebrochen.</small></div><div class="pp"><span class="ab">AB</span>28 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Polster-Tausch</strong><small>Original- oder Premium-Memory-Foam.</small></div><div class="pp"><span class="ab">AB</span>15 €</div></div>
+        </div>
+
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🕹️</span> ARCADE & HOTAS</div>
+          <div class="r-price-row"><div class="pl"><strong>Arcade-Stick (Hori, Razer, Mayflash)</strong><small>Microswitch-Tausch, Stick-Modul.</small></div><div class="pp"><span class="ab">AB</span>30 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>HOTAS Throttle / Joystick</strong><small>Thrustmaster, Logitech G — Drift, Tasten.</small></div><div class="pp"><span class="ab">AB</span>35 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Rennlenkrad-Reparatur</strong><small>Logitech G29/G923, Thrustmaster T-Series.</small></div><div class="pp"><span class="ab">AB</span>40 €</div></div>
+        </div>
+
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🎮</span> RETRO & DRITTHERSTELLER</div>
+          <div class="r-price-row"><div class="pl"><strong>SteelSeries Nimbus / Stratus</strong><small>Stick- und Tasten-Reparatur.</small></div><div class="pp"><span class="ab">AB</span>25 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Scuf / Battle Beaver / Aim Controller</strong><small>Reparatur und Paddle-Service.</small></div><div class="pp"><span class="ab">AB</span>30 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Retro-Controller (SNES, N64, GameCube)</strong><small>Joystick, Tasten, Kabel — auf Anfrage.</small></div><div class="pp"><span class="ab">AB</span>25 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>8BitDo Pro 2 / SN30 / Ultimate</strong><small>Stick-Drift und Tasten.</small></div><div class="pp"><span class="ab">AB</span>22 €</div></div>
+        </div>
+
+        <div class="r-price-group">
+          <div class="r-pg-h"><span class="pgi">🔧</span> SONSTIGES & CUSTOM</div>
+          <div class="r-price-row"><div class="pl"><strong>Lötarbeiten allgemein (pro 15 min)</strong><small>Mikrolöt-Arbeiten nach Aufwand.</small></div><div class="pp">15 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>3D-Druck Ersatzteil (auf Anfrage)</strong><small>Stick-Caps, Buttons, Adapter — nach Konstruktion.</small></div><div class="pp"><span class="ab">AB</span>15 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Custom-Lackierung / Painting</strong><small>Airbrush, Hydro-Dip, UV-Lack.</small></div><div class="pp"><span class="ab">AB</span>40 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Profi-Diagnose mit Bericht</strong><small>Detaillierter PDF-Bericht mit Empfehlung.</small></div><div class="pp">25 €</div></div>
+          <div class="r-price-row"><div class="pl"><strong>Sonderauftrag / unklare Defekte</strong><small>Auf Anfrage — wir bewerten kostenlos.</small></div><div class="pp">n. A.</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ PROCESS STEPS ═══ -->
+<section class="r-section">
+  <div class="r-section-h">⟫ SO LÄUFT'S AB</div>
+  <h2 class="r-section-title">In 4 Schritten zur Reparatur</h2>
+  <p class="r-section-desc">Von der Anfrage bis zur Rückgabe — der Ablauf ist transparent, schnell und unkompliziert. Du musst nicht vorab bezahlen, bevor wir den Schaden gesehen haben.</p>
+
+  <div class="r-process">
+    <div class="r-steps">
+      <div class="r-step">
+        <div class="r-step-n">01</div>
+        <div class="r-step-h">ANFRAGEN</div>
+        <div class="r-step-d">Fülle das <strong>Reparatur-Formular</strong> aus oder schreib uns. Beschreib den Defekt — wir senden dir innerhalb von <strong>24 h einen Festpreis</strong>.</div>
+      </div>
+      <div class="r-step">
+        <div class="r-step-n">02</div>
+        <div class="r-step-h">EINSENDEN</div>
+        <div class="r-step-d">Verpacke deinen Controller sicher und schicke ihn an unsere <strong>Werkstatt in Domsühl</strong>. Versandkosten ab 7,50 €.</div>
+      </div>
+      <div class="r-step">
+        <div class="r-step-n">03</div>
+        <div class="r-step-h">REPARIEREN</div>
+        <div class="r-step-d">Wir reparieren in <strong>3–5 Werktagen</strong> nach Eingang. Bei Bedarf melden wir uns vor zusätzlichen Arbeiten.</div>
+      </div>
+      <div class="r-step">
+        <div class="r-step-n">04</div>
+        <div class="r-step-h">ZURÜCK</div>
+        <div class="r-step-d">Bezahlung per <strong>Rechnung, Überweisung oder PayPal</strong>. Versand zurück per <strong>DHL versichert</strong> — inkl. 6 Monate Garantie.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PACKING GUIDE ═══ -->
+<section class="r-section">
+  <div class="r-section-h">⟫ VERPACKUNGS-GUIDE</div>
+  <h2 class="r-section-title">So verpackst du richtig</h2>
+  <p class="r-section-desc">In 4 Schritten transportsicher und versicherungs-tauglich verpacken. Bei Schäden durch unsachgemäße Verpackung haftet der Versender — nicht der Empfänger.</p>
+  <div class="r-pack">
+    <div class="r-pack-h">📦 SO KOMMT DEIN CONTROLLER SICHER BEI UNS AN</div>
+    <p class="r-pack-sub">Bitte halte dich an diese Schritte. Bei Fragen zur Verpackung kontaktiere uns vorab — wir helfen gerne und kostenfrei.</p>
+    <div class="r-pack-steps">
+      <div class="r-pack-step"><span class="n">1</span><strong>ANTISTATIK / FOLIE</strong><p>Verpacke den Controller in eine Plastiktüte oder Antistatik-Folie. Schützt vor Feuchtigkeit und ESD-Schäden.</p></div>
+      <div class="r-pack-step"><span class="n">2</span><strong>POLSTERUNG</strong><p>Mindestens 3-5 cm Luftpolsterfolie oder Schaumstoff rundum. Zeitungspapier nicht ausreichend.</p></div>
+      <div class="r-pack-step"><span class="n">3</span><strong>STABILER KARTON</strong><p>Verwende den Original- oder einen gleich großen Karton (z. B. von Amazon). Schuhkartons sind zu instabil.</p></div>
+      <div class="r-pack-step"><span class="n">4</span><strong>BEILAGE & ETIKETT</strong><p>Lege Reparaturnummer + Notiz mit Defektbeschreibung bei. Klebe Versandetikett wackelfrei auf.</p></div>
+      <div class="r-pack-step"><span class="n">5</span><strong>VERSICHERN</strong><p>Wähle DHL-Versand <strong>mit Versicherung</strong>. Standard-Versicherung deckt nur 25 € — wähle XL-Schutz für teure Controller.</p></div>
+      <div class="r-pack-step"><span class="n">6</span><strong>SENDUNGS-TRACKING</strong><p>Sende uns die Sendungsnummer per E-Mail — wir können Eingang besser nachverfolgen.</p></div>
+    </div>
+    <div class="r-callout" style="margin-top:18px"><div class="ci">⚠️</div><div><strong>Akku-Hinweis:</strong> Controller mit Lithium-Akkus dürfen <strong>nicht per Luftpost</strong> geschickt werden. Innerhalb Deutschlands ist Bodenversand (DHL Standard) immer ok.</div></div>
+  </div>
+</section>
+
+<!-- ═══ WHAT'S INCLUDED ═══ -->
+<section class="r-section">
+  <div class="r-section-h">⟫ INKLUSIVLEISTUNGEN</div>
+  <h2 class="r-section-title">Das ist in jeder Reparatur enthalten</h2>
+  <p class="r-section-desc">Bei LEXORD gibt's keine versteckten Kosten. Jede Reparatur — egal ob 25 € oder 150 € — enthält folgende Leistungen ohne Aufpreis.</p>
+
+  <div class="r-inc-grid">
+    <div class="r-inc"><div class="r-inc-ico">📋</div><div class="r-inc-t"><strong>VOLLSTÄNDIGE DIAGNOSE</strong><span>Wir prüfen den ganzen Controller, nicht nur den gemeldeten Defekt. Hidden-Issues werden sofort gemeldet.</span></div></div>
+    <div class="r-inc"><div class="r-inc-ico">💰</div><div class="r-inc-t"><strong>FESTPREIS VOR REPARATUR</strong><span>Du erhältst innerhalb 24 h einen exakten Festpreis. Keine Überraschungen.</span></div></div>
+    <div class="r-inc"><div class="r-inc-ico">🛡️</div><div class="r-inc-t"><strong>6 MONATE GARANTIE</strong><span>Auf alle durchgeführten Arbeiten — gesetzlich verankert. Optional 12 Monate (+15 €).</span></div></div>
+    <div class="r-inc"><div class="r-inc-ico">🧼</div><div class="r-inc-t"><strong>REINIGUNG INKLUSIVE</strong><span>Jeder Controller wird vor der Rückgabe gereinigt und desinfiziert.</span></div></div>
+    <div class="r-inc"><div class="r-inc-ico">📦</div><div class="r-inc-t"><strong>SICHERE RÜCKVERPACKUNG</strong><span>Antistatik-Beutel, Polster und stabiler Versandkarton. DHL-versichert.</span></div></div>
+    <div class="r-inc"><div class="r-inc-ico">🧪</div><div class="r-inc-t"><strong>FUNKTIONSTEST</strong><span>Jeder Controller wird vor Versand 30 Min. getestet — alle Inputs, Vibration, Trigger, Akku.</span></div></div>
+    <div class="r-inc"><div class="r-inc-ico">🧾</div><div class="r-inc-t"><strong>ORDNUNGSGEMÄSSE RECHNUNG</strong><span>Mit ausgewiesener Mehrwertsteuer — auch für B2B / Steuerberater.</span></div></div>
+    <div class="r-inc"><div class="r-inc-ico">📨</div><div class="r-inc-t"><strong>STATUS-UPDATES</strong><span>Du bekommst per E-Mail Updates: Eingang, Diagnose, Reparatur abgeschlossen, Versand.</span></div></div>
+  </div>
+</section>
+
+<!-- ═══ PREMIUM ADD-ONS ═══ -->
+<section class="r-section">
+  <div class="r-section-h">⟫ PREMIUM-OPTIONEN</div>
+  <h2 class="r-section-title">Optionale Aufwertungen</h2>
+  <p class="r-section-desc">Wenn dein Controller schon mal offen ist — nutze die Gelegenheit für Premium-Upgrades. Alles aus einer Hand, ohne zweite Versandlogistik.</p>
+
+  <div class="r-addon-grid">
+    <div class="r-addon">
+      <div class="r-addon-h"><span class="ico">⚡</span> EXPRESS-SERVICE</div>
+      <div class="r-addon-d">Bearbeitung innerhalb von <strong>24–48 Stunden</strong> nach Eingang. Vorrang in der Warteschlange. Versand am selben Tag nach Abschluss.</div>
+      <div class="r-addon-p"><span class="pre">AUFPREIS</span>+ 20 €</div>
+    </div>
+    <div class="r-addon">
+      <div class="r-addon-h"><span class="ico">🛡️</span> PREMIUM-GARANTIE</div>
+      <div class="r-addon-d">Verlängerte Gewährleistung von <strong>6 auf 12 Monate</strong> — auf alle ausgeführten Arbeiten und gelieferten Komponenten.</div>
+      <div class="r-addon-p"><span class="pre">AUFPREIS</span>+ 15 €</div>
+    </div>
+    <div class="r-addon">
+      <div class="r-addon-h"><span class="ico">📦</span> VERSAND-VERSICHERUNG XL</div>
+      <div class="r-addon-d">Erweiterte Transport-Versicherung bis <strong>500 €</strong> (statt 25 €). Sinnvoll bei Sondereditionen oder Custom-Painting.</div>
+      <div class="r-addon-p"><span class="pre">AUFPREIS</span>+ 5 €</div>
+    </div>
+    <div class="r-addon">
+      <div class="r-addon-h"><span class="ico">📋</span> TIEFEN-DIAGNOSE</div>
+      <div class="r-addon-d">Schriftlicher <strong>PDF-Bericht</strong> mit Vollständige-Komponenten-Check, Empfehlungen und Foto-Dokumentation.</div>
+      <div class="r-addon-p"><span class="pre">AUFPREIS</span>+ 10 €</div>
+    </div>
+    <div class="r-addon">
+      <div class="r-addon-h"><span class="ico">🎨</span> CUSTOM-LACKIERUNG</div>
+      <div class="r-addon-d">Wenn der Controller schon offen ist: <strong>Airbrush, Hydro-Dip, UV-Lack</strong> oder Glitter. Auf Wunsch komplett individualisiert.</div>
+      <div class="r-addon-p"><span class="pre">AB</span>40 €</div>
+    </div>
+    <div class="r-addon">
+      <div class="r-addon-h"><span class="ico">🎁</span> RUNDUM-SORGLOS-PAKET</div>
+      <div class="r-addon-d"><strong>Express + 12 Mon. Garantie + Tiefen-Diagnose + XL-Versicherung</strong> = Sparpaket. Ideal für teure Controller.</div>
+      <div class="r-addon-p"><span class="pre">PAKETPREIS</span>+ 40 €</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ WARRANTY ═══ -->
+<section class="r-section">
+  <div class="r-section-h">⟫ GEWÄHRLEISTUNG</div>
+  <h2 class="r-section-title">Garantie auf jeden Handgriff</h2>
+  <p class="r-section-desc">Wir stehen hinter unserer Arbeit — schriftlich. Beide Varianten umfassen Material und Arbeitsleistung. Bei Defekt: kostenlose Nachbesserung oder Erstattung.</p>
+
+  <div class="r-warranty">
+    <div class="r-warr standard">
+      <div class="r-warr-top">
+        <div class="r-warr-icon">🛡️</div>
+        <div class="r-warr-ribbon">STANDARD</div>
+      </div>
+      <div class="r-warr-h">BASIS-GEWÄHRLEISTUNG</div>
+      <div class="r-warr-p">6 <span class="month">MONATE</span></div>
+      <ul>
+        <li>Auf alle durchgeführten Arbeiten</li>
+        <li>Auf alle verbauten Ersatzteile</li>
+        <li>Kostenlose Nachbesserung</li>
+        <li>Versandkosten bei Nachbesserung wir</li>
+        <li>Inkl. Materialfehler</li>
+        <li>Standard bei jeder Reparatur</li>
+      </ul>
+    </div>
+    <div class="r-warr premium">
+      <div class="r-warr-top">
+        <div class="r-warr-icon">👑</div>
+        <div class="r-warr-ribbon">PREMIUM · + 15 €</div>
+      </div>
+      <div class="r-warr-h">EXTENDED-GEWÄHRLEISTUNG</div>
+      <div class="r-warr-p">12 <span class="month">MONATE</span></div>
+      <ul>
+        <li>Alles aus Standard</li>
+        <li>Verlängert auf volle 12 Monate</li>
+        <li>Priorisierte Folge-Reparatur</li>
+        <li>Auch für Verschleißteile</li>
+        <li>Kostenloser Rückversand</li>
+        <li>Optional bei jeder Reparatur buchbar</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TRUST / REVIEWS ═══ -->
+<section class="r-section">
+  <div class="r-section-h">⟫ KUNDENMEINUNGEN</div>
+  <h2 class="r-section-title">Was unsere Kunden sagen</h2>
+  <p class="r-section-desc">Über 5.000 erfolgreich abgeschlossene Reparaturen — und durchschnittlich 4,9 von 5 Sternen. Hier eine kleine Auswahl.</p>
+
+  <div class="r-trust-grid">
+    <div class="r-review">
+      <div class="r-review-stars">★★★★★</div>
+      <div class="r-review-txt">„Stick-Drift war nach 3 Tagen behoben. Top Kommunikation per E-Mail, faire Preise. Mein DualSense fühlt sich wieder wie neu an."</div>
+      <div class="r-review-meta"><div class="r-review-av">M</div><div class="r-review-who"><strong>MARCEL K.</strong><span>PS5 DualSense · Drift links</span></div></div>
+    </div>
+    <div class="r-review">
+      <div class="r-review-stars">★★★★★</div>
+      <div class="r-review-txt">„Habe meinen Edge Controller einsenden lassen. Hall-Effect-Umbau perfekt durchgeführt, dazu noch eine Tiefenreinigung gratis. Klare Empfehlung."</div>
+      <div class="r-review-meta"><div class="r-review-av">L</div><div class="r-review-who"><strong>LISA H.</strong><span>PS5 Edge · Hall-Effect Upgrade</span></div></div>
+    </div>
+    <div class="r-review">
+      <div class="r-review-stars">★★★★★</div>
+      <div class="r-review-txt">„Schnelle Diagnose, fairer Festpreis, professionelle Reparatur. HDMI-Port an meiner PS5 wieder dran. Andere wollten 130 € — hier 65 €."</div>
+      <div class="r-review-meta"><div class="r-review-av">T</div><div class="r-review-who"><strong>TIM R.</strong><span>PS5 · HDMI-Port Reparatur</span></div></div>
+    </div>
+    <div class="r-review">
+      <div class="r-review-stars">★★★★★</div>
+      <div class="r-review-txt">„Joy-Con Drift bei beiden Cons. Hall-Effect Upgrade gemacht — nie wieder Drift. Verarbeitung makellos, Versand 4 Tage."</div>
+      <div class="r-review-meta"><div class="r-review-av">N</div><div class="r-review-who"><strong>NIKLAS B.</strong><span>Switch Joy-Con · Hall-Effect</span></div></div>
+    </div>
+    <div class="r-review">
+      <div class="r-review-stars">★★★★★</div>
+      <div class="r-review-txt">„Elite Series 2 Sync-Button kaputt — 30 € statt Neukauf für 180 €. Sehr zufrieden, schnelle Bearbeitung."</div>
+      <div class="r-review-meta"><div class="r-review-av">A</div><div class="r-review-who"><strong>ANDRÉ S.</strong><span>Xbox Elite 2 · Sync-Button</span></div></div>
+    </div>
+    <div class="r-review">
+      <div class="r-review-stars">★★★★★</div>
+      <div class="r-review-txt">„Top Service! Habe Express gebucht und nach 36 Stunden war der Controller wieder bei mir. Kommunikation 1A."</div>
+      <div class="r-review-meta"><div class="r-review-av">J</div><div class="r-review-who"><strong>JULIAN W.</strong><span>PS5 DualSense · Trigger + Express</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ ═══ -->
+<section class="r-section">
+  <div class="r-section-h">⟫ HÄUFIGE FRAGEN</div>
+  <h2 class="r-section-title">FAQ zur Reparatur</h2>
+  <p class="r-section-desc">Die wichtigsten Fragen rund um Versand, Bezahlung, Garantie und Bearbeitung. Bei weiteren Fragen: <a href="mailto:Kontakt@Lexord.de">Kontakt@Lexord.de</a>.</p>
+
+  <div class="r-faq">
+    <div class="r-faq-item" onclick="tFaq(this)"><div class="r-faq-q">Wie sende ich meinen Controller ein? <span class="arr">+</span></div><div class="r-faq-a">Verpacke deinen Controller <strong>sicher</strong> (Antistatik-Beutel, Polster) und schicke ihn an: <strong style="color:var(--neon)">Leon Schulz · An Der Domsühler Str. 2 · 19374 Domsühl</strong>. Leg deine Reparaturnummer (per E-Mail nach Anfrage) bei. Wir empfehlen DHL-Paketversand mit Versicherung.</div></div>
+    <div class="r-faq-item" onclick="tFaq(this)"><div class="r-faq-q">Was kostet der Versand? <span class="arr">+</span></div><div class="r-faq-a"><strong>Hinversand</strong> trägst du selbst (ab 7,50 € DHL versichert empfohlen). <strong>Rückversand</strong> ist standardmäßig mit 7,50 € (versichert bis 25 €) berechnet. Optional XL-Versicherung bis 500 € für +5 €.</div></div>
+    <div class="r-faq-item" onclick="tFaq(this)"><div class="r-faq-q">Wie lange dauert die Reparatur? <span class="arr">+</span></div><div class="r-faq-a">Standard: <strong>3–5 Werktage</strong> nach Eingang. Express (+20 €): <strong>24–48 Stunden</strong>. Bei Konsolen oder komplexen Reparaturen kann es 5–7 Tage dauern — wir geben dir vorher Bescheid.</div></div>
+    <div class="r-faq-item" onclick="tFaq(this)"><div class="r-faq-q">Was passiert, wenn der Schaden komplexer ist als gedacht? <span class="arr">+</span></div><div class="r-faq-a">Wir melden uns vor jeder Mehrarbeit. Du entscheidest, ob du den Mehraufwand freigibst oder die Reparatur stoppst. Solltest du absagen, fallen <strong>nur die Diagnose-Pauschale (15 €)</strong> + Rückversand an.</div></div>
+    <div class="r-faq-item" onclick="tFaq(this)"><div class="r-faq-q">Welche Garantie gibt es auf die Reparatur? <span class="arr">+</span></div><div class="r-faq-a">Standardmäßig <strong>6 Monate Garantie</strong> auf Arbeit und Material. Optional <strong>12 Monate Premium-Garantie (+15 €)</strong>. Sollte ein Defekt innerhalb der Garantiezeit auftreten: kostenlose Nachbesserung inkl. Rückversand.</div></div>
+    <div class="r-faq-item" onclick="tFaq(this)"><div class="r-faq-q">Wie bezahle ich? <span class="arr">+</span></div><div class="r-faq-a">Du erhältst eine <strong>Rechnung per E-Mail</strong>. Bezahlung per <strong>SEPA-Überweisung, PayPal oder Stripe (Karte/Klarna)</strong>. Der Controller wird erst nach Zahlungseingang versandt — bei Stammkunden auch auf Rechnung möglich.</div></div>
+    <div class="r-faq-item" onclick="tFaq(this)"><div class="r-faq-q">Ist die Reparatur ein Werkvertrag? <span class="arr">+</span></div><div class="r-faq-a">Ja, gemäß <strong>§§ 631 ff. BGB</strong>. Das bedeutet: wir schulden den <strong>Erfolg der Reparatur</strong>, nicht nur den Versuch. Bei ausdrücklicher Zustimmung zur Reparatur erlischt dein Widerrufsrecht nach <strong>§ 356 Abs. 4 BGB</strong>.</div></div>
+    <div class="r-faq-item" onclick="tFaq(this)"><div class="r-faq-q">Repariert ihr auch Konsolen, nicht nur Controller? <span class="arr">+</span></div><div class="r-faq-a">Ja — wir reparieren <strong>PS5, PS4, Xbox Series X|S, Xbox One, Nintendo Switch & OLED</strong>. Häufigste Konsolen-Reparaturen: HDMI-Port, Lüfter, Disc-Laufwerk, Netzteil, USB-Ports. Siehe Tab „Konsolen" oben.</div></div>
+    <div class="r-faq-item" onclick="tFaq(this)"><div class="r-faq-q">Was ist mit Dritthersteller-Controllern? <span class="arr">+</span></div><div class="r-faq-a">Wir reparieren auch <strong>Scuf, Aim Controllers, 8BitDo, Hori, Razer, SteelSeries, Battle Beaver</strong> und viele andere. Auch Arcade-Sticks, HOTAS und Lenkräder. Schreib uns einfach, was du hast — wir geben Feedback in 24 h.</div></div>
+    <div class="r-faq-item" onclick="tFaq(this)"><div class="r-faq-q">Kann ich gleichzeitig ein Upgrade machen lassen? <span class="arr">+</span></div><div class="r-faq-a">Klar! Wenn dein Controller schon mal offen ist, lohnt sich z. B. ein <strong>Hall-Effect-Stick-Upgrade</strong>, neue <strong>Grip-Schale</strong> oder die <strong>Power-Akku-Erweiterung</strong>. Du sparst Versand- und Arbeitskosten. Gib einfach in der Anfrage an, was du dazu willst.</div></div>
+    <div class="r-faq-item" onclick="tFaq(this)"><div class="r-faq-q">Was, wenn ich meinen Controller nicht reparieren möchte nach der Diagnose? <span class="arr">+</span></div><div class="r-faq-a">Kein Problem — du bezahlst nur die <strong>Diagnose-Pauschale (15 €)</strong> + Rückversand (7,50 €). Wir senden dir den Controller <strong>unrepariert</strong>, aber mit schriftlichem Diagnose-Bericht zurück.</div></div>
+    <div class="r-faq-item" onclick="tFaq(this)"><div class="r-faq-q">B2B / Geschäftskunden? <span class="arr">+</span></div><div class="r-faq-a">Ja, wir bieten <strong>B2B-Tarife</strong> für Gaming-Lounges, Repair-Shops, eSports-Teams und Schulen. Volumen-Rabatte ab 5 Geräten/Monat. Mehr Infos unter <a href="b2b.html">/b2b</a> oder <a href="mailto:B2B@Lexord.de">B2B@Lexord.de</a>.</div></div>
+  </div>
+</section>
+
+<!-- ═══ KONTAKT & WERKSTATT ═══ -->
+<section class="r-section" id="kontakt">
+  <div class="r-section-h">⟫ ERREICHBARKEIT</div>
+  <h2 class="r-section-title">So erreichst du uns</h2>
+  <p class="r-section-desc">Werkstatt in Mecklenburg-Vorpommern · Versandadresse für Reparaturen · Erreichbar per E-Mail, WhatsApp, Telefon. Innerhalb der Geschäftszeiten <strong style="color:var(--neon)">Antwort innerhalb 4 Stunden</strong>, sonst max. 24 h.</p>
+
+  <div class="r-contact-grid">
+    <div class="r-contact-card">
+      <h3><span class="i">📞</span> KONTAKT-WEGE</h3>
+      <div class="r-contact-item">
+        <div class="ico">📧</div>
+        <div class="body">
+          <strong>E-MAIL (BEVORZUGT)</strong>
+          <a href="mailto:Kontakt@Lexord.de">Kontakt@Lexord.de</a>
+          <small>Antwort innerhalb 24 h · auch außerhalb der Öffnungszeiten</small>
+        </div>
+      </div>
+      <div class="r-contact-item">
+        <div class="ico">💬</div>
+        <div class="body">
+          <strong>WHATSAPP BUSINESS</strong>
+          <a href="https://wa.me/4915123456789?text=Hallo%20LEXORD%2C%20ich%20habe%20eine%20Reparatur-Anfrage%3A" target="_blank" rel="noopener">+49 151 23 456 789</a>
+          <small>Schnelle Rückfragen · Fotos vom Defekt direkt schicken</small>
+        </div>
+      </div>
+      <div class="r-contact-item">
+        <div class="ico">📨</div>
+        <div class="body">
+          <strong>REPARATUR-FORMULAR</strong>
+          <a href="index.html#repair-sec">→ Online-Formular ausfüllen</a>
+          <small>Geführter Ablauf · Festpreis innerhalb 24 h</small>
+        </div>
+      </div>
+      <div class="r-contact-item">
+        <div class="ico">🏢</div>
+        <div class="body">
+          <strong>B2B / GESCHÄFTSKUNDEN</strong>
+          <a href="mailto:B2B@Lexord.de">B2B@Lexord.de</a>
+          <small>Volumen-Tarife · Eilreparaturen · Gaming-Lounges</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="r-contact-card">
+      <h3><span class="i">📍</span> WERKSTATT & VERSANDADRESSE</h3>
+      <div class="r-contact-item">
+        <div class="ico">🏠</div>
+        <div class="body">
+          <strong>SENDE DEINEN CONTROLLER AN</strong>
+          <span style="color:var(--neon);font-weight:600">Leon Schulz<br>An Der Domsühler Str. 2<br>19374 Domsühl<br>Deutschland</span>
+          <small>Bitte Reparaturnummer beilegen</small>
+        </div>
+      </div>
+      <div class="r-contact-item">
+        <div class="ico">🕐</div>
+        <div class="body">
+          <strong>ÖFFNUNGSZEITEN WERKSTATT</strong>
+          <div class="r-hours">
+            <div class="day" id="d-mo">Montag</div><div class="time" id="t-mo">09:00 – 18:00</div>
+            <div class="day" id="d-di">Dienstag</div><div class="time" id="t-di">09:00 – 18:00</div>
+            <div class="day" id="d-mi">Mittwoch</div><div class="time" id="t-mi">09:00 – 18:00</div>
+            <div class="day" id="d-do">Donnerstag</div><div class="time" id="t-do">09:00 – 18:00</div>
+            <div class="day" id="d-fr">Freitag</div><div class="time" id="t-fr">09:00 – 16:00</div>
+            <div class="day" id="d-sa">Samstag</div><div class="time closed" id="t-sa">geschlossen</div>
+            <div class="day" id="d-so">Sonntag</div><div class="time closed" id="t-so">geschlossen</div>
+          </div>
+          <small style="margin-top:8px">Persönliche Abgabe nur nach Terminvereinbarung</small>
+        </div>
+      </div>
+      <a href="https://maps.google.com/?q=An+Der+Domsühler+Str.+2,+19374+Domsühl" target="_blank" rel="noopener" class="r-map-link">📍 IN GOOGLE MAPS ÖFFNEN →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ VERSAND & ZAHLUNG ═══ -->
+<section class="r-section">
+  <div class="r-section-h">⟫ VERSAND & ZAHLUNG</div>
+  <h2 class="r-section-title">Transparent. Sicher. Versichert.</h2>
+  <p class="r-section-desc">Alle Versand- und Zahlungsoptionen auf einen Blick. Hinversand trägst du, Rückversand ist in unseren Standardpreisen kalkuliert.</p>
+
+  <div class="r-sp-grid">
+    <div class="r-sp">
+      <h3><span class="i">📦</span> VERSAND-OPTIONEN</h3>
+      <div class="r-sp-row">
+        <div class="l"><strong>DHL Päckchen S (Hinversand) <span style="color:#999;font-size:10px">— bis 2 kg</span></strong><small>Standard für Controller · 2-3 Werktage</small></div>
+        <div class="r">ab 4,90 €</div>
+      </div>
+      <div class="r-sp-row">
+        <div class="l"><strong>DHL Paket M (Hinversand) <span style="color:#999;font-size:10px">— bis 10 kg</span></strong><small>Für Konsolen · inkl. 500 € Versicherung</small></div>
+        <div class="r">ab 6,99 €</div>
+      </div>
+      <div class="r-sp-row">
+        <div class="l"><strong>Rückversand DHL versichert (Standard)</strong><small>Bis 25 € Warenwert · 2-3 Werktage</small></div>
+        <div class="r">7,50 €</div>
+      </div>
+      <div class="r-sp-row">
+        <div class="l"><strong>Rückversand XL bis 500 € Warenwert</strong><small>Empfohlen für Edge / Premium Controller</small></div>
+        <div class="r">12,50 €</div>
+      </div>
+      <div class="r-sp-row">
+        <div class="l"><strong>Rückversand Konsole (DHL Paket)</strong><small>Bis 500 € Versicherung · 2-3 Werktage</small></div>
+        <div class="r">12,99 €</div>
+      </div>
+      <div class="r-sp-row">
+        <div class="l"><strong>Express-Versand DHL (Next-Day)</strong><small>Nur in Verbindung mit Express-Service</small></div>
+        <div class="r">+ 14,90 €</div>
+      </div>
+      <div class="r-sp-row">
+        <div class="l"><strong>Persönliche Abgabe vor Ort</strong><small>Nach Termin · 19374 Domsühl</small></div>
+        <div class="r">kostenlos</div>
+      </div>
+      <div class="r-sp-row">
+        <div class="l"><strong>EU-Versand (AT, CH, NL, BE, DK, FR, IT)</strong><small>Auf Anfrage · DHL International versichert</small></div>
+        <div class="r">ab 19,90 €</div>
+      </div>
+    </div>
+
+    <div class="r-sp">
+      <h3><span class="i">💳</span> ZAHLUNGSMETHODEN</h3>
+      <div class="r-pay-badges" style="margin-bottom:18px">
+        <div class="r-pay-badge"><span class="em">💳</span> Kreditkarte</div>
+        <div class="r-pay-badge"><span class="em">🅿️</span> PayPal</div>
+        <div class="r-pay-badge"><span class="em">🏦</span> SEPA-Überweisung</div>
+        <div class="r-pay-badge"><span class="em">⚡</span> Klarna Sofort</div>
+        <div class="r-pay-badge"><span class="em">🅖</span> Google Pay</div>
+        <div class="r-pay-badge"><span class="em">🅐</span> Apple Pay</div>
+      </div>
+      <div class="r-sp-row">
+        <div class="l"><strong>SEPA-Überweisung</strong><small>Klassisch · ohne Aufpreis · 1-2 Werktage Eingang</small></div>
+        <div class="r" style="color:var(--green)">0 % Aufpreis</div>
+      </div>
+      <div class="r-sp-row">
+        <div class="l"><strong>PayPal · Kartenzahlung · Apple/Google Pay</strong><small>Sofort verbucht · sichere Abwicklung über Stripe</small></div>
+        <div class="r" style="color:var(--green)">0 % Aufpreis</div>
+      </div>
+      <div class="r-sp-row">
+        <div class="l"><strong>Klarna Sofort (Rechnung / Ratenzahlung)</strong><small>Bonität vorausgesetzt · ab 50 € möglich</small></div>
+        <div class="r" style="color:var(--green)">0 % Aufpreis</div>
+      </div>
+      <div class="r-sp-row">
+        <div class="l"><strong>Rechnung (B2B, Stammkunden)</strong><small>Zahlungsziel 14 Tage netto · nach Prüfung</small></div>
+        <div class="r" style="color:var(--green)">0 % Aufpreis</div>
+      </div>
+      <div class="r-sp-row">
+        <div class="l"><strong>Nachnahme</strong><small>Auf Anfrage · zzgl. DHL-Nachnahme-Gebühr</small></div>
+        <div class="r">+ 7,99 €</div>
+      </div>
+      <div class="r-callout" style="margin-top:14px">
+        <div class="ci">🔒</div>
+        <div><strong>SSL-verschlüsselt · PCI-DSS Stripe</strong><br>Wir speichern keine Kartendaten. Alle Zahlungen werden über zertifizierte Anbieter abgewickelt.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COMPARISON ═══ -->
+<section class="r-section">
+  <div class="r-section-h">⟫ VERGLEICH</div>
+  <h2 class="r-section-title">Warum LEXORD-Reparatur?</h2>
+  <p class="r-section-desc">Direkter Vergleich: LEXORD vs. Hersteller-Reparatur vs. Neukauf. Spar Geld, spar Zeit, spar Elektroschrott.</p>
+
+  <div class="r-comp">
+    <table>
+      <thead>
+        <tr>
+          <th>LEISTUNG</th>
+          <th class="col-lexord"><span class="head-lex">LEXORD</span></th>
+          <th>HERSTELLER (Sony / MS)</th>
+          <th>NEUKAUF</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="feat">Stick-Drift Reparatur</td><td class="col-lexord">ab 25 €</td><td>nicht möglich (außerhalb Garantie)</td><td>70-200 €</td></tr>
+        <tr><td class="feat">Bearbeitungszeit</td><td class="col-lexord">3-5 Werktage</td><td>2-4 Wochen</td><td>sofort</td></tr>
+        <tr><td class="feat">Garantie auf Reparatur</td><td class="col-lexord">6-12 Monate</td><td>3 Monate</td><td>24 Monate</td></tr>
+        <tr><td class="feat">Hall-Effect / TMR Upgrade</td><td class="col-lexord"><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+        <tr><td class="feat">Festpreis vorab</td><td class="col-lexord"><span class="check">✓</span></td><td><span class="cross">✗</span> (variabel)</td><td><span class="check">✓</span></td></tr>
+        <tr><td class="feat">Diagnose</td><td class="col-lexord">kostenfrei bei Auftrag</td><td>kostenpflichtig</td><td>—</td></tr>
+        <tr><td class="feat">Express-Service</td><td class="col-lexord"><span class="check">✓</span> (24-48 h)</td><td><span class="cross">✗</span></td><td>—</td></tr>
+        <tr><td class="feat">Direkter Ansprechpartner</td><td class="col-lexord"><span class="check">✓</span> (1 Person)</td><td><span class="cross">✗</span> (Hotline)</td><td>—</td></tr>
+        <tr><td class="feat">Ersatzteil-Qualität</td><td class="col-lexord">Original + Premium Upgrades</td><td>Original</td><td>Original</td></tr>
+        <tr><td class="feat">Persönliche Beratung</td><td class="col-lexord"><span class="check">✓</span> (E-Mail / WhatsApp)</td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+        <tr><td class="feat">Umwelt-Footprint</td><td class="col-lexord">🌱 minimal (Reparatur)</td><td>🌱 minimal</td><td>♻️ neuer Controller = Elektroschrott</td></tr>
+        <tr><td class="feat">Daten / Custom-Profil</td><td class="col-lexord">erhalten</td><td>kann verloren gehen</td><td>verloren</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══ WERKSTATT ═══ -->
+<section class="r-section">
+  <div class="r-section-h">⟫ ÜBER UNS</div>
+  <h2 class="r-section-title">Die Werkstatt hinter LEXORD</h2>
+  <p class="r-section-desc">Inhabergeführt von Leon Schulz — keine Hotline, kein Callcenter, kein Subunternehmer. Jeder Controller wird persönlich von mir bearbeitet und vor dem Versand getestet.</p>
+
+  <div class="r-workshop">
+    <div class="r-workshop-text">
+      <h3>Mehr als 5 Jahre Erfahrung</h3>
+      <p>Was als Leidenschaft für Gaming und Elektronik begann, ist heute eine professionelle <strong>Manufaktur für Controller-Reparaturen und Custom-Modifikationen</strong> in Mecklenburg-Vorpommern. Spezialisiert auf Mikrolöt-Arbeiten, Stick-Drift-Upgrades und Premium-Mods.</p>
+      <p>Unsere Werkstatt ist ausgestattet mit <strong>professionellem Lötmikroskop, Heißluft-Station, Ultraschall-Reinigung</strong> und allen gängigen Diagnose-Tools. Alle Ersatzteile werden direkt beim Hersteller (Sony, Microsoft, Nintendo) oder von zertifizierten Premium-Quellen (Gulikit, ALPS, K-Silver) bezogen.</p>
+      <p><strong>Made in Germany</strong> · keine Subunternehmer · keine Werkstatt im Hinterhof. Du sprichst direkt mit dem, der deinen Controller in den Händen hält.</p>
+    </div>
+    <div class="r-workshop-stats">
+      <div class="r-ws-stat"><div class="n">5+</div><div class="l">JAHRE ERFAHRUNG</div></div>
+      <div class="r-ws-stat"><div class="n">5.000+</div><div class="l">REPARATUREN</div></div>
+      <div class="r-ws-stat"><div class="n">98%</div><div class="l">ERFOLGSQUOTE</div></div>
+      <div class="r-ws-stat"><div class="n">1</div><div class="l">FACHPERSON</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TRUST BADGES ═══ -->
+<section class="r-section">
+  <div class="r-section-h">⟫ VERTRAUEN</div>
+  <h2 class="r-section-title">Wofür wir stehen</h2>
+  <p class="r-section-desc">Verbindliche Standards. Keine Marketing-Floskeln — alles nachprüfbar in unseren AGB und Garantiebedingungen.</p>
+
+  <div class="r-trust-bar">
+    <div class="r-tb"><span class="em">🇩🇪</span><strong>MADE IN GERMANY</strong><span>Werkstatt in Domsühl, MV</span></div>
+    <div class="r-tb"><span class="em">🛡️</span><strong>6–12 MON. GARANTIE</strong><span>Standard- oder Premium-Schutz</span></div>
+    <div class="r-tb"><span class="em">📋</span><strong>FESTPREIS</strong><span>Vor Reparatur — schriftlich</span></div>
+    <div class="r-tb"><span class="em">⚡</span><strong>3–5 WERKTAGE</strong><span>Express in 24-48 h möglich</span></div>
+    <div class="r-tb"><span class="em">💰</span><strong>NUR BEI ERFOLG</strong><span>Werkvertrag · § 631 BGB</span></div>
+    <div class="r-tb"><span class="em">🧾</span><strong>UMSATZSTEUER-RECHNUNG</strong><span>Inkl. ausgew. MwSt.</span></div>
+    <div class="r-tb"><span class="em">🔒</span><strong>SSL-VERSCHLÜSSELT</strong><span>DSGVO-konform</span></div>
+    <div class="r-tb"><span class="em">📦</span><strong>VERSICHERTER VERSAND</strong><span>DHL · bis 500 €</span></div>
+    <div class="r-tb"><span class="em">⭐</span><strong>4,9 / 5 BEWERTUNG</strong><span>5.000+ Aufträge</span></div>
+    <div class="r-tb"><span class="em">🌱</span><strong>NACHHALTIG</strong><span>Reparatur statt Neukauf</span></div>
+  </div>
+</section>
+
+<!-- ═══ NEWSLETTER ═══ -->
+<section class="r-section">
+  <div class="r-news">
+    <h3>📬 REPAIR-NEWSLETTER</h3>
+    <p>Exklusive Tipps zur Controller-Pflege, neue Service-Angebote und Sondereditionen-Restposten — max. 1 E-Mail pro Monat. Kein Spam.</p>
+    <form class="r-news-form" onsubmit="event.preventDefault();subNews(this)">
+      <input type="email" required placeholder="deine@email.de" id="nl-email">
+      <button type="submit">ABONNIEREN</button>
+    </form>
+    <div class="r-news-small">Du kannst dich jederzeit mit einem Klick abmelden. Mehr in unserer <a href="Datenschutz.html" style="color:#888;text-decoration:underline">Datenschutzerklärung</a>.</div>
+  </div>
+</section>
+
+<!-- ═══ FINAL CTA ═══ -->
+<section class="r-section">
+  <div class="r-final">
+    <h2 class="r-final-h">Bereit für die <span class="acc">Reparatur</span>?</h2>
+    <p class="r-final-p">Sende deine Anfrage in 2 Minuten ab — kostenlos & unverbindlich. Wir melden uns innerhalb von 24 Stunden mit einem Festpreis.</p>
+    <div class="r-final-cta">
+      <a href="index.html#repair-sec" class="p">🔧 REPARATUR JETZT ANFRAGEN →</a>
+      <a href="mailto:Kontakt@Lexord.de?subject=Reparatur-Anfrage" class="s">📧 PER E-MAIL FRAGEN</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="r-foot">
+  <div class="r-foot-brand">LEX<span>O</span>RD<sup style="font-size:.55rem;color:var(--neon)">®</sup></div>
+  <div style="font-family:'Orbitron';font-size:8.5px;color:#666;letter-spacing:2px">ENGINEERING · REPARATUR · MADE IN GERMANY</div>
+  <div class="r-foot-links">
+    <a href="index.html">STARTSEITE</a>
+    <a href="collections.html">PRODUKTE</a>
+    <a href="zubehoer.html">ZUBEHÖR</a>
+    <a href="konfigurator.html">KONFIGURATOR</a>
+    <a href="b2b.html">B2B</a>
+    <a href="agb.html">AGB</a>
+    <a href="Datenschutz.html">DATENSCHUTZ</a>
+    <a href="Widerrufsbelehrung.html">WIDERRUF</a>
+  </div>
+  <div class="r-foot-copy">© 2026 LEXORD® · Leon Schulz · An Der Domsühler Str. 2 · 19374 Domsühl<br>USt-IdNr.: auf Anfrage · Inhaber: Leon Schulz</div>
+</footer>
+
+<!-- ═══ FLOATING WHATSAPP ═══ -->
+<a href="https://wa.me/4915123456789?text=Hallo%20LEXORD%2C%20ich%20habe%20eine%20Reparatur-Anfrage%3A" target="_blank" rel="noopener" class="r-fab" aria-label="WhatsApp Kontakt">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+</a>
+
+<script>
+function showDev(id){
+  document.querySelectorAll('.r-dev-tab').forEach(t=>t.classList.toggle('active',t.dataset.dev===id));
+  document.querySelectorAll('.r-dev-panel').forEach(p=>p.classList.toggle('active',p.id==='dev-'+id));
+  const panel=document.getElementById('dev-'+id);
+  if(panel){panel.scrollIntoView({behavior:'smooth',block:'start'});}
+}
+function tFaq(el){el.classList.toggle('open');}
+function subNews(f){
+  const e=document.getElementById('nl-email').value.trim();
+  if(!e)return;
+  const btn=f.querySelector('button');btn.disabled=true;btn.textContent='SENDE...';
+  fetch('https://lexord-api.leonschulz1420.workers.dev/api/newsletter',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e,source:'reparatur'})}).catch(()=>{}).finally(()=>{
+    btn.textContent='✓ ABONNIERT';btn.style.background='var(--green)';
+    document.getElementById('nl-email').value='';
+    setTimeout(()=>{btn.disabled=false;btn.textContent='ABONNIEREN';btn.style.background='';},3000);
+  });
+}
+
+// Highlight today's row in opening hours
+(function(){
+  const days=['so','mo','di','mi','do','fr','sa'];
+  const t=days[new Date().getDay()];
+  const d=document.getElementById('d-'+t),tm=document.getElementById('t-'+t);
+  if(d)d.classList.add('today');
+  if(tm&&!tm.classList.contains('closed'))tm.classList.add('today');
+})();
+</script>
+
+</body>
+</html>

@@ -483,6 +483,68 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 .r-news-form button:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,242,255,.4)}
 .r-news-small{font-size:11px;color:#666;margin-top:12px}
 
+/* ═══ KI CHAT WIDGET ═══ */
+.lxc-fab{position:fixed;bottom:24px;left:24px;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--neon) 0%,var(--neon2) 100%);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 28px rgba(0,242,255,.5),0 0 60px rgba(188,19,254,.25);z-index:899;transition:.3s;color:#000;font-size:28px;animation:lxcPulse 3s ease-in-out infinite}
+@keyframes lxcPulse{0%,100%{box-shadow:0 8px 28px rgba(0,242,255,.5),0 0 60px rgba(188,19,254,.25)}50%{box-shadow:0 8px 28px rgba(0,242,255,.8),0 0 80px rgba(188,19,254,.4)}}
+.lxc-fab:hover{transform:scale(1.1) translateY(-3px)}
+.lxc-fab::after{content:'KI';position:absolute;bottom:-6px;right:-6px;background:#000;border:2px solid var(--neon);color:var(--neon);font-family:'Orbitron';font-size:8px;font-weight:900;letter-spacing:1px;padding:2px 5px;border-radius:5px}
+.lxc-fab .ping{position:absolute;top:-2px;right:-2px;width:14px;height:14px;background:#00ff88;border:2px solid #000;border-radius:50%;animation:lxcBlink 2s ease-in-out infinite}
+@keyframes lxcBlink{0%,100%{opacity:1}50%{opacity:.5}}
+@media(max-width:560px){.lxc-fab{bottom:90px;left:16px;width:54px;height:54px;font-size:24px}}
+
+.lxc-box{position:fixed;bottom:96px;left:24px;width:380px;max-width:calc(100vw - 32px);height:560px;max-height:calc(100vh - 130px);background:#050505;border:1px solid #1a1a1a;border-radius:18px;display:none;flex-direction:column;overflow:hidden;z-index:900;box-shadow:0 24px 60px rgba(0,0,0,.7),0 0 80px rgba(0,242,255,.1)}
+.lxc-box.open{display:flex;animation:lxcSlide .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes lxcSlide{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:560px){.lxc-box{left:8px;right:8px;width:auto;bottom:84px;max-height:calc(100vh - 110px)}}
+
+.lxc-head{padding:18px 20px;background:linear-gradient(135deg,#0c0c0c 0%,#050505 100%);border-bottom:1px solid rgba(0,242,255,.15);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.lxc-h-info{display:flex;align-items:center;gap:12px}
+.lxc-h-av{width:40px;height:40px;background:linear-gradient(135deg,var(--neon),var(--neon2));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#000;flex-shrink:0;font-size:18px;box-shadow:0 4px 14px rgba(0,242,255,.4)}
+.lxc-h-t{font-family:'Orbitron';font-size:13px;font-weight:900;color:#fff;letter-spacing:1.5px}
+.lxc-h-s{font-family:'Orbitron';font-size:8.5px;color:#888;letter-spacing:1.5px;margin-top:3px;display:flex;align-items:center;gap:5px}
+.lxc-on{width:6px;height:6px;background:#00ff88;border-radius:50%;display:inline-block;box-shadow:0 0 6px #00ff88;animation:lxcBlink 1.5s infinite}
+.lxc-actions{display:flex;gap:6px}
+.lxc-act-btn{width:32px;height:32px;border:1px solid #1a1a1a;background:transparent;border-radius:50%;color:#888;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+.lxc-act-btn:hover{border-color:var(--neon);color:var(--neon)}
+.lxc-act-btn.fwd:hover{border-color:#00ff88;color:#00ff88}
+.lxc-act-btn.cls:hover{border-color:var(--red);color:var(--red)}
+
+.lxc-msgs{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch;background:radial-gradient(ellipse at top,#080808 0%,#020202 100%)}
+.lxc-msgs::-webkit-scrollbar{width:4px}
+.lxc-msgs::-webkit-scrollbar-thumb{background:#1a1a1a;border-radius:3px}
+.lxc-m{display:flex;animation:lxcMsgIn .35s ease-out}
+@keyframes lxcMsgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.lxc-m.bot{justify-content:flex-start}
+.lxc-m.usr{justify-content:flex-end}
+.lxc-m.sys{justify-content:center}
+.lxc-b{max-width:80%;padding:11px 15px;border-radius:14px;font-size:13px;line-height:1.55}
+.lxc-m.bot .lxc-b{background:linear-gradient(135deg,#0e0e0e,#080808);border:1px solid #1a1a1a;border-bottom-left-radius:4px;color:#ddd}
+.lxc-m.usr .lxc-b{background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;border-bottom-right-radius:4px;font-weight:500}
+.lxc-m.sys .lxc-b{background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.25);color:#00ff88;font-family:'Orbitron';font-size:10.5px;letter-spacing:1px;padding:8px 12px}
+.lxc-type{display:flex;gap:5px;padding:13px 15px;background:#0e0e0e;border-radius:14px;border:1px solid #1a1a1a;width:fit-content;border-bottom-left-radius:4px}
+.lxc-type span{width:7px;height:7px;background:var(--neon);border-radius:50%;animation:lxcType 1.2s infinite ease-in-out}
+.lxc-type span:nth-child(2){animation-delay:.2s}
+.lxc-type span:nth-child(3){animation-delay:.4s}
+@keyframes lxcType{0%,100%{transform:scale(.6);opacity:.4}50%{transform:scale(1);opacity:1}}
+
+.lxc-quick{padding:0 18px 12px;display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0}
+.lxc-q{padding:8px 12px;background:rgba(0,242,255,.06);border:1px solid rgba(0,242,255,.25);color:var(--neon);font-family:'Orbitron';font-size:8.5px;letter-spacing:.8px;border-radius:14px;cursor:pointer;transition:.2s;white-space:nowrap}
+.lxc-q:hover{background:var(--neon);color:#000;border-color:var(--neon);transform:translateY(-1px)}
+
+.lxc-fwd-bar{padding:10px 18px;background:rgba(0,255,136,.05);border-top:1px solid rgba(0,255,136,.15);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.lxc-fwd-btn{flex:1;padding:10px;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#000;border:none;border-radius:9px;font-family:'Orbitron';font-weight:900;font-size:9.5px;letter-spacing:1.5px;cursor:pointer;transition:.2s}
+.lxc-fwd-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,255,136,.4)}
+.lxc-fwd-btn:disabled{opacity:.5;cursor:wait}
+
+.lxc-in-row{padding:14px 18px;background:#040404;border-top:1px solid #0f0f0f;display:flex;gap:10px;align-items:center;flex-shrink:0}
+.lxc-in{flex:1;padding:11px 14px;background:#0c0c0c;border:1px solid #1a1a1a;color:#fff;border-radius:22px;font-family:'Inter';font-size:13px;outline:none;transition:.2s}
+.lxc-in:focus{border-color:var(--neon);background:rgba(0,242,255,.03)}
+.lxc-snd{width:40px;height:40px;background:linear-gradient(135deg,var(--neon),#00bdd6);border:none;border-radius:50%;color:#000;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0;box-shadow:0 4px 12px rgba(0,242,255,.3)}
+.lxc-snd:hover{transform:scale(1.08)}
+.lxc-snd:disabled{opacity:.4;cursor:wait}
+.lxc-foot{padding:8px 18px;background:#020202;font-family:'Orbitron';font-size:7.5px;color:#555;letter-spacing:1.2px;text-align:center;border-top:1px solid #0a0a0a;flex-shrink:0}
+.lxc-foot strong{color:#777}
+
 /* ═══ FLOATING WHATSAPP ═══ */
 .r-fab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(37,211,102,.4);cursor:pointer;text-decoration:none;color:#fff;font-size:26px;z-index:900;transition:.25s;animation:pulseWa 3s ease-in-out infinite}
 @keyframes pulseWa{0%,100%{box-shadow:0 8px 24px rgba(37,211,102,.4)}50%{box-shadow:0 8px 24px rgba(37,211,102,.7),0 0 0 12px rgba(37,211,102,0)}}
@@ -1562,11 +1624,19 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
         </div>
       </div>
       <div class="r-contact-item">
-        <div class="ico">💬</div>
+        <div class="ico">📱</div>
         <div class="body">
-          <strong>WHATSAPP BUSINESS</strong>
-          <a href="https://wa.me/4915123456789?text=Hallo%20LEXORD%2C%20ich%20habe%20eine%20Reparatur-Anfrage%3A" target="_blank" rel="noopener">+49 151 23 456 789</a>
-          <small>Schnelle Rückfragen · Fotos vom Defekt direkt schicken</small>
+          <strong>TELEFON / WHATSAPP</strong>
+          <a href="tel:+4915204718720">0152 047 18720</a>
+          <small>Auch per WhatsApp · Fotos vom Defekt direkt schicken</small>
+        </div>
+      </div>
+      <div class="r-contact-item">
+        <div class="ico">🤖</div>
+        <div class="body">
+          <strong>LEXORD-KI · 24/7</strong>
+          <a href="#" onclick="lxcOpen();return false;">→ Chat starten (sofortige Antwort)</a>
+          <small>Antwortet sofort · leitet dich an Leon weiter wenn nötig</small>
         </div>
       </div>
       <div class="r-contact-item">
@@ -1817,8 +1887,55 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
   <div class="r-foot-copy">© 2026 LEXORD® · Leon Schulz · An Der Domsühler Str. 2 · 19374 Domsühl<br>USt-IdNr.: auf Anfrage · Inhaber: Leon Schulz</div>
 </footer>
 
+<!-- ═══ LEXORD-KI CHAT WIDGET ═══ -->
+<button class="lxc-fab" onclick="lxcOpen()" aria-label="KI-Chat öffnen">
+  🤖
+  <span class="ping"></span>
+</button>
+
+<div class="lxc-box" id="lxc-box" role="dialog" aria-label="LEXORD KI Chat">
+  <div class="lxc-head">
+    <div class="lxc-h-info">
+      <div class="lxc-h-av">🤖</div>
+      <div>
+        <div class="lxc-h-t">LEXORD-KI</div>
+        <div class="lxc-h-s"><span class="lxc-on"></span> ONLINE · ANTWORTET SOFORT</div>
+      </div>
+    </div>
+    <div class="lxc-actions">
+      <button class="lxc-act-btn fwd" onclick="lxcForward()" aria-label="An Leon weiterleiten" title="Konversation an Leon weiterleiten">📩</button>
+      <button class="lxc-act-btn cls" onclick="lxcClose()" aria-label="Schließen">✕</button>
+    </div>
+  </div>
+
+  <div class="lxc-msgs" id="lxc-msgs">
+    <div class="lxc-m bot"><div class="lxc-b">👋 Hi! Ich bin die <strong>LEXORD-KI</strong>. Frag mich alles zu Reparaturen, Preisen, Versand oder deinem Defekt — ich helfe sofort. Mit <strong>📩 oben rechts</strong> kannst du die Konversation jederzeit an Leon weiterleiten.</div></div>
+  </div>
+
+  <div class="lxc-quick" id="lxc-quick">
+    <button class="lxc-q" onclick="lxcQuick('Was kostet eine Stick-Drift Reparatur?')">🕹️ Stick-Drift?</button>
+    <button class="lxc-q" onclick="lxcQuick('Wie lange dauert eine Reparatur?')">⏱️ Dauer?</button>
+    <button class="lxc-q" onclick="lxcQuick('Was kostet HDMI-Port Reparatur PS5?')">📺 HDMI?</button>
+    <button class="lxc-q" onclick="lxcQuick('Wohin sende ich meinen Controller?')">📦 Adresse?</button>
+    <button class="lxc-q" onclick="lxcQuick('Gibt es Express-Service?')">⚡ Express?</button>
+    <button class="lxc-q" onclick="lxcQuick('Habt ihr Joy-Con Hall-Effect?')">🎮 Joy-Con?</button>
+  </div>
+
+  <div class="lxc-fwd-bar" id="lxc-fwdbar" style="display:none">
+    <button class="lxc-fwd-btn" onclick="lxcForward()">📩 KONVERSATION AN LEON SENDEN</button>
+  </div>
+
+  <div class="lxc-in-row">
+    <input type="text" id="lxc-in" class="lxc-in" placeholder="Schreib eine Nachricht..." onkeydown="if(event.key==='Enter')lxcSend()" autocomplete="off">
+    <button class="lxc-snd" onclick="lxcSend()" aria-label="Senden">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+  <div class="lxc-foot">⚡ KI POWERED · ANTWORTEN IN <strong>~2 SEK</strong> · KEINE WARTESCHLEIFE</div>
+</div>
+
 <!-- ═══ FLOATING WHATSAPP ═══ -->
-<a href="https://wa.me/4915123456789?text=Hallo%20LEXORD%2C%20ich%20habe%20eine%20Reparatur-Anfrage%3A" target="_blank" rel="noopener" class="r-fab" aria-label="WhatsApp Kontakt">
+<a href="https://wa.me/4915204718720?text=Hallo%20LEXORD%2C%20ich%20habe%20eine%20Reparatur-Anfrage%3A" target="_blank" rel="noopener" class="r-fab" aria-label="WhatsApp Kontakt">
   <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
 </a>
 
@@ -1926,6 +2043,127 @@ function subNews(f){
   if(d)d.classList.add('today');
   if(tm&&!tm.classList.contains('closed'))tm.classList.add('today');
 })();
+
+/* ═══ LEXORD-KI CHAT ═══ */
+const LXC_API='https://lexord-api.leonschulz1420.workers.dev';
+const _lxc={
+  messages:[],
+  sessionId:'rep-'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),
+  fwdSent:false
+};
+
+function lxcOpen(){const b=document.getElementById('lxc-box');b.classList.add('open');setTimeout(()=>document.getElementById('lxc-in').focus(),300);}
+function lxcClose(){document.getElementById('lxc-box').classList.remove('open');}
+function lxcQuick(t){document.getElementById('lxc-in').value=t;lxcSend();}
+
+function lxcAdd(role,text){
+  const wrap=document.getElementById('lxc-msgs');
+  const div=document.createElement('div');
+  div.className='lxc-m '+(role==='user'?'usr':role==='system'?'sys':'bot');
+  div.innerHTML='<div class="lxc-b">'+text.replace(/</g,'&lt;').replace(/\n/g,'<br>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')+'</div>';
+  wrap.appendChild(div);
+  wrap.scrollTop=wrap.scrollHeight;
+  return div;
+}
+
+function lxcTyping(){
+  const wrap=document.getElementById('lxc-msgs');
+  const div=document.createElement('div');
+  div.className='lxc-m bot';
+  div.innerHTML='<div class="lxc-type"><span></span><span></span><span></span></div>';
+  wrap.appendChild(div);
+  wrap.scrollTop=wrap.scrollHeight;
+  return div;
+}
+
+async function lxcSend(){
+  const inp=document.getElementById('lxc-in');
+  const text=inp.value.trim();
+  if(!text)return;
+  inp.value='';inp.disabled=true;
+  lxcAdd('user',text);
+  _lxc.messages.push({role:'user',content:text});
+  document.getElementById('lxc-quick').style.display='none';
+  const t=lxcTyping();
+  let cE='';
+  try{const c=JSON.parse(sessionStorage.getItem('lxrd_customer')||'{}');cE=c.email||'';}catch(e){}
+  try{
+    const r=await fetch(LXC_API+'/api/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:_lxc.messages,sessionId:_lxc.sessionId,email:cE,source:'reparatur'})
+    });
+    const d=await r.json();
+    t.remove();
+    const reply=d.reply||'Entschuldige, etwas ist schiefgelaufen. Schreib gerne an Kontakt@Lexord.de oder ruf 0152 047 18720 an!';
+    lxcAdd('bot',reply);
+    _lxc.messages.push({role:'assistant',content:reply});
+    // After 2 user messages, show forward bar prominently
+    const userMsgs=_lxc.messages.filter(m=>m.role==='user').length;
+    if(userMsgs>=2&&!_lxc.fwdSent){
+      document.getElementById('lxc-fwdbar').style.display='flex';
+    }
+  }catch(e){
+    t.remove();
+    lxcAdd('bot','Ups, gerade keine Verbindung. Schreib direkt an Kontakt@Lexord.de oder ruf 0152 047 18720 an.\n\nDu kannst auch **📩 oben rechts** die Konversation an Leon senden.');
+    document.getElementById('lxc-fwdbar').style.display='flex';
+  }
+  inp.disabled=false;inp.focus();
+}
+
+async function lxcForward(){
+  if(_lxc.fwdSent){
+    lxcAdd('system','✓ BEREITS GESENDET');
+    return;
+  }
+  if(_lxc.messages.length===0){
+    lxcAdd('bot','Schreib mir bitte erst dein Anliegen — dann leite ich es weiter.');
+    return;
+  }
+  // Ask for email if we don't have one
+  let cE='';
+  try{const c=JSON.parse(sessionStorage.getItem('lxrd_customer')||'{}');cE=c.email||'';}catch(e){}
+  if(!cE){
+    cE=prompt('Deine E-Mail-Adresse für Rückmeldung von Leon:');
+    if(!cE||!cE.includes('@')){lxcAdd('bot','Ich brauche eine gültige E-Mail, damit Leon dir antworten kann.');return;}
+    try{sessionStorage.setItem('lxrd_customer',JSON.stringify({email:cE}));}catch(e){}
+  }
+  const btn=document.querySelector('.lxc-fwd-btn');
+  if(btn){btn.disabled=true;btn.textContent='⏳ SENDE...';}
+  try{
+    const r=await fetch(LXC_API+'/api/chat-forward',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        sessionId:_lxc.sessionId,
+        email:cE,
+        messages:_lxc.messages,
+        source:'reparatur.html',
+        userAgent:navigator.userAgent
+      })
+    });
+    if(!r.ok)throw new Error('Fail');
+    _lxc.fwdSent=true;
+    lxcAdd('system','✓ KONVERSATION AN LEON GESENDET · ANTWORT INNERHALB 24H');
+    if(btn){btn.textContent='✓ GESENDET';btn.style.background='linear-gradient(135deg,#888,#666)';btn.style.color='#fff';}
+  }catch(e){
+    // Fallback: open mailto with full transcript
+    const transcript=_lxc.messages.map(m=>(m.role==='user'?'KUNDE: ':'KI: ')+m.content).join('\n\n');
+    const subject=encodeURIComponent('[KI-CHAT] Reparatur-Anfrage');
+    const body=encodeURIComponent('E-Mail: '+cE+'\n\nKonversation:\n\n'+transcript);
+    window.location.href='mailto:Kontakt@Lexord.de?subject='+subject+'&body='+body;
+    if(btn){btn.disabled=false;btn.textContent='📩 KONVERSATION AN LEON SENDEN';}
+  }
+}
+
+// Auto-greet after 8s if user hasn't opened chat yet
+setTimeout(()=>{
+  if(!document.getElementById('lxc-box').classList.contains('open')&&!sessionStorage.getItem('lxc_greeted')){
+    try{sessionStorage.setItem('lxc_greeted','1');}catch(e){}
+    const fab=document.querySelector('.lxc-fab');
+    if(fab){fab.style.transform='scale(1.15)';setTimeout(()=>{fab.style.transform='';},600);}
+  }
+},8000);
 </script>
 
 </body>

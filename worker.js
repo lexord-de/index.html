@@ -154,6 +154,7 @@ async function test(){
       if (path === "/api/admin/all" && request.method === "GET") return await adminAll(request, env);
       if (path === "/api/admin/test-data" && request.method === "POST") return await adminTestData(request, env);
       if (path === "/api/chat" && request.method === "POST") return await chatWithAI(request, env);
+      if (path === "/api/chat-forward" && request.method === "POST") return await chatForwardToAdmin(request, env);
       if (path === "/api/discount/check" && request.method === "POST") return await checkDiscountCode(request, env);
       if (path === "/api/discount/use" && request.method === "POST") return await useDiscountCode(request, env);
       if (path === "/api/newsletter/subscribe" && request.method === "POST") return await newsletterSubscribe(request, env);
@@ -800,6 +801,138 @@ NIEMALS:
 
 function escapeHtml(s) {
   return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;");
+}
+
+// ============ CHAT FORWARD TO ADMIN ============
+async function chatForwardToAdmin(request, env) {
+  try {
+    const body = await request.json();
+    const sessionId = String(body.sessionId || "anon-" + Date.now());
+    const email = String(body.email || "").trim().toLowerCase();
+    const source = String(body.source || "unknown");
+    const messages = Array.isArray(body.messages) ? body.messages : [];
+    const userAgent = String(body.userAgent || "").slice(0, 200);
+
+    if (!email || !email.includes("@")) {
+      return json({ error: "Email required" }, 400);
+    }
+    if (messages.length === 0) {
+      return json({ error: "No messages" }, 400);
+    }
+
+    // Build transcript HTML
+    const transcriptHtml = messages.map(m => {
+      const isUser = m.role === "user";
+      const bg = isUser ? "#e8f9ff" : "#f5f5f5";
+      const border = isUser ? "#00bdd6" : "#999";
+      const label = isUser ? "👤 KUNDE" : "🤖 LEXORD-KI";
+      return `<div style="margin:10px 0;padding:12px 14px;background:${bg};border-left:4px solid ${border};border-radius:6px;font-family:system-ui,sans-serif"><strong style="display:block;font-size:11px;color:#666;margin-bottom:4px">${label}</strong><div style="font-size:14px;color:#222;line-height:1.55;white-space:pre-wrap">${escapeHtml(m.content || "")}</div></div>`;
+    }).join("");
+
+    const adminHtml = `<!DOCTYPE html><html><body style="font-family:system-ui,sans-serif;max-width:680px;margin:0 auto;background:#fff;color:#222;padding:20px">
+      <div style="background:linear-gradient(135deg,#00f2ff,#bc13fe);padding:24px;border-radius:12px;color:#000;margin-bottom:20px">
+        <h1 style="margin:0;font-size:22px;font-weight:900;letter-spacing:2px">📩 KUNDEN-CHAT WEITERGELEITET</h1>
+        <p style="margin:6px 0 0;font-size:13px;opacity:.85">Der Kunde hat seine Konversation an dich gesendet.</p>
+      </div>
+      <table style="width:100%;border-collapse:collapse;margin-bottom:20px">
+        <tr><td style="padding:8px 0;font-size:12px;color:#666;width:130px">📧 E-Mail Kunde:</td><td style="padding:8px 0;font-size:14px;color:#222"><strong><a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></strong></td></tr>
+        <tr><td style="padding:8px 0;font-size:12px;color:#666">🔖 Session-ID:</td><td style="padding:8px 0;font-size:13px;color:#222;font-family:monospace">${escapeHtml(sessionId)}</td></tr>
+        <tr><td style="padding:8px 0;font-size:12px;color:#666">📍 Herkunft:</td><td style="padding:8px 0;font-size:13px;color:#222">${escapeHtml(source)}</td></tr>
+        <tr><td style="padding:8px 0;font-size:12px;color:#666">🕐 Zeitstempel:</td><td style="padding:8px 0;font-size:13px;color:#222">${new Date().toLocaleString("de-DE")}</td></tr>
+        <tr><td style="padding:8px 0;font-size:12px;color:#666">🖥️ Browser:</td><td style="padding:8px 0;font-size:11px;color:#888">${escapeHtml(userAgent)}</td></tr>
+      </table>
+      <h2 style="font-size:15px;color:#222;margin:24px 0 12px;letter-spacing:1px">💬 VOLLSTÄNDIGE KONVERSATION (${messages.length} Nachrichten)</h2>
+      ${transcriptHtml}
+      <div style="margin-top:24px;padding:16px;background:#fff3cd;border-radius:8px;border:1px solid #ffe88a">
+        <strong style="display:block;font-size:13px;margin-bottom:6px">⚡ NÄCHSTE SCHRITTE</strong>
+        <div style="font-size:13px;color:#555;line-height:1.6">Antworte einfach auf diese E-Mail — der Kunde bekommt deine Antwort direkt.<br>Erwartungshaltung des Kunden: <strong>Antwort innerhalb 24 Stunden.</strong></div>
+      </div>
+      <div style="margin-top:30px;text-align:center;font-size:11px;color:#999;font-family:'Orbitron',monospace;letter-spacing:1.5px">LEXORD KI-CHAT-FORWARDER · ${new Date().toLocaleDateString("de-DE")}</div>
+    </body></html>`;
+
+    // Customer confirmation
+    const customerHtml = `<!DOCTYPE html><html><body style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto;background:#fff;color:#222;padding:20px">
+      <div style="background:linear-gradient(135deg,#00f2ff,#bc13fe);padding:24px;border-radius:12px;color:#000;margin-bottom:20px;text-align:center">
+        <h1 style="margin:0;font-size:22px;font-weight:900;letter-spacing:2px">✓ NACHRICHT EMPFANGEN</h1>
+        <p style="margin:6px 0 0;font-size:13px;opacity:.85">Leon meldet sich innerhalb 24 Stunden persönlich.</p>
+      </div>
+      <p style="font-size:14px;color:#333;line-height:1.65">Hi,</p>
+      <p style="font-size:14px;color:#333;line-height:1.65">danke für deine Nachricht über die LEXORD-KI. Ich (Leon) habe deine Konversation erhalten und melde mich innerhalb von <strong>24 Stunden</strong> persönlich bei dir per E-Mail.</p>
+      <p style="font-size:14px;color:#333;line-height:1.65">Falls es eilig ist, erreichst du mich auch direkt:</p>
+      <table style="width:100%;border-collapse:collapse;background:#f5f5f5;border-radius:8px;margin:16px 0"><tr><td style="padding:14px"><div style="font-size:12px;color:#666;margin-bottom:8px">📞 TELEFON / WHATSAPP</div><a href="tel:+4915204718720" style="font-size:16px;color:#00bdd6;text-decoration:none;font-weight:600">0152 047 18720</a></td></tr></table>
+      <p style="font-size:13px;color:#666;line-height:1.65;margin-top:20px">Beste Grüße<br><strong style="color:#222">Leon Schulz</strong><br>LEXORD® Engineering · Domsühl</p>
+      <div style="margin-top:30px;padding-top:20px;border-top:1px solid #eee;font-size:11px;color:#999;text-align:center">Diese E-Mail wurde automatisch nach deiner KI-Chat-Anfrage generiert.</div>
+    </body></html>`;
+
+    // Save full conversation to KV for admin panel
+    if (env.LEXORD_DATA) {
+      try {
+        const convKey = "chat-fwd:" + sessionId;
+        await env.LEXORD_DATA.put(convKey, JSON.stringify({
+          sessionId, email, source, messages,
+          forwardedAt: new Date().toISOString(),
+          userAgent
+        }), { expirationTtl: 60 * 60 * 24 * 90 }); // 90 days
+
+        // Append to forwarded list index
+        const idxKey = "chat-fwd-list";
+        const idx = JSON.parse((await env.LEXORD_DATA.get(idxKey)) || "[]");
+        idx.unshift({ sessionId, email, source, ts: new Date().toISOString(), msgCount: messages.length });
+        await env.LEXORD_DATA.put(idxKey, JSON.stringify(idx.slice(0, 200)));
+      } catch (e) { /* ignore */ }
+    }
+
+    // Send to admin
+    if (env.BREVO_API_KEY) {
+      const fromE = (env.FROM_EMAIL || "kontakt@lexord.de").toLowerCase();
+      try {
+        await fetch("https://api.brevo.com/v3/smtp/email", {
+          method: "POST",
+          headers: { "api-key": env.BREVO_API_KEY, "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify({
+            sender: { name: "LEXORD KI-Chat", email: fromE },
+            to: [{ email: fromE, name: "Leon (LEXORD)" }],
+            replyTo: { email, name: "Kunde" },
+            subject: "[KI-CHAT] Kundenanfrage von " + email,
+            htmlContent: adminHtml
+          })
+        });
+        // Send confirmation to customer
+        await fetch("https://api.brevo.com/v3/smtp/email", {
+          method: "POST",
+          headers: { "api-key": env.BREVO_API_KEY, "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify({
+            sender: { name: "LEXORD® Engineering", email: fromE },
+            to: [{ email, name: email.split("@")[0] }],
+            subject: "Wir haben deine Nachricht erhalten · LEXORD",
+            htmlContent: customerHtml
+          })
+        });
+      } catch (e) { /* ignore */ }
+    }
+
+    // Trigger push to admin device
+    if (env.LEXORD_DATA) {
+      try {
+        const subsRaw = await env.LEXORD_DATA.get("push:admin");
+        if (subsRaw) {
+          const subs = JSON.parse(subsRaw);
+          const payload = JSON.stringify({
+            title: "📩 Neue Kunden-Nachricht",
+            body: email + " — Chat-Konversation eingegangen",
+            url: "/admin.html"
+          });
+          for (const sub of (Array.isArray(subs) ? subs : [subs])) {
+            try { await sendWebPush(env, sub, payload); } catch (e) { /* ignore */ }
+          }
+        }
+      } catch (e) { /* ignore */ }
+    }
+
+    return json({ ok: true, sessionId });
+  } catch (e) {
+    return json({ error: "Server-Fehler: " + (e.message || "unknown") }, 500);
+  }
 }
 
 // ============ SINGLE-USE DISCOUNT CODES ============

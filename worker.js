@@ -160,6 +160,8 @@ async function test(){
       if (path === "/api/newsletter/subscribe" && request.method === "POST") return await newsletterSubscribe(request, env);
       if (path === "/api/newsletter/check" && request.method === "POST") return await newsletterCheck(request, env);
       if (path === "/api/admin/conversations" && request.method === "GET") return await adminConversations(request, env);
+      if (path.startsWith("/api/admin/conversation/") && request.method === "GET") return await adminConversationDetail(request, env, path.replace("/api/admin/conversation/", ""));
+      if (path.startsWith("/api/admin/conversation/") && request.method === "DELETE") return await adminConversationDelete(request, env, path.replace("/api/admin/conversation/", ""));
       if (path === "/api/admin/newsletter/send" && request.method === "POST") return await sendNewsletter(request, env);
       if (path === "/api/admin/products" && request.method === "GET") return await adminListProducts(request, env);
       if (path === "/api/admin/products" && request.method === "POST") return await adminCreateProduct(request, env);
@@ -674,6 +676,7 @@ async function chatWithAI(request, env) {
   const userMessages = body.messages || [];
   const sessionId = body.sessionId || "anon-" + Date.now();
   const customerEmail = body.email || "";
+  const source = body.source || (sessionId.startsWith("rep-") ? "reparatur" : "index");
 
   const systemPrompt = `Du bist die freundliche KI-Assistentin von LEXORD Engineering, einem deutschen Custom PS5 Controller Shop aus Domsuehl.
 
@@ -749,7 +752,8 @@ NIEMALS:
       try {
         const convKey = "chat:" + sessionId;
         const existing = await env.LEXORD_DATA.get(convKey);
-        const convo = existing ? JSON.parse(existing) : { sessionId, email: customerEmail, messages: [], started: new Date().toISOString() };
+        const convo = existing ? JSON.parse(existing) : { sessionId, email: customerEmail, source, messages: [], started: new Date().toISOString() };
+        if (!convo.source) convo.source = source;
         const lastUserMsg = userMessages[userMessages.length - 1];
         if (lastUserMsg) convo.messages.push({ role: "user", content: lastUserMsg.content, ts: new Date().toISOString() });
         convo.messages.push({ role: "assistant", content: reply, ts: new Date().toISOString() });
@@ -1500,24 +1504,81 @@ async function adminConversations(request, env) {
   if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
   if (!env.LEXORD_DATA) return json({ error: "KV not bound" }, 500);
 
+  // Regular AI chat sessions
   const list = await env.LEXORD_DATA.list({ prefix: "chat:" });
   const conversations = [];
   for (const k of list.keys) {
     const raw = await env.LEXORD_DATA.get(k.name);
     if (raw) {
       const c = JSON.parse(raw);
+      const msgs = c.messages || [];
+      const lastUser = [...msgs].reverse().find(m => m.role === "user");
       conversations.push({
-        sessionId: c.sessionId,
-        email: c.email,
+        sessionId: c.sessionId || k.name.replace("chat:", ""),
+        kvKey: k.name,
+        email: c.email || "",
+        source: c.source || (c.sessionId && c.sessionId.startsWith("rep-") ? "reparatur" : "index"),
         started: c.started,
-        updated: c.updated,
-        msgCount: (c.messages || []).length,
-        lastMsg: ((c.messages || []).slice(-1)[0] || {}).content || ""
+        updated: c.updated || c.started,
+        msgCount: msgs.length,
+        lastMsg: ((msgs.slice(-1)[0]) || {}).content || "",
+        lastUserMsg: (lastUser || {}).content || "",
+        forwarded: false
       });
     }
   }
-  conversations.sort((a, b) => new Date(b.updated || b.started) - new Date(a.updated || a.started));
-  return json({ conversations });
+
+  // Forwarded conversations (explicit forward action)
+  const fwdList = await env.LEXORD_DATA.list({ prefix: "chat-fwd:" });
+  for (const k of fwdList.keys) {
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if (raw) {
+      const c = JSON.parse(raw);
+      const msgs = c.messages || [];
+      const lastUser = [...msgs].reverse().find(m => m.role === "user");
+      conversations.push({
+        sessionId: c.sessionId || k.name.replace("chat-fwd:", ""),
+        kvKey: k.name,
+        email: c.email || "",
+        source: c.source || "unknown",
+        started: c.forwardedAt,
+        updated: c.forwardedAt,
+        msgCount: msgs.length,
+        lastMsg: ((msgs.slice(-1)[0]) || {}).content || "",
+        lastUserMsg: (lastUser || {}).content || "",
+        forwarded: true,
+        userAgent: c.userAgent || ""
+      });
+    }
+  }
+
+  conversations.sort((a, b) => new Date(b.updated || b.started || 0) - new Date(a.updated || a.started || 0));
+  return json({ conversations, count: conversations.length });
+}
+
+async function adminConversationDetail(request, env, kvKey) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ error: "KV not bound" }, 500);
+  const raw = await env.LEXORD_DATA.get(decodeURIComponent(kvKey));
+  if (!raw) return json({ error: "Not found" }, 404);
+  const c = JSON.parse(raw);
+  return json({
+    sessionId: c.sessionId,
+    email: c.email || "",
+    source: c.source || "",
+    started: c.started || c.forwardedAt,
+    updated: c.updated || c.forwardedAt,
+    messages: c.messages || [],
+    userAgent: c.userAgent || "",
+    forwarded: !!c.forwardedAt
+  });
+}
+
+async function adminConversationDelete(request, env, kvKey) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ error: "KV not bound" }, 500);
+  await env.LEXORD_DATA.delete(decodeURIComponent(kvKey));
+  return json({ ok: true });
 }
 
 

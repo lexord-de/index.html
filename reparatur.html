@@ -50,6 +50,97 @@ button{font-family:inherit}
 .aurora::after{background:radial-gradient(circle,rgba(188,19,254,.35),transparent 70%);bottom:-30%;right:-12%}
 .stars{position:fixed;inset:0;z-index:-1;background-image:radial-gradient(2px 2px at 20% 30%,rgba(255,255,255,.4),transparent),radial-gradient(1px 1px at 60% 70%,rgba(255,255,255,.3),transparent),radial-gradient(1px 1px at 80% 20%,rgba(0,242,255,.4),transparent);background-size:200px 200px}
 
+/* ═══ PREMIUM ANIMATIONS ═══ */
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes spin360{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes scrollMarq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes flicker{0%,100%{opacity:1}50%{opacity:.6}}
+@keyframes gradLine{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+@keyframes typeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* Reveal on scroll */
+.rv{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
+.rv.in{opacity:1;transform:translateY(0)}
+.rv-l{transform:translateX(-40px)}.rv-l.in{transform:translateX(0)}
+.rv-r{transform:translateX(40px)}.rv-r.in{transform:translateX(0)}
+.rv-s{transform:scale(.94)}.rv-s.in{transform:scale(1)}
+.rv-d1{transition-delay:.08s}.rv-d2{transition-delay:.16s}.rv-d3{transition-delay:.24s}.rv-d4{transition-delay:.32s}
+
+/* Animated Hero Visual */
+.r-hero-visual{position:relative;width:min(440px,80vw);height:min(440px,80vw);margin:30px auto 10px;perspective:1000px}
+.r-hero-visual .ring{position:absolute;inset:0;border-radius:50%;border:1px dashed rgba(0,242,255,.18);animation:spin360 32s linear infinite}
+.r-hero-visual .ring.r2{inset:14%;animation-duration:24s;animation-direction:reverse;border-color:rgba(188,19,254,.18)}
+.r-hero-visual .ring.r3{inset:28%;animation-duration:18s;border-color:rgba(0,242,255,.25);border-style:solid;opacity:.4}
+.r-hero-visual .glow{position:absolute;inset:0;background:radial-gradient(circle at center,rgba(0,242,255,.15) 0%,transparent 55%);filter:blur(20px);animation:flicker 4s ease-in-out infinite}
+.r-hero-visual .ctrl{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:62%;animation:floatY 6s ease-in-out infinite;filter:drop-shadow(0 30px 60px rgba(0,242,255,.25))}
+.r-hero-visual .tool{position:absolute;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.7);backdrop-filter:blur(12px);border:1px solid rgba(0,242,255,.4);display:flex;align-items:center;justify-content:center;font-size:18px;animation:floatY 4s ease-in-out infinite;box-shadow:0 8px 22px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.08)}
+.r-hero-visual .tool.t1{top:8%;left:12%;animation-delay:0s}
+.r-hero-visual .tool.t2{top:14%;right:8%;animation-delay:.5s}
+.r-hero-visual .tool.t3{bottom:18%;left:5%;animation-delay:1s}
+.r-hero-visual .tool.t4{bottom:8%;right:14%;animation-delay:1.5s}
+.r-hero-visual .tool.t5{top:48%;left:-2%;animation-delay:.8s}
+.r-hero-visual .tool.t6{top:48%;right:-2%;animation-delay:1.2s}
+.r-hero-visual .pulse{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--neon);box-shadow:0 0 14px var(--neon)}
+.r-hero-visual .pulse::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:1px solid var(--neon);animation:pulseRing 2s ease-out infinite}
+.r-hero-visual .pulse.p1{top:20%;left:30%;animation-delay:0s}
+.r-hero-visual .pulse.p2{bottom:25%;right:20%;animation-delay:1s;background:var(--neon2);box-shadow:0 0 14px var(--neon2)}
+.r-hero-visual .pulse.p2::before{border-color:var(--neon2)}
+@keyframes pulseRing{0%{inset:-6px;opacity:1}100%{inset:-26px;opacity:0}}
+
+/* Marquee */
+.r-marq{overflow:hidden;background:linear-gradient(90deg,transparent,rgba(0,242,255,.04),transparent);border-top:1px solid rgba(0,242,255,.1);border-bottom:1px solid rgba(0,242,255,.1);padding:18px 0;position:relative;margin:30px 0}
+.r-marq::before,.r-marq::after{content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none}
+.r-marq::before{left:0;background:linear-gradient(90deg,#000,transparent)}
+.r-marq::after{right:0;background:linear-gradient(270deg,#000,transparent)}
+.r-marq-track{display:flex;animation:scrollMarq 35s linear infinite;width:max-content;will-change:transform}
+.r-marq:hover .r-marq-track{animation-play-state:paused}
+.r-marq-item{display:inline-flex;align-items:center;gap:14px;padding:0 32px;font-family:'Orbitron';font-weight:900;font-size:14px;letter-spacing:3.5px;color:#fff;white-space:nowrap}
+.r-marq-item .dot{width:6px;height:6px;border-radius:50%;background:var(--neon);box-shadow:0 0 10px var(--neon);flex-shrink:0}
+.r-marq-item .em{font-size:18px}
+.r-marq-item .accent{color:var(--neon)}
+
+/* Section dividers */
+.r-divider{height:1px;background:linear-gradient(90deg,transparent 0%,rgba(0,242,255,.5) 30%,rgba(188,19,254,.5) 50%,rgba(0,242,255,.5) 70%,transparent 100%);background-size:200% 100%;animation:gradLine 6s linear infinite;margin:20px 0;max-width:1100px;margin-left:auto;margin-right:auto}
+
+/* Counter */
+.r-stat-n[data-target]{display:inline-block}
+
+/* Card tilt hover */
+.tilt{transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,border-color .35s}
+.tilt:hover{transform:perspective(800px) rotateX(2deg) rotateY(-2deg) translateY(-4px)}
+
+/* Spotlight on hover */
+.spot{position:relative;overflow:hidden}
+.spot::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(0,242,255,.08),transparent 40%);opacity:0;transition:opacity .4s;pointer-events:none}
+.spot:hover::after{opacity:1}
+
+/* Animated underline section title */
+.r-section-title.anim::after{content:'';display:block;width:0;height:3px;margin-top:14px;background:linear-gradient(90deg,var(--neon),var(--neon2));border-radius:2px;transition:width .8s cubic-bezier(.2,.8,.2,1);transition-delay:.3s}
+.r-section-title.anim.in::after{width:80px}
+
+/* Big animated number ticker */
+.r-bignum{font-family:'Orbitron';font-weight:900;font-size:clamp(3rem,8vw,5rem);background:linear-gradient(135deg,var(--neon) 0%,var(--neon2) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1;letter-spacing:2px;animation:floatY 4s ease-in-out infinite}
+
+/* Process line animation */
+.r-steps{position:relative}
+.r-steps::before{content:'';position:absolute;top:0;left:50%;width:1px;height:100%;background:linear-gradient(180deg,transparent,rgba(0,242,255,.3),rgba(188,19,254,.3),transparent);transform:translateX(-50%);display:none}
+@media(min-width:900px){.r-steps::before{display:block}}
+
+/* Live status pulse rings */
+.r-live-card{position:relative;overflow:hidden}
+.r-live-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(0,242,255,.05) 0%,transparent 50%);animation:spin360 20s linear infinite}
+
+/* Animated price row on hover */
+.r-price-row{position:relative;transition:.25s}
+.r-price-row:hover{padding-left:8px}
+.r-price-row .pp{transition:transform .25s}
+.r-price-row:hover .pp{transform:scale(1.08)}
+
+/* Reduce body padding on mobile for premium spacing */
+@media(max-width:768px){
+  .r-section{padding:50px 5%}
+}
+
 /* ═══ HEADER ═══ */
 header{padding:18px 6%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:rgba(0,0,0,.88);backdrop-filter:blur(16px);z-index:1000;border-bottom:1px solid rgba(255,255,255,.06);min-height:64px}
 .brand{display:flex;align-items:center;gap:18px;text-decoration:none}
@@ -391,27 +482,126 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 
 <!-- ═══ HERO ═══ -->
 <section class="r-hero">
-  <div class="r-eyebrow">⟫ FACHWERKSTATT · MADE IN GERMANY · 6 MONATE GARANTIE ⟪</div>
-  <h1 class="r-headline">REPARATUR <span class="accent">SERVICE</span></h1>
-  <p class="r-sub">Vom Stick-Drift bis zum HDMI-Port: Wir reparieren Controller und Konsolen aller Hersteller — schnell, transparent, fair. Mit Originalersatzteilen oder Premium-Upgrades wie TMR- und Hall-Effect-Sticks.</p>
-  <div class="r-hero-cta">
-    <a href="index.html#repair-sec" class="p">🔧 REPARATUR ANFRAGEN →</a>
-    <a href="#preise" class="s">PREISE ANSEHEN</a>
+  <div class="r-eyebrow rv">⟫ FACHWERKSTATT · MADE IN GERMANY ⟪</div>
+  <h1 class="r-headline rv rv-d1">REPARATUR <span class="accent">SERVICE</span></h1>
+  <p class="r-sub rv rv-d2">Vom Stick-Drift bis HDMI-Port — wir reparieren alles. Festpreis, Garantie, Made in Germany.</p>
+
+  <!-- Animated Hero Visual -->
+  <div class="r-hero-visual rv rv-s rv-d3">
+    <div class="glow"></div>
+    <div class="ring"></div>
+    <div class="ring r2"></div>
+    <div class="ring r3"></div>
+    <div class="pulse p1"></div>
+    <div class="pulse p2"></div>
+    <div class="tool t1">🔧</div>
+    <div class="tool t2">⚡</div>
+    <div class="tool t3">🛠️</div>
+    <div class="tool t4">🔩</div>
+    <div class="tool t5">🕹️</div>
+    <div class="tool t6">📐</div>
+    <!-- Inline animated controller SVG -->
+    <svg class="ctrl" viewBox="0 0 240 160" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#1a1a1f"/>
+          <stop offset="100%" stop-color="#050506"/>
+        </linearGradient>
+        <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#222"/>
+          <stop offset="100%" stop-color="#0a0a0a"/>
+        </linearGradient>
+        <radialGradient id="led">
+          <stop offset="0%" stop-color="#00f2ff"/>
+          <stop offset="100%" stop-color="#005a66"/>
+        </radialGradient>
+        <filter id="glow"><feGaussianBlur stdDeviation="2"/></filter>
+      </defs>
+      <!-- Controller body -->
+      <path d="M40 60 Q20 60 18 90 Q15 130 50 135 L80 130 Q100 138 140 138 L160 130 L190 135 Q225 130 222 90 Q220 60 200 60 L160 65 Q140 55 100 55 L80 65 Z" fill="url(#bg1)" stroke="#2a2a2f" stroke-width=".8"/>
+      <!-- Grips highlight -->
+      <path d="M30 70 Q20 80 22 110 Q24 128 50 130" fill="none" stroke="rgba(0,242,255,.18)" stroke-width="1"/>
+      <path d="M210 70 Q220 80 218 110 Q216 128 190 130" fill="none" stroke="rgba(188,19,254,.18)" stroke-width="1"/>
+      <!-- Touch surface -->
+      <rect x="98" y="68" width="44" height="22" rx="3" fill="url(#bg2)" stroke="#2a2a2f" stroke-width=".5"/>
+      <!-- D-Pad -->
+      <g transform="translate(60,95)">
+        <rect x="-3" y="-10" width="6" height="20" rx="1" fill="#1a1a1f"/>
+        <rect x="-10" y="-3" width="20" height="6" rx="1" fill="#1a1a1f"/>
+      </g>
+      <!-- Sticks -->
+      <circle cx="86" cy="108" r="13" fill="#0c0c10" stroke="#2a2a2f" stroke-width=".8"/>
+      <circle cx="86" cy="108" r="9" fill="#1a1a1f"/>
+      <circle cx="86" cy="108" r="2" fill="#00f2ff" filter="url(#glow)">
+        <animate attributeName="r" values="2;3;2" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="154" cy="108" r="13" fill="#0c0c10" stroke="#2a2a2f" stroke-width=".8"/>
+      <circle cx="154" cy="108" r="9" fill="#1a1a1f"/>
+      <circle cx="154" cy="108" r="2" fill="#bc13fe" filter="url(#glow)">
+        <animate attributeName="r" values="2;3;2" dur="2s" begin="1s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Face buttons -->
+      <circle cx="178" cy="80" r="4.5" fill="#1a1a1f" stroke="#2a2a2f" stroke-width=".5"/>
+      <circle cx="190" cy="92" r="4.5" fill="#1a1a1f" stroke="#2a2a2f" stroke-width=".5"/>
+      <circle cx="178" cy="104" r="4.5" fill="#1a1a1f" stroke="#2a2a2f" stroke-width=".5"/>
+      <circle cx="166" cy="92" r="4.5" fill="#1a1a1f" stroke="#2a2a2f" stroke-width=".5"/>
+      <!-- Triggers -->
+      <path d="M55 50 Q60 35 80 35 L95 38 L88 52 L60 55 Z" fill="url(#bg1)" stroke="#2a2a2f" stroke-width=".5"/>
+      <path d="M185 50 Q180 35 160 35 L145 38 L152 52 L180 55 Z" fill="url(#bg1)" stroke="#2a2a2f" stroke-width=".5"/>
+      <!-- LED light bar -->
+      <rect x="60" y="76" width="120" height="2" rx="1" fill="url(#led)" opacity=".8">
+        <animate attributeName="opacity" values=".4;1;.4" dur="3s" repeatCount="indefinite"/>
+      </rect>
+      <!-- Diagnostic scan line -->
+      <line x1="20" y1="100" x2="220" y2="100" stroke="rgba(0,242,255,.6)" stroke-width=".5" stroke-dasharray="2 4">
+        <animate attributeName="y1" values="55;138;55" dur="5s" repeatCount="indefinite"/>
+        <animate attributeName="y2" values="55;138;55" dur="5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0;1;0" dur="5s" repeatCount="indefinite"/>
+      </line>
+    </svg>
   </div>
 
-  <div class="r-stats">
-    <div class="r-stat"><div class="r-stat-n">5.000+</div><div class="r-stat-l">REPARATUREN</div></div>
-    <div class="r-stat"><div class="r-stat-n">4,9★</div><div class="r-stat-l">DURCHSCHN. BEWERTUNG</div></div>
-    <div class="r-stat"><div class="r-stat-n">3-5</div><div class="r-stat-l">WERKTAGE BEARBEITUNG</div></div>
-    <div class="r-stat"><div class="r-stat-n">24h</div><div class="r-stat-l">KOSTENVORANSCHLAG</div></div>
-    <div class="r-stat"><div class="r-stat-n">6 / 12</div><div class="r-stat-l">MONATE GARANTIE</div></div>
+  <div class="r-hero-cta rv rv-d4">
+    <a href="index.html#repair-sec" class="p">🔧 REPARATUR ANFRAGEN →</a>
+    <a href="#preise" class="s">PREISE</a>
+  </div>
+
+  <div class="r-stats rv">
+    <div class="r-stat"><div class="r-stat-n" data-target="5000" data-suffix="+">0</div><div class="r-stat-l">REPARATUREN</div></div>
+    <div class="r-stat"><div class="r-stat-n" data-target="49" data-suffix="★" data-fmt="x.y">0</div><div class="r-stat-l">BEWERTUNG</div></div>
+    <div class="r-stat"><div class="r-stat-n" data-suffix=" TAGE">3-5</div><div class="r-stat-l">BEARBEITUNG</div></div>
+    <div class="r-stat"><div class="r-stat-n" data-target="24" data-suffix="h">0</div><div class="r-stat-l">FESTPREIS</div></div>
+    <div class="r-stat"><div class="r-stat-n">12 <span style="font-size:1rem;color:#888">MON</span></div><div class="r-stat-l">GARANTIE BIS</div></div>
   </div>
 </section>
+
+<!-- Animated Marquee Ticker -->
+<div class="r-marq">
+  <div class="r-marq-track">
+    <div class="r-marq-item"><span class="dot"></span> <span class="em">🕹️</span> STICK-DRIFT REPARATUR <span class="accent">AB 25 €</span></div>
+    <div class="r-marq-item"><span class="dot"></span> <span class="em">⚡</span> EXPRESS-SERVICE <span class="accent">24-48 H</span></div>
+    <div class="r-marq-item"><span class="dot"></span> <span class="em">🛡️</span> 6-12 MONATE GARANTIE</div>
+    <div class="r-marq-item"><span class="dot"></span> <span class="em">📺</span> HDMI-PORT REPARATUR <span class="accent">AB 65 €</span></div>
+    <div class="r-marq-item"><span class="dot"></span> <span class="em">🇩🇪</span> MADE IN GERMANY</div>
+    <div class="r-marq-item"><span class="dot"></span> <span class="em">🎮</span> PS5 · PS4 · XBOX · SWITCH</div>
+    <div class="r-marq-item"><span class="dot"></span> <span class="em">🔧</span> TMR & HALL-EFFECT UPGRADES</div>
+    <div class="r-marq-item"><span class="dot"></span> <span class="em">⭐</span> 4.9 / 5 BEI 5.000+ AUFTRÄGEN</div>
+    <!-- Duplicate for seamless scroll -->
+    <div class="r-marq-item"><span class="dot"></span> <span class="em">🕹️</span> STICK-DRIFT REPARATUR <span class="accent">AB 25 €</span></div>
+    <div class="r-marq-item"><span class="dot"></span> <span class="em">⚡</span> EXPRESS-SERVICE <span class="accent">24-48 H</span></div>
+    <div class="r-marq-item"><span class="dot"></span> <span class="em">🛡️</span> 6-12 MONATE GARANTIE</div>
+    <div class="r-marq-item"><span class="dot"></span> <span class="em">📺</span> HDMI-PORT REPARATUR <span class="accent">AB 65 €</span></div>
+    <div class="r-marq-item"><span class="dot"></span> <span class="em">🇩🇪</span> MADE IN GERMANY</div>
+    <div class="r-marq-item"><span class="dot"></span> <span class="em">🎮</span> PS5 · PS4 · XBOX · SWITCH</div>
+    <div class="r-marq-item"><span class="dot"></span> <span class="em">🔧</span> TMR & HALL-EFFECT UPGRADES</div>
+    <div class="r-marq-item"><span class="dot"></span> <span class="em">⭐</span> 4.9 / 5 BEI 5.000+ AUFTRÄGEN</div>
+  </div>
+</div>
 
 <!-- ═══ SYMPTOM CHECKER ═══ -->
 <section class="r-section">
   <div class="r-section-h">⟫ SYMPTOM-CHECKER</div>
-  <h2 class="r-section-title">Welches Problem hast du?</h2>
+  <h2 class="r-section-title anim rv">Welches Problem hast du?</h2>
   <p class="r-section-desc">Klick auf dein Symptom — wir führen dich direkt zur passenden Reparatur und zeigen den voraussichtlichen Preis.</p>
   <div class="r-symp-grid">
     <a href="#preise" class="r-symp"><span class="em">🎯</span><span class="t">CHARAKTER LÄUFT VON ALLEIN</span><span class="sub">→ Stick-Drift</span></a>
@@ -432,7 +622,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 <!-- ═══ LIVE STATUS ═══ -->
 <section class="r-section" style="padding-top:0">
   <div class="r-section-h">⟫ AKTUELLER WERKSTATT-STATUS</div>
-  <h2 class="r-section-title">Live-Auslastung & Bearbeitungszeit</h2>
+  <h2 class="r-section-title anim rv">Live-Auslastung & Bearbeitungszeit</h2>
   <p class="r-section-desc">Realistische Einschätzung statt Marketing-Versprechen. Aktualisiert täglich.</p>
   <div class="r-live">
     <div class="r-live-card"><div class="dot"></div><div class="info"><strong>WERKSTATT-AUSLASTUNG</strong><span class="pct">68 %</span></div></div>
@@ -445,7 +635,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 <!-- ═══ QUICK CATEGORIES ═══ -->
 <section class="r-section">
   <div class="r-section-h">⟫ TOP-REPARATUREN</div>
-  <h2 class="r-section-title">Das reparieren wir am häufigsten</h2>
+  <h2 class="r-section-title anim rv">Das reparieren wir am häufigsten</h2>
   <p class="r-section-desc">Die häufigsten Schäden auf einen Blick — mit Festpreis und durchschnittlicher Bearbeitungszeit. Alle Reparaturen werden in unserer Werkstatt in Domsühl durchgeführt, ausschließlich mit geprüften Komponenten.</p>
   <div class="r-cats">
     <a href="#preise" class="r-cat">
@@ -506,7 +696,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 <!-- ═══ DETAILED PRICE TABLES ═══ -->
 <section class="r-section" id="preise">
   <div class="r-section-h">⟫ KOMPLETTE PREISLISTE</div>
-  <h2 class="r-section-title">Alle Reparaturen · Alle Geräte</h2>
+  <h2 class="r-section-title anim rv">Alle Reparaturen · Alle Geräte</h2>
   <p class="r-section-desc">Wähle dein Gerät und sieh dir die transparente Preisliste an. Alle Preise verstehen sich inklusive Material, Arbeitszeit und 6 Monaten Garantie. Versand ab 7,50 € (versichert).</p>
 
   <div class="r-devices">
@@ -828,7 +1018,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 <!-- ═══ PROCESS STEPS ═══ -->
 <section class="r-section">
   <div class="r-section-h">⟫ SO LÄUFT'S AB</div>
-  <h2 class="r-section-title">In 4 Schritten zur Reparatur</h2>
+  <h2 class="r-section-title anim rv">In 4 Schritten zur Reparatur</h2>
   <p class="r-section-desc">Von der Anfrage bis zur Rückgabe — der Ablauf ist transparent, schnell und unkompliziert. Du musst nicht vorab bezahlen, bevor wir den Schaden gesehen haben.</p>
 
   <div class="r-process">
@@ -860,7 +1050,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 <!-- ═══ PACKING GUIDE ═══ -->
 <section class="r-section">
   <div class="r-section-h">⟫ VERPACKUNGS-GUIDE</div>
-  <h2 class="r-section-title">So verpackst du richtig</h2>
+  <h2 class="r-section-title anim rv">So verpackst du richtig</h2>
   <p class="r-section-desc">In 4 Schritten transportsicher und versicherungs-tauglich verpacken. Bei Schäden durch unsachgemäße Verpackung haftet der Versender — nicht der Empfänger.</p>
   <div class="r-pack">
     <div class="r-pack-h">📦 SO KOMMT DEIN CONTROLLER SICHER BEI UNS AN</div>
@@ -880,7 +1070,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 <!-- ═══ WHAT'S INCLUDED ═══ -->
 <section class="r-section">
   <div class="r-section-h">⟫ INKLUSIVLEISTUNGEN</div>
-  <h2 class="r-section-title">Das ist in jeder Reparatur enthalten</h2>
+  <h2 class="r-section-title anim rv">Das ist in jeder Reparatur enthalten</h2>
   <p class="r-section-desc">Bei LEXORD gibt's keine versteckten Kosten. Jede Reparatur — egal ob 25 € oder 150 € — enthält folgende Leistungen ohne Aufpreis.</p>
 
   <div class="r-inc-grid">
@@ -895,10 +1085,28 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
   </div>
 </section>
 
+<!-- Mid-page Animated Marquee -->
+<div class="r-marq" style="background:linear-gradient(90deg,transparent,rgba(188,19,254,.04),transparent);border-color:rgba(188,19,254,.15)">
+  <div class="r-marq-track" style="animation-duration:42s">
+    <div class="r-marq-item"><span class="dot" style="background:var(--neon2);box-shadow:0 0 10px var(--neon2)"></span> <span class="em">🚀</span> NEU · HALL-EFFECT JOY-CON UPGRADE</div>
+    <div class="r-marq-item"><span class="dot" style="background:var(--neon2);box-shadow:0 0 10px var(--neon2)"></span> <span class="em">⚡</span> TMR STICKS FÜR DUALSENSE</div>
+    <div class="r-marq-item"><span class="dot" style="background:var(--neon2);box-shadow:0 0 10px var(--neon2)"></span> <span class="em">🎯</span> CLICKY-TRIGGER MOD</div>
+    <div class="r-marq-item"><span class="dot" style="background:var(--neon2);box-shadow:0 0 10px var(--neon2)"></span> <span class="em">🔋</span> POWER-AKKU 2000 MAH</div>
+    <div class="r-marq-item"><span class="dot" style="background:var(--neon2);box-shadow:0 0 10px var(--neon2)"></span> <span class="em">🎨</span> CUSTOM PAINT JOB</div>
+    <div class="r-marq-item"><span class="dot" style="background:var(--neon2);box-shadow:0 0 10px var(--neon2)"></span> <span class="em">🛠️</span> PADDLE SYSTEM V2</div>
+    <div class="r-marq-item"><span class="dot" style="background:var(--neon2);box-shadow:0 0 10px var(--neon2)"></span> <span class="em">🚀</span> NEU · HALL-EFFECT JOY-CON UPGRADE</div>
+    <div class="r-marq-item"><span class="dot" style="background:var(--neon2);box-shadow:0 0 10px var(--neon2)"></span> <span class="em">⚡</span> TMR STICKS FÜR DUALSENSE</div>
+    <div class="r-marq-item"><span class="dot" style="background:var(--neon2);box-shadow:0 0 10px var(--neon2)"></span> <span class="em">🎯</span> CLICKY-TRIGGER MOD</div>
+    <div class="r-marq-item"><span class="dot" style="background:var(--neon2);box-shadow:0 0 10px var(--neon2)"></span> <span class="em">🔋</span> POWER-AKKU 2000 MAH</div>
+    <div class="r-marq-item"><span class="dot" style="background:var(--neon2);box-shadow:0 0 10px var(--neon2)"></span> <span class="em">🎨</span> CUSTOM PAINT JOB</div>
+    <div class="r-marq-item"><span class="dot" style="background:var(--neon2);box-shadow:0 0 10px var(--neon2)"></span> <span class="em">🛠️</span> PADDLE SYSTEM V2</div>
+  </div>
+</div>
+
 <!-- ═══ PREMIUM ADD-ONS ═══ -->
 <section class="r-section">
   <div class="r-section-h">⟫ PREMIUM-OPTIONEN</div>
-  <h2 class="r-section-title">Optionale Aufwertungen</h2>
+  <h2 class="r-section-title anim rv">Optionale Aufwertungen</h2>
   <p class="r-section-desc">Wenn dein Controller schon mal offen ist — nutze die Gelegenheit für Premium-Upgrades. Alles aus einer Hand, ohne zweite Versandlogistik.</p>
 
   <div class="r-addon-grid">
@@ -938,7 +1146,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 <!-- ═══ WARRANTY ═══ -->
 <section class="r-section">
   <div class="r-section-h">⟫ GEWÄHRLEISTUNG</div>
-  <h2 class="r-section-title">Garantie auf jeden Handgriff</h2>
+  <h2 class="r-section-title anim rv">Garantie auf jeden Handgriff</h2>
   <p class="r-section-desc">Wir stehen hinter unserer Arbeit — schriftlich. Beide Varianten umfassen Material und Arbeitsleistung. Bei Defekt: kostenlose Nachbesserung oder Erstattung.</p>
 
   <div class="r-warranty">
@@ -980,7 +1188,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 <!-- ═══ TRUST / REVIEWS ═══ -->
 <section class="r-section">
   <div class="r-section-h">⟫ KUNDENMEINUNGEN</div>
-  <h2 class="r-section-title">Was unsere Kunden sagen</h2>
+  <h2 class="r-section-title anim rv">Was unsere Kunden sagen</h2>
   <p class="r-section-desc">Über 5.000 erfolgreich abgeschlossene Reparaturen — und durchschnittlich 4,9 von 5 Sternen. Hier eine kleine Auswahl.</p>
 
   <div class="r-trust-grid">
@@ -1020,7 +1228,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 <!-- ═══ FAQ ═══ -->
 <section class="r-section">
   <div class="r-section-h">⟫ HÄUFIGE FRAGEN</div>
-  <h2 class="r-section-title">FAQ zur Reparatur</h2>
+  <h2 class="r-section-title anim rv">FAQ zur Reparatur</h2>
   <p class="r-section-desc">Die wichtigsten Fragen rund um Versand, Bezahlung, Garantie und Bearbeitung. Bei weiteren Fragen: <a href="mailto:Kontakt@Lexord.de">Kontakt@Lexord.de</a>.</p>
 
   <div class="r-faq">
@@ -1042,7 +1250,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 <!-- ═══ KONTAKT & WERKSTATT ═══ -->
 <section class="r-section" id="kontakt">
   <div class="r-section-h">⟫ ERREICHBARKEIT</div>
-  <h2 class="r-section-title">So erreichst du uns</h2>
+  <h2 class="r-section-title anim rv">So erreichst du uns</h2>
   <p class="r-section-desc">Werkstatt in Mecklenburg-Vorpommern · Versandadresse für Reparaturen · Erreichbar per E-Mail, WhatsApp, Telefon. Innerhalb der Geschäftszeiten <strong style="color:var(--neon)">Antwort innerhalb 4 Stunden</strong>, sonst max. 24 h.</p>
 
   <div class="r-contact-grid">
@@ -1116,7 +1324,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 <!-- ═══ VERSAND & ZAHLUNG ═══ -->
 <section class="r-section">
   <div class="r-section-h">⟫ VERSAND & ZAHLUNG</div>
-  <h2 class="r-section-title">Transparent. Sicher. Versichert.</h2>
+  <h2 class="r-section-title anim rv">Transparent. Sicher. Versichert.</h2>
   <p class="r-section-desc">Alle Versand- und Zahlungsoptionen auf einen Blick. Hinversand trägst du, Rückversand ist in unseren Standardpreisen kalkuliert.</p>
 
   <div class="r-sp-grid">
@@ -1197,7 +1405,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 <!-- ═══ COMPARISON ═══ -->
 <section class="r-section">
   <div class="r-section-h">⟫ VERGLEICH</div>
-  <h2 class="r-section-title">Warum LEXORD-Reparatur?</h2>
+  <h2 class="r-section-title anim rv">Warum LEXORD-Reparatur?</h2>
   <p class="r-section-desc">Direkter Vergleich: LEXORD vs. Hersteller-Reparatur vs. Neukauf. Spar Geld, spar Zeit, spar Elektroschrott.</p>
 
   <div class="r-comp">
@@ -1231,7 +1439,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 <!-- ═══ WERKSTATT ═══ -->
 <section class="r-section">
   <div class="r-section-h">⟫ ÜBER UNS</div>
-  <h2 class="r-section-title">Die Werkstatt hinter LEXORD</h2>
+  <h2 class="r-section-title anim rv">Die Werkstatt hinter LEXORD</h2>
   <p class="r-section-desc">Inhabergeführt von Leon Schulz — keine Hotline, kein Callcenter, kein Subunternehmer. Jeder Controller wird persönlich von mir bearbeitet und vor dem Versand getestet.</p>
 
   <div class="r-workshop">
@@ -1253,7 +1461,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 <!-- ═══ TRUST BADGES ═══ -->
 <section class="r-section">
   <div class="r-section-h">⟫ VERTRAUEN</div>
-  <h2 class="r-section-title">Wofür wir stehen</h2>
+  <h2 class="r-section-title anim rv">Wofür wir stehen</h2>
   <p class="r-section-desc">Verbindliche Standards. Keine Marketing-Floskeln — alles nachprüfbar in unseren AGB und Garantiebedingungen.</p>
 
   <div class="r-trust-bar">
@@ -1325,6 +1533,83 @@ function showDev(id){
   if(panel){panel.scrollIntoView({behavior:'smooth',block:'start'});}
 }
 function tFaq(el){el.classList.toggle('open');}
+
+/* ═══ Reveal on scroll ═══ */
+(function(){
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}
+    });
+  },{threshold:.12,rootMargin:'0px 0px -50px 0px'});
+  // Auto-tag common elements that should reveal
+  const sel=['.r-cat','.r-price-group','.r-symp','.r-live-card','.r-step','.r-inc','.r-addon','.r-warr','.r-review','.r-faq-item','.r-contact-card','.r-sp','.r-pack-step','.r-tb','.r-stat'];
+  document.querySelectorAll(sel.join(',')).forEach((el,i)=>{
+    el.classList.add('rv');
+    if(i%6===1)el.classList.add('rv-d1');
+    if(i%6===2)el.classList.add('rv-d2');
+    if(i%6===3)el.classList.add('rv-d3');
+    if(i%6===4)el.classList.add('rv-d4');
+  });
+  document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+})();
+
+/* ═══ Animated number counters ═══ */
+(function(){
+  const targets=document.querySelectorAll('.r-stat-n[data-target]');
+  const io=new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(!e.isIntersecting)return;
+      const el=e.target;
+      const target=parseFloat(el.dataset.target);
+      const suffix=el.dataset.suffix||'';
+      const fmt=el.dataset.fmt||'';
+      const dur=1600;
+      const start=performance.now();
+      function step(t){
+        const p=Math.min((t-start)/dur,1);
+        const ease=1-Math.pow(1-p,3);
+        const v=target*ease;
+        let txt;
+        if(fmt==='x.y')txt=(v/10).toFixed(1).replace('.',',');
+        else if(target>=1000)txt=Math.floor(v).toLocaleString('de-DE');
+        else txt=Math.floor(v);
+        el.textContent=txt+suffix;
+        if(p<1)requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+      io.unobserve(el);
+    });
+  },{threshold:.3});
+  targets.forEach(t=>io.observe(t));
+})();
+
+/* ═══ Spotlight cursor on cards ═══ */
+(function(){
+  document.querySelectorAll('.r-cat,.r-price-group,.r-addon,.r-warr,.r-review,.r-contact-card,.r-sp,.r-symp,.r-tb').forEach(el=>{
+    el.classList.add('spot');
+    el.addEventListener('mousemove',e=>{
+      const r=el.getBoundingClientRect();
+      el.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+      el.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
+    });
+  });
+})();
+
+/* ═══ Card 3D tilt ═══ */
+(function(){
+  if(matchMedia('(hover:hover)').matches){
+    document.querySelectorAll('.r-cat,.r-addon,.r-symp').forEach(el=>{
+      el.addEventListener('mousemove',e=>{
+        const r=el.getBoundingClientRect();
+        const x=(e.clientX-r.left)/r.width-.5;
+        const y=(e.clientY-r.top)/r.height-.5;
+        el.style.transform=`perspective(900px) rotateX(${-y*5}deg) rotateY(${x*6}deg) translateY(-4px)`;
+      });
+      el.addEventListener('mouseleave',()=>{el.style.transform='';});
+    });
+  }
+})();
+
 function subNews(f){
   const e=document.getElementById('nl-email').value.trim();
   if(!e)return;

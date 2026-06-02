@@ -2364,39 +2364,85 @@ async function saveWiderruf(request, env) {
     });
   } catch (e) {}
 
-  // Bestätigungsmail an Kunden
+  // Bestätigungsmail an Kunden — professionelles Template mit allen Pflichtangaben
   if (env.BREVO_API_KEY) {
-    const html = buildEmailTemplate ? buildEmailTemplate({
-      headerTitle: "Widerruf eingegangen",
+    const html = buildEmailTemplate({
+      headerTitle: "Widerruf bestätigt",
       customerName: entry.name,
-      body: "<p>vielen Dank — dein Widerruf gemäß EU-Richtlinie 2023/2673 wurde erfolgreich eingegangen.</p>" +
-        "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='margin:20px 0'>" +
-        "<tr><td style='padding:14px;background:#f9f9fb;border-left:4px solid #0066ff;border-radius:6px'>" +
-        "<div style='font-size:11px;color:#666;letter-spacing:1.5px'>WIDERRUFS-NR.</div>" +
-        "<div style='font-size:18px;font-weight:900;color:#0066ff;margin:4px 0'>" + escapeHtml(wfNr) + "</div>" +
-        "<div style='font-size:11px;color:#666;margin-top:8px'>Bestellung: " + escapeHtml(entry.orderNr) + "</div>" +
+      body:
+        "<p style='margin:0 0 18px 0;font-size:15px;line-height:1.6;color:#e0e0e0'>vielen Dank — wir haben deinen Widerruf gemäß <strong style='color:#fff'>EU-Verbraucherrechte-Richtlinie 2023/2673</strong> erhalten und bestätigen ihn hiermit.</p>" +
+        // Widerrufs-Box
+        "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='margin:24px 0;border-collapse:collapse'>" +
+        "<tr><td style='padding:20px;background:linear-gradient(135deg,#001428 0%,#0a1a2e 100%);border-left:4px solid #00f2ff;border-radius:8px'>" +
+        "<div style='font-family:Arial,sans-serif;font-size:10px;color:#888;letter-spacing:2px;margin-bottom:4px'>WIDERRUFS-NUMMER</div>" +
+        "<div style='font-family:Arial,sans-serif;font-size:22px;font-weight:900;color:#00f2ff;letter-spacing:2px;margin-bottom:10px'>" + escapeHtml(wfNr) + "</div>" +
+        "<div style='font-size:12px;color:#aaa;line-height:1.7'>Bestellnummer: <strong style='color:#fff'>" + escapeHtml(entry.orderNr) + "</strong><br>" +
+        "Bestelldatum: <strong style='color:#fff'>" + (entry.orderDate ? new Date(entry.orderDate).toLocaleDateString('de-DE') : '–') + "</strong><br>" +
+        "Eingangsdatum: <strong style='color:#fff'>" + new Date(entry.submitted).toLocaleDateString('de-DE') + "</strong></div>" +
         "</td></tr></table>" +
-        "<p><strong>Nächste Schritte:</strong></p>" +
-        "<ol style='padding-left:20px'>" +
-        "<li>Sende die Ware <strong>innerhalb von 14 Tagen</strong> zurück an:<br>LEXORD Engineering · An Der Domsühler Str. 2 · 19374 Domsühl</li>" +
-        "<li>Bitte gut verpackt und versichert versenden (Rücksendekosten trägt der Kunde)</li>" +
-        "<li>Nach Eingang der Ware erfolgt die Rückerstattung innerhalb von 14 Tagen auf das ursprüngliche Zahlungsmittel</li>" +
-        "</ol>" +
-        "<p style='margin-top:20px;color:#666;font-size:11px'>Bei Fragen: <a href='mailto:Kontakt@Lexord.de'>Kontakt@Lexord.de</a></p>"
-    }) : "<p>Widerruf " + wfNr + " eingegangen. Du erhältst weitere Anweisungen.</p>";
-    await sendBrevoMail(env, entry.email, "Widerruf " + wfNr + " eingegangen — LEXORD", html, { wfNr, kind: "widerruf" });
+        // Rücksende-Adresse Box (prominent!)
+        "<div style='margin:24px 0 8px 0;font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;color:#00f2ff;font-weight:700'>📦 RÜCKSENDE-ADRESSE</div>" +
+        "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='margin:0 0 24px 0;border-collapse:collapse'>" +
+        "<tr><td style='padding:18px 20px;background:#fff;border-radius:8px;color:#000'>" +
+        "<div style='font-family:Arial,sans-serif;font-size:15px;font-weight:700;color:#000;line-height:1.6'>LEXORD Engineering<br>Leon Schulz<br>An Der Domsühler Str. 2<br>19374 Domsühl<br>Deutschland</div>" +
+        "</td></tr></table>" +
+        // Schritte
+        "<div style='font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;color:#00f2ff;font-weight:700;margin:24px 0 12px 0'>✓ NÄCHSTE SCHRITTE</div>" +
+        "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='border-collapse:collapse'>" +
+        "<tr><td style='padding:12px 0;border-bottom:1px solid #333;vertical-align:top;color:#e0e0e0;font-size:13px;line-height:1.6'>" +
+        "<strong style='color:#00f2ff;font-size:18px;margin-right:10px'>1.</strong>Sende die Ware <strong style='color:#fff'>innerhalb von 14 Tagen</strong> ab Eingang dieser Mail an die oben genannte Adresse zurück.</td></tr>" +
+        "<tr><td style='padding:12px 0;border-bottom:1px solid #333;vertical-align:top;color:#e0e0e0;font-size:13px;line-height:1.6'>" +
+        "<strong style='color:#00f2ff;font-size:18px;margin-right:10px'>2.</strong>Bitte verwende einen versicherten und nachverfolgbaren Versand (z.B. DHL Paket mit Sendungsverfolgung). Die <strong style='color:#fff'>Rücksendekosten trägst du</strong> als Kunde.</td></tr>" +
+        "<tr><td style='padding:12px 0;border-bottom:1px solid #333;vertical-align:top;color:#e0e0e0;font-size:13px;line-height:1.6'>" +
+        "<strong style='color:#00f2ff;font-size:18px;margin-right:10px'>3.</strong>Lege bitte einen Zettel mit deiner Widerrufs-Nummer <strong style='color:#00f2ff'>" + escapeHtml(wfNr) + "</strong> in das Paket — so können wir es schneller zuordnen.</td></tr>" +
+        "<tr><td style='padding:12px 0;vertical-align:top;color:#e0e0e0;font-size:13px;line-height:1.6'>" +
+        "<strong style='color:#00f2ff;font-size:18px;margin-right:10px'>4.</strong>Nach Eingang der Ware erhältst du die Erstattung <strong style='color:#fff'>innerhalb von 14 Tagen</strong> auf das ursprüngliche Zahlungsmittel.</td></tr>" +
+        "</table>" +
+        // Widerrufene Artikel
+        "<div style='font-family:Arial,sans-serif;font-size:11px;letter-spacing:2px;color:#00f2ff;font-weight:700;margin:24px 0 8px 0'>📋 WIDERRUFENE ARTIKEL</div>" +
+        "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='border-collapse:collapse;margin-bottom:18px'>" +
+        "<tr><td style='padding:14px 18px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;color:#ccc;font-size:13px;line-height:1.6'>" +
+        escapeHtml(entry.items).replace(/\n/g, "<br>") + "</td></tr></table>" +
+        // Wichtige Hinweise
+        "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='margin:24px 0;border-collapse:collapse'>" +
+        "<tr><td style='padding:14px 18px;background:#2a1f00;border-left:4px solid #ffa500;border-radius:8px;color:#ffd180;font-size:12px;line-height:1.6'>" +
+        "<strong style='color:#fff'>⚠ Ausnahmen vom Widerrufsrecht:</strong><br>" +
+        "Individuell konfigurierte Controller (§ 312g Abs. 2 Nr. 1 BGB) sowie bereits begonnene Reparaturen (§ 356 Abs. 4 BGB) sind vom Widerrufsrecht ausgenommen. Diese Artikel können nicht widerrufen werden." +
+        "</td></tr></table>" +
+        // Kontakt
+        "<p style='margin:28px 0 0 0;font-size:13px;color:#aaa;line-height:1.7'>Bei Fragen zu deinem Widerruf erreichst du uns unter:<br>" +
+        "<strong style='color:#fff'>📧 <a href='mailto:Kontakt@Lexord.de' style='color:#00f2ff;text-decoration:none'>Kontakt@Lexord.de</a></strong><br>" +
+        "<strong style='color:#fff'>📞 <a href='tel:+4915204718720' style='color:#00f2ff;text-decoration:none'>0152 047 18720</a></strong><br>" +
+        "<strong style='color:#fff'>💬 <a href='https://wa.me/4915204718720' style='color:#00f2ff;text-decoration:none'>WhatsApp Chat</a></strong></p>" +
+        "<p style='margin:18px 0 0 0;font-size:11px;color:#666;line-height:1.6'>Diese Bestätigung gilt als Eingangsbestätigung gemäß § 312k BGB. Sie wurde am " + new Date().toLocaleString('de-DE') + " automatisch erstellt.</p>"
+    });
+    await sendBrevoMail(env, entry.email, "Widerruf " + wfNr + " bestätigt — LEXORD Engineering", html, { wfNr, kind: "widerruf-confirm" });
+
     // Admin-Benachrichtigung
-    await sendBrevoMail(env, "Kontakt@Lexord.de",
-      "🛡 NEUER EU-WIDERRUF · " + wfNr,
-      "<p><strong>Neuer EU-Widerruf eingegangen</strong></p>" +
-      "<p>Widerrufs-Nr.: <strong>" + escapeHtml(wfNr) + "</strong><br>" +
-      "Kunde: " + escapeHtml(entry.name) + " (" + escapeHtml(entry.email) + ")<br>" +
-      "Bestellung: " + escapeHtml(entry.orderNr) + "<br>" +
-      "Bestelldatum: " + escapeHtml(entry.orderDate) + "<br>" +
-      "Adresse: " + escapeHtml(entry.address) + "</p>" +
-      "<p><strong>Widerrufene Artikel:</strong><br>" + escapeHtml(entry.items).replace(/\n/g, "<br>") + "</p>" +
-      (entry.reason ? "<p><strong>Grund (freiwillig):</strong><br>" + escapeHtml(entry.reason).replace(/\n/g, "<br>") + "</p>" : ""),
-      { wfNr, kind: "widerruf-admin" });
+    const adminHtml = buildEmailTemplate({
+      headerTitle: "🛡 Neuer EU-Widerruf",
+      customerName: "Admin",
+      body:
+        "<p style='margin:0 0 18px 0;font-size:15px;color:#fff'>Ein neuer EU-Widerruf ist eingegangen und wartet auf Bearbeitung im <a href='https://lexord.de/admin.html' style='color:#00f2ff;text-decoration:none'>Admin-Panel</a>.</p>" +
+        "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='margin:20px 0;border-collapse:collapse'>" +
+        "<tr><td style='padding:18px 20px;background:#001428;border-left:4px solid #00f2ff;border-radius:8px'>" +
+        "<div style='font-size:10px;color:#888;letter-spacing:2px;margin-bottom:4px'>WIDERRUFS-NR</div>" +
+        "<div style='font-size:20px;font-weight:900;color:#00f2ff;margin-bottom:14px'>" + escapeHtml(wfNr) + "</div>" +
+        "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='font-size:13px;color:#e0e0e0;line-height:2'>" +
+        "<tr><td style='color:#888;width:120px'>Kunde:</td><td><strong style='color:#fff'>" + escapeHtml(entry.name) + "</strong></td></tr>" +
+        "<tr><td style='color:#888'>Email:</td><td><a href='mailto:" + escapeHtml(entry.email) + "' style='color:#00f2ff'>" + escapeHtml(entry.email) + "</a></td></tr>" +
+        "<tr><td style='color:#888'>Bestellung:</td><td><strong style='color:#fff'>" + escapeHtml(entry.orderNr) + "</strong></td></tr>" +
+        "<tr><td style='color:#888'>Bestelldatum:</td><td>" + escapeHtml(entry.orderDate || '–') + "</td></tr>" +
+        "<tr><td style='color:#888;vertical-align:top'>Adresse:</td><td>" + escapeHtml(entry.address || '–') + "</td></tr>" +
+        "</table></td></tr></table>" +
+        "<div style='font-size:11px;color:#00f2ff;letter-spacing:2px;font-weight:700;margin:20px 0 8px 0'>WIDERRUFENE ARTIKEL</div>" +
+        "<div style='padding:14px;background:#0a0a0a;border-radius:8px;color:#ccc;font-size:13px;line-height:1.6'>" + escapeHtml(entry.items).replace(/\n/g, "<br>") + "</div>" +
+        (entry.reason ? "<div style='font-size:11px;color:#00f2ff;letter-spacing:2px;font-weight:700;margin:20px 0 8px 0'>GRUND (freiwillig)</div>" +
+          "<div style='padding:14px;background:#0a0a0a;border-radius:8px;color:#ccc;font-size:13px;line-height:1.6'>" + escapeHtml(entry.reason).replace(/\n/g, "<br>") + "</div>" : ""),
+      ctaButton: "WIDERRUF BEARBEITEN",
+      ctaUrl: "https://lexord.de/admin.html"
+    });
+    await sendBrevoMail(env, "Kontakt@Lexord.de", "🛡 NEUER EU-WIDERRUF · " + wfNr + " · " + entry.name, adminHtml, { wfNr, kind: "widerruf-admin" });
   }
   return json({ success: true, wfNr });
 }

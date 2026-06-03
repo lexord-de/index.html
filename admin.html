@@ -320,6 +320,7 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
     <button class="dash-tab" onclick="switchTab('archiv',this)">🗄️ ARCHIV</button>
     <button class="dash-tab" onclick="switchTab('widerrufe',this)">🛡️ WIDERRUFE</button>
     <button class="dash-tab" onclick="switchTab('chats',this)">🤖 KI-CHATS <span id="chats-badge" style="display:none;background:#ff4d6d;color:#000;font-family:'Orbitron';font-size:9px;padding:2px 6px;border-radius:8px;margin-left:4px;font-weight:900"></span></button>
+    <button class="dash-tab" onclick="switchTab('reviews',this)">⭐ BEWERTUNGEN</button>
   </div>
 
   <!-- PANEL: LIVE -->
@@ -447,6 +448,30 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
     </div>
     <div id="chats-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:14px 0"></div>
     <div id="chats-container"><div style="text-align:center;color:#666;padding:40px;font-family:Orbitron;font-size:11px;letter-spacing:2px">LADE KONVERSATIONEN ...</div></div>
+  </div>
+
+  <!-- PANEL: BEWERTUNGEN -->
+  <div class="dash-panel" id="panel-reviews">
+    <div class="arch-banner" style="background:linear-gradient(135deg,rgba(255,174,0,.08),rgba(0,242,255,.05));border-color:rgba(255,174,0,.3)">
+      ⭐ <strong>Bewertungs-Kampagne</strong> · Versende Premium-E-Mails an Kunden mit abgeschlossenen Bestellungen · Google + Trustpilot · 5 % Dankeschön-Rabatt (Code <code>DANKE5</code>)
+    </div>
+    <div id="reviews-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:14px 0"></div>
+
+    <div class="dash-actions" style="flex-wrap:wrap;gap:10px">
+      <button class="dash-action" onclick="loadReviewOrders()">↻ AKTUALISIEREN</button>
+      <input type="text" class="search-input" id="rev-search" placeholder="🔍 Suche Bestellnr / E-Mail / Name …" oninput="filterReviewOrders()">
+      <select class="fin-sel" id="rev-filter" onchange="filterReviewOrders()">
+        <option value="eligible">Bereit zum Senden (abgeschlossen, noch nicht gefragt)</option>
+        <option value="all">Alle Bestellungen</option>
+        <option value="sent">Bereits angefragt</option>
+        <option value="completed">Nur abgeschlossene</option>
+      </select>
+      <button class="dash-action" onclick="selectAllReviewOrders(true)">☑ ALLE</button>
+      <button class="dash-action" onclick="selectAllReviewOrders(false)">☐ KEINE</button>
+      <button class="dash-action" style="background:linear-gradient(135deg,#ffae00,#ff8c00);color:#000;font-weight:900" onclick="sendReviewRequests()">📧 BEWERTUNGS-MAIL SENDEN (<span id="rev-sel-count">0</span>)</button>
+      <button class="dash-action" style="background:rgba(0,242,255,.1);color:#00f2ff;border-color:rgba(0,242,255,.3)" onclick="previewReviewEmail()">👁️ E-MAIL-VORSCHAU</button>
+    </div>
+    <div id="reviews-container"><div style="text-align:center;color:#666;padding:40px;font-family:Orbitron;font-size:11px;letter-spacing:2px">LADE BESTELLUNGEN ...</div></div>
   </div>
 
   <!-- PANEL: FINANZEN / STEUERAUFSTELLUNG -->
@@ -1685,7 +1710,240 @@ function switchTab(tab, btn){
   if(tab === 'archiv') loadArchive();
   if(tab === 'widerrufe') loadWiderrufe();
   if(tab === 'chats') loadChats();
+  if(tab === 'reviews') loadReviewOrders();
   if(tab === 'live') { loadLive(); resizeGlobe(); }
+}
+
+/* ════════ BEWERTUNGS-KAMPAGNE ════════ */
+let REVIEW_ORDERS = [];
+let REVIEW_SELECTED = new Set();
+
+async function loadReviewOrders(){
+  const c = document.getElementById('reviews-container');
+  if(!c) return;
+  c.innerHTML = '<div style="text-align:center;color:#666;padding:40px;font-family:Orbitron;font-size:11px;letter-spacing:2px">LADE BESTELLUNGEN ...</div>';
+  let d = null;
+  try{
+    const r = await fetch(WORKER_URL + '/admin/review-stats', { headers: { 'Authorization': 'Bearer ' + (localStorage.getItem(TOKEN_KEY) || '') } });
+    d = await r.json();
+  }catch(e){ d = null; }
+  if(!d || !d.orders){
+    c.innerHTML = '<div style="text-align:center;color:#888;padding:40px;font-family:Orbitron;font-size:11px;letter-spacing:2px">⚠️ KEINE DATEN — Worker nicht erreichbar.</div>';
+    return;
+  }
+  REVIEW_ORDERS = d.orders || [];
+  REVIEW_SELECTED.clear();
+
+  const s = d.stats || {};
+  document.getElementById('reviews-stats').innerHTML = [
+    chatStat('GESAMT', s.totalOrders || 0, '#888'),
+    chatStat('ABGESCHLOSSEN', s.completed || 0, '#00ff88'),
+    chatStat('BEREIT FÜR ANFRAGE', Math.max(0, (s.eligible || 0) - (s.requestedTotal || 0)), '#ffae00'),
+    chatStat('SCHON ANGEFRAGT', s.requestedTotal || 0, '#00f2ff'),
+    chatStat('LETZTE 30 TAGE', s.requestedLast30 || 0, '#bc13fe')
+  ].join('');
+
+  filterReviewOrders();
+}
+
+function filterReviewOrders(){
+  const q = (document.getElementById('rev-search').value || '').toLowerCase();
+  const f = document.getElementById('rev-filter').value || 'eligible';
+  let list = REVIEW_ORDERS.slice();
+
+  if(f === 'eligible'){
+    list = list.filter(o => {
+      const st = (o.status || '').toLowerCase();
+      const done = ['delivered','zugestellt','abgeschlossen','completed'].indexOf(st) >= 0;
+      return done && !o.reviewRequestedAt && o.email;
+    });
+  } else if(f === 'sent'){
+    list = list.filter(o => !!o.reviewRequestedAt);
+  } else if(f === 'completed'){
+    list = list.filter(o => {
+      const st = (o.status || '').toLowerCase();
+      return ['delivered','zugestellt','abgeschlossen','completed'].indexOf(st) >= 0;
+    });
+  }
+
+  if(q){
+    list = list.filter(o => (o.email || '').toLowerCase().includes(q) || (o.name || '').toLowerCase().includes(q) || (o.orderNr || '').toLowerCase().includes(q));
+  }
+
+  renderReviewOrders(list);
+}
+
+function renderReviewOrders(list){
+  const c = document.getElementById('reviews-container');
+  if(!list.length){
+    c.innerHTML = '<div style="text-align:center;color:#666;padding:60px;font-family:Orbitron;font-size:11px;letter-spacing:2px">📭 KEINE BESTELLUNGEN GEFUNDEN</div>';
+    updateReviewSelCount();
+    return;
+  }
+  c.innerHTML = list.map(o => {
+    const isSent = !!o.reviewRequestedAt;
+    const isChecked = REVIEW_SELECTED.has(o.orderNr);
+    const dateStr = o.date ? new Date(o.date).toLocaleString('de-DE') : '—';
+    const sentStr = isSent ? new Date(o.reviewRequestedAt).toLocaleString('de-DE') : '';
+    const totalStr = (Number(o.total) || 0).toFixed(2).replace('.', ',') + ' €';
+    const st = (o.status || '—').toUpperCase();
+
+    return '<div class="oi-card" style="border-color:'+(isChecked ? 'rgba(255,174,0,.5)' : '#161616')+';display:flex;align-items:center;gap:14px;flex-wrap:wrap">'+
+      '<label style="display:flex;align-items:center;cursor:'+(o.email && !isSent ? 'pointer' : 'not-allowed')+';flex-shrink:0">'+
+        '<input type="checkbox" '+(isChecked ? 'checked' : '')+' '+((!o.email) ? 'disabled' : '')+' onclick="toggleReviewSel(\''+o.orderNr.replace(/\'/g,"\\'")+'\',this.checked)" style="width:22px;height:22px;accent-color:#ffae00;cursor:'+(o.email ? 'pointer' : 'not-allowed')+'">'+
+      '</label>'+
+      '<div style="flex:1;min-width:200px">'+
+        '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">'+
+          '<span style="font-family:Orbitron;font-weight:900;font-size:12px;color:#fff;letter-spacing:1.5px">#'+escAdm(o.orderNr)+'</span>'+
+          '<span style="font-family:Orbitron;font-size:8.5px;letter-spacing:1.2px;padding:3px 8px;border-radius:5px;background:rgba(255,255,255,.05);color:#aaa;font-weight:700">'+escAdm(st)+'</span>'+
+          (isSent ? '<span style="font-family:Orbitron;font-size:8.5px;letter-spacing:1.2px;padding:3px 8px;border-radius:5px;background:rgba(0,242,255,.1);color:#00f2ff;border:1px solid rgba(0,242,255,.3);font-weight:700">✓ ANGEFRAGT '+sentStr+'</span>' : (o.email ? '<span style="font-family:Orbitron;font-size:8.5px;letter-spacing:1.2px;padding:3px 8px;border-radius:5px;background:rgba(255,174,0,.1);color:#ffae00;border:1px solid rgba(255,174,0,.3);font-weight:700">★ BEREIT</span>' : '<span style="font-family:Orbitron;font-size:8.5px;letter-spacing:1.2px;padding:3px 8px;border-radius:5px;background:rgba(255,77,109,.1);color:#ff4d6d;font-weight:700">⚠️ KEINE E-MAIL</span>'))+
+        '</div>'+
+        '<div style="font-size:13px;color:#ccc;font-weight:500">'+escAdm(o.name || '—')+(o.email ? ' · <a href="mailto:'+escAdm(o.email)+'" style="color:#00f2ff;text-decoration:none">'+escAdm(o.email)+'</a>' : '')+'</div>'+
+        '<div style="font-family:Orbitron;font-size:9px;color:#666;letter-spacing:1px;margin-top:3px">📅 '+dateStr+'</div>'+
+      '</div>'+
+      '<div style="font-family:Orbitron;font-weight:900;font-size:14px;color:var(--neon);letter-spacing:.5px;flex-shrink:0">'+totalStr+'</div>'+
+      (o.email ? '<button class="oi-btn" style="font-size:9px;background:rgba(255,174,0,.08);color:#ffae00;border-color:rgba(255,174,0,.3);flex-shrink:0" onclick="sendSingleReviewRequest(\''+o.orderNr.replace(/\'/g,"\\'")+'\',this)">📧 EINZELN SENDEN</button>' : '')+
+    '</div>';
+  }).join('');
+  updateReviewSelCount();
+}
+
+function toggleReviewSel(orderNr, checked){
+  if(checked) REVIEW_SELECTED.add(orderNr);
+  else REVIEW_SELECTED.delete(orderNr);
+  updateReviewSelCount();
+}
+
+function selectAllReviewOrders(state){
+  const visible = document.querySelectorAll('#reviews-container input[type=checkbox]:not(:disabled)');
+  visible.forEach(cb => {
+    cb.checked = state;
+    const card = cb.closest('.oi-card');
+    if(card) card.style.borderColor = state ? 'rgba(255,174,0,.5)' : '#161616';
+    // Find associated orderNr from the onclick attribute
+    const onclick = cb.getAttribute('onclick') || '';
+    const m = onclick.match(/toggleReviewSel\('([^']+)'/);
+    if(m){
+      if(state) REVIEW_SELECTED.add(m[1]);
+      else REVIEW_SELECTED.delete(m[1]);
+    }
+  });
+  updateReviewSelCount();
+}
+
+function updateReviewSelCount(){
+  const el = document.getElementById('rev-sel-count');
+  if(el) el.textContent = REVIEW_SELECTED.size;
+}
+
+async function sendReviewRequests(){
+  if(REVIEW_SELECTED.size === 0){ alert('Bitte mindestens eine Bestellung auswählen.'); return; }
+  if(!confirm('Bewertungs-Mail an '+REVIEW_SELECTED.size+' Kunden senden?\n\nJeder erhält:\n• Personalisierte E-Mail\n• Google + Trustpilot Link\n• 5 % Rabatt-Code (DANKE5)')) return;
+
+  const orderNumbers = Array.from(REVIEW_SELECTED);
+  try{
+    const r = await fetch(WORKER_URL + '/admin/review-request', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + (localStorage.getItem(TOKEN_KEY) || ''), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderNumbers })
+    });
+    const d = await r.json();
+    if(d.error){ alert('Fehler: ' + d.error); return; }
+    const msg = '✓ ' + (d.sent || 0) + ' E-Mails gesendet'+
+                (d.skipped ? '\n⏭ ' + d.skipped + ' übersprungen (bereits angefragt)' : '')+
+                (d.failed ? '\n⚠️ ' + d.failed + ' fehlgeschlagen' : '');
+    alert(msg);
+    REVIEW_SELECTED.clear();
+    loadReviewOrders();
+  }catch(e){ alert('Netzwerk-Fehler: ' + e.message); }
+}
+
+async function sendSingleReviewRequest(orderNr, btn){
+  if(!confirm('Bewertungs-Mail an Kunde von Bestellung #'+orderNr+' senden?')) return;
+  if(btn){ btn.disabled = true; btn.textContent = '⏳ SENDE...'; }
+  try{
+    const r = await fetch(WORKER_URL + '/admin/review-request', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + (localStorage.getItem(TOKEN_KEY) || ''), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderNumbers: [orderNr], force: true })
+    });
+    const d = await r.json();
+    if(d.sent > 0){
+      if(btn){ btn.textContent = '✓ GESENDET'; btn.style.background = 'rgba(0,255,136,.15)'; btn.style.color = '#00ff88'; }
+      loadReviewOrders();
+    } else {
+      if(btn){ btn.disabled = false; btn.textContent = '📧 EINZELN SENDEN'; }
+      alert('Konnte nicht senden: ' + (d.details?.failed?.[0]?.reason || d.details?.skipped?.[0]?.reason || 'unbekannt'));
+    }
+  }catch(e){
+    if(btn){ btn.disabled = false; btn.textContent = '📧 EINZELN SENDEN'; }
+    alert('Fehler: ' + e.message);
+  }
+}
+
+function previewReviewEmail(){
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(16px);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px';
+  modal.onclick = (e) => { if(e.target === modal) modal.remove(); };
+  modal.innerHTML = '<div style="background:#080808;border:1px solid rgba(255,174,0,.4);border-radius:18px;width:100%;max-width:780px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden">'+
+    '<div style="padding:18px 24px;background:linear-gradient(135deg,#0c0c0c,#050505);border-bottom:1px solid rgba(255,174,0,.2);display:flex;justify-content:space-between;align-items:center">'+
+      '<div style="font-family:Orbitron;font-weight:900;font-size:13px;color:#ffae00;letter-spacing:2px">⭐ E-MAIL-VORSCHAU</div>'+
+      '<button onclick="this.closest(\'[style*=fixed]\').remove()" style="background:transparent;border:1px solid #333;color:#888;width:34px;height:34px;border-radius:50%;cursor:pointer">✕</button>'+
+    '</div>'+
+    '<iframe id="rev-prev-iframe" style="flex:1;border:0;background:#fff" srcdoc=""></iframe>'+
+  '</div>';
+  document.body.appendChild(modal);
+  // Build local preview HTML matching the worker template
+  const previewHtml = buildLocalReviewPreview('Max');
+  const iframe = document.getElementById('rev-prev-iframe');
+  iframe.srcdoc = previewHtml;
+}
+
+function buildLocalReviewPreview(name){
+  return '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;background:#000;font-family:Arial;color:#e0e0e0">'+
+    '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#000"><tr><td align="center" style="padding:30px 16px">'+
+    '<table cellpadding="0" cellspacing="0" border="0" width="640" style="max-width:640px;width:100%;border-radius:16px;overflow:hidden">'+
+    '<tr><td style="background:linear-gradient(135deg,#000 0%,#0a0a14 50%,#000 100%);padding:50px 40px 40px;text-align:center;border-bottom:1px solid #1a1a1a">'+
+      '<div style="font-size:26px;font-weight:900;letter-spacing:8px;color:#fff;margin-bottom:8px">LEX<span style="color:#00f2ff">O</span>RD<span style="color:#00f2ff;font-size:14px;vertical-align:super">®</span></div>'+
+      '<div style="font-size:9px;letter-spacing:4px;color:#555;text-transform:uppercase;margin-bottom:36px">ENGINEERING</div>'+
+      '<div style="font-size:54px;line-height:1;letter-spacing:8px;color:#ffae00;margin-bottom:8px">★★★★★</div>'+
+      '<div style="font-size:9px;color:#00f2ff;letter-spacing:3px;text-transform:uppercase;margin-bottom:18px">// PERSÖNLICHE NACHRICHT VON LEON</div>'+
+      '<h1 style="margin:0 0 6px;font-size:32px;font-weight:900;letter-spacing:3px;color:#fff;line-height:1.15">Wie war\'s,<br><span style="color:#00f2ff">'+name+'</span>?</h1>'+
+      '<div style="font-family:monospace;font-size:11px;color:#666;letter-spacing:1.5px;margin-top:6px">BESTELLUNG #LXR-2026-001</div>'+
+    '</td></tr>'+
+    '<tr><td style="background:#0a0a0a;padding:36px 40px 10px;color:#ccc;font-size:15px;line-height:1.75">'+
+      '<p style="margin:0 0 14px;color:#fff;font-size:16px">Hi <strong>'+name+'</strong>,</p>'+
+      '<p style="margin:0 0 14px">danke, dass du LEXORD vertraut hast! Jeder Controller wird von <strong style="color:#fff">mir persönlich</strong> in der Werkstatt in Domsühl gebaut — und ich bin neugierig: <strong style="color:#00f2ff">wie war\'s?</strong></p>'+
+      '<p style="margin:0">Eine kurze Bewertung — Google oder Trustpilot — hilft anderen Gamern, uns zu finden. Als Dankeschön bekommst du <strong style="color:#ffae00">5 % Rabatt auf deine nächste Bestellung</strong>.</p>'+
+    '</td></tr>'+
+    '<tr><td style="background:#0a0a0a;padding:30px 40px">'+
+      '<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>'+
+        '<td width="50%" style="padding:0 6px 12px 0;vertical-align:top">'+
+          '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:linear-gradient(135deg,#1a1a1a 0%,#080808 100%);border:1px solid #2a2a2a;border-radius:12px"><tr><td align="center" style="padding:26px 18px">'+
+            '<div style="font-size:36px;line-height:1;margin-bottom:10px">G</div>'+
+            '<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#fff;margin-bottom:14px">GOOGLE BEWERTUNG</div>'+
+            '<a href="https://share.google/LyDufjCSigZwLBLwS" target="_blank" style="display:inline-block;padding:12px 22px;background:#4285F4;color:#fff;font-size:11px;font-weight:900;letter-spacing:1.5px;text-decoration:none;border-radius:6px">5 STERNE GEBEN →</a>'+
+          '</td></tr></table>'+
+        '</td>'+
+        '<td width="50%" style="padding:0 0 12px 6px;vertical-align:top">'+
+          '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:linear-gradient(135deg,#1a1a1a 0%,#080808 100%);border:1px solid #2a2a2a;border-radius:12px"><tr><td align="center" style="padding:26px 18px">'+
+            '<div style="font-size:36px;line-height:1;margin-bottom:10px;color:#00b67a">★</div>'+
+            '<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#fff;margin-bottom:14px">TRUSTPILOT</div>'+
+            '<a href="https://de.trustpilot.com/review/Lexord.de" target="_blank" style="display:inline-block;padding:12px 22px;background:#00b67a;color:#fff;font-size:11px;font-weight:900;letter-spacing:1.5px;text-decoration:none;border-radius:6px">REZENSION SCHREIBEN →</a>'+
+          '</td></tr></table>'+
+        '</td>'+
+      '</tr></table>'+
+    '</td></tr>'+
+    '<tr><td style="background:#0a0a0a;padding:6px 40px 30px">'+
+      '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:linear-gradient(135deg,rgba(255,174,0,.08),rgba(0,242,255,.04));border:1px dashed rgba(255,174,0,.4);border-radius:12px"><tr><td style="padding:22px 24px;text-align:center">'+
+        '<div style="font-size:9px;color:#ffae00;letter-spacing:2.5px;margin-bottom:10px">// DEIN DANKESCHÖN</div>'+
+        '<div style="font-size:11px;color:#ccc;margin-bottom:10px">Nach deiner Bewertung: 5 % Rabatt-Code für deinen nächsten Besuch</div>'+
+        '<div style="display:inline-block;padding:12px 22px;background:#000;border:1.5px solid #ffae00;border-radius:8px;font-family:monospace;font-size:22px;font-weight:900;letter-spacing:6px;color:#ffae00">DANKE5</div>'+
+        '<div style="font-size:9px;color:#666;letter-spacing:1.5px;margin-top:10px">Einlösbar auf lexord.de · Gültig 60 Tage</div>'+
+      '</td></tr></table>'+
+    '</td></tr>'+
+    '<tr><td style="background:#0a0a0a;padding:0 40px 36px"><div style="border-top:1px solid #1a1a1a;padding-top:24px;font-size:13px;color:#aaa;line-height:1.7">Danke für dein Vertrauen,<br><strong style="color:#fff">Leon Schulz</strong><br><span style="color:#666;font-size:11px">Gründer · LEXORD® Engineering</span></div></td></tr>'+
+    '</table></td></tr></table></body></html>';
 }
 
 /* ════════ KI-CHAT-KONVERSATIONEN ════════ */

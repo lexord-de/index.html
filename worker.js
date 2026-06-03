@@ -229,6 +229,14 @@ async function test(){
         return await admin2OrderInvoice(request, env, decodeURIComponent(path.split("/")[3]), url);
       }
 
+      // Bewertungs-Anfragen (Review Request Campaign)
+      if (path === "/admin/review-request" && request.method === "POST") {
+        return await admin2SendReviewRequests(request, env);
+      }
+      if (path === "/admin/review-stats" && request.method === "GET") {
+        return await admin2ReviewStats(request, env);
+      }
+
       // Pro-Discount Aktionen
       if (path.startsWith("/admin/discounts/") && request.method === "PATCH") {
         return await admin2DiscountToggle(request, env, decodeURIComponent(path.split("/").pop()));
@@ -2388,6 +2396,190 @@ async function admin2PushGenKeys(request, env){
     subject: 'mailto:kontakt@lexord.de',
     instructions: 'In Cloudflare → Worker Settings → Variables and Secrets: VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT setzen'
   });
+}
+
+// ════════════════════════════════════════════════════════════════
+// BEWERTUNGS-KAMPAGNEN — Trustpilot & Google Reviews
+// ════════════════════════════════════════════════════════════════
+
+const REVIEW_TRUSTPILOT_URL = "https://de.trustpilot.com/review/Lexord.de";
+const REVIEW_GOOGLE_URL = "https://share.google/LyDufjCSigZwLBLwS";
+const REVIEW_DISCOUNT_CODE = "DANKE5";
+
+function buildReviewRequestEmail(customerName, orderNr) {
+  const name = escapeHtml(customerName || "Kunde");
+  const orderRef = orderNr ? '<div style="font-family:monospace;font-size:11px;color:#666;letter-spacing:1.5px;margin-top:6px">BESTELLUNG #' + escapeHtml(orderNr) + '</div>' : '';
+  return '<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Wie war\'s? Bewerte uns!</title></head>'
+    + '<body style="margin:0;padding:0;background-color:#000;font-family:Arial,Helvetica,sans-serif;color:#e0e0e0">'
+    + '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#000">'
+    + '<tr><td align="center" style="padding:30px 16px">'
+    + '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="640" style="max-width:640px;width:100%;border-radius:16px;overflow:hidden">'
+
+    // Hero with stars
+    + '<tr><td style="background:linear-gradient(135deg,#000 0%,#0a0a14 50%,#000 100%);padding:50px 40px 40px;text-align:center;border-bottom:1px solid #1a1a1a">'
+    + '<div style="font-size:26px;font-weight:900;letter-spacing:8px;color:#fff;margin-bottom:8px">LEX<span style="color:#00f2ff">O</span>RD<span style="color:#00f2ff;font-size:14px;vertical-align:super">&reg;</span></div>'
+    + '<div style="font-size:9px;letter-spacing:4px;color:#555;text-transform:uppercase;margin-bottom:36px">ENGINEERING</div>'
+    + '<div style="font-size:54px;line-height:1;letter-spacing:8px;color:#ffae00;margin-bottom:8px">&#9733;&#9733;&#9733;&#9733;&#9733;</div>'
+    + '<div style="font-family:Arial;font-size:9px;color:#00f2ff;letter-spacing:3px;text-transform:uppercase;margin-bottom:18px">// PERSONLICHE NACHRICHT VON LEON</div>'
+    + '<h1 style="margin:0 0 6px;font-size:32px;font-weight:900;letter-spacing:3px;color:#fff;line-height:1.15;text-transform:uppercase">Wie war\'s,<br><span style="background:linear-gradient(90deg,#00f2ff,#bc13fe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;color:#00f2ff">' + name + '</span>?</h1>'
+    + orderRef
+    + '</td></tr>'
+
+    // Greeting
+    + '<tr><td style="background:#0a0a0a;padding:36px 40px 10px;color:#ccc;font-size:15px;line-height:1.75">'
+    + '<p style="margin:0 0 14px;color:#fff;font-size:16px">Hi <strong>' + name + '</strong>,</p>'
+    + '<p style="margin:0 0 14px">danke, dass du LEXORD vertraut hast! Jeder Controller wird von <strong style="color:#fff">mir persönlich</strong> in der Werkstatt in Domsühl gebaut &mdash; und ich bin neugierig: <strong style="color:#00f2ff">wie war\'s?</strong></p>'
+    + '<p style="margin:0 0 0">Eine kurze Bewertung &mdash; Google oder Trustpilot &mdash; hilft anderen Gamern, uns zu finden. Als Dankesch&ouml;n bekommst du <strong style="color:#ffae00">5 % Rabatt auf deine n&auml;chste Bestellung</strong>.</p>'
+    + '</td></tr>'
+
+    // Two-button grid
+    + '<tr><td style="background:#0a0a0a;padding:30px 40px">'
+    + '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">'
+    + '<tr>'
+
+    // GOOGLE BUTTON
+    + '<td width="50%" style="padding:0 6px 12px 0;vertical-align:top">'
+    + '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:linear-gradient(135deg,#1a1a1a 0%,#080808 100%);border:1px solid #2a2a2a;border-radius:12px">'
+    + '<tr><td align="center" style="padding:26px 18px">'
+    + '<div style="font-size:36px;line-height:1;margin-bottom:10px">G</div>'
+    + '<div style="font-family:Arial;font-size:11px;font-weight:700;letter-spacing:2px;color:#fff;margin-bottom:14px">GOOGLE BEWERTUNG</div>'
+    + '<a href="' + REVIEW_GOOGLE_URL + '" target="_blank" style="display:inline-block;padding:12px 22px;background:#4285F4;color:#fff;font-family:Arial;font-size:11px;font-weight:900;letter-spacing:1.5px;text-decoration:none;border-radius:6px">5 STERNE GEBEN &rarr;</a>'
+    + '</td></tr></table>'
+    + '</td>'
+
+    // TRUSTPILOT BUTTON
+    + '<td width="50%" style="padding:0 0 12px 6px;vertical-align:top">'
+    + '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:linear-gradient(135deg,#1a1a1a 0%,#080808 100%);border:1px solid #2a2a2a;border-radius:12px">'
+    + '<tr><td align="center" style="padding:26px 18px">'
+    + '<div style="font-size:36px;line-height:1;margin-bottom:10px;color:#00b67a">&#9733;</div>'
+    + '<div style="font-family:Arial;font-size:11px;font-weight:700;letter-spacing:2px;color:#fff;margin-bottom:14px">TRUSTPILOT</div>'
+    + '<a href="' + REVIEW_TRUSTPILOT_URL + '" target="_blank" style="display:inline-block;padding:12px 22px;background:#00b67a;color:#fff;font-family:Arial;font-size:11px;font-weight:900;letter-spacing:1.5px;text-decoration:none;border-radius:6px">REZENSION SCHREIBEN &rarr;</a>'
+    + '</td></tr></table>'
+    + '</td>'
+
+    + '</tr></table>'
+    + '</td></tr>'
+
+    // Discount code
+    + '<tr><td style="background:#0a0a0a;padding:6px 40px 30px">'
+    + '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:linear-gradient(135deg,rgba(255,174,0,.08),rgba(0,242,255,.04));border:1px dashed rgba(255,174,0,.4);border-radius:12px">'
+    + '<tr><td style="padding:22px 24px;text-align:center">'
+    + '<div style="font-family:Arial;font-size:9px;color:#ffae00;letter-spacing:2.5px;margin-bottom:10px">// DEIN DANKESCH&Ouml;N</div>'
+    + '<div style="font-family:Arial;font-size:11px;color:#ccc;margin-bottom:10px">Nach deiner Bewertung: 5 % Rabatt-Code f&uuml;r deinen n&auml;chsten Besuch</div>'
+    + '<div style="display:inline-block;padding:12px 22px;background:#000;border:1.5px solid #ffae00;border-radius:8px;font-family:monospace;font-size:22px;font-weight:900;letter-spacing:6px;color:#ffae00">' + REVIEW_DISCOUNT_CODE + '</div>'
+    + '<div style="font-family:Arial;font-size:9px;color:#666;letter-spacing:1.5px;margin-top:10px">Einl&ouml;sbar auf lexord.de &middot; G&uuml;ltig 60 Tage</div>'
+    + '</td></tr></table>'
+    + '</td></tr>'
+
+    // Why it matters
+    + '<tr><td style="background:#0a0a0a;padding:8px 40px 30px;color:#888;font-size:13px;line-height:1.75">'
+    + '<p style="margin:0 0 12px;color:#ccc;font-size:13px"><strong style="color:#00f2ff">Warum es wichtig ist:</strong> Als kleine Manufaktur kann ich keinen Werbespot bei der ProSieben buchen. Echte Bewertungen sind das, was uns sichtbar macht &mdash; und wachsen l&auml;sst.</p>'
+    + '<p style="margin:0;font-size:12px;color:#888">Falls etwas nicht gepasst hat: <a href="mailto:Kontakt@Lexord.de" style="color:#00f2ff;text-decoration:none">schreib mir direkt</a> &mdash; ich melde mich pers&ouml;nlich. Konstruktives Feedback hilft mir mehr als ein leiser Schwund.</p>'
+    + '</td></tr>'
+
+    // Signature
+    + '<tr><td style="background:#0a0a0a;padding:0 40px 36px">'
+    + '<div style="border-top:1px solid #1a1a1a;padding-top:24px;font-size:13px;color:#aaa;line-height:1.7">'
+    + 'Danke f&uuml;r dein Vertrauen,<br><strong style="color:#fff">Leon Schulz</strong><br><span style="color:#666;font-size:11px">Gr&uuml;nder &middot; LEXORD&reg; Engineering</span>'
+    + '</div>'
+    + '</td></tr>'
+
+    // Footer
+    + '<tr><td style="background:#000;padding:24px 40px;border-top:1px solid #1a1a1a;text-align:center">'
+    + '<div style="font-size:10px;color:#555;line-height:1.7;letter-spacing:1px">'
+    + 'LEXORD&reg; Engineering &middot; Leon Schulz<br>An Der Doms&uuml;hler Str. 2, 19374 Doms&uuml;hl<br>'
+    + '<a href="mailto:Kontakt@Lexord.de" style="color:#00f2ff;text-decoration:none">Kontakt@Lexord.de</a> &middot; '
+    + '<a href="tel:+4915204718720" style="color:#00f2ff;text-decoration:none">0152 047 18720</a><br><br>'
+    + '<span style="color:#444;font-size:9px">Du erh&auml;ltst diese Mail, weil du bei LEXORD bestellt hast. Du kannst dich jederzeit <a href="mailto:Kontakt@Lexord.de?subject=Abmeldung%20Bewertungs-Mails" style="color:#888">abmelden</a>.</span>'
+    + '</div>'
+    + '</td></tr>'
+
+    + '</table>'
+    + '</td></tr></table>'
+    + '</body></html>';
+}
+
+async function admin2SendReviewRequests(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ error: "KV not bound" }, 500);
+
+  const body = await request.json().catch(() => ({}));
+  const orderNumbers = Array.isArray(body.orderNumbers) ? body.orderNumbers : [];
+  const force = !!body.force;
+
+  if (!orderNumbers.length) return json({ error: "No orders provided" }, 400);
+
+  const sent = [];
+  const failed = [];
+  const skipped = [];
+
+  for (const orderNr of orderNumbers) {
+    try {
+      const raw = await env.LEXORD_DATA.get("order:" + orderNr);
+      if (!raw) { failed.push({ orderNr, reason: "not_found" }); continue; }
+      const order = JSON.parse(raw);
+      if (!order.email) { failed.push({ orderNr, reason: "no_email" }); continue; }
+      if (order.reviewRequestedAt && !force) { skipped.push({ orderNr, reason: "already_sent", at: order.reviewRequestedAt }); continue; }
+
+      const name = order.firstName || order.name || (order.email || "").split("@")[0];
+      const html = buildReviewRequestEmail(name, orderNr);
+      const subject = "Wie war's? Hinterlass uns deine Bewertung - 5% Rabatt als Dankeschoen";
+
+      const ok = await sendBrevoMail(env, order.email, subject, html, {
+        orderNr, kind: "review-request"
+      });
+
+      if (ok) {
+        order.reviewRequestedAt = new Date().toISOString();
+        order.reviewRequestedCount = (order.reviewRequestedCount || 0) + 1;
+        await env.LEXORD_DATA.put("order:" + orderNr, JSON.stringify(order));
+        sent.push({ orderNr, email: order.email });
+      } else {
+        failed.push({ orderNr, reason: "send_failed" });
+      }
+    } catch (e) {
+      failed.push({ orderNr, reason: "exception: " + (e.message || "") });
+    }
+  }
+
+  return json({ sent: sent.length, failed: failed.length, skipped: skipped.length, details: { sent, failed, skipped } });
+}
+
+async function admin2ReviewStats(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ error: "KV not bound" }, 500);
+
+  const list = await env.LEXORD_DATA.list({ prefix: "order:" });
+  let totalOrders = 0, eligible = 0, requestedTotal = 0, requestedLast30 = 0, completed = 0;
+  const now = Date.now();
+  const orders = [];
+
+  for (const k of list.keys) {
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if (!raw) continue;
+    const o = JSON.parse(raw);
+    totalOrders++;
+    const status = (o.status || "").toLowerCase();
+    const isDelivered = status === "delivered" || status === "zugestellt" || status === "abgeschlossen" || status === "completed";
+    if (isDelivered) { completed++; eligible++; }
+    if (o.reviewRequestedAt) {
+      requestedTotal++;
+      if (now - new Date(o.reviewRequestedAt).getTime() < 30 * 86400 * 1000) requestedLast30++;
+    }
+    orders.push({
+      orderNr: o.orderNumber || o.orderNr || k.name.replace("order:", ""),
+      email: o.email || "",
+      name: o.firstName || o.name || "",
+      status: o.status || "",
+      total: o.total || o.amount || 0,
+      date: o.createdAt || o.date || "",
+      reviewRequestedAt: o.reviewRequestedAt || null,
+      reviewRequestedCount: o.reviewRequestedCount || 0
+    });
+  }
+
+  orders.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+  return json({ stats: { totalOrders, eligible, completed, requestedTotal, requestedLast30 }, orders });
 }
 
 // ════════════════════════════════════════════════════════════════

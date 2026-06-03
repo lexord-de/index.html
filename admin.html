@@ -1728,14 +1728,37 @@ async function loadReviewOrders(){
   if(!c) return;
   c.innerHTML = '<div style="text-align:center;color:#666;padding:40px;font-family:Orbitron;font-size:11px;letter-spacing:2px">LADE BESTELLUNGEN ...</div>';
 
+  let apiState = 'ok';  // ok | unreachable | empty | error
   // Reuse existing ALL_ORDERS if loaded, otherwise call /admin/orders
   if(!ALL_ORDERS || ALL_ORDERS.length === 0){
     const d = await api('/admin/orders');
-    if(d && d.orders) ALL_ORDERS = d.orders;
+    if(d === null){ apiState = 'unreachable'; }
+    else if(d && d.error){ apiState = 'error'; }
+    else if(d && d.orders){ ALL_ORDERS = d.orders; }
   }
 
   if(!ALL_ORDERS || ALL_ORDERS.length === 0){
-    c.innerHTML = '<div style="text-align:center;color:#888;padding:40px;font-family:Orbitron;font-size:11px;letter-spacing:2px">📭 KEINE BESTELLUNGEN GEFUNDEN</div>';
+    let msg = '';
+    if(apiState === 'unreachable'){
+      msg = '<div style="font-size:40px;margin-bottom:14px">⚠️</div>'+
+            '<div style="font-family:Orbitron;color:#ff4d6d;font-size:13px;letter-spacing:2px;margin-bottom:10px">VERBINDUNG ZUM WORKER FEHLGESCHLAGEN</div>'+
+            '<div style="font-family:Inter;color:#888;font-size:13px;line-height:1.7;max-width:480px;margin:0 auto 24px;font-weight:300;letter-spacing:0;text-transform:none">Der Cloudflare-Worker antwortet nicht. Mögliche Ursachen: Worker offline, falsche URL, abgelaufenes Login. Versuch es nochmal mit Aktualisieren oder logge dich neu ein.</div>';
+    } else if(apiState === 'error'){
+      msg = '<div style="font-size:40px;margin-bottom:14px">🔒</div>'+
+            '<div style="font-family:Orbitron;color:#ffae00;font-size:13px;letter-spacing:2px;margin-bottom:10px">WORKER ANTWORT UNGÜLTIG</div>'+
+            '<div style="font-family:Inter;color:#888;font-size:13px;line-height:1.7;max-width:480px;margin:0 auto 24px;font-weight:300;letter-spacing:0;text-transform:none">Der Worker antwortet, aber das Endpoint ist möglicherweise noch nicht deployed. Du kannst trotzdem eine Test-Mail an deine eigene Adresse senden.</div>';
+    } else {
+      msg = '<div style="font-size:40px;margin-bottom:14px">📭</div>'+
+            '<div style="font-family:Orbitron;color:#888;font-size:13px;letter-spacing:2px;margin-bottom:10px">NOCH KEINE BESTELLUNGEN</div>'+
+            '<div style="font-family:Inter;color:#888;font-size:13px;line-height:1.7;max-width:480px;margin:0 auto 24px;font-weight:300;letter-spacing:0;text-transform:none">Sobald du erste Bestellungen erhältst, erscheinen sie hier automatisch. Du kannst die Bewertungs-Mail jetzt schon an deine eigene Adresse senden, um zu sehen wie sie aussieht.</div>';
+    }
+    c.innerHTML = '<div style="text-align:center;padding:50px 20px;background:#080808;border:1px solid #161616;border-radius:16px">'+msg+
+      '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">'+
+        '<button class="dash-action" onclick="loadReviewOrders()">↻ ERNEUT VERSUCHEN</button>'+
+        '<button class="dash-action" style="background:linear-gradient(135deg,#ffae00,#ff8c00);color:#000;font-weight:900" onclick="sendTestReviewEmail()">📧 TEST-MAIL AN DICH SENDEN</button>'+
+        '<button class="dash-action" style="background:rgba(0,242,255,.1);color:#00f2ff;border-color:rgba(0,242,255,.3)" onclick="previewReviewEmail()">👁️ VORSCHAU</button>'+
+      '</div></div>';
+    document.getElementById('reviews-stats').innerHTML = '';
     return;
   }
 
@@ -1957,6 +1980,12 @@ async function sendSingleReviewRequest(orderNr, btn){
     }
     if(btn){ btn.disabled = false; btn.textContent = '📧 EINZELN SENDEN'; }
   }
+}
+
+function sendTestReviewEmail(){
+  const yourEmail = prompt('An welche E-Mail-Adresse soll die Test-Bewertungs-Mail gehen?\n\n(z. B. deine eigene zum Testen)', 'Kontakt@Lexord.de');
+  if(!yourEmail || !yourEmail.includes('@')) return;
+  openMailtoFallback({ email: yourEmail, name: 'Test-Kunde' });
 }
 
 function openMailtoFallback(o){

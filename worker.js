@@ -154,14 +154,11 @@ async function test(){
       if (path === "/api/admin/all" && request.method === "GET") return await adminAll(request, env);
       if (path === "/api/admin/test-data" && request.method === "POST") return await adminTestData(request, env);
       if (path === "/api/chat" && request.method === "POST") return await chatWithAI(request, env);
-      if (path === "/api/chat-forward" && request.method === "POST") return await chatForwardToAdmin(request, env);
       if (path === "/api/discount/check" && request.method === "POST") return await checkDiscountCode(request, env);
       if (path === "/api/discount/use" && request.method === "POST") return await useDiscountCode(request, env);
       if (path === "/api/newsletter/subscribe" && request.method === "POST") return await newsletterSubscribe(request, env);
       if (path === "/api/newsletter/check" && request.method === "POST") return await newsletterCheck(request, env);
       if (path === "/api/admin/conversations" && request.method === "GET") return await adminConversations(request, env);
-      if (path.startsWith("/api/admin/conversation/") && request.method === "GET") return await adminConversationDetail(request, env, path.replace("/api/admin/conversation/", ""));
-      if (path.startsWith("/api/admin/conversation/") && request.method === "DELETE") return await adminConversationDelete(request, env, path.replace("/api/admin/conversation/", ""));
       if (path === "/api/admin/newsletter/send" && request.method === "POST") return await sendNewsletter(request, env);
       if (path === "/api/admin/products" && request.method === "GET") return await adminListProducts(request, env);
       if (path === "/api/admin/products" && request.method === "POST") return await adminCreateProduct(request, env);
@@ -227,14 +224,6 @@ async function test(){
       }
       if (path.startsWith("/admin/orders/") && path.endsWith("/invoice") && request.method === "GET") {
         return await admin2OrderInvoice(request, env, decodeURIComponent(path.split("/")[3]), url);
-      }
-
-      // Bewertungs-Anfragen (Review Request Campaign)
-      if (path === "/admin/review-request" && request.method === "POST") {
-        return await admin2SendReviewRequests(request, env);
-      }
-      if (path === "/admin/review-stats" && request.method === "GET") {
-        return await admin2ReviewStats(request, env);
       }
 
       // Pro-Discount Aktionen
@@ -815,137 +804,6 @@ function escapeHtml(s) {
   return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;");
 }
 
-// ============ CHAT FORWARD TO ADMIN ============
-async function chatForwardToAdmin(request, env) {
-  try {
-    const body = await request.json();
-    const sessionId = String(body.sessionId || "anon-" + Date.now());
-    const email = String(body.email || "").trim().toLowerCase();
-    const source = String(body.source || "unknown");
-    const messages = Array.isArray(body.messages) ? body.messages : [];
-    const userAgent = String(body.userAgent || "").slice(0, 200);
-
-    if (!email || !email.includes("@")) {
-      return json({ error: "Email required" }, 400);
-    }
-    if (messages.length === 0) {
-      return json({ error: "No messages" }, 400);
-    }
-
-    // Build transcript HTML
-    const transcriptHtml = messages.map(m => {
-      const isUser = m.role === "user";
-      const bg = isUser ? "#e8f9ff" : "#f5f5f5";
-      const border = isUser ? "#00bdd6" : "#999";
-      const label = isUser ? "👤 KUNDE" : "🤖 LEXORD-KI";
-      return `<div style="margin:10px 0;padding:12px 14px;background:${bg};border-left:4px solid ${border};border-radius:6px;font-family:system-ui,sans-serif"><strong style="display:block;font-size:11px;color:#666;margin-bottom:4px">${label}</strong><div style="font-size:14px;color:#222;line-height:1.55;white-space:pre-wrap">${escapeHtml(m.content || "")}</div></div>`;
-    }).join("");
-
-    const adminHtml = `<!DOCTYPE html><html><body style="font-family:system-ui,sans-serif;max-width:680px;margin:0 auto;background:#fff;color:#222;padding:20px">
-      <div style="background:linear-gradient(135deg,#00f2ff,#bc13fe);padding:24px;border-radius:12px;color:#000;margin-bottom:20px">
-        <h1 style="margin:0;font-size:22px;font-weight:900;letter-spacing:2px">📩 KUNDEN-CHAT WEITERGELEITET</h1>
-        <p style="margin:6px 0 0;font-size:13px;opacity:.85">Der Kunde hat seine Konversation an dich gesendet.</p>
-      </div>
-      <table style="width:100%;border-collapse:collapse;margin-bottom:20px">
-        <tr><td style="padding:8px 0;font-size:12px;color:#666;width:130px">📧 E-Mail Kunde:</td><td style="padding:8px 0;font-size:14px;color:#222"><strong><a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></strong></td></tr>
-        <tr><td style="padding:8px 0;font-size:12px;color:#666">🔖 Session-ID:</td><td style="padding:8px 0;font-size:13px;color:#222;font-family:monospace">${escapeHtml(sessionId)}</td></tr>
-        <tr><td style="padding:8px 0;font-size:12px;color:#666">📍 Herkunft:</td><td style="padding:8px 0;font-size:13px;color:#222">${escapeHtml(source)}</td></tr>
-        <tr><td style="padding:8px 0;font-size:12px;color:#666">🕐 Zeitstempel:</td><td style="padding:8px 0;font-size:13px;color:#222">${new Date().toLocaleString("de-DE")}</td></tr>
-        <tr><td style="padding:8px 0;font-size:12px;color:#666">🖥️ Browser:</td><td style="padding:8px 0;font-size:11px;color:#888">${escapeHtml(userAgent)}</td></tr>
-      </table>
-      <h2 style="font-size:15px;color:#222;margin:24px 0 12px;letter-spacing:1px">💬 VOLLSTÄNDIGE KONVERSATION (${messages.length} Nachrichten)</h2>
-      ${transcriptHtml}
-      <div style="margin-top:24px;padding:16px;background:#fff3cd;border-radius:8px;border:1px solid #ffe88a">
-        <strong style="display:block;font-size:13px;margin-bottom:6px">⚡ NÄCHSTE SCHRITTE</strong>
-        <div style="font-size:13px;color:#555;line-height:1.6">Antworte einfach auf diese E-Mail — der Kunde bekommt deine Antwort direkt.<br>Erwartungshaltung des Kunden: <strong>Antwort innerhalb 24 Stunden.</strong></div>
-      </div>
-      <div style="margin-top:30px;text-align:center;font-size:11px;color:#999;font-family:'Orbitron',monospace;letter-spacing:1.5px">LEXORD KI-CHAT-FORWARDER · ${new Date().toLocaleDateString("de-DE")}</div>
-    </body></html>`;
-
-    // Customer confirmation
-    const customerHtml = `<!DOCTYPE html><html><body style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto;background:#fff;color:#222;padding:20px">
-      <div style="background:linear-gradient(135deg,#00f2ff,#bc13fe);padding:24px;border-radius:12px;color:#000;margin-bottom:20px;text-align:center">
-        <h1 style="margin:0;font-size:22px;font-weight:900;letter-spacing:2px">✓ NACHRICHT EMPFANGEN</h1>
-        <p style="margin:6px 0 0;font-size:13px;opacity:.85">Leon meldet sich innerhalb 24 Stunden persönlich.</p>
-      </div>
-      <p style="font-size:14px;color:#333;line-height:1.65">Hi,</p>
-      <p style="font-size:14px;color:#333;line-height:1.65">danke für deine Nachricht über die LEXORD-KI. Ich (Leon) habe deine Konversation erhalten und melde mich innerhalb von <strong>24 Stunden</strong> persönlich bei dir per E-Mail.</p>
-      <p style="font-size:14px;color:#333;line-height:1.65">Falls es eilig ist, erreichst du mich auch direkt:</p>
-      <table style="width:100%;border-collapse:collapse;background:#f5f5f5;border-radius:8px;margin:16px 0"><tr><td style="padding:14px"><div style="font-size:12px;color:#666;margin-bottom:8px">📞 TELEFON / WHATSAPP</div><a href="tel:+4915204718720" style="font-size:16px;color:#00bdd6;text-decoration:none;font-weight:600">0152 047 18720</a></td></tr></table>
-      <p style="font-size:13px;color:#666;line-height:1.65;margin-top:20px">Beste Grüße<br><strong style="color:#222">Leon Schulz</strong><br>LEXORD® Engineering · Domsühl</p>
-      <div style="margin-top:30px;padding-top:20px;border-top:1px solid #eee;font-size:11px;color:#999;text-align:center">Diese E-Mail wurde automatisch nach deiner KI-Chat-Anfrage generiert.</div>
-    </body></html>`;
-
-    // Save full conversation to KV for admin panel
-    if (env.LEXORD_DATA) {
-      try {
-        const convKey = "chat-fwd:" + sessionId;
-        await env.LEXORD_DATA.put(convKey, JSON.stringify({
-          sessionId, email, source, messages,
-          forwardedAt: new Date().toISOString(),
-          userAgent
-        }), { expirationTtl: 60 * 60 * 24 * 90 }); // 90 days
-
-        // Append to forwarded list index
-        const idxKey = "chat-fwd-list";
-        const idx = JSON.parse((await env.LEXORD_DATA.get(idxKey)) || "[]");
-        idx.unshift({ sessionId, email, source, ts: new Date().toISOString(), msgCount: messages.length });
-        await env.LEXORD_DATA.put(idxKey, JSON.stringify(idx.slice(0, 200)));
-      } catch (e) { /* ignore */ }
-    }
-
-    // Send to admin
-    if (env.BREVO_API_KEY) {
-      const fromE = (env.FROM_EMAIL || "kontakt@lexord.de").toLowerCase();
-      try {
-        await fetch("https://api.brevo.com/v3/smtp/email", {
-          method: "POST",
-          headers: { "api-key": env.BREVO_API_KEY, "Content-Type": "application/json", "Accept": "application/json" },
-          body: JSON.stringify({
-            sender: { name: "LEXORD KI-Chat", email: fromE },
-            to: [{ email: fromE, name: "Leon (LEXORD)" }],
-            replyTo: { email, name: "Kunde" },
-            subject: "[KI-CHAT] Kundenanfrage von " + email,
-            htmlContent: adminHtml
-          })
-        });
-        // Send confirmation to customer
-        await fetch("https://api.brevo.com/v3/smtp/email", {
-          method: "POST",
-          headers: { "api-key": env.BREVO_API_KEY, "Content-Type": "application/json", "Accept": "application/json" },
-          body: JSON.stringify({
-            sender: { name: "LEXORD® Engineering", email: fromE },
-            to: [{ email, name: email.split("@")[0] }],
-            subject: "Wir haben deine Nachricht erhalten · LEXORD",
-            htmlContent: customerHtml
-          })
-        });
-      } catch (e) { /* ignore */ }
-    }
-
-    // Trigger push to admin device
-    if (env.LEXORD_DATA) {
-      try {
-        const subsRaw = await env.LEXORD_DATA.get("push:admin");
-        if (subsRaw) {
-          const subs = JSON.parse(subsRaw);
-          const payload = JSON.stringify({
-            title: "📩 Neue Kunden-Nachricht",
-            body: email + " — Chat-Konversation eingegangen",
-            url: "/admin.html"
-          });
-          for (const sub of (Array.isArray(subs) ? subs : [subs])) {
-            try { await sendWebPush(env, sub, payload); } catch (e) { /* ignore */ }
-          }
-        }
-      } catch (e) { /* ignore */ }
-    }
-
-    return json({ ok: true, sessionId });
-  } catch (e) {
-    return json({ error: "Server-Fehler: " + (e.message || "unknown") }, 500);
-  }
-}
 
 // ============ SINGLE-USE DISCOUNT CODES ============
 // Welcome-Codes: einmal pro Geraet/IP/Email einloesbar, nur fuer konfigurierte Controller
@@ -1512,7 +1370,6 @@ async function adminConversations(request, env) {
   if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
   if (!env.LEXORD_DATA) return json({ error: "KV not bound" }, 500);
 
-  // Regular AI chat sessions
   const list = await env.LEXORD_DATA.list({ prefix: "chat:" });
   const conversations = [];
   for (const k of list.keys) {
@@ -1520,75 +1377,20 @@ async function adminConversations(request, env) {
     if (raw) {
       const c = JSON.parse(raw);
       const msgs = c.messages || [];
-      const lastUser = [...msgs].reverse().find(m => m.role === "user");
       conversations.push({
-        sessionId: c.sessionId || k.name.replace("chat:", ""),
-        kvKey: k.name,
-        email: c.email || "",
-        source: c.source || (c.sessionId && c.sessionId.startsWith("rep-") ? "reparatur" : "index"),
+        sessionId: c.sessionId,
+        email: c.email,
         started: c.started,
-        updated: c.updated || c.started,
+        updated: c.updated,
         msgCount: msgs.length,
         lastMsg: ((msgs.slice(-1)[0]) || {}).content || "",
-        lastUserMsg: (lastUser || {}).content || "",
-        forwarded: false
+        messages: msgs
       });
     }
   }
-
-  // Forwarded conversations (explicit forward action)
-  const fwdList = await env.LEXORD_DATA.list({ prefix: "chat-fwd:" });
-  for (const k of fwdList.keys) {
-    const raw = await env.LEXORD_DATA.get(k.name);
-    if (raw) {
-      const c = JSON.parse(raw);
-      const msgs = c.messages || [];
-      const lastUser = [...msgs].reverse().find(m => m.role === "user");
-      conversations.push({
-        sessionId: c.sessionId || k.name.replace("chat-fwd:", ""),
-        kvKey: k.name,
-        email: c.email || "",
-        source: c.source || "unknown",
-        started: c.forwardedAt,
-        updated: c.forwardedAt,
-        msgCount: msgs.length,
-        lastMsg: ((msgs.slice(-1)[0]) || {}).content || "",
-        lastUserMsg: (lastUser || {}).content || "",
-        forwarded: true,
-        userAgent: c.userAgent || ""
-      });
-    }
-  }
-
   conversations.sort((a, b) => new Date(b.updated || b.started || 0) - new Date(a.updated || a.started || 0));
-  return json({ conversations, count: conversations.length });
+  return json({ conversations });
 }
-
-async function adminConversationDetail(request, env, kvKey) {
-  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
-  if (!env.LEXORD_DATA) return json({ error: "KV not bound" }, 500);
-  const raw = await env.LEXORD_DATA.get(decodeURIComponent(kvKey));
-  if (!raw) return json({ error: "Not found" }, 404);
-  const c = JSON.parse(raw);
-  return json({
-    sessionId: c.sessionId,
-    email: c.email || "",
-    source: c.source || "",
-    started: c.started || c.forwardedAt,
-    updated: c.updated || c.forwardedAt,
-    messages: c.messages || [],
-    userAgent: c.userAgent || "",
-    forwarded: !!c.forwardedAt
-  });
-}
-
-async function adminConversationDelete(request, env, kvKey) {
-  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
-  if (!env.LEXORD_DATA) return json({ error: "KV not bound" }, 500);
-  await env.LEXORD_DATA.delete(decodeURIComponent(kvKey));
-  return json({ ok: true });
-}
-
 
 // ════════════════════════════════════════════════════════════════
 // ADMIN-PANEL v4.0 — Live-Visitor-Tracking, Refund, Discounts, Stats
@@ -2396,190 +2198,6 @@ async function admin2PushGenKeys(request, env){
     subject: 'mailto:kontakt@lexord.de',
     instructions: 'In Cloudflare → Worker Settings → Variables and Secrets: VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT setzen'
   });
-}
-
-// ════════════════════════════════════════════════════════════════
-// BEWERTUNGS-KAMPAGNEN — Trustpilot & Google Reviews
-// ════════════════════════════════════════════════════════════════
-
-const REVIEW_TRUSTPILOT_URL = "https://de.trustpilot.com/review/Lexord.de";
-const REVIEW_GOOGLE_URL = "https://share.google/LyDufjCSigZwLBLwS";
-const REVIEW_DISCOUNT_CODE = "DANKE5";
-
-function buildReviewRequestEmail(customerName, orderNr) {
-  const name = escapeHtml(customerName || "Kunde");
-  const orderRef = orderNr ? '<div style="font-family:monospace;font-size:11px;color:#666;letter-spacing:1.5px;margin-top:6px">BESTELLUNG #' + escapeHtml(orderNr) + '</div>' : '';
-  return '<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Wie war\'s? Bewerte uns!</title></head>'
-    + '<body style="margin:0;padding:0;background-color:#000;font-family:Arial,Helvetica,sans-serif;color:#e0e0e0">'
-    + '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#000">'
-    + '<tr><td align="center" style="padding:30px 16px">'
-    + '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="640" style="max-width:640px;width:100%;border-radius:16px;overflow:hidden">'
-
-    // Hero with stars
-    + '<tr><td style="background:linear-gradient(135deg,#000 0%,#0a0a14 50%,#000 100%);padding:50px 40px 40px;text-align:center;border-bottom:1px solid #1a1a1a">'
-    + '<div style="font-size:26px;font-weight:900;letter-spacing:8px;color:#fff;margin-bottom:8px">LEX<span style="color:#00f2ff">O</span>RD<span style="color:#00f2ff;font-size:14px;vertical-align:super">&reg;</span></div>'
-    + '<div style="font-size:9px;letter-spacing:4px;color:#555;text-transform:uppercase;margin-bottom:36px">ENGINEERING</div>'
-    + '<div style="font-size:54px;line-height:1;letter-spacing:8px;color:#ffae00;margin-bottom:8px">&#9733;&#9733;&#9733;&#9733;&#9733;</div>'
-    + '<div style="font-family:Arial;font-size:9px;color:#00f2ff;letter-spacing:3px;text-transform:uppercase;margin-bottom:18px">// PERSONLICHE NACHRICHT VON LEON</div>'
-    + '<h1 style="margin:0 0 6px;font-size:32px;font-weight:900;letter-spacing:3px;color:#fff;line-height:1.15;text-transform:uppercase">Wie war\'s,<br><span style="background:linear-gradient(90deg,#00f2ff,#bc13fe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;color:#00f2ff">' + name + '</span>?</h1>'
-    + orderRef
-    + '</td></tr>'
-
-    // Greeting
-    + '<tr><td style="background:#0a0a0a;padding:36px 40px 10px;color:#ccc;font-size:15px;line-height:1.75">'
-    + '<p style="margin:0 0 14px;color:#fff;font-size:16px">Hi <strong>' + name + '</strong>,</p>'
-    + '<p style="margin:0 0 14px">danke, dass du LEXORD vertraut hast! Jeder Controller wird von <strong style="color:#fff">mir persönlich</strong> in der Werkstatt in Domsühl gebaut &mdash; und ich bin neugierig: <strong style="color:#00f2ff">wie war\'s?</strong></p>'
-    + '<p style="margin:0 0 0">Eine kurze Bewertung &mdash; Google oder Trustpilot &mdash; hilft anderen Gamern, uns zu finden. Als Dankesch&ouml;n bekommst du <strong style="color:#ffae00">5 % Rabatt auf deine n&auml;chste Bestellung</strong>.</p>'
-    + '</td></tr>'
-
-    // Two-button grid
-    + '<tr><td style="background:#0a0a0a;padding:30px 40px">'
-    + '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">'
-    + '<tr>'
-
-    // GOOGLE BUTTON
-    + '<td width="50%" style="padding:0 6px 12px 0;vertical-align:top">'
-    + '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:linear-gradient(135deg,#1a1a1a 0%,#080808 100%);border:1px solid #2a2a2a;border-radius:12px">'
-    + '<tr><td align="center" style="padding:26px 18px">'
-    + '<div style="font-size:36px;line-height:1;margin-bottom:10px">G</div>'
-    + '<div style="font-family:Arial;font-size:11px;font-weight:700;letter-spacing:2px;color:#fff;margin-bottom:14px">GOOGLE BEWERTUNG</div>'
-    + '<a href="' + REVIEW_GOOGLE_URL + '" target="_blank" style="display:inline-block;padding:12px 22px;background:#4285F4;color:#fff;font-family:Arial;font-size:11px;font-weight:900;letter-spacing:1.5px;text-decoration:none;border-radius:6px">5 STERNE GEBEN &rarr;</a>'
-    + '</td></tr></table>'
-    + '</td>'
-
-    // TRUSTPILOT BUTTON
-    + '<td width="50%" style="padding:0 0 12px 6px;vertical-align:top">'
-    + '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:linear-gradient(135deg,#1a1a1a 0%,#080808 100%);border:1px solid #2a2a2a;border-radius:12px">'
-    + '<tr><td align="center" style="padding:26px 18px">'
-    + '<div style="font-size:36px;line-height:1;margin-bottom:10px;color:#00b67a">&#9733;</div>'
-    + '<div style="font-family:Arial;font-size:11px;font-weight:700;letter-spacing:2px;color:#fff;margin-bottom:14px">TRUSTPILOT</div>'
-    + '<a href="' + REVIEW_TRUSTPILOT_URL + '" target="_blank" style="display:inline-block;padding:12px 22px;background:#00b67a;color:#fff;font-family:Arial;font-size:11px;font-weight:900;letter-spacing:1.5px;text-decoration:none;border-radius:6px">REZENSION SCHREIBEN &rarr;</a>'
-    + '</td></tr></table>'
-    + '</td>'
-
-    + '</tr></table>'
-    + '</td></tr>'
-
-    // Discount code
-    + '<tr><td style="background:#0a0a0a;padding:6px 40px 30px">'
-    + '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:linear-gradient(135deg,rgba(255,174,0,.08),rgba(0,242,255,.04));border:1px dashed rgba(255,174,0,.4);border-radius:12px">'
-    + '<tr><td style="padding:22px 24px;text-align:center">'
-    + '<div style="font-family:Arial;font-size:9px;color:#ffae00;letter-spacing:2.5px;margin-bottom:10px">// DEIN DANKESCH&Ouml;N</div>'
-    + '<div style="font-family:Arial;font-size:11px;color:#ccc;margin-bottom:10px">Nach deiner Bewertung: 5 % Rabatt-Code f&uuml;r deinen n&auml;chsten Besuch</div>'
-    + '<div style="display:inline-block;padding:12px 22px;background:#000;border:1.5px solid #ffae00;border-radius:8px;font-family:monospace;font-size:22px;font-weight:900;letter-spacing:6px;color:#ffae00">' + REVIEW_DISCOUNT_CODE + '</div>'
-    + '<div style="font-family:Arial;font-size:9px;color:#666;letter-spacing:1.5px;margin-top:10px">Einl&ouml;sbar auf lexord.de &middot; G&uuml;ltig 60 Tage</div>'
-    + '</td></tr></table>'
-    + '</td></tr>'
-
-    // Why it matters
-    + '<tr><td style="background:#0a0a0a;padding:8px 40px 30px;color:#888;font-size:13px;line-height:1.75">'
-    + '<p style="margin:0 0 12px;color:#ccc;font-size:13px"><strong style="color:#00f2ff">Warum es wichtig ist:</strong> Als kleine Manufaktur kann ich keinen Werbespot bei der ProSieben buchen. Echte Bewertungen sind das, was uns sichtbar macht &mdash; und wachsen l&auml;sst.</p>'
-    + '<p style="margin:0;font-size:12px;color:#888">Falls etwas nicht gepasst hat: <a href="mailto:Kontakt@Lexord.de" style="color:#00f2ff;text-decoration:none">schreib mir direkt</a> &mdash; ich melde mich pers&ouml;nlich. Konstruktives Feedback hilft mir mehr als ein leiser Schwund.</p>'
-    + '</td></tr>'
-
-    // Signature
-    + '<tr><td style="background:#0a0a0a;padding:0 40px 36px">'
-    + '<div style="border-top:1px solid #1a1a1a;padding-top:24px;font-size:13px;color:#aaa;line-height:1.7">'
-    + 'Danke f&uuml;r dein Vertrauen,<br><strong style="color:#fff">Leon Schulz</strong><br><span style="color:#666;font-size:11px">Gr&uuml;nder &middot; LEXORD&reg; Engineering</span>'
-    + '</div>'
-    + '</td></tr>'
-
-    // Footer
-    + '<tr><td style="background:#000;padding:24px 40px;border-top:1px solid #1a1a1a;text-align:center">'
-    + '<div style="font-size:10px;color:#555;line-height:1.7;letter-spacing:1px">'
-    + 'LEXORD&reg; Engineering &middot; Leon Schulz<br>An Der Doms&uuml;hler Str. 2, 19374 Doms&uuml;hl<br>'
-    + '<a href="mailto:Kontakt@Lexord.de" style="color:#00f2ff;text-decoration:none">Kontakt@Lexord.de</a> &middot; '
-    + '<a href="tel:+4915204718720" style="color:#00f2ff;text-decoration:none">0152 047 18720</a><br><br>'
-    + '<span style="color:#444;font-size:9px">Du erh&auml;ltst diese Mail, weil du bei LEXORD bestellt hast. Du kannst dich jederzeit <a href="mailto:Kontakt@Lexord.de?subject=Abmeldung%20Bewertungs-Mails" style="color:#888">abmelden</a>.</span>'
-    + '</div>'
-    + '</td></tr>'
-
-    + '</table>'
-    + '</td></tr></table>'
-    + '</body></html>';
-}
-
-async function admin2SendReviewRequests(request, env) {
-  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
-  if (!env.LEXORD_DATA) return json({ error: "KV not bound" }, 500);
-
-  const body = await request.json().catch(() => ({}));
-  const orderNumbers = Array.isArray(body.orderNumbers) ? body.orderNumbers : [];
-  const force = !!body.force;
-
-  if (!orderNumbers.length) return json({ error: "No orders provided" }, 400);
-
-  const sent = [];
-  const failed = [];
-  const skipped = [];
-
-  for (const orderNr of orderNumbers) {
-    try {
-      const raw = await env.LEXORD_DATA.get("order:" + orderNr);
-      if (!raw) { failed.push({ orderNr, reason: "not_found" }); continue; }
-      const order = JSON.parse(raw);
-      if (!order.email) { failed.push({ orderNr, reason: "no_email" }); continue; }
-      if (order.reviewRequestedAt && !force) { skipped.push({ orderNr, reason: "already_sent", at: order.reviewRequestedAt }); continue; }
-
-      const name = order.firstName || order.name || (order.email || "").split("@")[0];
-      const html = buildReviewRequestEmail(name, orderNr);
-      const subject = "Wie war's? Hinterlass uns deine Bewertung - 5% Rabatt als Dankeschoen";
-
-      const ok = await sendBrevoMail(env, order.email, subject, html, {
-        orderNr, kind: "review-request"
-      });
-
-      if (ok) {
-        order.reviewRequestedAt = new Date().toISOString();
-        order.reviewRequestedCount = (order.reviewRequestedCount || 0) + 1;
-        await env.LEXORD_DATA.put("order:" + orderNr, JSON.stringify(order));
-        sent.push({ orderNr, email: order.email });
-      } else {
-        failed.push({ orderNr, reason: "send_failed" });
-      }
-    } catch (e) {
-      failed.push({ orderNr, reason: "exception: " + (e.message || "") });
-    }
-  }
-
-  return json({ sent: sent.length, failed: failed.length, skipped: skipped.length, details: { sent, failed, skipped } });
-}
-
-async function admin2ReviewStats(request, env) {
-  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
-  if (!env.LEXORD_DATA) return json({ error: "KV not bound" }, 500);
-
-  const list = await env.LEXORD_DATA.list({ prefix: "order:" });
-  let totalOrders = 0, eligible = 0, requestedTotal = 0, requestedLast30 = 0, completed = 0;
-  const now = Date.now();
-  const orders = [];
-
-  for (const k of list.keys) {
-    const raw = await env.LEXORD_DATA.get(k.name);
-    if (!raw) continue;
-    const o = JSON.parse(raw);
-    totalOrders++;
-    const status = (o.status || "").toLowerCase();
-    const isDelivered = status === "delivered" || status === "zugestellt" || status === "abgeschlossen" || status === "completed";
-    if (isDelivered) { completed++; eligible++; }
-    if (o.reviewRequestedAt) {
-      requestedTotal++;
-      if (now - new Date(o.reviewRequestedAt).getTime() < 30 * 86400 * 1000) requestedLast30++;
-    }
-    orders.push({
-      orderNr: o.orderNumber || o.orderNr || k.name.replace("order:", ""),
-      email: o.email || "",
-      name: o.firstName || o.name || "",
-      status: o.status || "",
-      total: o.total || o.amount || 0,
-      date: o.createdAt || o.date || "",
-      reviewRequestedAt: o.reviewRequestedAt || null,
-      reviewRequestedCount: o.reviewRequestedCount || 0
-    });
-  }
-
-  orders.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-  return json({ stats: { totalOrders, eligible, completed, requestedTotal, requestedLast30 }, orders });
 }
 
 // ════════════════════════════════════════════════════════════════

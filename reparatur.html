@@ -2110,7 +2110,7 @@ async function lxcSend(){
   inp.disabled=false;inp.focus();
 }
 
-async function lxcForward(){
+function lxcForward(){
   if(_lxc.fwdSent){
     lxcAdd('system','✓ BEREITS GESENDET');
     return;
@@ -2119,7 +2119,6 @@ async function lxcForward(){
     lxcAdd('bot','Schreib mir bitte erst dein Anliegen — dann leite ich es weiter.');
     return;
   }
-  // Ask for email if we don't have one
   let cE='';
   try{const c=JSON.parse(sessionStorage.getItem('lxrd_customer')||'{}');cE=c.email||'';}catch(e){}
   if(!cE){
@@ -2127,32 +2126,15 @@ async function lxcForward(){
     if(!cE||!cE.includes('@')){lxcAdd('bot','Ich brauche eine gültige E-Mail, damit Leon dir antworten kann.');return;}
     try{sessionStorage.setItem('lxrd_customer',JSON.stringify({email:cE}));}catch(e){}
   }
+  // Direkt mailto öffnen — voll vorausgefüllt, Kunde sendet aus seinem E-Mail-Programm
+  const transcript=_lxc.messages.map(m=>(m.role==='user'?'KUNDE: ':'KI: ')+m.content).join('\n\n');
+  const subject=encodeURIComponent('[KI-CHAT] Reparatur-Anfrage von '+cE);
+  const body=encodeURIComponent('Hallo Leon,\n\nfolgende Konversation hatte ich mit der LEXORD-KI:\n\nMeine E-Mail: '+cE+'\nSession: '+_lxc.sessionId+'\n\n--- KONVERSATION ---\n\n'+transcript+'\n\n--- ENDE ---\n\nBitte melde dich bei mir.\n\nGrüße');
+  window.location.href='mailto:Kontakt@Lexord.de?subject='+subject+'&body='+body;
+  _lxc.fwdSent=true;
+  lxcAdd('system','✓ E-MAIL-PROGRAMM GEÖFFNET — BITTE NUR NOCH SENDEN');
   const btn=document.querySelector('.lxc-fwd-btn');
-  if(btn){btn.disabled=true;btn.textContent='⏳ SENDE...';}
-  try{
-    const r=await fetch(LXC_API+'/api/chat-forward',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        sessionId:_lxc.sessionId,
-        email:cE,
-        messages:_lxc.messages,
-        source:'reparatur.html',
-        userAgent:navigator.userAgent
-      })
-    });
-    if(!r.ok)throw new Error('Fail');
-    _lxc.fwdSent=true;
-    lxcAdd('system','✓ KONVERSATION AN LEON GESENDET · ANTWORT INNERHALB 24H');
-    if(btn){btn.textContent='✓ GESENDET';btn.style.background='linear-gradient(135deg,#888,#666)';btn.style.color='#fff';}
-  }catch(e){
-    // Fallback: open mailto with full transcript
-    const transcript=_lxc.messages.map(m=>(m.role==='user'?'KUNDE: ':'KI: ')+m.content).join('\n\n');
-    const subject=encodeURIComponent('[KI-CHAT] Reparatur-Anfrage');
-    const body=encodeURIComponent('E-Mail: '+cE+'\n\nKonversation:\n\n'+transcript);
-    window.location.href='mailto:Kontakt@Lexord.de?subject='+subject+'&body='+body;
-    if(btn){btn.disabled=false;btn.textContent='📩 KONVERSATION AN LEON SENDEN';}
-  }
+  if(btn){btn.textContent='✓ GEÖFFNET';btn.style.background='linear-gradient(135deg,#888,#666)';btn.style.color='#fff';}
 }
 
 // Auto-greet after 8s if user hasn't opened chat yet

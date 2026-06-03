@@ -1714,33 +1714,56 @@ function switchTab(tab, btn){
   if(tab === 'live') { loadLive(); resizeGlobe(); }
 }
 
-/* ════════ BEWERTUNGS-KAMPAGNE ════════ */
+/* ════════ BEWERTUNGS-KAMPAGNE — nutzt /admin/orders + lokales Tracking ════════ */
+const REVIEW_SENT_KEY = 'lxrd_review_sent';
 let REVIEW_ORDERS = [];
 let REVIEW_SELECTED = new Set();
+
+function getReviewSent(){ try{ return JSON.parse(localStorage.getItem(REVIEW_SENT_KEY) || '{}'); }catch(e){ return {}; } }
+function setReviewSent(map){ try{ localStorage.setItem(REVIEW_SENT_KEY, JSON.stringify(map)); }catch(e){} }
+function markReviewSent(orderNr){ const m = getReviewSent(); m[orderNr] = new Date().toISOString(); setReviewSent(m); }
 
 async function loadReviewOrders(){
   const c = document.getElementById('reviews-container');
   if(!c) return;
   c.innerHTML = '<div style="text-align:center;color:#666;padding:40px;font-family:Orbitron;font-size:11px;letter-spacing:2px">LADE BESTELLUNGEN ...</div>';
-  let d = null;
-  try{
-    const r = await fetch(WORKER_URL + '/admin/review-stats', { headers: { 'Authorization': 'Bearer ' + (localStorage.getItem(TOKEN_KEY) || '') } });
-    d = await r.json();
-  }catch(e){ d = null; }
-  if(!d || !d.orders){
-    c.innerHTML = '<div style="text-align:center;color:#888;padding:40px;font-family:Orbitron;font-size:11px;letter-spacing:2px">⚠️ KEINE DATEN — Worker nicht erreichbar.</div>';
+
+  // Reuse existing ALL_ORDERS if loaded, otherwise call /admin/orders
+  if(!ALL_ORDERS || ALL_ORDERS.length === 0){
+    const d = await api('/admin/orders');
+    if(d && d.orders) ALL_ORDERS = d.orders;
+  }
+
+  if(!ALL_ORDERS || ALL_ORDERS.length === 0){
+    c.innerHTML = '<div style="text-align:center;color:#888;padding:40px;font-family:Orbitron;font-size:11px;letter-spacing:2px">📭 KEINE BESTELLUNGEN GEFUNDEN</div>';
     return;
   }
-  REVIEW_ORDERS = d.orders || [];
+
+  const sent = getReviewSent();
+  REVIEW_ORDERS = ALL_ORDERS.map(o => ({
+    orderNr: o.orderNumber || o.orderNr || o.id || '',
+    email: o.email || '',
+    name: o.firstName || o.name || '',
+    status: o.status || '',
+    total: o.total || o.amount || 0,
+    date: o.createdAt || o.date || o.timestamp || '',
+    reviewRequestedAt: sent[o.orderNumber || o.orderNr || o.id || ''] || null
+  })).filter(o => o.orderNr);
   REVIEW_SELECTED.clear();
 
-  const s = d.stats || {};
+  const total = REVIEW_ORDERS.length;
+  const completed = REVIEW_ORDERS.filter(o => ['delivered','zugestellt','abgeschlossen','completed'].indexOf((o.status||'').toLowerCase()) >= 0).length;
+  const requested = REVIEW_ORDERS.filter(o => !!o.reviewRequestedAt).length;
+  const ready = REVIEW_ORDERS.filter(o => !o.reviewRequestedAt && o.email && ['delivered','zugestellt','abgeschlossen','completed'].indexOf((o.status||'').toLowerCase()) >= 0).length;
+  const now = Date.now();
+  const last30 = REVIEW_ORDERS.filter(o => o.reviewRequestedAt && (now - new Date(o.reviewRequestedAt).getTime()) < 30*86400*1000).length;
+
   document.getElementById('reviews-stats').innerHTML = [
-    chatStat('GESAMT', s.totalOrders || 0, '#888'),
-    chatStat('ABGESCHLOSSEN', s.completed || 0, '#00ff88'),
-    chatStat('BEREIT FÜR ANFRAGE', Math.max(0, (s.eligible || 0) - (s.requestedTotal || 0)), '#ffae00'),
-    chatStat('SCHON ANGEFRAGT', s.requestedTotal || 0, '#00f2ff'),
-    chatStat('LETZTE 30 TAGE', s.requestedLast30 || 0, '#bc13fe')
+    chatStat('GESAMT', total, '#888'),
+    chatStat('ABGESCHLOSSEN', completed, '#00ff88'),
+    chatStat('BEREIT FÜR ANFRAGE', ready, '#ffae00'),
+    chatStat('SCHON ANGEFRAGT', requested, '#00f2ff'),
+    chatStat('LETZTE 30 TAGE', last30, '#bc13fe')
   ].join('');
 
   filterReviewOrders();
@@ -1836,49 +1859,124 @@ function updateReviewSelCount(){
   if(el) el.textContent = REVIEW_SELECTED.size;
 }
 
+function buildReviewEmailBody(name){
+  const n = (name || 'Kunde').replace(/</g,'&lt;');
+  return [
+    '<p style="margin:0 0 14px 0;color:#fff;font-size:16px">Hi <strong>'+n+'</strong>,</p>',
+    '<p style="margin:0 0 14px 0">danke fuer dein Vertrauen in LEXORD! Jeder Controller wird von <strong style="color:#fff">mir persoenlich</strong> in der Werkstatt in Domsuehl gebaut &mdash; und ich bin neugierig: <strong style="color:#00f2ff">wie war\'s?</strong></p>',
+    '<p style="margin:0 0 20px 0">Eine kurze Bewertung &mdash; Google oder Trustpilot &mdash; hilft anderen Gamern uns zu finden. Als Dankeschoen: <strong style="color:#ffae00">5 % Rabatt auf deine naechste Bestellung</strong>.</p>',
+    '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:8px 0 20px"><tr>',
+    '<td width="50%" style="padding:0 6px 0 0;vertical-align:top">',
+    '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#0e0e0e;border:1px solid #2a2a2a;border-radius:10px"><tr><td align="center" style="padding:22px 14px">',
+    '<div style="font-size:30px;line-height:1;margin-bottom:8px;font-weight:900;color:#4285F4">G</div>',
+    '<div style="font-size:10px;font-weight:700;letter-spacing:2px;color:#fff;margin-bottom:12px">GOOGLE</div>',
+    '<a href="https://share.google/LyDufjCSigZwLBLwS" target="_blank" style="display:inline-block;padding:10px 18px;background:#4285F4;color:#fff;font-size:10px;font-weight:900;letter-spacing:1.5px;text-decoration:none;border-radius:6px">5 STERNE GEBEN &rarr;</a>',
+    '</td></tr></table></td>',
+    '<td width="50%" style="padding:0 0 0 6px;vertical-align:top">',
+    '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#0e0e0e;border:1px solid #2a2a2a;border-radius:10px"><tr><td align="center" style="padding:22px 14px">',
+    '<div style="font-size:30px;line-height:1;margin-bottom:8px;color:#00b67a">&#9733;</div>',
+    '<div style="font-size:10px;font-weight:700;letter-spacing:2px;color:#fff;margin-bottom:12px">TRUSTPILOT</div>',
+    '<a href="https://de.trustpilot.com/review/Lexord.de" target="_blank" style="display:inline-block;padding:10px 18px;background:#00b67a;color:#fff;font-size:10px;font-weight:900;letter-spacing:1.5px;text-decoration:none;border-radius:6px">REZENSION &rarr;</a>',
+    '</td></tr></table></td>',
+    '</tr></table>',
+    '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:rgba(255,174,0,.06);border:1px dashed rgba(255,174,0,.4);border-radius:10px;margin-bottom:18px"><tr><td style="padding:18px;text-align:center">',
+    '<div style="font-size:9px;color:#ffae00;letter-spacing:2px;margin-bottom:8px">// DEIN DANKESCHOEN</div>',
+    '<div style="display:inline-block;padding:10px 20px;background:#000;border:1px solid #ffae00;border-radius:6px;font-family:monospace;font-size:18px;font-weight:900;letter-spacing:5px;color:#ffae00">DANKE5</div>',
+    '<div style="font-size:10px;color:#888;margin-top:8px">5 % auf lexord.de &middot; Gueltig 60 Tage</div>',
+    '</td></tr></table>',
+    '<p style="margin:0;color:#888;font-size:13px;line-height:1.7">Falls etwas nicht gepasst hat: <a href="mailto:Kontakt@Lexord.de" style="color:#00f2ff;text-decoration:none">schreib mir direkt</a> &mdash; ich melde mich persoenlich.</p>'
+  ].join('');
+}
+
 async function sendReviewRequests(){
   if(REVIEW_SELECTED.size === 0){ alert('Bitte mindestens eine Bestellung auswählen.'); return; }
-  if(!confirm('Bewertungs-Mail an '+REVIEW_SELECTED.size+' Kunden senden?\n\nJeder erhält:\n• Personalisierte E-Mail\n• Google + Trustpilot Link\n• 5 % Rabatt-Code (DANKE5)')) return;
+  if(!confirm('Bewertungs-Mail an '+REVIEW_SELECTED.size+' Kunden senden?\n\nJeder erhält:\n• Personalisierte E-Mail im LEXORD-Design\n• Google + Trustpilot Buttons\n• DANKE5 Rabatt-Code (5 %, 60 Tage)')) return;
 
   const orderNumbers = Array.from(REVIEW_SELECTED);
-  try{
-    const r = await fetch(WORKER_URL + '/admin/review-request', {
-      method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + (localStorage.getItem(TOKEN_KEY) || ''), 'Content-Type': 'application/json' },
-      body: JSON.stringify({ orderNumbers })
-    });
-    const d = await r.json();
-    if(d.error){ alert('Fehler: ' + d.error); return; }
-    const msg = '✓ ' + (d.sent || 0) + ' E-Mails gesendet'+
-                (d.skipped ? '\n⏭ ' + d.skipped + ' übersprungen (bereits angefragt)' : '')+
-                (d.failed ? '\n⚠️ ' + d.failed + ' fehlgeschlagen' : '');
-    alert(msg);
-    REVIEW_SELECTED.clear();
-    loadReviewOrders();
-  }catch(e){ alert('Netzwerk-Fehler: ' + e.message); }
+  const subject = "Wie war's? Hinterlass uns deine Bewertung – 5 % Rabatt als Dankeschön";
+  let sent = 0, failed = 0;
+
+  for(const orderNr of orderNumbers){
+    const o = REVIEW_ORDERS.find(x => x.orderNr === orderNr);
+    if(!o || !o.email){ failed++; continue; }
+    const htmlBody = buildReviewEmailBody(o.name);
+    try{
+      const r = await api('/admin/orders/'+encodeURIComponent(orderNr)+'/email', {
+        method: 'POST',
+        body: JSON.stringify({ subject, body: htmlBody, html: true })
+      });
+      if(r && (r.success || r.ok)){
+        markReviewSent(orderNr);
+        sent++;
+      } else failed++;
+    }catch(e){ failed++; }
+  }
+
+  const msg = '✓ ' + sent + ' E-Mails gesendet' + (failed ? '\n⚠️ ' + failed + ' fehlgeschlagen' : '');
+  alert(msg);
+  REVIEW_SELECTED.clear();
+  loadReviewOrders();
 }
 
 async function sendSingleReviewRequest(orderNr, btn){
   if(!confirm('Bewertungs-Mail an Kunde von Bestellung #'+orderNr+' senden?')) return;
   if(btn){ btn.disabled = true; btn.textContent = '⏳ SENDE...'; }
+  const o = REVIEW_ORDERS.find(x => x.orderNr === orderNr);
+  if(!o || !o.email){
+    if(btn){ btn.disabled = false; btn.textContent = '📧 EINZELN SENDEN'; }
+    alert('Keine E-Mail-Adresse für diese Bestellung.');
+    return;
+  }
+  const subject = "Wie war's? Hinterlass uns deine Bewertung – 5 % Rabatt als Dankeschön";
+  const htmlBody = buildReviewEmailBody(o.name);
   try{
-    const r = await fetch(WORKER_URL + '/admin/review-request', {
+    const r = await api('/admin/orders/'+encodeURIComponent(orderNr)+'/email', {
       method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + (localStorage.getItem(TOKEN_KEY) || ''), 'Content-Type': 'application/json' },
-      body: JSON.stringify({ orderNumbers: [orderNr], force: true })
+      body: JSON.stringify({ subject, body: htmlBody, html: true })
     });
-    const d = await r.json();
-    if(d.sent > 0){
+    if(r && (r.success || r.ok)){
+      markReviewSent(orderNr);
       if(btn){ btn.textContent = '✓ GESENDET'; btn.style.background = 'rgba(0,255,136,.15)'; btn.style.color = '#00ff88'; }
       loadReviewOrders();
     } else {
+      // Fallback: open mailto with pre-filled subject + plain body
+      if(confirm('Direkter Versand nicht möglich. Stattdessen E-Mail-Programm öffnen?')){
+        openMailtoFallback(o);
+        markReviewSent(orderNr);
+        loadReviewOrders();
+        return;
+      }
       if(btn){ btn.disabled = false; btn.textContent = '📧 EINZELN SENDEN'; }
-      alert('Konnte nicht senden: ' + (d.details?.failed?.[0]?.reason || d.details?.skipped?.[0]?.reason || 'unbekannt'));
     }
   }catch(e){
+    if(confirm('Fehler beim Senden. E-Mail-Programm öffnen?')){
+      openMailtoFallback(o);
+      markReviewSent(orderNr);
+      loadReviewOrders();
+      return;
+    }
     if(btn){ btn.disabled = false; btn.textContent = '📧 EINZELN SENDEN'; }
-    alert('Fehler: ' + e.message);
   }
+}
+
+function openMailtoFallback(o){
+  const name = (o.name || 'Kunde');
+  const subject = encodeURIComponent("Wie war's? Bewerte uns - 5% Rabatt als Dankeschoen");
+  const body = encodeURIComponent(
+    'Hi ' + name + ',\n\n' +
+    'danke fuer dein Vertrauen in LEXORD! Jeder Controller wird von mir persoenlich in der Werkstatt in Domsuehl gebaut - und ich bin neugierig: wie war\'s?\n\n' +
+    'Eine kurze Bewertung hilft uns sehr:\n\n' +
+    '★ Google:     https://share.google/LyDufjCSigZwLBLwS\n' +
+    '★ Trustpilot: https://de.trustpilot.com/review/Lexord.de\n\n' +
+    'Als Dankeschoen: 5 % Rabatt auf deine naechste Bestellung\n' +
+    'Code: DANKE5  (gueltig 60 Tage auf lexord.de)\n\n' +
+    'Falls etwas nicht gepasst hat: schreib mir direkt - ich melde mich persoenlich.\n\n' +
+    'Beste Gruesse\n' +
+    'Leon Schulz\n' +
+    'LEXORD(R) Engineering\n' +
+    'kontakt@lexord.de  |  0152 047 18720'
+  );
+  window.location.href = 'mailto:' + o.email + '?subject=' + subject + '&body=' + body;
 }
 
 function previewReviewEmail(){
@@ -1957,24 +2055,32 @@ async function loadChats(){
   let d = null;
   try{
     const r = await fetch(WORKER_URL + '/api/admin/conversations', { headers: { 'Authorization': 'Bearer ' + (localStorage.getItem(TOKEN_KEY) || '') } });
-    d = await r.json();
+    if(r.ok) d = await r.json();
   }catch(e){ d = null; }
   if(!d || !d.conversations){
-    c.innerHTML = '<div style="text-align:center;color:#888;padding:40px;font-family:Orbitron;font-size:11px;letter-spacing:2px">⚠️ KEINE DATEN — Worker nicht erreichbar oder noch keine Chats vorhanden.</div>';
+    c.innerHTML = '<div style="text-align:center;color:#888;padding:50px;font-family:Orbitron;font-size:11px;letter-spacing:2px">📭 KEINE KONVERSATIONEN VORHANDEN<br><br><span style="font-size:10px;color:#666;letter-spacing:1px;text-transform:none;font-family:Inter">Sobald Kunden mit der LEXORD-KI chatten,<br>erscheinen die Konversationen hier.</span></div>';
+    document.getElementById('chats-stats').innerHTML = '';
+    const badge = document.getElementById('chats-badge');
+    if(badge) badge.style.display = 'none';
     return;
   }
-  CHATS_DATA = d.conversations || [];
+  CHATS_DATA = (d.conversations || []).map(co => {
+    const sid = co.sessionId || '';
+    return Object.assign({}, co, {
+      kvKey: co.kvKey || ('chat:' + sid),
+      source: co.source || (sid.indexOf('rep-') === 0 ? 'reparatur' : 'index'),
+      lastUserMsg: co.lastUserMsg || co.lastMsg || ''
+    });
+  });
 
   const total = CHATS_DATA.length;
-  const fromIndex = CHATS_DATA.filter(co => co.source === 'index' || (!co.source && co.sessionId && !String(co.sessionId).startsWith('rep-'))).length;
+  const fromIndex = CHATS_DATA.filter(co => co.source === 'index').length;
   const fromRep = CHATS_DATA.filter(co => co.source === 'reparatur').length;
-  const fwd = CHATS_DATA.filter(co => co.forwarded).length;
   const withEmail = CHATS_DATA.filter(co => co.email).length;
   document.getElementById('chats-stats').innerHTML = [
     chatStat('GESAMT', total, '#00f2ff'),
     chatStat('HAUPTSEITE', fromIndex, '#888'),
     chatStat('REPARATUR-SEITE', fromRep, '#bc13fe'),
-    chatStat('WEITERGELEITET', fwd, '#00ff88'),
     chatStat('MIT E-MAIL', withEmail, '#ffae00')
   ].join('');
 
@@ -2055,29 +2161,25 @@ function replyChat(email){
   window.location.href = 'mailto:'+email+'?subject=' + encodeURIComponent('Re: Deine Anfrage bei LEXORD');
 }
 
-async function openChat(kvKey){
+function openChat(kvKey){
+  const key = decodeURIComponent(kvKey);
   try{
     const seen = JSON.parse(localStorage.getItem(CHATS_SEEN_KEY) || '{}');
-    seen[decodeURIComponent(kvKey)] = Date.now();
+    seen[key] = Date.now();
     localStorage.setItem(CHATS_SEEN_KEY, JSON.stringify(seen));
-    loadChats();
   }catch(e){}
+
+  // Look up in already-loaded list — no extra API call needed
+  const detail = CHATS_DATA.find(co => co.kvKey === key);
+  if(!detail){
+    alert('Konversation nicht in der Liste gefunden — bitte aktualisieren.');
+    return;
+  }
 
   const modal = document.createElement('div');
   modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(16px);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px';
-  modal.innerHTML = '<div style="background:#080808;border:1px solid rgba(0,242,255,.3);border-radius:18px;width:100%;max-width:760px;padding:30px;text-align:center;color:#666;font-family:Orbitron;letter-spacing:2px">⏳ LADE KONVERSATION ...</div>';
   modal.onclick = (e) => { if(e.target === modal) modal.remove(); };
   document.body.appendChild(modal);
-
-  let detail;
-  try{
-    const r = await fetch(WORKER_URL + '/api/admin/conversation/' + kvKey, { headers: { 'Authorization': 'Bearer ' + (localStorage.getItem(TOKEN_KEY) || '') } });
-    detail = await r.json();
-  }catch(e){ detail = null; }
-  if(!detail || detail.error){
-    modal.innerHTML = '<div style="background:#080808;border:1px solid #ff4d6d;border-radius:18px;width:100%;max-width:520px;padding:30px;text-align:center;color:#ff4d6d;font-family:Orbitron;letter-spacing:1.5px;font-size:12px">⚠️ FEHLER BEIM LADEN<br><br><button onclick="this.closest(\'[style*=fixed]\').remove()" style="margin-top:14px;background:#1a1a1a;color:#fff;border:1px solid #333;padding:10px 20px;border-radius:8px;cursor:pointer;font-family:Orbitron">SCHLIESSEN</button></div>';
-    return;
-  }
 
   const msgs = (detail.messages || []).map(m => {
     const isUser = m.role === 'user';
@@ -2105,7 +2207,7 @@ async function openChat(kvKey){
       '<button onclick="this.closest(\'[style*=fixed]\').remove()" style="background:transparent;border:1px solid #333;color:#888;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;flex-shrink:0">✕</button>'+
     '</div>'+
     '<div style="flex:1;overflow-y:auto;padding:24px;background:radial-gradient(ellipse at top,#080808,#020202)">'+
-      (msgs || '<div style="text-align:center;color:#666;padding:30px;font-family:Orbitron;font-size:11px;letter-spacing:2px">KEINE NACHRICHTEN</div>')+
+      (msgs || (detail.lastMsg ? '<div style="display:flex;justify-content:flex-start;margin-bottom:10px"><div style="max-width:80%;padding:12px 16px;border-radius:14px;background:#0e0e0e;border:1px solid #1a1a1a;color:#ddd;border-bottom-left-radius:4px;font-size:13px;line-height:1.6"><div style="font-family:Orbitron;font-size:8px;letter-spacing:1.2px;color:#666;margin-bottom:5px;font-weight:700">🤖 LETZTE NACHRICHT</div><div style="white-space:pre-wrap">'+escAdm(detail.lastMsg)+'</div></div></div>' : '<div style="text-align:center;color:#666;padding:30px;font-family:Orbitron;font-size:11px;letter-spacing:2px">KEINE NACHRICHTEN</div>'))+
     '</div>'+
     (detail.email ? '<div style="padding:14px 24px;background:#040404;border-top:1px solid #0f0f0f;display:flex;gap:10px;flex-wrap:wrap">'+
       '<a href="mailto:'+escAdm(detail.email)+'?subject='+encodeURIComponent('Re: Deine Anfrage bei LEXORD (#'+(detail.sessionId||'').slice(0,12)+')')+'" style="flex:1;text-align:center;padding:12px;background:linear-gradient(135deg,#00ff88,#00cc6a);color:#000;border-radius:9px;font-family:Orbitron;font-weight:900;font-size:10px;letter-spacing:1.5px;text-decoration:none">📧 ANTWORTEN AN '+escAdm(detail.email)+'</a>'+
@@ -2113,13 +2215,10 @@ async function openChat(kvKey){
   '</div>';
 }
 
-async function deleteChat(kvKey){
-  if(!confirm('Diese Konversation wirklich löschen?')) return;
-  try{
-    await fetch(WORKER_URL + '/api/admin/conversation/' + kvKey, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + (localStorage.getItem(TOKEN_KEY) || '') } });
-    CHATS_DATA = CHATS_DATA.filter(co => encodeURIComponent(co.kvKey) !== kvKey);
-    renderChats(CHATS_DATA);
-  }catch(e){ alert('Fehler beim Löschen'); }
+function deleteChat(kvKey){
+  if(!confirm('Diese Konversation aus der lokalen Ansicht ausblenden?')) return;
+  CHATS_DATA = CHATS_DATA.filter(co => encodeURIComponent(co.kvKey) !== kvKey);
+  renderChats(CHATS_DATA);
 }
 
 function escAdm(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}

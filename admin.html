@@ -1883,32 +1883,42 @@ function updateReviewSelCount(){
 }
 
 function buildReviewEmailBody(name){
-  const n = (name || 'Kunde').replace(/</g,'&lt;');
+  // Plain text — the existing /admin/orders/:nr/email endpoint escapes HTML.
+  // URLs auto-link in all major email clients (Gmail, Outlook, Apple Mail).
+  const n = (name || 'Kunde');
   return [
-    '<p style="margin:0 0 14px 0;color:#fff;font-size:16px">Hi <strong>'+n+'</strong>,</p>',
-    '<p style="margin:0 0 14px 0">danke fuer dein Vertrauen in LEXORD! Jeder Controller wird von <strong style="color:#fff">mir persoenlich</strong> in der Werkstatt in Domsuehl gebaut &mdash; und ich bin neugierig: <strong style="color:#00f2ff">wie war\'s?</strong></p>',
-    '<p style="margin:0 0 20px 0">Eine kurze Bewertung &mdash; Google oder Trustpilot &mdash; hilft anderen Gamern uns zu finden. Als Dankeschoen: <strong style="color:#ffae00">5 % Rabatt auf deine naechste Bestellung</strong>.</p>',
-    '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:8px 0 20px"><tr>',
-    '<td width="50%" style="padding:0 6px 0 0;vertical-align:top">',
-    '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#0e0e0e;border:1px solid #2a2a2a;border-radius:10px"><tr><td align="center" style="padding:22px 14px">',
-    '<div style="font-size:30px;line-height:1;margin-bottom:8px;font-weight:900;color:#4285F4">G</div>',
-    '<div style="font-size:10px;font-weight:700;letter-spacing:2px;color:#fff;margin-bottom:12px">GOOGLE</div>',
-    '<a href="https://share.google/LyDufjCSigZwLBLwS" target="_blank" style="display:inline-block;padding:10px 18px;background:#4285F4;color:#fff;font-size:10px;font-weight:900;letter-spacing:1.5px;text-decoration:none;border-radius:6px">5 STERNE GEBEN &rarr;</a>',
-    '</td></tr></table></td>',
-    '<td width="50%" style="padding:0 0 0 6px;vertical-align:top">',
-    '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#0e0e0e;border:1px solid #2a2a2a;border-radius:10px"><tr><td align="center" style="padding:22px 14px">',
-    '<div style="font-size:30px;line-height:1;margin-bottom:8px;color:#00b67a">&#9733;</div>',
-    '<div style="font-size:10px;font-weight:700;letter-spacing:2px;color:#fff;margin-bottom:12px">TRUSTPILOT</div>',
-    '<a href="https://de.trustpilot.com/review/Lexord.de" target="_blank" style="display:inline-block;padding:10px 18px;background:#00b67a;color:#fff;font-size:10px;font-weight:900;letter-spacing:1.5px;text-decoration:none;border-radius:6px">REZENSION &rarr;</a>',
-    '</td></tr></table></td>',
-    '</tr></table>',
-    '<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:rgba(255,174,0,.06);border:1px dashed rgba(255,174,0,.4);border-radius:10px;margin-bottom:18px"><tr><td style="padding:18px;text-align:center">',
-    '<div style="font-size:9px;color:#ffae00;letter-spacing:2px;margin-bottom:8px">// DEIN DANKESCHOEN</div>',
-    '<div style="display:inline-block;padding:10px 20px;background:#000;border:1px solid #ffae00;border-radius:6px;font-family:monospace;font-size:18px;font-weight:900;letter-spacing:5px;color:#ffae00">DANKE5</div>',
-    '<div style="font-size:10px;color:#888;margin-top:8px">5 % auf lexord.de &middot; Gueltig 60 Tage</div>',
-    '</td></tr></table>',
-    '<p style="margin:0;color:#888;font-size:13px;line-height:1.7">Falls etwas nicht gepasst hat: <a href="mailto:Kontakt@Lexord.de" style="color:#00f2ff;text-decoration:none">schreib mir direkt</a> &mdash; ich melde mich persoenlich.</p>'
-  ].join('');
+    'Hi ' + n + ',',
+    '',
+    'danke fuer dein Vertrauen in LEXORD! Jeder Controller wird von mir',
+    'persoenlich in der Werkstatt in Domsuehl gebaut - und ich bin neugierig:',
+    'wie war\'s?',
+    '',
+    'Eine kurze Bewertung hilft uns sehr - und du bekommst 5 % Rabatt fuer',
+    'deinen naechsten Besuch.',
+    '',
+    '★ Google Bewertung:',
+    'https://share.google/LyDufjCSigZwLBLwS',
+    '',
+    '★ Trustpilot:',
+    'https://de.trustpilot.com/review/Lexord.de',
+    '',
+    '----------------------------------------',
+    'DEIN DANKESCHOEN: 5 % RABATT-CODE',
+    '----------------------------------------',
+    '',
+    '   CODE:  DANKE5',
+    '   Einloesbar auf lexord.de',
+    '   Gueltig 60 Tage',
+    '',
+    '----------------------------------------',
+    '',
+    'Falls etwas nicht gepasst hat: schreib mir direkt - ich melde mich',
+    'persoenlich. Konstruktives Feedback hilft mir mehr als ein leiser Schwund.',
+    '',
+    'Danke fuer dein Vertrauen,',
+    'Leon Schulz',
+    'Gruender LEXORD(R) Engineering'
+  ].join('\n');
 }
 
 async function sendReviewRequests(){
@@ -1922,11 +1932,11 @@ async function sendReviewRequests(){
   for(const orderNr of orderNumbers){
     const o = REVIEW_ORDERS.find(x => x.orderNr === orderNr);
     if(!o || !o.email){ failed++; continue; }
-    const htmlBody = buildReviewEmailBody(o.name);
+    const textBody = buildReviewEmailBody(o.name);
     try{
       const r = await api('/admin/orders/'+encodeURIComponent(orderNr)+'/email', {
         method: 'POST',
-        body: JSON.stringify({ subject, body: htmlBody, html: true })
+        body: JSON.stringify({ subject, body: textBody })
       });
       if(r && (r.success || r.ok)){
         markReviewSent(orderNr);
@@ -1951,11 +1961,11 @@ async function sendSingleReviewRequest(orderNr, btn){
     return;
   }
   const subject = "Wie war's? Hinterlass uns deine Bewertung – 5 % Rabatt als Dankeschön";
-  const htmlBody = buildReviewEmailBody(o.name);
+  const textBody = buildReviewEmailBody(o.name);
   try{
     const r = await api('/admin/orders/'+encodeURIComponent(orderNr)+'/email', {
       method: 'POST',
-      body: JSON.stringify({ subject, body: htmlBody, html: true })
+      body: JSON.stringify({ subject, body: textBody })
     });
     if(r && (r.success || r.ok)){
       markReviewSent(orderNr);

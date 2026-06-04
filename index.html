@@ -1002,9 +1002,6 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
 /* Section title shimmer on view */
 @keyframes lxdShimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 
-/* WhatsApp Order Button polish */
-#lxd-wa-order:hover{background:rgba(37,211,102,.12)!important;border-color:#25D366!important;transform:translateY(-1px);box-shadow:0 6px 18px rgba(37,211,102,.2)}
-
 /* Real reviews mini-widgets hover */
 .lxd-reviews-real a:hover{border-color:rgba(0,242,255,.3)!important;background:#0c0c0c!important;transform:translateY(-2px)}
 @media(max-width:600px){.lxd-reviews-real{grid-template-columns:1fr!important}}
@@ -1303,13 +1300,6 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/klarna.svg" style="height:14px;filter:invert(1);opacity:.45" alt="Klarna">
       </div>
       <div id="pp-btn-cont"></div>
-
-      <!-- WhatsApp Quick-Buy Alternative -->
-      <a id="lxd-wa-order" href="#" onclick="lxdWhatsAppOrder();return false;" style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:10px;padding:13px 16px;background:rgba(37,211,102,.06);border:1px solid rgba(37,211,102,.4);color:#25D366;font-family:Orbitron;font-weight:700;font-size:10px;letter-spacing:1.5px;border-radius:10px;text-decoration:none;transition:.25s">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-        <span>PER WHATSAPP BESTELLEN</span>
-      </a>
-
       <div class="vat-lbl">Gesamtpreis inkl. Versand · Keine MwSt. § 19 UStG</div>
       <div class="trust-row">
         <span class="trust-chip">🔒 SSL</span><span class="trust-chip">✓ KÄUFERSCHUTZ</span>
@@ -2916,13 +2906,54 @@ const DISCOUNT_CODES={
 const WELCOME_CODES=['WILLKOMMEN10','WELCOME10','WELCOME'];
 let activeDiscount=null,cart=[],recentlyViewed=[];
 
-/* Geraete-Fingerprint fuer Welcome-Code-Lock (kombiniert UA + Screen + Sprache + Zeitzone) */
+/* Hardware-Fingerprint (VPN-resistent: kombiniert Canvas + WebGL + Audio + Fonts + Hardware) */
 function getDeviceFP(){
   try{
     let fp=localStorage.getItem('lxrd_fp');if(fp)return fp;
-    const raw=[navigator.userAgent,navigator.language,screen.width+'x'+screen.height+'x'+screen.colorDepth,new Date().getTimezoneOffset(),navigator.hardwareConcurrency||0,navigator.platform||''].join('|');
+    const signals=[
+      navigator.userAgent,
+      navigator.language,
+      (navigator.languages||[]).join(','),
+      screen.width+'x'+screen.height+'x'+screen.colorDepth,
+      screen.availWidth+'x'+screen.availHeight,
+      new Date().getTimezoneOffset(),
+      Intl.DateTimeFormat().resolvedOptions().timeZone||'',
+      navigator.hardwareConcurrency||0,
+      navigator.deviceMemory||0,
+      navigator.platform||'',
+      navigator.maxTouchPoints||0,
+      (navigator.cookieEnabled?1:0),
+      ('ontouchstart'in window?1:0)
+    ];
+    // Canvas fingerprint (Hardware-spezifisch, VPN ändert das nicht)
+    try{
+      const c=document.createElement('canvas');c.width=200;c.height=50;
+      const ctx=c.getContext('2d');
+      ctx.textBaseline='alphabetic';ctx.fillStyle='#f60';ctx.fillRect(0,0,100,50);
+      ctx.fillStyle='#069';ctx.font='14px Arial';ctx.fillText('LEXORD® FP·42x',2,15);
+      ctx.fillStyle='rgba(102,204,0,.7)';ctx.font='12px Times';ctx.fillText('Engineer',4,30);
+      signals.push(c.toDataURL().slice(-50));
+    }catch(e){}
+    // WebGL renderer (GPU-Hardware)
+    try{
+      const gl=document.createElement('canvas').getContext('webgl')||document.createElement('canvas').getContext('experimental-webgl');
+      if(gl){
+        const dbg=gl.getExtension('WEBGL_debug_renderer_info');
+        if(dbg)signals.push(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)||'');
+        signals.push(gl.getParameter(gl.VERSION)||'');
+      }
+    }catch(e){}
+    // AudioContext fingerprint
+    try{
+      const AC=window.OfflineAudioContext||window.webkitOfflineAudioContext;
+      if(AC){
+        const ac=new AC(1,44100,44100);
+        signals.push(ac.sampleRate+'_'+(ac.destination&&ac.destination.maxChannelCount||0));
+      }
+    }catch(e){}
+    const raw=signals.join('|');
     let h=0;for(let i=0;i<raw.length;i++){h=((h<<5)-h+raw.charCodeAt(i))|0;}
-    fp='fp_'+Math.abs(h).toString(36)+'_'+Math.random().toString(36).slice(2,8);
+    fp='fp_'+Math.abs(h).toString(36);
     localStorage.setItem('lxrd_fp',fp);return fp;
   }catch(e){return 'fp_anon';}
 }
@@ -2952,6 +2983,27 @@ async function applyDiscount(){
   const isPersonalOld=/^LXRD\d{4}$/.test(code);
   const isReferral=isPersonalNew||isPersonalOld;
   const isWelcome=WELCOME_CODES.includes(code)||(hardcoded&&hardcoded.welcome);
+
+  // === REFERRAL-CODE SCHUTZ — nur Controller-Konfiguration, einmalig, IP-/FP-Lock ===
+  if(isReferral){
+    // 1) Eigenen Code nicht selbst einlösen
+    const myOwn=(localStorage.getItem('lxd_my_ref')||'').toUpperCase();
+    if(myOwn===code){err.innerText='✗ Eigene Empfehlungs-Codes nicht einlösbar';err.style.display='block';activeDiscount=null;updateCart();return;}
+    // 2) Cart muss konfigurierten Controller enthalten
+    if(!cart.some(isCustomItem)){err.innerText='✗ Nur bei Controller-Konfiguration einlösbar';err.style.display='block';activeDiscount=null;updateCart();return;}
+    // 3) Lokal: schon mal verwendet auf diesem Gerät?
+    let refUsed=[];try{refUsed=JSON.parse(localStorage.getItem('lxrd_ref_used')||'[]');}catch(e){}
+    if(refUsed.length){err.innerText='✗ Empfehlungs-Code bereits eingelöst (1× pro Gerät)';err.style.display='block';activeDiscount=null;updateCart();return;}
+    // 4) Server-Check: IP + Fingerprint (VPN-resistent)
+    try{
+      const r=await fetch(CF_WORKER_URL+'/api/discount/check',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({code,fp:getDeviceFP(),referral:true})
+      });
+      const cd=await r.json();
+      if(cd.alreadyUsed){err.innerText='✗ '+(cd.error||'Bereits eingelöst');err.style.display='block';activeDiscount=null;updateCart();return;}
+    }catch(e){/* offline → lokaler Lock greift */}
+  }
 
   // Welcome-Code lokaler Geräte-Lock
   if(isWelcome){
@@ -3644,13 +3696,13 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLogin();closeA
   </div>
 </div>
 
-<!-- Schwebender Empfehlungs-Button — neben dem KI-Button -->
-<button id="lxd-ref-btn" onclick="lxdOpenShare()" aria-label="Empfehlen & Sparen" title="Empfehlen & 10 € sparen"
-  style="position:fixed;bottom:40px;right:100px;width:48px;height:48px;border-radius:50%;background:rgba(8,8,8,.92);backdrop-filter:blur(10px);border:1px solid rgba(255,174,0,.45);cursor:pointer;color:#ffae00;font-size:20px;z-index:9000;box-shadow:0 4px 14px rgba(0,0,0,.55);transition:.25s;display:flex;align-items:center;justify-content:center">🎁</button>
+<!-- Empfehlungs-Button — gleicher Stil wie KI-Button, direkt über KI-Button -->
+<button id="lxd-ref-btn" onclick="lxdOpenShare()" aria-label="Empfehlen & 10 € sparen" title="Empfehlen & 10 € sparen">🎁</button>
 <style>
-#lxd-ref-btn:hover{transform:translateY(-2px);border-color:#ffae00;box-shadow:0 8px 22px rgba(255,174,0,.35)}
-#lxd-ref-btn::after{content:'-10 €';position:absolute;bottom:-6px;right:-6px;background:#000;border:1px solid #ffae00;color:#ffae00;font-family:'Orbitron';font-size:7px;font-weight:900;letter-spacing:.5px;padding:1px 4px;border-radius:4px;line-height:1.2}
-@media(max-width:560px){#lxd-ref-btn{bottom:36px;right:90px;width:44px;height:44px;font-size:18px}}
+#lxd-ref-btn{position:fixed;bottom:100px;right:28px;width:60px;height:60px;background:linear-gradient(135deg,var(--neon) 0%,var(--neon2) 100%);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:9000;box-shadow:0 8px 28px rgba(0,242,255,.4),0 4px 12px rgba(188,19,254,.25);color:#000;transition:.3s;font-size:24px}
+#lxd-ref-btn:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 12px 40px rgba(0,242,255,.55),0 6px 18px rgba(188,19,254,.35)}
+#lxd-ref-btn::after{content:'-10 €';position:absolute;bottom:-4px;right:-4px;background:#000;border:1.5px solid #00f2ff;color:#00f2ff;font-family:'Orbitron';font-size:8px;font-weight:900;letter-spacing:.5px;padding:2px 5px;border-radius:5px;line-height:1.2}
+@media(max-width:760px){#lxd-ref-btn{bottom:90px;right:22px;width:56px;height:56px;font-size:22px}}
 </style>
 
 <script>
@@ -3788,26 +3840,6 @@ function lxdShare(platform){
     if(window.lxrdTrack)lxrdTrack.lead();
   }
 }
-
-/* ═══ WHATSAPP QUICK-BUY — Cart per WhatsApp bestellen ═══
-   Öffnet WhatsApp mit vorausgefüllter Bestell-Nachricht inkl. Warenkorb-Inhalt.
-   In DE conversion-stark: viele Kunden ziehen Chat über Online-Checkout vor.
-══════════════════════════════════════════════════════════════════════ */
-window.lxdWhatsAppOrder = function(){
-  let cart=[];
-  try{cart=JSON.parse(localStorage.getItem('lxrd_cart')||'[]');}catch(e){}
-  if(!cart.length){
-    if(window.toast)toast('Warenkorb ist leer','err');
-    return;
-  }
-  const total=cart.reduce((s,i)=>s+(i.price||0)*(i.qty||1),0);
-  const list=cart.map(i=>`• ${i.name}${i.variant?' ('+i.variant+')':''} × ${i.qty||1} — ${((i.price||0)*(i.qty||1)).toFixed(2).replace('.',',')} €`).join('%0A');
-  const myRef=localStorage.getItem('lxd_referred_by')||localStorage.getItem('lxd_my_ref')||'';
-  const refLine=myRef?'%0A%0ARabatt-Code: '+myRef:'';
-  const msg='Hallo LEXORD,%0A%0Aich möchte folgendes bestellen:%0A%0A'+list+'%0A%0AGesamt: '+total.toFixed(2).replace('.',',')+' €'+refLine+'%0A%0ABitte gib mir Bescheid wegen Versand und Bezahlung. Danke!';
-  window.open('https://wa.me/4915204718720?text='+msg,'_blank','noopener,noreferrer');
-  if(window.lxrdTrack)lxrdTrack.initiateCheckout(total,'EUR');
-};
 
 /* ═══ PWA INSTALL BANNER — als App auf Handy speicherbar ═══
    Browser feuert 'beforeinstallprompt' wenn manifest.json + service worker da sind.

@@ -2905,7 +2905,14 @@ const EU_ZONE1=['AT','BE','NL','LU','PL','CZ','SK','HU','SI'];
 const EU_ZONE2=['FR','IT','ES','SE','DK','FI','GR','PT','RO','BG','HR','EE','LV','LT','CY','MT','IE'];
 function getShipping(land,sub){if(land==='DE')return sub>=50?0:6.99;if(EU_ZONE1.includes(land))return 14.49;if(EU_ZONE2.includes(land)||land==='EU_OTHER')return 16.49;if(land==='CH')return 20.99;if(land==='GB')return 19.99;if(land==='US')return 24.99;return 22.49;}
 
-const DISCOUNT_CODES={'WILLKOMMEN10':{type:'percent',value:10,label:'10% Willkommens-Bonus',welcome:true,customOnly:true},'LEXORD15':{type:'percent',value:15,label:'15% Treue-Rabatt'},'REPAIR5':{type:'fixed',value:5,label:'5€ Reparatur-Rabatt'},'SOMMER2026':{type:'percent',value:20,label:'20% Sommer-Deal'}};
+const DISCOUNT_CODES={
+  'WILLKOMMEN10':{type:'percent',value:10,label:'10% Willkommens-Bonus',welcome:true,customOnly:true},
+  'LEXORD15':{type:'percent',value:15,label:'15% Treue-Rabatt'},
+  'REPAIR5':{type:'fixed',value:5,label:'5€ Reparatur-Rabatt'},
+  'SOMMER2026':{type:'percent',value:20,label:'20% Sommer-Deal'},
+  'DANKE5':{type:'percent',value:5,label:'5% Dankeschön-Rabatt'},
+  'DRIFT10':{type:'fixed',value:10,label:'10€ Drift-Aktion'}
+};
 const WELCOME_CODES=['WILLKOMMEN10','WELCOME10','WELCOME'];
 let activeDiscount=null,cart=[],recentlyViewed=[];
 
@@ -2925,6 +2932,7 @@ function customSubtotal(){return cart.filter(isCustomItem).reduce((a,i)=>a+i.pri
 
 function calcDiscount(s){
   if(!activeDiscount)return 0;
+  if(activeDiscount.type==='shipping'||activeDiscount.freeShipping)return 0; // Versand wird separat 0 gesetzt
   /* Welcome/customOnly-Codes nur auf konfigurierte Controller-Items anwenden */
   const base=activeDiscount.customOnly?customSubtotal():s;
   if(base<=0)return 0;
@@ -2936,32 +2944,57 @@ async function applyDiscount(){
   const ok=document.getElementById('discount-ok'),err=document.getElementById('discount-err');
   ok.style.display='none';err.style.display='none';
   if(!code){err.innerText='BITTE CODE EINGEBEN';err.style.display='block';return;}
-  const d=DISCOUNT_CODES[code];const isPersonal=/^LXRD\d{4}$/.test(code);
-  if(!d && !isPersonal){err.innerText='✗ UNGÜLTIGER RABATTCODE';err.style.display='block';activeDiscount=null;updateCart();return;}
 
-  const isWelcome=WELCOME_CODES.includes(code)||(d&&d.welcome);
+  // 1) Hardcoded Codes (offline-tauglich)
+  const hardcoded=DISCOUNT_CODES[code];
+  // 2) Personal-Code Pattern: alt 'LXRD####' oder neu 'LXR' + 5-8 Zeichen
+  const isPersonalNew=/^LXR[A-Z0-9]{5,8}$/.test(code);
+  const isPersonalOld=/^LXRD\d{4}$/.test(code);
+  const isReferral=isPersonalNew||isPersonalOld;
+  const isWelcome=WELCOME_CODES.includes(code)||(hardcoded&&hardcoded.welcome);
 
-  /* Welcome-Code-Beschraenkungen */
+  // Welcome-Code lokaler Geräte-Lock
   if(isWelcome){
-    /* 1) Geraete-Lock via localStorage — bereits eingeloest? */
     let usedList=[];try{usedList=JSON.parse(localStorage.getItem('lxrd_welcome_used')||'[]');}catch(e){}
     if(usedList.length){err.innerText='✗ Willkommens-Bonus bereits eingelöst (1× pro Gerät)';err.style.display='block';activeDiscount=null;updateCart();return;}
-    /* 2) Cart muss mindestens einen konfigurierten Controller enthalten */
     if(!cart.some(isCustomItem)){err.innerText='✗ Nur für individuell konfigurierte Controller einlösbar';err.style.display='block';activeDiscount=null;updateCart();return;}
-    /* 3) Server-Check: IP- und Geraete-Fingerprint */
-    try{
-      const r=await fetch(CF_WORKER_URL+'/api/discount/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,fp:getDeviceFP()})});
-      const cd=await r.json();
-      if(cd.alreadyUsed){err.innerText='✗ '+(cd.error||'Bonus bereits eingelöst');err.style.display='block';activeDiscount=null;updateCart();return;}
-    }catch(e){/* Worker offline -> Geraete-Lock greift weiterhin */}
-  } else {
-    /* Standard-Codes: nur Email-Check (wie bisher) */
-    let custEmail='';try{const c=JSON.parse(sessionStorage.getItem('lxrd_customer')||'{}');custEmail=c.email||'';}catch(e){}
-    if(custEmail){try{const r=await fetch(CF_WORKER_URL+'/api/discount/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,email:custEmail})});const cd=await r.json();if(cd.alreadyUsed){err.innerText='✗ Dieser Code wurde bereits eingelöst';err.style.display='block';activeDiscount=null;updateCart();return;}}catch(e){}}
   }
 
-  if(isPersonal)activeDiscount={type:'percent',value:15,label:'15% Treue-Rabatt',code};
-  else activeDiscount={...d,code};
+  // 3) Worker-Check für Admin-Codes + Welcome-Server-Validation
+  let custEmail='';try{const c=JSON.parse(sessionStorage.getItem('lxrd_customer')||'{}');custEmail=c.email||'';}catch(e){}
+  let workerSays=null;
+  try{
+    const r=await fetch(CF_WORKER_URL+'/api/discount/check',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({code,email:custEmail,fp:getDeviceFP()})
+    });
+    workerSays=await r.json();
+  }catch(e){/* Worker offline */}
+
+  // Worker hat 'already used' geantwortet
+  if(workerSays&&workerSays.alreadyUsed){
+    err.innerText='✗ '+(workerSays.error||'Code bereits eingelöst');err.style.display='block';
+    activeDiscount=null;updateCart();return;
+  }
+
+  // Code-Auflösung
+  if(workerSays&&workerSays.valid){
+    // Admin-Code aus KV oder server-validierter Code
+    let label=workerSays.label||code;
+    if(workerSays.type==='percent')      activeDiscount={type:'percent',value:workerSays.value||workerSays.percentOff||10,label:label,code};
+    else if(workerSays.type==='fixed')   activeDiscount={type:'fixed',value:workerSays.value||workerSays.amountOff||5,label:label,code};
+    else if(workerSays.type==='shipping')activeDiscount={type:'shipping',value:0,label:'Versandkostenfrei',code,freeShipping:true};
+    else                                  activeDiscount={type:'percent',value:10,label:label,code};
+  } else if(hardcoded){
+    activeDiscount={...hardcoded,code};
+  } else if(isReferral){
+    // Referral-Code: 10 € fix Rabatt
+    activeDiscount={type:'fixed',value:10,label:'10 € Empfehlungs-Rabatt',code};
+  } else {
+    err.innerText='✗ UNGÜLTIGER RABATTCODE';err.style.display='block';
+    activeDiscount=null;updateCart();return;
+  }
+
   ok.innerText='✓ '+activeDiscount.label+' AKTIVIERT';ok.style.display='block';
   toast('✓ Rabattcode '+code+' aktiviert!','ok');updateCart();
 }

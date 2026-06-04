@@ -1,0 +1,44 @@
+# robots.txt — LEXORD® Engineering
+# https://lexord.de
+# Letzte Aktualisierung: 2026-06-04
+
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /admin/
+Disallow: /api/
+Disallow: /worker.js
+Disallow: /diag.html
+Disallow: /vapid-setup.html
+Disallow: /lxrd-tracker.js
+Disallow: /sw.js
+Disallow: /*.json$
+Disallow: /functions/
+Disallow: /Reperaturen/
+
+# Sitemap
+Sitemap: https://lexord.de/sitemap.xml
+
+# Bilder & Assets explizit erlauben (für Google Images)
+User-agent: Googlebot-Image
+Allow: /
+
+# Crawler-Throttling für gierige Bots (LLMs, Scraper)
+User-agent: GPTBot
+Disallow: /admin.html
+Disallow: /admin/
+Allow: /
+
+User-agent: ClaudeBot
+Disallow: /admin.html
+Disallow: /admin/
+Allow: /
+
+User-agent: Bytespider
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 5
+
+User-agent: AhrefsBot
+Crawl-delay: 5

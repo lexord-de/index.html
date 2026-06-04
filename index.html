@@ -2858,11 +2858,34 @@ async function applyDiscount(){
   toast('✓ Rabattcode '+code+' aktiviert!','ok');updateCart();
 }
 
-const PRODUCTS=[{name:'LXRD Performance Black',price:240,img:'Photoroom_20260305_123705.png',cat:'Controller'},{name:'LXRD Plus Black',price:180,img:'Photoroom_20260305_140346.png',cat:'Controller'},{name:'LXRD Basic Black',price:105,img:'Photoroom_20260402_014813.png',cat:'Controller'},{name:'LXRD Elite Pro',price:280,img:'Photoroom_20260306_112425.png',cat:'Controller'},{name:'LXRD Stealth Edition',price:220,img:'Photoroom_20260501_094506.png',cat:'Controller'},{name:'LXRD Wallet',price:39.90,img:'img/lxrd-wallet.jpg',cat:'Atelier',url:'zubehoer.html'},{name:'Stickzange Pro',price:5,img:'Stickzange.PNG',cat:'Werkzeug'},{name:'Paddle System V2',price:40,img:'Photoroom_20260304_212902.png',cat:'Zubehör'},{name:'TMR Stick Upgrade Kit',price:55,img:'Photoroom_20260305_123705.png',cat:'Zubehör'},{name:'Hall Effect Upgrade Kit',price:35,img:'Photoroom_20260305_140346.png',cat:'Zubehör'},{name:'GRIP Gehäuse Set',price:28,img:'Photoroom_20260402_014813.png',cat:'Zubehör'},{name:'Clicky Trigger Kit',price:22,img:'Photoroom_20260304_212902.png',cat:'Zubehör'}];
+const PRODUCTS=[
+  // Controller
+  {name:'LXRD Performance Black',price:240,img:'Photoroom_20260305_123705.png',cat:'Controller',tags:'tmr stick clicky trigger paddle premium'},
+  {name:'LXRD Plus Black',price:180,img:'Photoroom_20260305_140346.png',cat:'Controller',tags:'hall effect drift paddle'},
+  {name:'LXRD Basic Black',price:105,img:'Photoroom_20260402_014813.png',cat:'Controller',tags:'einsteiger paddle'},
+  {name:'LXRD Elite Pro',price:280,img:'Photoroom_20260306_112425.png',cat:'Controller',tags:'tmr pro carbon rgb gravur top premium 4 paddles'},
+  {name:'LXRD Stealth Edition',price:220,img:'Photoroom_20260501_094506.png',cat:'Controller',tags:'hall effect matt limited'},
+  // Atelier
+  {name:'LXRD Wallet',price:39.90,img:'img/lxrd-wallet.jpg',cat:'Atelier',url:'zubehoer.html',tags:'portemonnaie bio petg rfid karten 3d druck'},
+  // Reparatur-Kits & Zubehör
+  {name:'Stickzange Pro',price:5,img:'stickzange-pro.PNG',cat:'Werkzeug',tags:'tool werkzeug stick entfernen reparatur'},
+  {name:'Paddle System V2',price:40,img:'paddle-system-v2.PNG',cat:'Zubehör',tags:'paddle umbau back-buttons mod'},
+  {name:'TMR Stick Upgrade Kit',price:55,img:'tmr-upgrade-kit.PNG',cat:'Zubehör',tags:'tmr stick driftfrei upgrade kit tunnelmagnet'},
+  {name:'Hall Effect Upgrade Kit',price:35,img:'hall-effect-kit.PNG',cat:'Zubehör',tags:'hall effect stick driftfrei magnet upgrade'},
+  {name:'GRIP Gehäuse Set',price:28,img:'grip-housing-set.PNG',cat:'Zubehör',tags:'grip gehäuse soft touch case'},
+  {name:'Clicky Trigger Kit',price:22,img:'clicky-trigger-kit.PNG',cat:'Zubehör',tags:'clicky trigger mod L2 R2 mausklick'},
+  {name:'Power Akku Umbau',price:45,img:'power-akku-umbau.PNG',cat:'Zubehör',tags:'akku batterie 2000mah upgrade laufzeit power'},
+  {name:'Anti-Stickdrift Bundle',price:75,img:'ANTI STICKDRIFT BUNDLE.PNG',cat:'Zubehör',tags:'bundle anti drift tmr hall effect set'},
+  // Service
+  {name:'Stick-Drift Reparatur',price:25,img:'IMG_7023.png',cat:'Reparatur',url:'reparatur.html',tags:'drift stick reparatur dualsense joy-con'},
+  {name:'HDMI-Port Reparatur',price:65,img:'IMG_7023.png',cat:'Reparatur',url:'reparatur.html',tags:'hdmi konsole ps5 ps4 xbox switch'},
+  {name:'Joy-Con Hall-Effect Upgrade',price:45,img:'IMG_7023.png',cat:'Reparatur',url:'reparatur.html',tags:'joy-con joycon nintendo switch hall effect drift'}
+];
 
-function deskSearch(v){const d=document.getElementById('srch-drop');if(v.length<2){d.style.display='none';return;}const f=PRODUCTS.filter(p=>p.name.toLowerCase().includes(v.toLowerCase())||p.cat.toLowerCase().includes(v.toLowerCase()));if(!f.length){d.innerHTML='<div class="srch-empty">KEINE ERGEBNISSE</div>';d.style.display='block';return;}d.innerHTML=f.map(p=>`<div class="srch-item" onclick="handleSrch('${esc(p.name)}',${p.price},'${p.img}','${p.url||''}')"><img src="${p.img}" alt=""><span class="srch-item-name">${esc(p.name)}</span><span class="srch-item-price">${p.price.toFixed(2)} €</span></div>`).join('');d.style.display='block';}
+function matchProduct(p,q){const Q=q.toLowerCase().trim();const hay=(p.name+' '+(p.cat||'')+' '+(p.tags||'')).toLowerCase();return hay.includes(Q);}
+function deskSearch(v){const d=document.getElementById('srch-drop');if(v.length<2){d.style.display='none';return;}const f=PRODUCTS.filter(p=>matchProduct(p,v));if(!f.length){d.innerHTML='<div class="srch-empty">KEINE ERGEBNISSE</div>';d.style.display='block';return;}d.innerHTML=f.map(p=>`<div class="srch-item" onclick="handleSrch('${esc(p.name)}',${p.price},'${p.img}','${p.url||''}')"><img src="${p.img}" alt="" onerror="this.src='IMG_7023.png'"><span class="srch-item-name">${esc(p.name)}<small style="display:block;font-size:8.5px;color:#666;letter-spacing:1.5px;margin-top:2px">${esc(p.cat||'')}</small></span><span class="srch-item-price">${p.price.toFixed(2)} €</span></div>`).join('');d.style.display='block';}
 function handleSrch(n,p,i,u){if(u){window.location.href=u;return;}addToCart(n,p,i);document.getElementById('desk-srch').value='';document.getElementById('srch-drop').style.display='none';}
-function mobSearch(v){const r=document.getElementById('mob-srch-res');if(v.length<2){r.innerHTML='';return;}const f=PRODUCTS.filter(p=>p.name.toLowerCase().includes(v.toLowerCase()));r.innerHTML=f.map(p=>`<div class="srch-item" onclick="${p.url?`window.location.href='${p.url}'`:`addToCart('${esc(p.name)}',${p.price},'${p.img}');document.getElementById('mob-srch-ov').classList.remove('on')`}" style="background:#0c0c0c;border-radius:8px;margin-bottom:8px;border:1px solid #111"><img src="${p.img}" alt=""><span class="srch-item-name">${esc(p.name)}</span><span class="srch-item-price">${p.price.toFixed(2)} €</span></div>`).join('')||'<div class="srch-empty">KEINE ERGEBNISSE</div>';}
+function mobSearch(v){const r=document.getElementById('mob-srch-res');if(v.length<2){r.innerHTML='';return;}const f=PRODUCTS.filter(p=>matchProduct(p,v));r.innerHTML=f.map(p=>`<div class="srch-item" onclick="${p.url?`window.location.href='${p.url}'`:`addToCart('${esc(p.name)}',${p.price},'${p.img}');document.getElementById('mob-srch-ov').classList.remove('on')`}" style="background:#0c0c0c;border-radius:8px;margin-bottom:8px;border:1px solid #111"><img src="${p.img}" alt="" onerror="this.src='IMG_7023.png'"><span class="srch-item-name">${esc(p.name)}<small style="display:block;font-size:8.5px;color:#666;letter-spacing:1.5px;margin-top:2px">${esc(p.cat||'')}</small></span><span class="srch-item-price">${p.price.toFixed(2)} €</span></div>`).join('')||'<div class="srch-empty">KEINE ERGEBNISSE</div>';}
 document.addEventListener('click',e=>{if(!e.target.closest('.srch-wrap'))document.getElementById('srch-drop').style.display='none';});
 
 function loadCart(){try{const s=localStorage.getItem('lxrd_cart');if(s)cart=JSON.parse(s);}catch(e){cart=[];}}

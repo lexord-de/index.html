@@ -3537,30 +3537,88 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLogin();closeA
      🚀 AUTOMATISCHE EMPFEHLUNG & INDEXIERUNG — keine Anmeldung nötig
      ═══════════════════════════════════════════════════════════════ -->
 
-<!-- Auto-Share & Referral Modal -->
+<!-- Multi-Step Referral & Share Modal -->
 <div id="lxd-share-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(16px);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity .3s">
-  <div style="background:#080808;border:1px solid rgba(0,242,255,.3);border-radius:18px;max-width:480px;width:100%;padding:36px 28px;text-align:center;position:relative;animation:slideUp .4s cubic-bezier(.2,.8,.2,1)">
-    <button onclick="lxdCloseShare()" style="position:absolute;top:14px;right:14px;background:transparent;border:1px solid #222;color:#888;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px">✕</button>
-    <div style="font-size:48px;margin-bottom:14px">🎁</div>
-    <h3 style="font-family:Orbitron;font-weight:900;font-size:1.3rem;letter-spacing:2px;color:#fff;margin-bottom:10px">EMPFEHLEN<br><span style="background:linear-gradient(90deg,#00f2ff,#bc13fe);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">&amp; SPAREN</span></h3>
-    <p style="font-size:14px;color:#aaa;line-height:1.6;margin-bottom:8px;font-weight:300">Empfiehl LEXORD weiter und <strong style="color:#fff">spar 10 €</strong> auf deine nächste Bestellung. Dein Freund bekommt auch <strong style="color:#fff">10 € Rabatt</strong>.</p>
-    <div style="display:inline-flex;align-items:center;gap:8px;padding:9px 16px;background:rgba(255,174,0,.06);border:1px dashed rgba(255,174,0,.4);border-radius:8px;font-family:monospace;font-size:14px;color:#ffae00;letter-spacing:4px;font-weight:900;margin:14px 0 20px" id="lxd-ref-code">DEIN-CODE</div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:14px">
-      <button onclick="lxdShare('whatsapp')" style="background:#25D366;color:#fff;border:none;padding:10px 16px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:10px;letter-spacing:1px;cursor:pointer;display:inline-flex;align-items:center;gap:6px">💬 WhatsApp</button>
-      <button onclick="lxdShare('telegram')" style="background:#0088cc;color:#fff;border:none;padding:10px 16px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:10px;letter-spacing:1px;cursor:pointer">✈️ Telegram</button>
-      <button onclick="lxdShare('email')" style="background:#444;color:#fff;border:none;padding:10px 16px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:10px;letter-spacing:1px;cursor:pointer">📧 E-Mail</button>
-      <button onclick="lxdShare('twitter')" style="background:#000;color:#fff;border:1px solid #444;padding:10px 16px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:10px;letter-spacing:1px;cursor:pointer">𝕏 Posten</button>
-      <button onclick="lxdShare('facebook')" style="background:#1877f2;color:#fff;border:none;padding:10px 16px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:10px;letter-spacing:1px;cursor:pointer">f Facebook</button>
-      <button onclick="lxdShare('pinterest')" style="background:#E60023;color:#fff;border:none;padding:10px 16px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:10px;letter-spacing:1px;cursor:pointer">📌 Pin</button>
-      <button onclick="lxdShare('reddit')" style="background:#FF4500;color:#fff;border:none;padding:10px 16px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:10px;letter-spacing:1px;cursor:pointer">↗ Reddit</button>
-      <button onclick="lxdShare('copy')" style="background:rgba(0,242,255,.1);color:#00f2ff;border:1px solid rgba(0,242,255,.3);padding:10px 16px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:10px;letter-spacing:1px;cursor:pointer">🔗 Link kopieren</button>
+  <div style="background:#080808;border:1px solid rgba(0,242,255,.3);border-radius:18px;max-width:520px;width:100%;position:relative;overflow:hidden;animation:slideUp .4s cubic-bezier(.2,.8,.2,1)">
+    <button onclick="lxdCloseShare()" style="position:absolute;top:14px;right:14px;background:transparent;border:1px solid #222;color:#888;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px;z-index:10">✕</button>
+
+    <!-- Step Indicator -->
+    <div style="display:flex;gap:6px;padding:18px 24px 0;justify-content:center">
+      <div class="lxd-rstep-dot" data-step="1" style="width:38px;height:3px;border-radius:2px;background:#00f2ff;transition:.3s"></div>
+      <div class="lxd-rstep-dot" data-step="2" style="width:38px;height:3px;border-radius:2px;background:#1a1a1a;transition:.3s"></div>
+      <div class="lxd-rstep-dot" data-step="3" style="width:38px;height:3px;border-radius:2px;background:#1a1a1a;transition:.3s"></div>
     </div>
-    <div style="font-family:Orbitron;font-size:8px;color:#555;letter-spacing:1.5px">✓ AUTOMATISCH IM CHECKOUT EINLÖSBAR</div>
+
+    <!-- STEP 1: Wie es funktioniert -->
+    <div class="lxd-rstep" data-step="1" style="padding:30px 32px 32px;text-align:center">
+      <div style="font-size:48px;margin-bottom:14px">🎁</div>
+      <h3 style="font-family:Orbitron;font-weight:900;font-size:1.4rem;letter-spacing:2.5px;color:#fff;margin-bottom:8px;line-height:1.2">EMPFEHLUNGS-<br><span style="background:linear-gradient(90deg,#00f2ff,#bc13fe);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">PROGRAMM</span></h3>
+      <div style="font-family:Orbitron;font-size:9px;color:#666;letter-spacing:2.5px;margin-bottom:24px">// SO FUNKTIONIERT'S</div>
+      <div style="display:flex;flex-direction:column;gap:14px;text-align:left;margin-bottom:28px">
+        <div style="display:flex;gap:14px;align-items:flex-start"><div style="width:32px;height:32px;border-radius:50%;background:rgba(0,242,255,.1);border:1px solid rgba(0,242,255,.3);color:#00f2ff;display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-weight:900;font-size:11px;flex-shrink:0">01</div><div><strong style="font-family:Orbitron;font-size:10px;letter-spacing:1.5px;color:#fff;display:block;margin-bottom:3px">REGISTRIEREN</strong><span style="font-size:12.5px;color:#999;line-height:1.55">Trag deine E-Mail ein und stimm den Bedingungen zu. Wir erstellen deinen persönlichen Code.</span></div></div>
+        <div style="display:flex;gap:14px;align-items:flex-start"><div style="width:32px;height:32px;border-radius:50%;background:rgba(0,242,255,.1);border:1px solid rgba(0,242,255,.3);color:#00f2ff;display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-weight:900;font-size:11px;flex-shrink:0">02</div><div><strong style="font-family:Orbitron;font-size:10px;letter-spacing:1.5px;color:#fff;display:block;margin-bottom:3px">EMPFEHLEN</strong><span style="font-size:12.5px;color:#999;line-height:1.55">Teile deinen Link mit Freunden. Sie bekommen <strong style="color:#fff">10 € Rabatt</strong> auf ihre erste Bestellung.</span></div></div>
+        <div style="display:flex;gap:14px;align-items:flex-start"><div style="width:32px;height:32px;border-radius:50%;background:rgba(255,174,0,.1);border:1px solid rgba(255,174,0,.3);color:#ffae00;display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-weight:900;font-size:11px;flex-shrink:0">03</div><div><strong style="font-family:Orbitron;font-size:10px;letter-spacing:1.5px;color:#fff;display:block;margin-bottom:3px">BELOHNUNG ERHALTEN</strong><span style="font-size:12.5px;color:#999;line-height:1.55">Sobald dein Freund bestellt: <strong style="color:#ffae00">10 € Gutschrift</strong> auf dein nächstes Produkt.</span></div></div>
+      </div>
+      <button onclick="lxdRefStep(2)" style="width:100%;padding:14px;background:linear-gradient(135deg,#00f2ff,#00bdd6);color:#000;border:none;border-radius:11px;font-family:Orbitron;font-weight:900;font-size:11px;letter-spacing:2px;cursor:pointer;transition:.2s">JETZT TEILNEHMEN →</button>
+      <div style="font-family:Orbitron;font-size:8px;color:#444;letter-spacing:1.5px;margin-top:14px">KOSTENFREI · KEINE VERPFLICHTUNG · JEDERZEIT KÜNDBAR</div>
+    </div>
+
+    <!-- STEP 2: E-Mail eingeben -->
+    <div class="lxd-rstep" data-step="2" style="padding:30px 32px 32px;text-align:center;display:none">
+      <div style="font-size:42px;margin-bottom:14px">📧</div>
+      <h3 style="font-family:Orbitron;font-weight:900;font-size:1.2rem;letter-spacing:2.5px;color:#fff;margin-bottom:8px">DEINE DATEN</h3>
+      <p style="font-size:13px;color:#888;line-height:1.6;margin-bottom:24px;font-weight:300">Wir senden dir deinen persönlichen Code per E-Mail. So findest du ihn immer wieder.</p>
+      <form id="lxd-ref-form" onsubmit="event.preventDefault();lxdSubmitRef();" style="text-align:left">
+        <label style="display:block;font-family:Orbitron;font-size:9px;color:#888;letter-spacing:1.5px;margin-bottom:6px">DEIN VORNAME</label>
+        <input type="text" id="lxd-ref-name" required placeholder="z. B. Marcel" style="width:100%;padding:13px 16px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:9px;font-family:Inter;font-size:14px;outline:none;margin-bottom:14px;transition:border-color .2s">
+        <label style="display:block;font-family:Orbitron;font-size:9px;color:#888;letter-spacing:1.5px;margin-bottom:6px">E-MAIL-ADRESSE</label>
+        <input type="email" id="lxd-ref-email" required placeholder="du@beispiel.de" style="width:100%;padding:13px 16px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:9px;font-family:Inter;font-size:14px;outline:none;margin-bottom:18px;transition:border-color .2s">
+        <label style="display:flex;align-items:flex-start;gap:8px;font-size:11.5px;color:#888;line-height:1.55;cursor:pointer;margin-bottom:18px">
+          <input type="checkbox" id="lxd-ref-consent" required style="margin-top:2px;flex-shrink:0;accent-color:#00f2ff;width:14px;height:14px">
+          <span>Ich stimme den <a href="#" onclick="openLegal('agb');return false;" style="color:#00f2ff">AGB</a> &amp; <a href="#" onclick="openLegal('datenschutz');return false;" style="color:#00f2ff">Datenschutzbestimmungen</a> zu und möchte Updates zu meinen Empfehlungen erhalten. Jederzeit abbestellbar. *</span>
+        </label>
+        <div style="display:flex;gap:10px">
+          <button type="button" onclick="lxdRefStep(1)" style="flex:0 0 auto;padding:14px 18px;background:transparent;border:1px solid #222;color:#888;border-radius:11px;font-family:Orbitron;font-weight:700;font-size:10px;letter-spacing:1.5px;cursor:pointer">← ZURÜCK</button>
+          <button type="submit" id="lxd-ref-submit" style="flex:1;padding:14px;background:linear-gradient(135deg,#00f2ff,#00bdd6);color:#000;border:none;border-radius:11px;font-family:Orbitron;font-weight:900;font-size:11px;letter-spacing:2px;cursor:pointer">CODE ERSTELLEN ⚡</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- STEP 3: Code + Share -->
+    <div class="lxd-rstep" data-step="3" style="padding:30px 32px 32px;text-align:center;display:none">
+      <div style="font-size:42px;margin-bottom:14px">✓</div>
+      <h3 style="font-family:Orbitron;font-weight:900;font-size:1.2rem;letter-spacing:2.5px;color:#fff;margin-bottom:8px">DEIN PERSÖNLICHER CODE</h3>
+      <p style="font-size:12.5px;color:#888;line-height:1.6;margin-bottom:18px;font-weight:300">Wir haben dir den Code auch per E-Mail geschickt. Teile ihn jetzt mit deinen Freunden:</p>
+      <div style="background:linear-gradient(135deg,rgba(0,242,255,.06),rgba(188,19,254,.04));border:1px dashed rgba(255,174,0,.4);border-radius:12px;padding:22px;margin-bottom:22px">
+        <div style="font-family:Orbitron;font-size:9px;color:#ffae00;letter-spacing:2px;margin-bottom:10px">// DEIN CODE</div>
+        <div style="font-family:'Space Mono',monospace;font-size:22px;color:#ffae00;letter-spacing:8px;font-weight:900;margin-bottom:10px" id="lxd-ref-code">DEIN-CODE</div>
+        <div style="font-family:Orbitron;font-size:8.5px;color:#666;letter-spacing:1.5px">10 € RABATT · BEIDE SEITEN</div>
+      </div>
+      <div style="font-family:Orbitron;font-size:10px;color:#888;letter-spacing:1.5px;margin-bottom:12px;text-align:left">JETZT TEILEN VIA</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-start;margin-bottom:14px">
+        <button onclick="lxdShare('whatsapp')" style="background:#25D366;color:#fff;border:none;padding:10px 14px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:9.5px;letter-spacing:1px;cursor:pointer;display:inline-flex;align-items:center;gap:6px">💬 WhatsApp</button>
+        <button onclick="lxdShare('telegram')" style="background:#0088cc;color:#fff;border:none;padding:10px 14px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:9.5px;letter-spacing:1px;cursor:pointer">✈️ Telegram</button>
+        <button onclick="lxdShare('email')" style="background:#444;color:#fff;border:none;padding:10px 14px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:9.5px;letter-spacing:1px;cursor:pointer">📧 E-Mail</button>
+        <button onclick="lxdShare('twitter')" style="background:#000;color:#fff;border:1px solid #444;padding:10px 14px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:9.5px;letter-spacing:1px;cursor:pointer">𝕏 Post</button>
+        <button onclick="lxdShare('facebook')" style="background:#1877f2;color:#fff;border:none;padding:10px 14px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:9.5px;letter-spacing:1px;cursor:pointer">f Facebook</button>
+        <button onclick="lxdShare('pinterest')" style="background:#E60023;color:#fff;border:none;padding:10px 14px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:9.5px;letter-spacing:1px;cursor:pointer">📌 Pin</button>
+        <button onclick="lxdShare('reddit')" style="background:#FF4500;color:#fff;border:none;padding:10px 14px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:9.5px;letter-spacing:1px;cursor:pointer">↗ Reddit</button>
+        <button onclick="lxdShare('copy')" style="background:rgba(0,242,255,.1);color:#00f2ff;border:1px solid rgba(0,242,255,.3);padding:10px 14px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:9.5px;letter-spacing:1px;cursor:pointer">🔗 Link</button>
+      </div>
+      <div style="font-family:Orbitron;font-size:8.5px;color:#555;letter-spacing:1.5px">✓ AUTOMATISCH IM CHECKOUT EINLÖSBAR · 90 TAGE GÜLTIG</div>
+    </div>
+
   </div>
 </div>
 
-<!-- Schwebender Empfehlungs-Button — dezent unten rechts -->
-<button id="lxd-ref-btn" onclick="lxdOpenShare()" style="position:fixed;bottom:24px;right:88px;width:48px;height:48px;border-radius:50%;background:rgba(8,8,8,.85);backdrop-filter:blur(10px);border:1px solid rgba(0,242,255,.4);cursor:pointer;color:#00f2ff;font-size:18px;z-index:898;box-shadow:0 4px 14px rgba(0,0,0,.5);transition:.25s" aria-label="Empfehlen & Sparen" title="Empfehlen & 10 € sparen">🎁</button>
+<!-- Schwebender Empfehlungs-Button — neben dem KI-Button -->
+<button id="lxd-ref-btn" onclick="lxdOpenShare()" aria-label="Empfehlen & Sparen" title="Empfehlen & 10 € sparen"
+  style="position:fixed;bottom:40px;right:100px;width:48px;height:48px;border-radius:50%;background:rgba(8,8,8,.92);backdrop-filter:blur(10px);border:1px solid rgba(255,174,0,.45);cursor:pointer;color:#ffae00;font-size:20px;z-index:9000;box-shadow:0 4px 14px rgba(0,0,0,.55);transition:.25s;display:flex;align-items:center;justify-content:center">🎁</button>
+<style>
+#lxd-ref-btn:hover{transform:translateY(-2px);border-color:#ffae00;box-shadow:0 8px 22px rgba(255,174,0,.35)}
+#lxd-ref-btn::after{content:'-10 €';position:absolute;bottom:-6px;right:-6px;background:#000;border:1px solid #ffae00;color:#ffae00;font-family:'Orbitron';font-size:7px;font-weight:900;letter-spacing:.5px;padding:1px 4px;border-radius:4px;line-height:1.2}
+@media(max-width:560px){#lxd-ref-btn{bottom:36px;right:90px;width:44px;height:44px;font-size:18px}}
+</style>
 
 <script>
 /* ═══ AUTO-INDEXIERUNG (IndexNow Protocol — Bing/Yandex/Seznam/Naver) ═══
@@ -3611,9 +3669,15 @@ function lxdGenRef(){
 })();
 
 function lxdOpenShare(){
-  const code=lxdGenRef();
-  document.getElementById('lxd-ref-code').textContent=code;
   const m=document.getElementById('lxd-share-modal');
+  // Wenn schon registriert → direkt zu Step 3 mit Code
+  const saved=getRefRegistration();
+  if(saved&&saved.code){
+    lxdRefStep(3);
+    document.getElementById('lxd-ref-code').textContent=saved.code;
+  }else{
+    lxdRefStep(1);
+  }
   m.style.display='flex';
   setTimeout(()=>m.style.opacity='1',10);
 }
@@ -3621,6 +3685,48 @@ function lxdCloseShare(){
   const m=document.getElementById('lxd-share-modal');
   m.style.opacity='0';
   setTimeout(()=>m.style.display='none',300);
+}
+
+function lxdRefStep(n){
+  document.querySelectorAll('.lxd-rstep').forEach(s=>{s.style.display=(parseInt(s.dataset.step)===n)?'block':'none';});
+  document.querySelectorAll('.lxd-rstep-dot').forEach(d=>{d.style.background=(parseInt(d.dataset.step)<=n)?'#00f2ff':'#1a1a1a';});
+}
+
+function getRefRegistration(){
+  try{return JSON.parse(localStorage.getItem('lxd_ref_user')||'null');}catch(e){return null;}
+}
+
+async function lxdSubmitRef(){
+  const name=document.getElementById('lxd-ref-name').value.trim();
+  const email=document.getElementById('lxd-ref-email').value.trim();
+  const consent=document.getElementById('lxd-ref-consent').checked;
+  if(!name||!email||!consent)return;
+  const btn=document.getElementById('lxd-ref-submit');
+  const old=btn.textContent;btn.disabled=true;btn.textContent='⏳ ERSTELLE...';
+
+  // Code generieren (persistent)
+  const code=lxdGenRef();
+
+  // Im LocalStorage merken
+  try{localStorage.setItem('lxd_ref_user',JSON.stringify({name,email,code,joinedAt:new Date().toISOString()}));}catch(e){}
+
+  // Newsletter-Subscribe + Code per E-Mail über vorhandenen Worker-Endpoint
+  let fp='';try{fp=Math.random().toString(36).slice(2,12);}catch(e){}
+  const payload={email,name,code,source:'referral-program',consent:true,fp};
+  try{
+    await fetch('https://lexord-api.leonschulz1420.workers.dev/api/newsletter/subscribe',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+  }catch(e){}
+
+  // Tracking
+  if(window.lxrdTrack)lxrdTrack.lead();
+
+  // Code anzeigen + zu Step 3
+  document.getElementById('lxd-ref-code').textContent=code;
+  lxdRefStep(3);
+  btn.disabled=false;btn.textContent=old;
 }
 
 function lxdShare(platform){

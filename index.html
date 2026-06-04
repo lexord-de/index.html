@@ -882,40 +882,50 @@ main{position:relative;z-index:1}
 .hero-btn-main::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 30%,rgba(255,255,255,.3) 50%,transparent 70%);transform:translateX(-100%);transition:transform .6s}
 .hero-btn-main:hover::after{transform:translateX(100%)}
 
-/* Sticky Bottom CTA (only on small scrolls, dismissible) */
-.lxd-sticky-cta{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(180deg,rgba(0,0,0,.96) 0%,#000 100%);backdrop-filter:blur(16px);border-top:1px solid rgba(0,242,255,.22);padding:13px 5%;z-index:850;display:flex;align-items:center;justify-content:space-between;gap:14px;transform:translateY(100%);transition:transform .45s cubic-bezier(.2,.8,.2,1);box-shadow:0 -10px 40px rgba(0,0,0,.7)}
-.lxd-sticky-cta.show{transform:translateY(0)}
-.lxd-sticky-info{flex:1;min-width:0;display:flex;align-items:center;gap:14px}
-.lxd-sticky-emoji{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--neon),var(--neon2));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;animation:floatY 3s ease-in-out infinite}
-.lxd-sticky-h{font-family:'Orbitron';font-weight:900;font-size:11px;letter-spacing:1.5px;color:#fff;margin-bottom:3px;line-height:1.3}
-.lxd-sticky-h .neon{color:var(--neon)}
-.lxd-sticky-m{font-family:'Orbitron';font-size:8.5px;color:#888;letter-spacing:1.2px;display:flex;gap:12px;flex-wrap:wrap}
-.lxd-sticky-m span::before{content:'●';color:var(--neon);margin-right:5px;font-size:7px}
-.lxd-sticky-btn{padding:13px 22px;background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;border:none;border-radius:10px;font-family:'Orbitron';font-weight:900;font-size:10px;letter-spacing:2px;cursor:pointer;text-decoration:none;flex-shrink:0;transition:.2s;box-shadow:0 6px 18px rgba(0,242,255,.4)}
-.lxd-sticky-btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,242,255,.6)}
-.lxd-sticky-close{background:transparent;border:1px solid #222;color:#666;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:13px;flex-shrink:0;transition:.2s}
-.lxd-sticky-close:hover{color:#ff4d6d;border-color:#ff4d6d}
-@media(max-width:560px){
-  .lxd-sticky-cta{padding:10px 4%}
-  .lxd-sticky-h{font-size:10px}
-  .lxd-sticky-m{display:none}
-  .lxd-sticky-emoji{width:34px;height:34px;font-size:16px}
-  .lxd-sticky-btn{padding:11px 14px;font-size:9px;letter-spacing:1.5px}
-}
-
-/* Live activity feed (bottom-left rotating) */
-.lxd-feed{position:fixed;bottom:90px;left:24px;background:rgba(8,8,8,.95);backdrop-filter:blur(14px);border:1px solid rgba(0,242,255,.3);border-radius:14px;padding:13px 18px;max-width:300px;z-index:880;display:flex;align-items:center;gap:12px;transform:translateX(-130%);transition:transform .5s cubic-bezier(.2,.8,.2,1);box-shadow:0 14px 40px rgba(0,0,0,.5)}
-.lxd-feed.show{transform:translateX(0)}
-.lxd-feed-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--neon),var(--neon2));display:flex;align-items:center;justify-content:center;color:#000;font-family:'Orbitron';font-weight:900;font-size:13px;flex-shrink:0}
-.lxd-feed-info{flex:1;min-width:0}
-.lxd-feed-who{font-family:'Orbitron';font-size:10px;color:#fff;font-weight:700;letter-spacing:1px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.lxd-feed-what{font-size:11px;color:#aaa;line-height:1.4}
-.lxd-feed-when{font-family:'Orbitron';font-size:8px;color:#666;letter-spacing:1px;margin-top:3px}
-.lxd-feed-when::before{content:'●';color:#00b67a;margin-right:4px;animation:lxdBlink 2s infinite}
-@media(max-width:560px){.lxd-feed{bottom:140px;left:8px;right:8px;max-width:none}}
-
 /* Hero banner depth — subtle parallax */
-.hero-banner{transition:transform .15s ease-out}
+.hero-banner{transition:transform .15s ease-out;border-radius:18px!important;box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 60px rgba(0,242,255,.15),inset 0 1px 0 rgba(255,255,255,.05)!important;border:1px solid rgba(0,242,255,.3)!important}
+
+/* ═══ CHOREOGRAPHED REVEAL ═══ */
+.lxd-reveal{opacity:0;transform:translateY(40px);transition:opacity 1s cubic-bezier(.2,.8,.2,1),transform 1s cubic-bezier(.2,.8,.2,1)}
+.lxd-reveal.lxd-in{opacity:1;transform:translateY(0)}
+.lxd-reveal-d1{transition-delay:.1s}
+.lxd-reveal-d2{transition-delay:.2s}
+.lxd-reveal-d3{transition-delay:.3s}
+.lxd-reveal-d4{transition-delay:.4s}
+
+/* ═══ PREMIUM SECTION HEADERS ═══ */
+.sec-title{position:relative;display:inline-block}
+.sec-title::after{content:'';display:block;width:60px;height:3px;background:linear-gradient(90deg,var(--neon),var(--neon2));margin:18px auto 0;border-radius:2px;box-shadow:0 0 12px rgba(0,242,255,.5)}
+
+/* ═══ PREMIUM CARD POLISH ═══ */
+.lm-card,#shop .product-card{box-shadow:0 12px 40px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.04)!important;transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s,border-color .45s!important;will-change:transform}
+.lm-card:hover,#shop .product-card:hover{box-shadow:0 30px 70px rgba(0,0,0,.65),0 0 40px rgba(0,242,255,.15),inset 0 1px 0 rgba(255,255,255,.06)!important;border-color:rgba(0,242,255,.4)!important}
+
+/* ═══ PREMIUM CTA POLISH ═══ */
+.hero-btn-main,.cfg-launch-btn{position:relative;overflow:hidden}
+.hero-btn-main::before,.cfg-launch-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 30%,rgba(255,255,255,.4) 50%,transparent 70%);transform:translateX(-100%);transition:transform .8s;pointer-events:none}
+.hero-btn-main:hover::before,.cfg-launch-btn:hover::before{transform:translateX(100%)}
+
+/* ═══ HEADER GLASS UPGRADE ═══ */
+header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(20px) saturate(140%)!important;-webkit-backdrop-filter:blur(20px) saturate(140%)!important;border-bottom:1px solid rgba(255,255,255,.06)!important}
+
+/* ═══ MAGAZINE TYPOGRAPHY ═══ */
+.hero-headline{text-shadow:0 0 60px rgba(0,242,255,.15);position:relative;z-index:2}
+.hero-headline-neon{filter:drop-shadow(0 0 20px rgba(0,242,255,.25))}
+
+/* ═══ HERO STATS PREMIUM ═══ */
+.hero-stats > div{position:relative;padding:14px 22px;border-radius:14px;transition:.4s cubic-bezier(.2,.8,.2,1)}
+.hero-stats > div:hover{background:rgba(0,242,255,.04);transform:translateY(-4px)}
+.hero-stat-num{background:linear-gradient(180deg,#fff 30%,rgba(255,255,255,.6) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-family:'Orbitron';font-weight:900;letter-spacing:-1px}
+
+/* ═══ FEATURES STRIP UPGRADE ═══ */
+.features-strip{position:relative;border-top:1px solid rgba(0,242,255,.1)!important;border-bottom:1px solid rgba(0,242,255,.1)!important;background:linear-gradient(180deg,rgba(0,242,255,.02),transparent,rgba(188,19,254,.02))!important;backdrop-filter:blur(8px)}
+.features-strip::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,242,255,.4),rgba(188,19,254,.4),transparent)}
+.features-strip::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,242,255,.4),rgba(188,19,254,.4),transparent)}
+
+/* ═══ EYEBROW SECTION ANNOTATION ═══ */
+.lxd-eyebrow{display:inline-flex;align-items:center;gap:10px;padding:7px 16px;background:rgba(0,242,255,.05);border:1px solid rgba(0,242,255,.25);border-radius:30px;font-family:'Orbitron';font-weight:700;font-size:9px;color:var(--neon);letter-spacing:3px;margin-bottom:14px}
+.lxd-eyebrow::before{content:'';width:5px;height:5px;background:var(--neon);border-radius:50%;box-shadow:0 0 8px var(--neon)}
 
 /* Smooth hover lift on shop products */
 .shop-card,#shop .product-card,.lm-card{transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,border-color .35s!important}
@@ -1280,7 +1290,7 @@ main{position:relative;z-index:1}
 </div>
 
 <!-- KONFIGURATOR LAUNCHER -->
-<section id="configurator" class="reveal">
+<section id="configurator" class="reveal lxd-reveal">
   <div class="lightning-bg" id="lightning-bg" aria-hidden="true"></div>
   <div style="text-align:center;padding:0 5% 50px;position:relative;z-index:1">
     <div style="display:inline-block;padding:6px 14px;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.25);border-radius:20px;font-family:'Orbitron';font-size:8px;color:var(--neon);letter-spacing:3px;margin-bottom:14px">🎮 PROFESSIONAL KONFIGURATOR</div>
@@ -1465,7 +1475,7 @@ main{position:relative;z-index:1}
 </section>
 
 <!-- SHOP -->
-<section id="shop" class="reveal">
+<section id="shop" class="reveal lxd-reveal">
   <h2 class="sec-title">ZUBEHÖR &amp; TEILE</h2>
   <p class="sec-sub">EINZELTEILE · UPGRADES · WERKZEUG</p>
   <div class="grid">
@@ -1551,13 +1561,13 @@ main{position:relative;z-index:1}
 </section>
 
 <!-- RECENTLY VIEWED -->
-<section id="recently" class="reveal">
+<section id="recently" class="reveal lxd-reveal">
   <h2 class="sec-title" style="font-size:.95rem;margin-bottom:6px">ZULETZT ANGESEHEN</h2>
   <div class="rec-scroll" id="rec-grid"></div>
 </section>
 
 <!-- EMAIL MARKETING -->
-<section id="email-marketing" class="reveal">
+<section id="email-marketing" class="reveal lxd-reveal">
   <div class="em-glow"></div>
   <div class="em-inner">
     <h2 class="sec-title">BLEIB AUF DEM LAUFENDEN</h2>
@@ -1577,7 +1587,7 @@ main{position:relative;z-index:1}
 </section>
 
 <!-- CONTACT -->
-<section id="contact" class="reveal">
+<section id="contact" class="reveal lxd-reveal">
   <h2 class="sec-title">KONTAKT</h2>
   <p class="sec-sub" style="margin-bottom:28px">WIR ANTWORTEN INNERHALB VON 24H</p>
   <form id="contact-form" onsubmit="sendContact(event)">
@@ -1606,7 +1616,7 @@ main{position:relative;z-index:1}
 <div class="lexord-watermark"><a href="https://www.Lexord.de" rel="noopener">www.Lexord.de</a></div>
 
 <!-- TESTER -->
-<section id="tester-sec" class="reveal">
+<section id="tester-sec" class="reveal lxd-reveal">
   <h2 class="sec-title">CONTROLLER TESTER</h2>
   <p class="sec-sub">PROFESSIONAL CALIBRATION SUITE · KOSTENLOS</p>
   <div class="tester-ui">
@@ -1665,7 +1675,7 @@ main{position:relative;z-index:1}
 </section>
 
 <!-- REPARATUR -->
-<section id="repair-sec" class="reveal">
+<section id="repair-sec" class="reveal lxd-reveal">
   <h2 class="sec-title">CONTROLLER REPARATUR</h2>
   <p class="sec-sub">PROFESSIONELL · GÜNSTIG · SCHNELL · MADE IN GERMANY</p>
   <div class="repair-ui">
@@ -1726,7 +1736,7 @@ main{position:relative;z-index:1}
 </section>
 
 <!-- ÜBER UNS -->
-<section id="about-sec" class="reveal" style="padding:90px 0 60px;background:#000;border-top:1px solid #0a0a0a">
+<section id="about-sec" class="reveal lxd-reveal" style="padding:90px 0 60px;background:#000;border-top:1px solid #0a0a0a">
   <div style="text-align:center;margin-bottom:60px;padding:0 5%">
     <h2 class="sec-title" style="color:#fff">ÜBER UNS</h2>
     <p class="sec-sub" style="color:#444">LEXORD ENGINEERING · MADE IN GERMANY</p>
@@ -3200,39 +3210,17 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLogin();closeA
 
 <script>if(localStorage.getItem('ck_analytics')==='1')loadTracker();</script>
 
-<!-- ═══ STICKY BOTTOM CTA — appears after 1000px scroll ═══ -->
-<div class="lxd-sticky-cta" id="lxd-sticky">
-  <div class="lxd-sticky-info">
-    <div class="lxd-sticky-emoji">🎮</div>
-    <div>
-      <div class="lxd-sticky-h">CUSTOM CONTROLLER · AB <span class="neon">105 €</span></div>
-      <div class="lxd-sticky-m"><span>24H VERSAND</span><span>24 MONATE GARANTIE</span><span>3D KONFIGURATOR</span></div>
-    </div>
-  </div>
-  <a href="konfigurator.html" class="lxd-sticky-btn">⚡ KONFIGURIEREN →</a>
-  <button class="lxd-sticky-close" onclick="lxdCloseSticky()" aria-label="Schließen">✕</button>
-</div>
-
-<!-- ═══ LIVE ACTIVITY FEED ═══ -->
-<div class="lxd-feed" id="lxd-feed">
-  <div class="lxd-feed-av" id="lxd-feed-av">M</div>
-  <div class="lxd-feed-info">
-    <div class="lxd-feed-who" id="lxd-feed-who">Marcel · Berlin</div>
-    <div class="lxd-feed-what" id="lxd-feed-what">Performance Edition bestellt</div>
-    <div class="lxd-feed-when" id="lxd-feed-when">vor 2 Min.</div>
-  </div>
-</div>
-
 <script>
-/* ═══ MAXIMUM-DESIGN JS — Cinematic Layer ═══ */
+/* ═══ PREMIUM POLISH JS ═══ */
 (function(){
   // Scroll progress bar
   const bar=document.getElementById('lxd-scroll-bar');
-  window.addEventListener('scroll',()=>{
-    if(!bar)return;
-    const h=document.documentElement.scrollHeight-window.innerHeight;
-    bar.style.width=Math.min(100,(window.scrollY/h)*100)+'%';
-  },{passive:true});
+  if(bar){
+    window.addEventListener('scroll',()=>{
+      const h=document.documentElement.scrollHeight-window.innerHeight;
+      bar.style.width=Math.min(100,(window.scrollY/h)*100)+'%';
+    },{passive:true});
+  }
 
   // Floating premium particles
   const wrap=document.getElementById('lxd-particles');
@@ -3257,56 +3245,12 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLogin();closeA
     window.addEventListener('scroll',()=>{
       const r=banner.getBoundingClientRect();
       if(r.bottom>0&&r.top<window.innerHeight){
-        const offset=(window.scrollY*.08);
-        banner.style.transform='translateY('+offset+'px)';
+        banner.style.transform='translateY('+(window.scrollY*.08)+'px)';
       }
     },{passive:true});
   }
 
-  // Sticky CTA show after scroll
-  const sticky=document.getElementById('lxd-sticky');
-  let stickyShown=false;
-  function lxdCheckSticky(){
-    if(stickyShown||!sticky)return;
-    let closed=false;
-    try{closed=sessionStorage.getItem('lxd_sticky_closed')==='1';}catch(e){}
-    if(closed)return;
-    if(window.scrollY>1000){sticky.classList.add('show');stickyShown=true;}
-  }
-  window.addEventListener('scroll',lxdCheckSticky,{passive:true});
-  window.lxdCloseSticky=function(){
-    if(sticky)sticky.classList.remove('show');
-    try{sessionStorage.setItem('lxd_sticky_closed','1');}catch(e){}
-  };
-
-  // Live activity feed rotation
-  const FEED=[
-    {n:'Marcel',c:'Berlin',w:'Performance Edition bestellt',t:'vor 2 Min.'},
-    {n:'Lisa',c:'München',w:'Plus Edition mit TMR-Sticks',t:'vor 5 Min.'},
-    {n:'Tim',c:'Hamburg',w:'Stickdrift-Reparatur angefragt',t:'vor 8 Min.'},
-    {n:'Niklas',c:'Köln',w:'Stealth Edition · Limited',t:'vor 12 Min.'},
-    {n:'André',c:'Stuttgart',w:'Custom Konfiguration gestartet',t:'vor 16 Min.'},
-    {n:'Julian',c:'Frankfurt',w:'Elite Pro · Carbon Edition',t:'vor 22 Min.'},
-    {n:'Sophie',c:'Düsseldorf',w:'5-Sterne-Bewertung abgegeben',t:'vor 28 Min.'},
-    {n:'Daniel',c:'Leipzig',w:'Paddle-System V2 bestellt',t:'vor 35 Min.'},
-    {n:'Kevin',c:'Hannover',w:'TMR Upgrade Kit',t:'vor 41 Min.'},
-    {n:'Anna',c:'Bremen',w:'LXRD Wallet · Schwarz Matt',t:'vor 48 Min.'}
-  ];
-  let fi=0;
-  const feed=document.getElementById('lxd-feed');
-  function showFeed(){
-    if(!feed)return;
-    const d=FEED[fi%FEED.length];fi++;
-    document.getElementById('lxd-feed-av').textContent=d.n[0];
-    document.getElementById('lxd-feed-who').textContent=d.n+' · '+d.c;
-    document.getElementById('lxd-feed-what').textContent=d.w;
-    document.getElementById('lxd-feed-when').textContent=d.t;
-    feed.classList.add('show');
-    setTimeout(()=>feed.classList.remove('show'),5500);
-  }
-  setTimeout(()=>{showFeed();setInterval(showFeed,12000);},7000);
-
-  // Animated number counters on hero stats
+  // Premium count-up on hero stats
   const counterEls=document.querySelectorAll('.hero-stat-num[data-target]');
   if(counterEls.length&&'IntersectionObserver' in window){
     const io=new IntersectionObserver(es=>{
@@ -3315,10 +3259,10 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLogin();closeA
         const el=e.target;
         const target=parseFloat(el.dataset.target);
         const suffix=el.dataset.suffix||'';
-        const dur=1400,start=performance.now();
+        const dur=1800,start=performance.now();
         function step(t){
           const p=Math.min((t-start)/dur,1);
-          const ease=1-Math.pow(1-p,3);
+          const ease=1-Math.pow(1-p,4);
           el.textContent=Math.floor(target*ease)+suffix;
           if(p<1)requestAnimationFrame(step);
         }
@@ -3327,6 +3271,29 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLogin();closeA
       });
     },{threshold:.3});
     counterEls.forEach(el=>io.observe(el));
+  }
+
+  // Cinematic reveal on .lxd-reveal elements with stagger
+  if('IntersectionObserver' in window){
+    const io=new IntersectionObserver(es=>{
+      es.forEach(e=>{
+        if(e.isIntersecting){e.target.classList.add('lxd-in');io.unobserve(e.target);}
+      });
+    },{threshold:.12,rootMargin:'0px 0px -60px 0px'});
+    document.querySelectorAll('.lxd-reveal').forEach(el=>io.observe(el));
+  }
+
+  // 3D-tilt on shop cards (desktop only)
+  if(matchMedia('(hover:hover)').matches){
+    document.querySelectorAll('.lm-card,#shop .product-card,#shop .ent-card').forEach(card=>{
+      card.addEventListener('mousemove',e=>{
+        const r=card.getBoundingClientRect();
+        const x=(e.clientX-r.left)/r.width-.5;
+        const y=(e.clientY-r.top)/r.height-.5;
+        card.style.transform='perspective(1000px) rotateX('+(-y*4)+'deg) rotateY('+(x*5)+'deg) translateY(-4px)';
+      });
+      card.addEventListener('mouseleave',()=>{card.style.transform='';});
+    });
   }
 })();
 </script>

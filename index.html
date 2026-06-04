@@ -960,6 +960,108 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
 /* Section title shimmer on view */
 @keyframes lxdShimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 
+/* ════════════════════════════════════════════════════════════════
+   🚀 ULTRA MAXIMUM LAYER — physical limit of CSS premium
+   ════════════════════════════════════════════════════════════════ */
+
+/* ═══ BLUEPRINT GRID — subtle engineering background ═══ */
+.lxd-grid{position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:
+  linear-gradient(rgba(0,242,255,.025) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(0,242,255,.025) 1px,transparent 1px);
+  background-size:80px 80px;mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 30%,transparent 80%);
+  -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 30%,transparent 80%);opacity:.6;
+  animation:lxdGridDrift 60s linear infinite}
+@keyframes lxdGridDrift{to{background-position:80px 80px,80px 80px}}
+
+/* ═══ FILM-GRAIN OVERLAY — adds cinematic texture ═══ */
+.lxd-grain{position:fixed;inset:-50%;z-index:-1;pointer-events:none;opacity:.035;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='.7'/></svg>");
+  animation:lxdGrainMove .8s steps(4) infinite}
+@keyframes lxdGrainMove{
+  0%{transform:translate(0,0)}
+  25%{transform:translate(-2%,-1%)}
+  50%{transform:translate(1%,2%)}
+  75%{transform:translate(-1%,1%)}
+  100%{transform:translate(0,0)}
+}
+
+/* ═══ CURSOR SPOTLIGHT — radial glow follows cursor on hero ═══ */
+.lxd-spot{position:fixed;width:600px;height:600px;border-radius:50%;pointer-events:none;z-index:0;opacity:0;
+  background:radial-gradient(circle,rgba(0,242,255,.08) 0%,rgba(0,242,255,.03) 30%,transparent 70%);
+  transform:translate(-50%,-50%);transition:opacity .3s;filter:blur(20px);will-change:transform}
+.lxd-spot.lxd-spot-on{opacity:1}
+
+/* ═══ MAGNETIC CTA — pulls toward cursor ═══ */
+.hero-btn-main{transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s!important;will-change:transform}
+
+/* ═══ HOLOGRAPHIC HERO STATS BG ═══ */
+.hero-stats{position:relative;border:1px solid transparent!important;background:
+  linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)) padding-box,
+  conic-gradient(from 0deg,rgba(0,242,255,.3),rgba(188,19,254,.3),rgba(0,242,255,.3)) border-box!important;
+  animation:lxdHologramSpin 8s linear infinite}
+@keyframes lxdHologramSpin{to{filter:hue-rotate(360deg)}}
+
+/* ═══ PREMIUM PAGE INTRO LOADER ═══ */
+.lxd-intro{position:fixed;inset:0;z-index:99999;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;pointer-events:none;animation:lxdIntroOut 1.8s cubic-bezier(.7,0,.3,1) 1.6s forwards}
+.lxd-intro-logo{font-family:'Orbitron';font-weight:900;font-size:clamp(2rem,8vw,4rem);letter-spacing:12px;color:#fff;line-height:1;opacity:0;animation:lxdIntroIn 1.2s cubic-bezier(.2,.8,.2,1) .2s forwards}
+.lxd-intro-logo i{color:var(--neon);font-style:normal;display:inline-block;animation:lxdIntroSpin 1.4s cubic-bezier(.2,.8,.2,1) .3s both}
+.lxd-intro-logo sup{font-size:1rem;color:var(--neon);vertical-align:super;margin-left:4px;font-weight:700}
+.lxd-intro-bar{width:200px;height:2px;background:#222;border-radius:2px;overflow:hidden;opacity:0;animation:lxdIntroIn .6s ease 1s forwards}
+.lxd-intro-bar::after{content:'';display:block;width:0;height:100%;background:linear-gradient(90deg,var(--neon),var(--neon2));box-shadow:0 0 12px var(--neon);animation:lxdIntroFill 1.2s cubic-bezier(.2,.8,.2,1) 1.1s forwards}
+.lxd-intro-tag{font-family:'Orbitron';font-size:10px;letter-spacing:6px;color:#444;opacity:0;animation:lxdIntroIn .6s ease 1.2s forwards}
+@keyframes lxdIntroIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes lxdIntroSpin{from{opacity:0;transform:rotate(-180deg) scale(.5)}to{opacity:1;transform:rotate(0) scale(1)}}
+@keyframes lxdIntroFill{to{width:100%}}
+@keyframes lxdIntroOut{to{opacity:0;transform:scale(1.1);visibility:hidden}}
+
+/* ═══ TYPEWRITER REVEAL ON HERO HEADLINE ═══ */
+.hero-headline-white,.hero-headline-neon{position:relative;overflow:hidden}
+.hero-headline-white::after,.hero-headline-neon::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:#000;animation:lxdMaskOut 1.2s cubic-bezier(.2,.8,.2,1) .6s forwards}
+.hero-headline-neon::after{animation-delay:.85s}
+@keyframes lxdMaskOut{to{transform:translateX(105%)}}
+
+/* ═══ HERO LIGHT BEAM — diagonal ray behind hero ═══ */
+.lxd-beam{position:absolute;top:-20%;left:50%;width:2px;height:140%;background:linear-gradient(180deg,transparent,rgba(0,242,255,.4),transparent);transform:translateX(-50%) rotate(15deg);filter:blur(2px);pointer-events:none;animation:lxdBeamShift 8s ease-in-out infinite;z-index:0}
+.lxd-beam.b2{transform:translateX(-50%) rotate(-15deg);background:linear-gradient(180deg,transparent,rgba(188,19,254,.3),transparent);animation-delay:2s;left:30%}
+.lxd-beam.b3{transform:translateX(-50%) rotate(10deg);background:linear-gradient(180deg,transparent,rgba(0,242,255,.2),transparent);animation-delay:4s;left:70%}
+@keyframes lxdBeamShift{0%,100%{opacity:.5}50%{opacity:1;filter:blur(3px)}}
+
+/* ═══ STAT NUMBERS HALO ═══ */
+.hero-stat-num{filter:drop-shadow(0 0 12px rgba(0,242,255,.25))}
+
+/* ═══ SECTION-SPECIFIC GLASSMORPH UPGRADE ═══ */
+#configurator,#shop,#repair-sec,#about-sec{position:relative}
+#configurator::before,#shop::before,#repair-sec::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:140px;height:1px;background:linear-gradient(90deg,transparent,var(--neon),transparent);box-shadow:0 0 12px rgba(0,242,255,.5)}
+
+/* ═══ CONIC-GRADIENT BORDERS ON PREMIUM ELEMENTS ═══ */
+.hero-btn-main{background:
+  linear-gradient(var(--neon),var(--neon)) padding-box,
+  conic-gradient(from 0deg,#fff,var(--neon),#fff,var(--neon),#fff) border-box!important;
+  border:1.5px solid transparent!important;
+  animation:lxdConicSpin 4s linear infinite}
+@keyframes lxdConicSpin{to{filter:hue-rotate(360deg)}}
+
+/* ═══ ADVANCED HOVER ON CTAs ═══ */
+.hero-btn-main:hover{box-shadow:0 0 60px rgba(0,242,255,.7),0 0 120px rgba(0,242,255,.3),inset 0 0 20px rgba(255,255,255,.3)!important}
+
+/* ═══ SCROLL-LINKED HUE SHIFT ═══ */
+body{transition:filter .3s ease}
+
+/* ═══ LOGO LASER ENGRAVE EFFECT ═══ */
+.float-logo{will-change:transform;animation:floatY 4s ease-in-out infinite,lxdLogoGlow 6s ease-in-out infinite}
+@keyframes lxdLogoGlow{0%,100%{filter:drop-shadow(0 0 22px var(--neon))}50%{filter:drop-shadow(0 0 32px var(--neon)) drop-shadow(0 0 16px var(--neon2))}}
+
+/* ═══ PRESS STRIP UPGRADE ═══ */
+.lxd-press{position:relative;background:
+  linear-gradient(90deg,rgba(0,242,255,.02),rgba(188,19,254,.02),rgba(0,242,255,.02))!important;
+  border-top:1px solid transparent!important;border-bottom:1px solid transparent!important}
+.lxd-press::before,.lxd-press::after{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,242,255,.4),rgba(188,19,254,.4),transparent)}
+.lxd-press::before{top:0}
+.lxd-press::after{bottom:0}
+
+/* ═══ TICKER POLISH ═══ */
+.ticker-bar{box-shadow:0 4px 24px rgba(0,242,255,.15)!important;border-bottom:1px solid rgba(0,242,255,.15)!important}
+
 </style>
 </head>
 <body>
@@ -1228,14 +1330,24 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
 
 <main>
 
-<!-- CINEMATIC BACKGROUND LAYERS -->
+<!-- ═══ ULTRA-PREMIUM CINEMATIC LAYERS ═══ -->
+<div class="lxd-intro" id="lxd-intro">
+  <div class="lxd-intro-logo">LEX<i>O</i>RD<sup>®</sup></div>
+  <div class="lxd-intro-bar"></div>
+  <div class="lxd-intro-tag">ENGINEERING THE FUTURE OF GAMING</div>
+</div>
+<div class="lxd-grid"></div>
+<div class="lxd-grain"></div>
 <div class="lxd-cinema"><div class="lxd-cinema-mesh"></div></div>
 <div class="lxd-particles" id="lxd-particles"></div>
+<div class="lxd-spot" id="lxd-spot"></div>
 <div class="lxd-scroll-bar" id="lxd-scroll-bar"></div>
 
 <!-- HERO -->
 <section id="hero">
-  <div class="lxd-hero-pre">⟫ MADE IN GERMANY · HANDGEFERTIGT IN DOMSÜHL ⟪</div>
+  <div class="lxd-beam"></div>
+  <div class="lxd-beam b2"></div>
+  <div class="lxd-beam b3"></div>
   <div style="position:relative;display:inline-block;margin-bottom:22px">
     <div class="lxd-logo-rings"></div>
     <img src="IMG_7023.png" class="float-logo" alt="LEXORD Logo" width="200" height="200" style="margin-bottom:0;position:relative;z-index:1">
@@ -3293,6 +3405,42 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLogin();closeA
         card.style.transform='perspective(1000px) rotateX('+(-y*4)+'deg) rotateY('+(x*5)+'deg) translateY(-4px)';
       });
       card.addEventListener('mouseleave',()=>{card.style.transform='';});
+    });
+  }
+
+  // Premium intro cleanup
+  setTimeout(()=>{
+    const i=document.getElementById('lxd-intro');
+    if(i)i.remove();
+  },3600);
+
+  // Cursor spotlight follower (desktop only)
+  if(matchMedia('(hover:hover)').matches){
+    const spot=document.getElementById('lxd-spot');
+    if(spot){
+      let raf;
+      window.addEventListener('mousemove',e=>{
+        if(raf)cancelAnimationFrame(raf);
+        raf=requestAnimationFrame(()=>{
+          spot.style.left=e.clientX+'px';
+          spot.style.top=e.clientY+'px';
+          spot.classList.add('lxd-spot-on');
+        });
+      },{passive:true});
+      document.addEventListener('mouseleave',()=>spot.classList.remove('lxd-spot-on'));
+    }
+  }
+
+  // Magnetic CTA — pulls toward cursor on hover
+  if(matchMedia('(hover:hover)').matches){
+    document.querySelectorAll('.hero-btn-main,.cfg-launch-btn').forEach(btn=>{
+      btn.addEventListener('mousemove',e=>{
+        const r=btn.getBoundingClientRect();
+        const x=e.clientX-r.left-r.width/2;
+        const y=e.clientY-r.top-r.height/2;
+        btn.style.transform='translate('+(x*.2)+'px,'+(y*.25)+'px) scale(1.03)';
+      });
+      btn.addEventListener('mouseleave',()=>{btn.style.transform='';});
     });
   }
 })();

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>LEXORD® Engineering · Premium Custom PS5 Controller &amp; Zubehör</title>
+  <link>https://lexord.de</link>
+  <description>Custom PS5 Controller, Reparatur-Service, 3D-Print Atelier-Kollektion. Made in Germany.</description>
+  <language>de-DE</language>
+  <atom:link href="https://lexord.de/feed.xml" rel="self" type="application/rss+xml"/>
+  <image>
+    <url>https://lexord.de/IMG_7023.png</url>
+    <title>LEXORD® Engineering</title>
+    <link>https://lexord.de</link>
+  </image>
+
+  <item>
+    <g:id>LXRD-PERF-BLK</g:id>
+    <title>LXRD Performance Black — Custom PS5 Controller</title>
+    <link>https://lexord.de/collections.html</link>
+    <description>Premium Custom PS5 Controller mit TMR-Sticks, Clicky-Trigger, GRIP-Gehäuse, 2x Paddles. Handmontiert in Domsühl.</description>
+    <g:image_link>https://lexord.de/Photoroom_20260305_123705.png</g:image_link>
+    <g:price>240.00 EUR</g:price>
+    <g:availability>in stock</g:availability>
+    <g:condition>new</g:condition>
+    <g:brand>LEXORD</g:brand>
+    <g:product_type>Custom Controller &gt; PS5</g:product_type>
+    <g:google_product_category>Electronics &gt; Video Games &gt; Video Game Accessories &gt; Game Controllers</g:google_product_category>
+    <g:identifier_exists>false</g:identifier_exists>
+    <g:shipping><g:country>DE</g:country><g:price>0 EUR</g:price></g:shipping>
+  </item>
+
+  <item>
+    <g:id>LXRD-PLUS-BLK</g:id>
+    <title>LXRD Plus Black — Hall Effect Controller</title>
+    <link>https://lexord.de/collections.html</link>
+    <description>Custom PS5 Controller mit Hall Effect Sticks (driftfrei), Clicky-Trigger, 2x Paddles.</description>
+    <g:image_link>https://lexord.de/Photoroom_20260305_140346.png</g:image_link>
+    <g:price>180.00 EUR</g:price>
+    <g:availability>in stock</g:availability>
+    <g:condition>new</g:condition>
+    <g:brand>LEXORD</g:brand>
+    <g:product_type>Custom Controller &gt; PS5</g:product_type>
+    <g:google_product_category>Electronics &gt; Video Games &gt; Video Game Accessories &gt; Game Controllers</g:google_product_category>
+    <g:identifier_exists>false</g:identifier_exists>
+    <g:shipping><g:country>DE</g:country><g:price>0 EUR</g:price></g:shipping>
+  </item>
+
+  <item>
+    <g:id>LXRD-BASIC-BLK</g:id>
+    <title>LXRD Basic Black — Einsteiger Custom Controller</title>
+    <link>https://lexord.de/collections.html</link>
+    <description>Einsteiger Custom PS5 Controller mit 2x Paddles. Perfekt für Pro-Gamer mit kleinem Budget.</description>
+    <g:image_link>https://lexord.de/Photoroom_20260402_014813.png</g:image_link>
+    <g:price>105.00 EUR</g:price>
+    <g:availability>in stock</g:availability>
+    <g:condition>new</g:condition>
+    <g:brand>LEXORD</g:brand>
+    <g:product_type>Custom Controller &gt; PS5</g:product_type>
+    <g:google_product_category>Electronics &gt; Video Games &gt; Video Game Accessories &gt; Game Controllers</g:google_product_category>
+    <g:identifier_exists>false</g:identifier_exists>
+    <g:shipping><g:country>DE</g:country><g:price>4.99 EUR</g:price></g:shipping>
+  </item>
+
+  <item>
+    <g:id>LXRD-ELITE-PRO</g:id>
+    <title>LXRD Elite Pro — Top-Tier Controller</title>
+    <link>https://lexord.de/collections.html</link>
+    <description>Top-Tier Controller: TMR Pro Sticks, Carbon Look, 4x Paddles, RGB, optionale Gravur.</description>
+    <g:image_link>https://lexord.de/Photoroom_20260306_112425.png</g:image_link>
+    <g:price>280.00 EUR</g:price>
+    <g:availability>in stock</g:availability>
+    <g:condition>new</g:condition>
+    <g:brand>LEXORD</g:brand>
+    <g:product_type>Custom Controller &gt; PS5 &gt; Premium</g:product_type>
+    <g:google_product_category>Electronics &gt; Video Games &gt; Video Game Accessories &gt; Game Controllers</g:google_product_category>
+    <g:identifier_exists>false</g:identifier_exists>
+    <g:shipping><g:country>DE</g:country><g:price>0 EUR</g:price></g:shipping>
+  </item>
+
+  <item>
+    <g:id>LXRD-STEALTH</g:id>
+    <title>LXRD Stealth Edition — Matt-Finish Limited</title>
+    <link>https://lexord.de/collections.html</link>
+    <description>Limited Edition mit Hall Effect Sticks, Matt-Finish, Premium-Verarbeitung.</description>
+    <g:image_link>https://lexord.de/Photoroom_20260501_094506.png</g:image_link>
+    <g:price>220.00 EUR</g:price>
+    <g:availability>in stock</g:availability>
+    <g:condition>new</g:condition>
+    <g:brand>LEXORD</g:brand>
+    <g:product_type>Custom Controller &gt; PS5 &gt; Limited</g:product_type>
+    <g:google_product_category>Electronics &gt; Video Games &gt; Video Game Accessories &gt; Game Controllers</g:google_product_category>
+    <g:identifier_exists>false</g:identifier_exists>
+    <g:shipping><g:country>DE</g:country><g:price>0 EUR</g:price></g:shipping>
+  </item>
+
+  <item>
+    <g:id>LXRD-WALLET</g:id>
+    <title>LXRD Wallet — 3D-Druck Premium Portemonnaie</title>
+    <link>https://lexord.de/zubehoer.html</link>
+    <description>Limited Edition 3D-gedrucktes Portemonnaie aus Bio-PETG. RFID-Safe, Magnet-Lock.</description>
+    <g:image_link>https://lexord.de/img/lxrd-wallet.jpg</g:image_link>
+    <g:price>39.90 EUR</g:price>
+    <g:availability>in stock</g:availability>
+    <g:condition>new</g:condition>
+    <g:brand>LEXORD</g:brand>
+    <g:product_type>Zubehör &gt; Lifestyle</g:product_type>
+    <g:google_product_category>Apparel &amp; Accessories &gt; Handbags, Wallets &amp; Cases &gt; Wallets &amp; Money Clips</g:google_product_category>
+    <g:identifier_exists>false</g:identifier_exists>
+    <g:shipping><g:country>DE</g:country><g:price>4.90 EUR</g:price></g:shipping>
+  </item>
+
+  <item>
+    <g:id>LXRD-REPAIR-DRIFT</g:id>
+    <title>Stick-Drift Reparatur · LEXORD Service</title>
+    <link>https://lexord.de/reparatur.html</link>
+    <description>Professionelle Stick-Drift Reparatur ab 25 €. PS5, PS4, Xbox, Switch. 6 Monate Garantie.</description>
+    <g:image_link>https://lexord.de/IMG_7023.png</g:image_link>
+    <g:price>25.00 EUR</g:price>
+    <g:availability>in stock</g:availability>
+    <g:condition>new</g:condition>
+    <g:brand>LEXORD</g:brand>
+    <g:product_type>Reparatur-Service</g:product_type>
+    <g:google_product_category>Business &amp; Industrial &gt; Work Safety Protective Gear</g:google_product_category>
+    <g:identifier_exists>false</g:identifier_exists>
+  </item>
+
+</channel>
+</rss>

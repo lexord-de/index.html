@@ -940,6 +940,47 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
 /* Section title shimmer on view */
 @keyframes lxdShimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 
+/* ═══ LXRD ATELIER TEASER ═══ */
+.lxd-atelier{position:relative;padding:90px 5%;background:linear-gradient(180deg,#000 0%,#040408 50%,#000 100%);overflow:hidden;border-top:1px solid #0a0a0a;border-bottom:1px solid #0a0a0a}
+.lxd-atelier::before{content:'';position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(0,242,255,.08),transparent 70%);filter:blur(60px);top:-150px;left:10%;pointer-events:none}
+.lxd-atelier::after{content:'';position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(188,19,254,.06),transparent 70%);filter:blur(60px);bottom:-150px;right:10%;pointer-events:none}
+.lxd-at-wrap{max-width:1180px;margin:0 auto;position:relative;z-index:1}
+.lxd-at-pre{font-family:'Orbitron';font-size:9px;color:var(--neon);letter-spacing:4px;text-align:center;margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:14px}
+.lxd-at-pre::before,.lxd-at-pre::after{content:'';flex:0 0 50px;height:1px;background:linear-gradient(90deg,transparent,rgba(0,242,255,.5))}
+.lxd-at-pre::after{background:linear-gradient(90deg,rgba(0,242,255,.5),transparent)}
+.lxd-at-title{font-family:'Orbitron';font-weight:900;font-size:clamp(1.6rem,4vw,2.6rem);text-align:center;letter-spacing:5px;color:#fff;margin-bottom:14px;line-height:1.1}
+.lxd-at-title .acc{background:linear-gradient(90deg,var(--neon),var(--neon2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.lxd-at-sub{font-family:'Inter';font-size:14px;color:#888;text-align:center;max-width:520px;margin:0 auto 50px;line-height:1.7;font-weight:300}
+.lxd-at-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:50px;align-items:center}
+@media(max-width:900px){.lxd-at-grid{grid-template-columns:1fr;gap:36px}}
+.lxd-at-vis{position:relative;aspect-ratio:1/1;background:radial-gradient(ellipse at 50% 50%,#0c0c0c,#000);border:1px solid #161616;border-radius:20px;display:flex;align-items:center;justify-content:center;overflow:hidden;max-width:540px;width:100%;margin:0 auto}
+.lxd-at-vis::before{content:'';position:absolute;width:70%;height:70%;background:radial-gradient(circle,rgba(0,242,255,.1),transparent 70%);filter:blur(40px)}
+.lxd-at-vis img{max-width:75%;max-height:75%;object-fit:contain;position:relative;z-index:2;filter:drop-shadow(0 24px 50px rgba(0,242,255,.2))}
+.lxd-at-vis-fallback{position:relative;z-index:2;text-align:center;padding:40px}
+.lxd-at-vis-fallback svg{width:280px;height:180px;filter:drop-shadow(0 20px 40px rgba(0,242,255,.15))}
+.lxd-at-vis .ribbon{position:absolute;top:18px;left:18px;font-family:'Orbitron';font-size:8.5px;letter-spacing:2px;padding:6px 12px;border-radius:5px;background:rgba(212,175,55,.12);color:#d4af37;border:1px solid rgba(212,175,55,.4);font-weight:700;z-index:3;backdrop-filter:blur(6px)}
+.lxd-at-vis .serial{position:absolute;bottom:18px;right:18px;font-family:'Space Mono',monospace;font-size:9px;color:#666;letter-spacing:1px;z-index:3}
+.lxd-at-info{padding:10px 0}
+.lxd-at-cat{font-family:'Orbitron';font-size:10px;color:#666;letter-spacing:3px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.lxd-at-cat::before{content:'';width:24px;height:1px;background:var(--neon)}
+.lxd-at-h{font-family:'Orbitron';font-weight:900;font-size:clamp(1.6rem,3vw,2.2rem);color:#fff;letter-spacing:3px;line-height:1.1;margin-bottom:16px}
+.lxd-at-h .acc{background:linear-gradient(90deg,var(--neon),var(--neon2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.lxd-at-desc{font-family:'Inter';font-size:14px;color:#aaa;line-height:1.75;margin-bottom:24px;font-weight:300}
+.lxd-at-feats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:28px}
+.lxd-at-feat{display:flex;align-items:flex-start;gap:9px;font-size:12px;color:#bbb;line-height:1.5}
+.lxd-at-feat .ico{color:var(--green,#00b67a);font-weight:900;flex-shrink:0;font-size:13px}
+.lxd-at-feat strong{color:#fff;font-weight:500}
+.lxd-at-pricerow{display:flex;align-items:flex-end;gap:18px;margin-bottom:22px;flex-wrap:wrap}
+.lxd-at-price{font-family:'Orbitron';font-weight:900;font-size:2rem;color:#fff;line-height:1;letter-spacing:1px}
+.lxd-at-price .cur{font-size:1rem;color:#888;margin-left:2px}
+.lxd-at-price-vat{font-size:11px;color:#666;margin-top:6px}
+.lxd-at-ctas{display:flex;gap:10px;flex-wrap:wrap}
+.lxd-at-cta{padding:15px 26px;border-radius:11px;font-family:'Orbitron';font-weight:900;font-size:10px;letter-spacing:2px;text-decoration:none;transition:.3s cubic-bezier(.2,.8,.2,1);display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:none}
+.lxd-at-cta.p{background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;box-shadow:0 8px 20px rgba(0,242,255,.3)}
+.lxd-at-cta.p:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(0,242,255,.5)}
+.lxd-at-cta.s{background:transparent;color:#fff;border:1px solid #222}
+.lxd-at-cta.s:hover{border-color:var(--neon);color:var(--neon);background:rgba(0,242,255,.04)}
+
 </style>
 </head>
 <body>
@@ -1532,6 +1573,57 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
       <div class="dbox"><span class="truck">🚚</span><div><div class="dbox-lbl">Premium Versand</div><div class="dbox-date">Ankunft: <span class="delivery-date">–</span></div></div></div>
       <button class="btn" onclick="addToCart('Power Akku Umbau',45.00,'power-akku-umbau.PNG')">IN DEN WARENKORB</button>
     </article>
+  </div>
+</section>
+
+<!-- LXRD ATELIER TEASER -->
+<section class="lxd-atelier reveal lxd-reveal" aria-label="LXRD Atelier Series">
+  <div class="lxd-at-wrap">
+    <div class="lxd-at-pre">⟫ NEU · ATELIER SERIES ⟪</div>
+    <h2 class="lxd-at-title">LXRD <span class="acc">ATELIER</span></h2>
+    <p class="lxd-at-sub">Exklusive 3D-gedruckte Premium-Accessoires aus unserer Werkstatt in Domsühl. Limited Edition. Handgefertigt. Lifetime-Garantie.</p>
+
+    <div class="lxd-at-grid">
+      <div class="lxd-at-vis">
+        <span class="ribbon">⭐ LIMITED EDITION · #001 / 500</span>
+        <img src="img/lxrd-wallet.jpg" alt="LXRD Wallet" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <div class="lxd-at-vis-fallback" style="display:none">
+          <svg viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="wgIdx" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a1a1f"/><stop offset="1" stop-color="#050505"/></linearGradient>
+              <linearGradient id="cgIdx" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00f2ff" stop-opacity=".6"/><stop offset="1" stop-color="#bc13fe" stop-opacity=".5"/></linearGradient>
+            </defs>
+            <rect x="10" y="10" width="260" height="160" rx="14" fill="url(#wgIdx)" stroke="#2a2a2f"/>
+            <rect x="20" y="60" width="180" height="100" rx="8" fill="url(#cgIdx)" opacity=".85"/>
+            <rect x="30" y="50" width="170" height="100" rx="8" fill="url(#cgIdx)" opacity=".6"/>
+            <text x="22" y="32" font-family="Orbitron" font-size="14" font-weight="900" fill="#fff" letter-spacing="3">LEX<tspan fill="#00f2ff">O</tspan>RD</text>
+          </svg>
+        </div>
+        <span class="serial">SERIE 001 · 2026</span>
+      </div>
+
+      <div class="lxd-at-info">
+        <div class="lxd-at-cat">ATELIER COLLECTION · 3D PRINT</div>
+        <h3 class="lxd-at-h">LXRD <span class="acc">WALLET</span></h3>
+        <p class="lxd-at-desc">Präzisions-gefertigtes Premium-Portemonnaie aus Bio-PETG. Handpoliert. RFID-Safe. Magnet-Lock. Ein Stück Engineering-Kunst, das du täglich trägst.</p>
+        <div class="lxd-at-feats">
+          <div class="lxd-at-feat"><span class="ico">✓</span><span><strong>RFID-Safe</strong> Schutz vor Skimming</span></div>
+          <div class="lxd-at-feat"><span class="ico">✓</span><span><strong>Bis 8 Karten</strong> + Bargeld</span></div>
+          <div class="lxd-at-feat"><span class="ico">✓</span><span><strong>72 g</strong> federleicht</span></div>
+          <div class="lxd-at-feat"><span class="ico">✓</span><span><strong>Bio-PETG</strong> kompostierbar</span></div>
+        </div>
+        <div class="lxd-at-pricerow">
+          <div>
+            <div class="lxd-at-price">39,90<span class="cur"> €</span></div>
+            <div class="lxd-at-price-vat">Endpreis · § 19 UStG · zzgl. Versand</div>
+          </div>
+        </div>
+        <div class="lxd-at-ctas">
+          <a href="zubehoer.html" class="lxd-at-cta p">⚡ ZUR ATELIER-KOLLEKTION →</a>
+          <a href="zubehoer.html#kaufen" class="lxd-at-cta s">🛒 IN DEN WARENKORB</a>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -2766,11 +2858,11 @@ async function applyDiscount(){
   toast('✓ Rabattcode '+code+' aktiviert!','ok');updateCart();
 }
 
-const PRODUCTS=[{name:'LXRD Performance Black',price:240,img:'Photoroom_20260305_123705.png',cat:'Controller'},{name:'LXRD Plus Black',price:180,img:'Photoroom_20260305_140346.png',cat:'Controller'},{name:'LXRD Basic Black',price:105,img:'Photoroom_20260402_014813.png',cat:'Controller'},{name:'LXRD Elite Pro',price:280,img:'Photoroom_20260306_112425.png',cat:'Controller'},{name:'LXRD Stealth Edition',price:220,img:'Photoroom_20260501_094506.png',cat:'Controller'},{name:'Stickzange Pro',price:5,img:'Stickzange.PNG',cat:'Werkzeug'},{name:'Paddle System V2',price:40,img:'Photoroom_20260304_212902.png',cat:'Zubehör'},{name:'TMR Stick Upgrade Kit',price:55,img:'Photoroom_20260305_123705.png',cat:'Zubehör'},{name:'Hall Effect Upgrade Kit',price:35,img:'Photoroom_20260305_140346.png',cat:'Zubehör'},{name:'GRIP Gehäuse Set',price:28,img:'Photoroom_20260402_014813.png',cat:'Zubehör'},{name:'Clicky Trigger Kit',price:22,img:'Photoroom_20260304_212902.png',cat:'Zubehör'}];
+const PRODUCTS=[{name:'LXRD Performance Black',price:240,img:'Photoroom_20260305_123705.png',cat:'Controller'},{name:'LXRD Plus Black',price:180,img:'Photoroom_20260305_140346.png',cat:'Controller'},{name:'LXRD Basic Black',price:105,img:'Photoroom_20260402_014813.png',cat:'Controller'},{name:'LXRD Elite Pro',price:280,img:'Photoroom_20260306_112425.png',cat:'Controller'},{name:'LXRD Stealth Edition',price:220,img:'Photoroom_20260501_094506.png',cat:'Controller'},{name:'LXRD Wallet',price:39.90,img:'img/lxrd-wallet.jpg',cat:'Atelier',url:'zubehoer.html'},{name:'Stickzange Pro',price:5,img:'Stickzange.PNG',cat:'Werkzeug'},{name:'Paddle System V2',price:40,img:'Photoroom_20260304_212902.png',cat:'Zubehör'},{name:'TMR Stick Upgrade Kit',price:55,img:'Photoroom_20260305_123705.png',cat:'Zubehör'},{name:'Hall Effect Upgrade Kit',price:35,img:'Photoroom_20260305_140346.png',cat:'Zubehör'},{name:'GRIP Gehäuse Set',price:28,img:'Photoroom_20260402_014813.png',cat:'Zubehör'},{name:'Clicky Trigger Kit',price:22,img:'Photoroom_20260304_212902.png',cat:'Zubehör'}];
 
-function deskSearch(v){const d=document.getElementById('srch-drop');if(v.length<2){d.style.display='none';return;}const f=PRODUCTS.filter(p=>p.name.toLowerCase().includes(v.toLowerCase())||p.cat.toLowerCase().includes(v.toLowerCase()));if(!f.length){d.innerHTML='<div class="srch-empty">KEINE ERGEBNISSE</div>';d.style.display='block';return;}d.innerHTML=f.map(p=>`<div class="srch-item" onclick="handleSrch('${esc(p.name)}',${p.price},'${p.img}')"><img src="${p.img}" alt=""><span class="srch-item-name">${esc(p.name)}</span><span class="srch-item-price">${p.price.toFixed(2)} €</span></div>`).join('');d.style.display='block';}
-function handleSrch(n,p,i){addToCart(n,p,i);document.getElementById('desk-srch').value='';document.getElementById('srch-drop').style.display='none';}
-function mobSearch(v){const r=document.getElementById('mob-srch-res');if(v.length<2){r.innerHTML='';return;}const f=PRODUCTS.filter(p=>p.name.toLowerCase().includes(v.toLowerCase()));r.innerHTML=f.map(p=>`<div class="srch-item" onclick="addToCart('${esc(p.name)}',${p.price},'${p.img}');document.getElementById('mob-srch-ov').classList.remove('on')" style="background:#0c0c0c;border-radius:8px;margin-bottom:8px;border:1px solid #111"><img src="${p.img}" alt=""><span class="srch-item-name">${esc(p.name)}</span><span class="srch-item-price">${p.price.toFixed(2)} €</span></div>`).join('')||'<div class="srch-empty">KEINE ERGEBNISSE</div>';}
+function deskSearch(v){const d=document.getElementById('srch-drop');if(v.length<2){d.style.display='none';return;}const f=PRODUCTS.filter(p=>p.name.toLowerCase().includes(v.toLowerCase())||p.cat.toLowerCase().includes(v.toLowerCase()));if(!f.length){d.innerHTML='<div class="srch-empty">KEINE ERGEBNISSE</div>';d.style.display='block';return;}d.innerHTML=f.map(p=>`<div class="srch-item" onclick="handleSrch('${esc(p.name)}',${p.price},'${p.img}','${p.url||''}')"><img src="${p.img}" alt=""><span class="srch-item-name">${esc(p.name)}</span><span class="srch-item-price">${p.price.toFixed(2)} €</span></div>`).join('');d.style.display='block';}
+function handleSrch(n,p,i,u){if(u){window.location.href=u;return;}addToCart(n,p,i);document.getElementById('desk-srch').value='';document.getElementById('srch-drop').style.display='none';}
+function mobSearch(v){const r=document.getElementById('mob-srch-res');if(v.length<2){r.innerHTML='';return;}const f=PRODUCTS.filter(p=>p.name.toLowerCase().includes(v.toLowerCase()));r.innerHTML=f.map(p=>`<div class="srch-item" onclick="${p.url?`window.location.href='${p.url}'`:`addToCart('${esc(p.name)}',${p.price},'${p.img}');document.getElementById('mob-srch-ov').classList.remove('on')`}" style="background:#0c0c0c;border-radius:8px;margin-bottom:8px;border:1px solid #111"><img src="${p.img}" alt=""><span class="srch-item-name">${esc(p.name)}</span><span class="srch-item-price">${p.price.toFixed(2)} €</span></div>`).join('')||'<div class="srch-empty">KEINE ERGEBNISSE</div>';}
 document.addEventListener('click',e=>{if(!e.target.closest('.srch-wrap'))document.getElementById('srch-drop').style.display='none';});
 
 function loadCart(){try{const s=localStorage.getItem('lxrd_cart');if(s)cart=JSON.parse(s);}catch(e){cart=[];}}

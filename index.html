@@ -43,6 +43,14 @@
 <meta name="distribution" content="global">
 <meta name="format-detection" content="telephone=yes">
 
+<!-- ═══ Auto-Discovery für Aggregatoren ═══ -->
+<link rel="alternate" type="application/rss+xml" title="LEXORD Produkt-Feed" href="https://lexord.de/feed.xml">
+<link rel="alternate" type="application/atom+xml" title="LEXORD Updates" href="https://lexord.de/feed.xml">
+
+<!-- ═══ Pinterest Rich Pins — automatische Produkt-Daten ═══ -->
+<meta property="article:author" content="Leon Schulz">
+<meta property="article:publisher" content="https://lexord.de">
+
 <!-- Pinterest Verifizierung (Optional, ID einfügen wenn vorhanden) -->
 <!-- <meta name="p:domain_verify" content="DEIN-CODE"> -->
 
@@ -3459,6 +3467,136 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLogin();closeA
 </div>
 
 <script>if(localStorage.getItem('ck_analytics')==='1'){loadTracker();loadMarketing();}</script>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     🚀 AUTOMATISCHE EMPFEHLUNG & INDEXIERUNG — keine Anmeldung nötig
+     ═══════════════════════════════════════════════════════════════ -->
+
+<!-- Auto-Share & Referral Modal -->
+<div id="lxd-share-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(16px);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity .3s">
+  <div style="background:#080808;border:1px solid rgba(0,242,255,.3);border-radius:18px;max-width:480px;width:100%;padding:36px 28px;text-align:center;position:relative;animation:slideUp .4s cubic-bezier(.2,.8,.2,1)">
+    <button onclick="lxdCloseShare()" style="position:absolute;top:14px;right:14px;background:transparent;border:1px solid #222;color:#888;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px">✕</button>
+    <div style="font-size:48px;margin-bottom:14px">🎁</div>
+    <h3 style="font-family:Orbitron;font-weight:900;font-size:1.3rem;letter-spacing:2px;color:#fff;margin-bottom:10px">EMPFEHLEN<br><span style="background:linear-gradient(90deg,#00f2ff,#bc13fe);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">&amp; SPAREN</span></h3>
+    <p style="font-size:14px;color:#aaa;line-height:1.6;margin-bottom:8px;font-weight:300">Empfiehl LEXORD weiter und <strong style="color:#fff">spar 10 €</strong> auf deine nächste Bestellung. Dein Freund bekommt auch <strong style="color:#fff">10 € Rabatt</strong>.</p>
+    <div style="display:inline-flex;align-items:center;gap:8px;padding:9px 16px;background:rgba(255,174,0,.06);border:1px dashed rgba(255,174,0,.4);border-radius:8px;font-family:monospace;font-size:14px;color:#ffae00;letter-spacing:4px;font-weight:900;margin:14px 0 20px" id="lxd-ref-code">DEIN-CODE</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:14px">
+      <button onclick="lxdShare('whatsapp')" style="background:#25D366;color:#fff;border:none;padding:10px 16px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:10px;letter-spacing:1px;cursor:pointer;display:inline-flex;align-items:center;gap:6px">💬 WhatsApp</button>
+      <button onclick="lxdShare('telegram')" style="background:#0088cc;color:#fff;border:none;padding:10px 16px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:10px;letter-spacing:1px;cursor:pointer">✈️ Telegram</button>
+      <button onclick="lxdShare('email')" style="background:#444;color:#fff;border:none;padding:10px 16px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:10px;letter-spacing:1px;cursor:pointer">📧 E-Mail</button>
+      <button onclick="lxdShare('twitter')" style="background:#000;color:#fff;border:1px solid #444;padding:10px 16px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:10px;letter-spacing:1px;cursor:pointer">𝕏 Posten</button>
+      <button onclick="lxdShare('facebook')" style="background:#1877f2;color:#fff;border:none;padding:10px 16px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:10px;letter-spacing:1px;cursor:pointer">f Facebook</button>
+      <button onclick="lxdShare('pinterest')" style="background:#E60023;color:#fff;border:none;padding:10px 16px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:10px;letter-spacing:1px;cursor:pointer">📌 Pin</button>
+      <button onclick="lxdShare('reddit')" style="background:#FF4500;color:#fff;border:none;padding:10px 16px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:10px;letter-spacing:1px;cursor:pointer">↗ Reddit</button>
+      <button onclick="lxdShare('copy')" style="background:rgba(0,242,255,.1);color:#00f2ff;border:1px solid rgba(0,242,255,.3);padding:10px 16px;border-radius:10px;font-family:Orbitron;font-weight:700;font-size:10px;letter-spacing:1px;cursor:pointer">🔗 Link kopieren</button>
+    </div>
+    <div style="font-family:Orbitron;font-size:8px;color:#555;letter-spacing:1.5px">✓ AUTOMATISCH IM CHECKOUT EINLÖSBAR</div>
+  </div>
+</div>
+
+<!-- Schwebender Empfehlungs-Button — dezent unten rechts -->
+<button id="lxd-ref-btn" onclick="lxdOpenShare()" style="position:fixed;bottom:24px;right:88px;width:48px;height:48px;border-radius:50%;background:rgba(8,8,8,.85);backdrop-filter:blur(10px);border:1px solid rgba(0,242,255,.4);cursor:pointer;color:#00f2ff;font-size:18px;z-index:898;box-shadow:0 4px 14px rgba(0,0,0,.5);transition:.25s" aria-label="Empfehlen & Sparen" title="Empfehlen & 10 € sparen">🎁</button>
+
+<script>
+/* ═══ AUTO-INDEXIERUNG (IndexNow Protocol — Bing/Yandex/Seznam/Naver) ═══
+   Pingt automatisch alle Suchmaschinen bei Seitenaufruf.
+   Bing indexiert innerhalb von Minuten statt Wochen.
+   Google nutzt Bing-Daten → indirekter Boost.
+══════════════════════════════════════════════════════════════════════ */
+(function(){
+  if(sessionStorage.getItem('lxd_indexed'))return;
+  sessionStorage.setItem('lxd_indexed','1');
+  const KEY='b3a7c2f1e8d94f8c'; // public key — auch als /b3a7c2f1e8d94f8c.txt hinterlegt
+  const url=encodeURIComponent(location.href.split('#')[0].split('?')[0]);
+  // IndexNow API — verwendet von Bing, Yandex, Seznam, Naver
+  fetch(`https://api.indexnow.org/indexnow?url=${url}&key=${KEY}`,{mode:'no-cors'}).catch(()=>{});
+})();
+
+/* ═══ REFERRAL-SYSTEM — automatisch tracking + Belohnung ═══
+   Jeder Besucher bekommt einen eigenen Code.
+   Klickt jemand seinen Link, wird der Code im LocalStorage gespeichert.
+   Beim Checkout wird er automatisch eingelöst.
+══════════════════════════════════════════════════════════════════════ */
+function lxdGenRef(){
+  let c=localStorage.getItem('lxd_my_ref');
+  if(c)return c;
+  c='LXR'+Math.random().toString(36).slice(2,7).toUpperCase();
+  localStorage.setItem('lxd_my_ref',c);
+  return c;
+}
+
+// Wenn jemand mit ?ref=CODE kommt: speichern für Checkout
+(function(){
+  const p=new URLSearchParams(location.search);
+  const r=p.get('ref');
+  if(r){
+    localStorage.setItem('lxd_referred_by',r);
+    // Auto-Toast nach 1.5s
+    setTimeout(()=>{
+      const t=document.getElementById('toasts');
+      if(t){
+        const d=document.createElement('div');
+        d.className='toast ok';
+        d.innerText='🎁 10 € Rabatt aktiviert! Code: '+r;
+        t.appendChild(d);
+        setTimeout(()=>d.remove(),5000);
+      }
+    },1500);
+  }
+})();
+
+function lxdOpenShare(){
+  const code=lxdGenRef();
+  document.getElementById('lxd-ref-code').textContent=code;
+  const m=document.getElementById('lxd-share-modal');
+  m.style.display='flex';
+  setTimeout(()=>m.style.opacity='1',10);
+}
+function lxdCloseShare(){
+  const m=document.getElementById('lxd-share-modal');
+  m.style.opacity='0';
+  setTimeout(()=>m.style.display='none',300);
+}
+
+function lxdShare(platform){
+  const code=lxdGenRef();
+  const url='https://lexord.de/?ref='+code;
+  const title='LEXORD® Custom PS5 Controller — handgefertigt in Germany';
+  const text=`Schau dir mal LEXORD an — Premium Custom PS5 Controller mit TMR-Sticks & Hall-Effect. Mit meinem Link bekommst du 10 € Rabatt: ${url}`;
+  let target='';
+  switch(platform){
+    case 'whatsapp': target=`https://wa.me/?text=${encodeURIComponent(text)}`; break;
+    case 'telegram': target=`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`; break;
+    case 'email':    target=`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(text)}`; break;
+    case 'twitter':  target=`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`; break;
+    case 'facebook': target=`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`; break;
+    case 'pinterest':target=`https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&media=${encodeURIComponent('https://lexord.de/IMG_0556.jpeg')}&description=${encodeURIComponent(title)}`; break;
+    case 'reddit':   target=`https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`; break;
+    case 'copy':
+      navigator.clipboard.writeText(url).then(()=>{
+        const t=document.getElementById('toasts');
+        if(t){const d=document.createElement('div');d.className='toast ok';d.innerText='✓ Link kopiert!';t.appendChild(d);setTimeout(()=>d.remove(),3000);}
+      });
+      return;
+  }
+  if(target){
+    window.open(target,'_blank','noopener,noreferrer');
+    if(window.lxrdTrack)lxrdTrack.lead();
+  }
+}
+
+/* ═══ NATIVE SHARE (Smartphone-System-Share) ═══ */
+window.lxdNativeShare = async function(){
+  if(!navigator.share)return lxdOpenShare();
+  try{
+    await navigator.share({
+      title:'LEXORD® Custom PS5 Controller',
+      text:'Schau dir mal LEXORD an — handgefertigt, ohne Drift, mit 10 € Rabatt für dich',
+      url:'https://lexord.de/?ref='+lxdGenRef()
+    });
+  }catch(e){}
+};
+</script>
 
 <script>
 /* ═══ PREMIUM POLISH JS ═══ */

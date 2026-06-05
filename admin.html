@@ -501,6 +501,41 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
     <!-- Summary-Karten -->
     <div class="fin-summary" id="fin-summary"></div>
 
+    <!-- Bilanz-Übersicht (Einnahmen − Ausgaben = Gewinn) -->
+    <div id="fin-bilanz" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:18px 0"></div>
+
+    <!-- ════════ AUSGABEN-TRACKING ════════ -->
+    <div style="background:#080808;border:1px solid #1a1a1a;border-radius:14px;padding:22px;margin:22px 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="font-family:Orbitron;font-weight:900;font-size:13px;color:#fff;letter-spacing:2px">💸 BETRIEBSAUSGABEN</div>
+          <div style="font-family:Orbitron;font-size:9px;color:#666;letter-spacing:1.5px;margin-top:4px">Alles was du steuerlich absetzen kannst (§ 4 Abs. 4 EStG)</div>
+        </div>
+        <button class="dash-action primary" onclick="exOpenForm()" style="background:linear-gradient(135deg,#ff4d6d,#ff8c00);color:#000;font-weight:900">+ AUSGABE HINZUFÜGEN</button>
+      </div>
+      <div id="ex-list"></div>
+    </div>
+
+    <!-- ════════ ABSETZBAR-CATEGORIES Reference ════════ -->
+    <details style="background:#080808;border:1px solid #1a1a1a;border-radius:14px;padding:16px 22px;margin-bottom:22px">
+      <summary style="cursor:pointer;font-family:Orbitron;font-weight:900;font-size:11px;color:#00f2ff;letter-spacing:2px;outline:none">📋 WAS KANNST DU ALLES ABSETZEN? (KLICKEN)</summary>
+      <div style="margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;font-size:12px;color:#aaa;line-height:1.7">
+        <div><strong style="color:#fff;font-family:Orbitron;font-size:10px;letter-spacing:1.5px;display:block;margin-bottom:6px">🛒 MATERIAL</strong>Controller-Komponenten, Sticks, Trigger, Gehäuse, Paddles, Schrauben, Kabel, 3D-Filament (Bio-PETG)</div>
+        <div><strong style="color:#fff;font-family:Orbitron;font-size:10px;letter-spacing:1.5px;display:block;margin-bottom:6px">📦 VERSAND</strong>DHL-Marken, Verpackungsmaterial, Polsterung, Etiketten, Antistatik-Beutel, Karton</div>
+        <div><strong style="color:#fff;font-family:Orbitron;font-size:10px;letter-spacing:1.5px;display:block;margin-bottom:6px">🔧 WERKZEUG</strong>Lötkolben, Mikroskop, Heißluft-Station, Ultraschallreiniger, Schraubendreher, Stickzangen, Multimeter</div>
+        <div><strong style="color:#fff;font-family:Orbitron;font-size:10px;letter-spacing:1.5px;display:block;margin-bottom:6px">💻 SOFTWARE / IT</strong>Cloudflare, GitHub, Brevo, PayPal-Gebühren, Domain (lexord.de), Hosting, Adobe, KI-Tools</div>
+        <div><strong style="color:#fff;font-family:Orbitron;font-size:10px;letter-spacing:1.5px;display:block;margin-bottom:6px">📢 MARKETING</strong>Google Ads, Meta Ads, TikTok Ads, Influencer-Kosten, Visitenkarten, Logo-Design, Foto-Equipment</div>
+        <div><strong style="color:#fff;font-family:Orbitron;font-size:10px;letter-spacing:1.5px;display:block;margin-bottom:6px">🏢 BÜRO / WERKSTATT</strong>Miete-Anteil (Arbeitszimmer), Strom, Internet, Telefon, Schreibwaren, Drucker, Patronen</div>
+        <div><strong style="color:#fff;font-family:Orbitron;font-size:10px;letter-spacing:1.5px;display:block;margin-bottom:6px">🚗 FAHRTKOSTEN</strong>Werkstatt-Fahrten, Geschäftsessen mit Kunden (70%), Messen, Kongresse, ÖPNV-Tickets</div>
+        <div><strong style="color:#fff;font-family:Orbitron;font-size:10px;letter-spacing:1.5px;display:block;margin-bottom:6px">📚 BILDUNG</strong>Fachbücher, Online-Kurse (Udemy, YouTube Premium), Workshops, Zertifikate</div>
+        <div><strong style="color:#fff;font-family:Orbitron;font-size:10px;letter-spacing:1.5px;display:block;margin-bottom:6px">🛡️ VERSICHERUNG</strong>Betriebshaftpflicht, Geräteversicherung, Berufsunfähigkeit, KSK (falls relevant)</div>
+        <div><strong style="color:#fff;font-family:Orbitron;font-size:10px;letter-spacing:1.5px;display:block;margin-bottom:6px">💰 BANK / GEBÜHREN</strong>Geschäftskonto, Stripe-/PayPal-Gebühren, EC-Gerät, Kartengebühren, Transaktionsentgelte</div>
+        <div><strong style="color:#fff;font-family:Orbitron;font-size:10px;letter-spacing:1.5px;display:block;margin-bottom:6px">⚖️ BERATUNG</strong>Steuerberater, Anwalt, Buchhalter, IHK-Gebühren, Notar</div>
+        <div><strong style="color:#fff;font-family:Orbitron;font-size:10px;letter-spacing:1.5px;display:block;margin-bottom:6px">🎁 SONSTIGES</strong>Beanstandungs-Erstattungen, Kunden-Goodies, Werbegeschenke (bis 35€/Person), Spenden</div>
+      </div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid #1a1a1a;font-size:11px;color:#777;line-height:1.6">⚠️ <strong style="color:#ffae00">Wichtig:</strong> Belege immer mindestens 10 Jahre aufheben (§ 147 AO). Bei Beträgen ab 250 € EUR brutto wird Rechnung mit allen Pflichtangaben benötigt. Bei Kleinunternehmer (§ 19 UStG): Vorsteuer ist NICHT abziehbar — du nimmst Brutto-Beträge als Betriebsausgaben.</div>
+    </details>
+
     <!-- Steuer-Tabelle (GoBD-konform fuer Finanzamt) -->
     <div class="fin-table-wrap" id="fin-table-wrap">
       <div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div>
@@ -510,6 +545,41 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
       Beim § 19 UStG-Modus werden keine Umsatzsteuer-Anteile ausgewiesen. Stornos sind als negative Eintraege markiert.
       Fuer eine offizielle Steuererklaerung empfiehlt sich der CSV-Export an deinen Steuerberater.
     </p>
+  </div>
+
+  <!-- AUSGABEN-FORMULAR MODAL -->
+  <div id="ex-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(12px);z-index:99999;display:none;align-items:center;justify-content:center;padding:20px">
+    <div style="background:#080808;border:1px solid rgba(255,77,109,.4);border-radius:16px;max-width:480px;width:100%;padding:28px;position:relative">
+      <button onclick="exCloseForm()" style="position:absolute;top:14px;right:14px;background:transparent;border:1px solid #222;color:#888;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:14px">✕</button>
+      <div style="font-family:Orbitron;font-weight:900;font-size:14px;color:#fff;letter-spacing:2px;margin-bottom:6px">💸 BETRIEBSAUSGABE</div>
+      <div style="font-family:Orbitron;font-size:9px;color:#666;letter-spacing:1.5px;margin-bottom:20px">// HINZUFÜGEN</div>
+      <form id="ex-form" onsubmit="event.preventDefault();exSubmit();">
+        <label style="display:block;font-family:Orbitron;font-size:9px;color:#888;letter-spacing:1.5px;margin-bottom:6px">DATUM *</label>
+        <input type="date" id="ex-date" required style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;outline:none;margin-bottom:14px;color-scheme:dark">
+        <label style="display:block;font-family:Orbitron;font-size:9px;color:#888;letter-spacing:1.5px;margin-bottom:6px">KATEGORIE *</label>
+        <select id="ex-cat" required style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;outline:none;margin-bottom:14px">
+          <option value="material">🛒 Material</option>
+          <option value="versand">📦 Versand</option>
+          <option value="werkzeug">🔧 Werkzeug</option>
+          <option value="software">💻 Software / IT</option>
+          <option value="marketing">📢 Marketing / Ads</option>
+          <option value="buero">🏢 Büro / Werkstatt</option>
+          <option value="fahrt">🚗 Fahrtkosten</option>
+          <option value="bildung">📚 Bildung</option>
+          <option value="versicherung">🛡️ Versicherung</option>
+          <option value="bank">💰 Bank / Gebühren</option>
+          <option value="beratung">⚖️ Beratung</option>
+          <option value="sonstiges">🎁 Sonstiges</option>
+        </select>
+        <label style="display:block;font-family:Orbitron;font-size:9px;color:#888;letter-spacing:1.5px;margin-bottom:6px">BESCHREIBUNG *</label>
+        <input type="text" id="ex-desc" required placeholder="z. B. TMR-Sticks Bestellung Reichelt" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;outline:none;margin-bottom:14px">
+        <label style="display:block;font-family:Orbitron;font-size:9px;color:#888;letter-spacing:1.5px;margin-bottom:6px">BETRAG (BRUTTO €) *</label>
+        <input type="number" id="ex-amount" required step="0.01" min="0" placeholder="0.00" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;outline:none;margin-bottom:14px">
+        <label style="display:block;font-family:Orbitron;font-size:9px;color:#888;letter-spacing:1.5px;margin-bottom:6px">BELEG-NUMMER (optional)</label>
+        <input type="text" id="ex-receipt" placeholder="z. B. Rechnung #12345" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;outline:none;margin-bottom:18px">
+        <button type="submit" style="width:100%;padding:14px;background:linear-gradient(135deg,#ff4d6d,#ff8c00);color:#000;border:none;border-radius:10px;font-family:Orbitron;font-weight:900;font-size:11px;letter-spacing:2px;cursor:pointer">💾 AUSGABE SPEICHERN</button>
+      </form>
+    </div>
   </div>
 
   <!-- PANEL: STATS -->
@@ -1633,7 +1703,132 @@ function renderFinTable(rows, mode){
       </tfoot>
     </table>` : empty('📋','KEINE BESTELLUNGEN IM ZEITRAUM');
   document.getElementById('fin-table-wrap').innerHTML = tableHtml;
+  renderExpenses();
+  renderBilanz();
 }
+
+/* ════════ AUSGABEN-VERWALTUNG ════════ */
+const EX_KEY='lxrd_admin_expenses';
+const EX_CATS={material:'🛒 Material',versand:'📦 Versand',werkzeug:'🔧 Werkzeug',software:'💻 Software / IT',marketing:'📢 Marketing',buero:'🏢 Büro / Werkstatt',fahrt:'🚗 Fahrtkosten',bildung:'📚 Bildung',versicherung:'🛡️ Versicherung',bank:'💰 Bank / Gebühren',beratung:'⚖️ Beratung',sonstiges:'🎁 Sonstiges'};
+
+function getExpenses(){try{return JSON.parse(localStorage.getItem(EX_KEY)||'[]');}catch(e){return [];}}
+function setExpenses(arr){try{localStorage.setItem(EX_KEY,JSON.stringify(arr));}catch(e){}}
+
+function exOpenForm(){
+  const m=document.getElementById('ex-modal');
+  document.getElementById('ex-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('ex-desc').value='';
+  document.getElementById('ex-amount').value='';
+  document.getElementById('ex-receipt').value='';
+  m.style.display='flex';
+}
+function exCloseForm(){document.getElementById('ex-modal').style.display='none';}
+
+function exSubmit(){
+  const date=document.getElementById('ex-date').value;
+  const cat=document.getElementById('ex-cat').value;
+  const desc=document.getElementById('ex-desc').value.trim();
+  const amount=parseFloat(document.getElementById('ex-amount').value)||0;
+  const receipt=document.getElementById('ex-receipt').value.trim();
+  if(!date||!desc||amount<=0)return;
+  const expenses=getExpenses();
+  expenses.push({id:'EX-'+Date.now(),date,cat,desc,amount,receipt,createdAt:new Date().toISOString()});
+  setExpenses(expenses);
+  exCloseForm();
+  renderExpenses();
+  renderBilanz();
+}
+
+function exDelete(id){
+  if(!confirm('Diese Ausgabe wirklich löschen?'))return;
+  const expenses=getExpenses().filter(e=>e.id!==id);
+  setExpenses(expenses);
+  renderExpenses();
+  renderBilanz();
+}
+
+function renderExpenses(){
+  const c=document.getElementById('ex-list');
+  if(!c)return;
+  const year=parseInt(document.getElementById('fin-year')?.value||new Date().getFullYear());
+  const period=document.getElementById('fin-period')?.value||'year';
+  let expenses=getExpenses().filter(e=>{
+    const d=new Date(e.date);
+    if(d.getFullYear()!==year)return false;
+    const m=d.getMonth()+1;
+    if(period.startsWith('m'))return m===parseInt(period.slice(1));
+    if(period==='q1')return m<=3;
+    if(period==='q2')return m>=4&&m<=6;
+    if(period==='q3')return m>=7&&m<=9;
+    if(period==='q4')return m>=10;
+    return true;
+  });
+  expenses.sort((a,b)=>b.date.localeCompare(a.date));
+
+  if(!expenses.length){
+    c.innerHTML='<div style="text-align:center;color:#666;padding:30px;font-family:Orbitron;font-size:10px;letter-spacing:2px">📭 KEINE AUSGABEN IM ZEITRAUM<br><br><span style="font-size:9px;color:#444">Klick „AUSGABE HINZUFÜGEN" oben</span></div>';
+    return;
+  }
+
+  const total=expenses.reduce((s,e)=>s+(e.amount||0),0);
+  const byCat={};
+  expenses.forEach(e=>{byCat[e.cat]=(byCat[e.cat]||0)+(e.amount||0);});
+
+  // Kategorie-Übersicht
+  let catHtml='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">';
+  Object.keys(byCat).sort((a,b)=>byCat[b]-byCat[a]).forEach(k=>{
+    catHtml+='<div style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:7px;padding:6px 11px;font-family:Orbitron;font-size:9px;color:#ccc;letter-spacing:1px">'+(EX_CATS[k]||k)+' · <strong style="color:#ff4d6d">'+byCat[k].toFixed(2).replace('.',',')+' €</strong></div>';
+  });
+  catHtml+='</div>';
+
+  // Liste
+  let listHtml='<table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:#0a0a0a"><th style="text-align:left;padding:10px;font-family:Orbitron;font-size:9px;color:#888;letter-spacing:1.5px;border-bottom:1px solid #1a1a1a">DATUM</th><th style="text-align:left;padding:10px;font-family:Orbitron;font-size:9px;color:#888;letter-spacing:1.5px;border-bottom:1px solid #1a1a1a">KAT.</th><th style="text-align:left;padding:10px;font-family:Orbitron;font-size:9px;color:#888;letter-spacing:1.5px;border-bottom:1px solid #1a1a1a">BESCHREIBUNG</th><th style="text-align:left;padding:10px;font-family:Orbitron;font-size:9px;color:#888;letter-spacing:1.5px;border-bottom:1px solid #1a1a1a">BELEG</th><th style="text-align:right;padding:10px;font-family:Orbitron;font-size:9px;color:#888;letter-spacing:1.5px;border-bottom:1px solid #1a1a1a">BETRAG</th><th style="padding:10px;border-bottom:1px solid #1a1a1a"></th></tr></thead><tbody>';
+  expenses.forEach(e=>{
+    listHtml+='<tr style="border-bottom:1px solid #111"><td style="padding:10px;font-family:Space Mono,monospace;font-size:11px;color:#aaa">'+new Date(e.date).toLocaleDateString('de-DE')+'</td><td style="padding:10px;font-family:Orbitron;font-size:9.5px;letter-spacing:1px">'+(EX_CATS[e.cat]||e.cat)+'</td><td style="padding:10px;color:#ccc">'+escAdm(e.desc)+'</td><td style="padding:10px;font-family:monospace;font-size:11px;color:#666">'+escAdm(e.receipt||'—')+'</td><td style="padding:10px;text-align:right;font-family:Orbitron;font-weight:900;color:#ff4d6d">−'+(e.amount||0).toFixed(2).replace('.',',')+' €</td><td style="padding:10px;text-align:right"><button onclick="exDelete(\''+e.id+'\')" style="background:transparent;border:1px solid #222;color:#666;width:28px;height:28px;border-radius:5px;cursor:pointer">🗑️</button></td></tr>';
+  });
+  listHtml+='<tr style="background:rgba(255,77,109,.05);border-top:2px solid #ff4d6d"><td colspan="4" style="padding:14px;font-family:Orbitron;font-size:11px;letter-spacing:2px;color:#fff;font-weight:900">SUMME AUSGABEN</td><td style="padding:14px;text-align:right;font-family:Orbitron;font-weight:900;font-size:16px;color:#ff4d6d">−'+total.toFixed(2).replace('.',',')+' €</td><td></td></tr>';
+  listHtml+='</tbody></table>';
+
+  c.innerHTML=catHtml+listHtml;
+}
+
+function renderBilanz(){
+  const bilanz=document.getElementById('fin-bilanz');
+  if(!bilanz)return;
+  // Einnahmen aus dem Summary holen (oder berechnen)
+  let einnahmen=0;
+  document.querySelectorAll('#fin-summary .fin-summary-card').forEach(card=>{
+    const label=card.querySelector('.fin-summary-lbl')?.textContent||'';
+    const val=card.querySelector('.fin-summary-val')?.textContent||'';
+    if(label.includes('UMSATZ')||label.includes('NETTO')||label.includes('GESAMT')){
+      const n=parseFloat(val.replace(/[^\d,.-]/g,'').replace(',','.'))||0;
+      if(n>einnahmen)einnahmen=n;
+    }
+  });
+  const year=parseInt(document.getElementById('fin-year')?.value||new Date().getFullYear());
+  const period=document.getElementById('fin-period')?.value||'year';
+  const expenses=getExpenses().filter(e=>{
+    const d=new Date(e.date);
+    if(d.getFullYear()!==year)return false;
+    const m=d.getMonth()+1;
+    if(period.startsWith('m'))return m===parseInt(period.slice(1));
+    if(period==='q1')return m<=3;
+    if(period==='q2')return m>=4&&m<=6;
+    if(period==='q3')return m>=7&&m<=9;
+    if(period==='q4')return m>=10;
+    return true;
+  });
+  const ausgaben=expenses.reduce((s,e)=>s+(e.amount||0),0);
+  const gewinn=einnahmen-ausgaben;
+  const margin=einnahmen>0?(gewinn/einnahmen*100):0;
+
+  bilanz.innerHTML=
+    '<div style="background:linear-gradient(135deg,rgba(0,182,122,.08),rgba(0,242,255,.04));border:1px solid rgba(0,182,122,.3);border-radius:12px;padding:18px;text-align:center"><div style="font-family:Orbitron;font-size:9px;color:#888;letter-spacing:2px;margin-bottom:8px">📈 EINNAHMEN</div><div style="font-family:Orbitron;font-weight:900;font-size:1.4rem;color:#00b67a">+'+einnahmen.toFixed(2).replace('.',',')+' €</div></div>'+
+    '<div style="background:linear-gradient(135deg,rgba(255,77,109,.08),rgba(255,140,0,.04));border:1px solid rgba(255,77,109,.3);border-radius:12px;padding:18px;text-align:center"><div style="font-family:Orbitron;font-size:9px;color:#888;letter-spacing:2px;margin-bottom:8px">📉 AUSGABEN</div><div style="font-family:Orbitron;font-weight:900;font-size:1.4rem;color:#ff4d6d">−'+ausgaben.toFixed(2).replace('.',',')+' €</div></div>'+
+    '<div style="background:linear-gradient(135deg,'+(gewinn>=0?'rgba(0,242,255,.08),rgba(0,182,122,.04)':'rgba(255,77,109,.08),rgba(255,140,0,.04)')+');border:1px solid '+(gewinn>=0?'rgba(0,242,255,.4)':'rgba(255,77,109,.4)')+';border-radius:12px;padding:18px;text-align:center"><div style="font-family:Orbitron;font-size:9px;color:#888;letter-spacing:2px;margin-bottom:8px">💰 GEWINN VOR STEUER</div><div style="font-family:Orbitron;font-weight:900;font-size:1.4rem;color:'+(gewinn>=0?'#00f2ff':'#ff4d6d')+'">'+(gewinn>=0?'+':'')+gewinn.toFixed(2).replace('.',',')+' €</div></div>'+
+    '<div style="background:#080808;border:1px solid #1a1a1a;border-radius:12px;padding:18px;text-align:center"><div style="font-family:Orbitron;font-size:9px;color:#888;letter-spacing:2px;margin-bottom:8px">📊 MARGE</div><div style="font-family:Orbitron;font-weight:900;font-size:1.4rem;color:#fff">'+margin.toFixed(1).replace('.',',')+' %</div></div>';
+}
+
 function exportFinanzenCSV(){
   if(!FIN_ROWS.length) return toast('Keine Daten zum Export','warn');
   const year = document.getElementById('fin-year').value;

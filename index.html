@@ -1122,6 +1122,54 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
   </div>
 </div>
 
+<!-- VORKASSE SUCCESS — Premium Bestätigung mit Bankdaten -->
+<div id="vorkasse-success-modal" role="dialog" style="position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:300000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(20px);padding:20px;overflow-y:auto">
+  <div style="background:#080808;border:1px solid rgba(0,182,122,.4);border-radius:20px;max-width:560px;width:100%;max-height:92vh;overflow-y:auto;position:relative;animation:slideUp .4s cubic-bezier(.2,.8,.2,1)">
+
+    <!-- HEADER -->
+    <div style="background:linear-gradient(135deg,rgba(0,182,122,.1),rgba(0,242,255,.04));padding:36px 32px 28px;text-align:center;border-bottom:1px solid rgba(0,182,122,.2)">
+      <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#00b67a,#00ff88);display:inline-flex;align-items:center;justify-content:center;font-size:36px;color:#000;margin-bottom:16px;box-shadow:0 12px 32px rgba(0,182,122,.4);animation:vkSuccessPop .6s cubic-bezier(.2,1.4,.5,1) both">✓</div>
+      <div style="font-family:'Orbitron';font-size:9px;color:#00b67a;letter-spacing:3px;margin-bottom:8px">// VORKASSE-BESTELLUNG ERHALTEN</div>
+      <div style="font-family:'Orbitron';font-weight:900;font-size:1.4rem;color:#fff;letter-spacing:2.5px;line-height:1.2;margin-bottom:8px">JETZT NUR NOCH<br><span style="background:linear-gradient(90deg,#00b67a,#00ff88);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">ÜBERWEISEN</span></div>
+      <div style="font-family:'Space Mono',monospace;font-size:12px;color:#888;letter-spacing:1px;margin-top:6px">BESTELLNUMMER: <strong id="vk-suc-nr" style="color:#fff;letter-spacing:2px">LXRD-0000000</strong></div>
+    </div>
+
+    <!-- BANKDATEN -->
+    <div style="padding:28px 32px">
+      <div style="font-family:'Orbitron';font-size:10px;color:#888;letter-spacing:2px;margin-bottom:14px">🏦 UNSERE BANKDATEN</div>
+      <div style="background:linear-gradient(135deg,#040404,#0a0a0a);border:1px dashed rgba(0,182,122,.4);border-radius:14px;padding:20px;font-family:'Space Mono',monospace;font-size:13px;line-height:1.9;color:#ccc">
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:8px"><span style="color:#666;font-size:10px;letter-spacing:1.5px">EMPFÄNGER</span><strong style="color:#fff">Leon Schulz</strong></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:8px"><span style="color:#666;font-size:10px;letter-spacing:1.5px">IBAN</span><button onclick="vkCopy('DE36100123450271320201',this)" style="background:transparent;border:none;color:#00b67a;font-family:monospace;font-size:13px;cursor:pointer;padding:4px 8px;border-radius:6px;font-weight:700" title="Klick zum Kopieren">DE36 1001 2345 0271 3202 01 📋</button></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:8px"><span style="color:#666;font-size:10px;letter-spacing:1.5px">BIC</span><button onclick="vkCopy('TRBKDEBBXXX',this)" style="background:transparent;border:none;color:#00b67a;font-family:monospace;font-size:13px;cursor:pointer;padding:4px 8px;border-radius:6px;font-weight:700" title="Klick zum Kopieren">TRBKDEBBXXX 📋</button></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:8px"><span style="color:#666;font-size:10px;letter-spacing:1.5px">BANK</span><strong style="color:#fff">Deutsche Bank</strong></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a;padding-bottom:8px;margin-bottom:8px;background:rgba(255,174,0,.05);padding:8px;border-radius:6px;margin-left:-8px;margin-right:-8px"><span style="color:#ffae00;font-size:10px;letter-spacing:1.5px;font-weight:900">⚡ VERWENDUNGSZWECK</span><button onclick="vkCopy(document.getElementById('vk-suc-nr').innerText,this)" style="background:transparent;border:none;color:#ffae00;font-family:monospace;font-size:14px;cursor:pointer;font-weight:900;padding:4px 8px;border-radius:6px" title="Klick zum Kopieren"><span id="vk-suc-nr2">LXRD-0000000</span> 📋</button></div>
+        <div style="display:flex;justify-content:space-between;align-items:center"><span style="color:#666;font-size:10px;letter-spacing:1.5px">BETRAG</span><strong style="color:#00ff88;font-size:18px;font-weight:900" id="vk-suc-total">0,00 €</strong></div>
+      </div>
+      <div style="font-size:11px;color:#666;text-align:center;margin-top:12px;line-height:1.6">💡 <strong style="color:#ccc">Tipp:</strong> Klick auf IBAN/BIC/Verwendungszweck zum Kopieren</div>
+    </div>
+
+    <!-- WAS PASSIERT JETZT -->
+    <div style="padding:0 32px 24px">
+      <div style="font-family:'Orbitron';font-size:10px;color:#888;letter-spacing:2px;margin-bottom:14px">📋 WIE ES WEITERGEHT</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;gap:14px;align-items:flex-start"><div style="width:28px;height:28px;border-radius:50%;background:rgba(0,182,122,.1);border:1px solid rgba(0,182,122,.4);color:#00b67a;display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-weight:900;font-size:11px;flex-shrink:0">1</div><div style="font-size:13px;color:#bbb;line-height:1.55"><strong style="color:#fff">Du überweist den Betrag</strong> innerhalb 7 Tagen mit deiner Bestellnummer als Verwendungszweck</div></div>
+        <div style="display:flex;gap:14px;align-items:flex-start"><div style="width:28px;height:28px;border-radius:50%;background:rgba(0,182,122,.1);border:1px solid rgba(0,182,122,.4);color:#00b67a;display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-weight:900;font-size:11px;flex-shrink:0">2</div><div style="font-size:13px;color:#bbb;line-height:1.55"><strong style="color:#fff">Wir prüfen Geldeingang</strong> meist innerhalb 1-2 Werktage. Du bekommst dann eine Bestätigung per E-Mail</div></div>
+        <div style="display:flex;gap:14px;align-items:flex-start"><div style="width:28px;height:28px;border-radius:50%;background:rgba(0,182,122,.1);border:1px solid rgba(0,182,122,.4);color:#00b67a;display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-weight:900;font-size:11px;flex-shrink:0">3</div><div style="font-size:13px;color:#bbb;line-height:1.55"><strong style="color:#fff">Fertigung &amp; Versand</strong> starten sofort nach Geldeingang. Versand-Tracking per E-Mail</div></div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div style="padding:20px 32px 28px;border-top:1px solid #161616;background:#040404;border-radius:0 0 20px 20px">
+      <div style="font-size:11.5px;color:#888;text-align:center;margin-bottom:14px;line-height:1.6">Eine Bestätigung mit allen Daten kommt per E-Mail an<br><strong id="vk-suc-mail" style="color:var(--neon)"></strong></div>
+      <button onclick="closeVorkasseSuccess()" style="width:100%;padding:14px;background:linear-gradient(135deg,#00b67a,#00a06b);color:#000;border:none;border-radius:11px;font-family:'Orbitron';font-weight:900;font-size:11px;letter-spacing:2px;cursor:pointer">ALLES KLAR — SCHLIESSEN</button>
+      <div style="text-align:center;margin-top:12px"><a href="#" onclick="closeVorkasseSuccess();openLogin();return false;" style="font-family:Orbitron;font-size:9px;color:var(--neon);letter-spacing:1.5px;text-decoration:none">→ STATUS UNTER MEIN KONTO VERFOLGEN</a></div>
+    </div>
+  </div>
+</div>
+<style>
+@keyframes vkSuccessPop{0%{transform:scale(.3) rotate(-180deg);opacity:0}60%{transform:scale(1.1) rotate(15deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+</style>
+
 <!-- KUNDEN LOGIN MODAL -->
 <div id="login-modal" role="dialog">
   <div class="lm-box">
@@ -3403,10 +3451,23 @@ async function lxdBankCheckout(){
   }
   if(window.lxrdTrack)lxrdTrack.purchase(orderNr,total,'EUR',cart);
 
-  // Cart leeren + Erfolg anzeigen
+  // Cart leeren + Vorkasse-Erfolgs-Modal anzeigen
   cart=[];saveCart();updateCart();closeCart();
-  document.getElementById('order-success-num').innerText=orderNr;
-  document.getElementById('order-success').style.display='flex';
+  document.getElementById('vk-suc-nr').innerText=orderNr;
+  document.getElementById('vk-suc-nr2').innerText=orderNr;
+  document.getElementById('vk-suc-total').innerText=total.toFixed(2).replace('.',',')+' €';
+  document.getElementById('vk-suc-mail').innerText=email;
+  document.getElementById('vorkasse-success-modal').style.display='flex';
+}
+
+function closeVorkasseSuccess(){document.getElementById('vorkasse-success-modal').style.display='none';}
+function vkCopy(text,btn){
+  navigator.clipboard.writeText(text).then(()=>{
+    const o=btn.textContent;btn.textContent='✓ KOPIERT';btn.style.color='#00ff88';
+    setTimeout(()=>{btn.textContent=o;btn.style.color='';},1800);
+  }).catch(()=>{
+    if(window.toast)toast('Bitte manuell kopieren','err');
+  });
 }
 function toggleShipForm(){const f=document.getElementById('ship-form');if(f)f.classList.toggle('open');}
 function openShipForm(){const f=document.getElementById('ship-form');if(f){f.classList.add('open');setTimeout(()=>document.getElementById('ship-fn')?.focus(),120);}}

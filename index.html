@@ -3210,7 +3210,7 @@ function renderPP(sub,ship,land){
   const c=document.getElementById('pp-btn-cont');c.innerHTML='';
   if(sub<=0||typeof paypal==='undefined')return;
 
-  // Shared handlers für alle Funding-Sources
+  // Shared PayPal handlers
   const onClick=(d,a)=>{
     if(!document.getElementById('cart-agb').checked){toast('Bitte AGB & Widerruf akzeptieren','err');return a.reject();}
     if(!validateShipAddress(true)){toast('Bitte Lieferadresse vollständig ausfüllen','err');openShipForm();return a.reject();}
@@ -3246,41 +3246,14 @@ function renderPP(sub,ship,land){
   const onCancel=()=>toast('Zahlung abgebrochen','err');
   const onError=(err)=>{console.error('PayPal:',err);toast('Fehler bei der Zahlung. Erneut versuchen.','err');};
 
-  // Alle nativen Zahlungs-Buttons rendern (PayPal-SDK liefert echte Apple-Pay, Google-Pay etc.)
-  const fundingSources=[
-    {src:paypal.FUNDING.PAYPAL,    color:'gold',  label:'paypal',  delay:0},
-    {src:paypal.FUNDING.CARD,      color:'black', label:'',        delay:.05},
-    {src:paypal.FUNDING.APPLEPAY,  color:'black', label:'',        delay:.1},
-    {src:paypal.FUNDING.GOOGLEPAY, color:'white', label:'',        delay:.15},
-    {src:paypal.FUNDING.PAYLATER,  color:'gold',  label:'paylater',delay:.2},
-    {src:paypal.FUNDING.SEPA,      color:'',      label:'',        delay:.25},
-    {src:paypal.FUNDING.GIROPAY,   color:'',      label:'',        delay:.3},
-    {src:paypal.FUNDING.IDEAL,     color:'',      label:'',        delay:.35},
-    {src:paypal.FUNDING.SOFORT,    color:'',      label:'',        delay:.4},
-    {src:paypal.FUNDING.BANCONTACT,color:'',      label:'',        delay:.45},
-    {src:paypal.FUNDING.MYBANK,    color:'',      label:'',        delay:.5},
-    {src:paypal.FUNDING.EPS,       color:'',      label:'',        delay:.55},
-    {src:paypal.FUNDING.MULTIBANCO,color:'',      label:'',        delay:.6},
-    {src:paypal.FUNDING.BLIK,      color:'',      label:'',        delay:.65},
-    {src:paypal.FUNDING.P24,       color:'',      label:'',        delay:.7},
-    {src:paypal.FUNDING.TRUSTLY,   color:'',      label:'',        delay:.75}
-  ];
-
-  fundingSources.forEach(({src,color,label,delay})=>{
-    if(!src)return;
-    try{
-      const style={layout:'vertical',shape:'rect',height:48,tagline:false};
-      if(color)style.color=color;
-      if(label)style.label=label;
-      const btn=paypal.Buttons({fundingSource:src,style,onClick,createOrder,onApprove,onCancel,onError});
-      if(btn.isEligible&&!btn.isEligible())return;
-      const wrap=document.createElement('div');
-      wrap.className='lxd-pay-btn-wrap';
-      wrap.style.cssText=`margin-bottom:8px;opacity:0;transform:translateY(8px);animation:lxdPayIn .5s cubic-bezier(.2,.8,.2,1) ${delay}s forwards`;
-      c.appendChild(wrap);
-      btn.render(wrap).catch(()=>{wrap.remove();});
-    }catch(e){/* funding source nicht verfügbar in dieser Region */}
-  });
+  // PayPal Smart-Stack — rendert AUTOMATISCH alle vom Merchant freigeschalteten Methoden:
+  // PayPal · Karte · Apple Pay · Google Pay · Klarna · SEPA · Giropay · iDEAL · Sofort · PayLater
+  try{
+    paypal.Buttons({
+      style:{layout:'vertical',color:'gold',shape:'rect',label:'paypal',height:48,tagline:false},
+      onClick,createOrder,onApprove,onCancel,onError
+    }).render('#pp-btn-cont').catch(e=>console.warn('PayPal render:',e));
+  }catch(e){console.warn('PayPal:',e);}
 }
 
 /* === LIEFERADRESS-VERWALTUNG === */

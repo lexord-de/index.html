@@ -1323,19 +1323,12 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/maestro.svg" style="height:14px;filter:invert(1);opacity:.45" alt="Maestro">
       </div>
 
-      <!-- Zahlungs-Methoden-Auswahl: PayPal-Suite vs. Banküberweisung-Vorkasse -->
-      <div class="lxd-pay-methods" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
-        <button type="button" class="lxd-pay-opt active" data-method="paypal" onclick="lxdSelectPay('paypal')" style="background:#0a0a0a;border:1px solid var(--neon);color:#fff;padding:11px 9px;border-radius:9px;cursor:pointer;font-family:Orbitron;font-size:9px;letter-spacing:1px;text-align:left;transition:.2s;display:flex;flex-direction:column;gap:4px">
-          <span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:var(--neon);box-shadow:0 0 6px var(--neon);display:inline-block;flex-shrink:0"></span>PAYPAL · KARTE · APPLE PAY</span>
-          <span style="font-size:8px;color:#888;letter-spacing:.5px;text-transform:none">Sofort bestätigt</span>
-        </button>
-        <button type="button" class="lxd-pay-opt" data-method="banktransfer" onclick="lxdSelectPay('banktransfer')" style="background:#0a0a0a;border:1px solid #1a1a1a;color:#888;padding:11px 9px;border-radius:9px;cursor:pointer;font-family:Orbitron;font-size:9px;letter-spacing:1px;text-align:left;transition:.2s;display:flex;flex-direction:column;gap:4px">
-          <span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#333;display:inline-block;flex-shrink:0"></span>BANKÜBERWEISUNG <span style="font-family:Orbitron;font-size:8px;background:rgba(0,182,122,.1);color:#00b67a;padding:2px 6px;border-radius:4px;border:1px solid rgba(0,182,122,.3);margin-left:auto;font-weight:900">−2 %</span></span>
-          <span style="font-size:8px;color:#666;letter-spacing:.5px;text-transform:none">Vorkasse · 2 % Rabatt</span>
-        </button>
-      </div>
-
       <div id="pp-btn-cont"></div>
+
+      <!-- Dezenter Banküberweisung-Toggle als Alternative unter PayPal -->
+      <div style="text-align:center;margin-top:10px">
+        <button type="button" id="lxd-bank-toggle" onclick="lxdToggleBank()" style="background:transparent;border:none;color:#00b67a;font-family:Orbitron;font-size:9.5px;letter-spacing:1.5px;cursor:pointer;padding:8px 14px;border-bottom:1px dashed rgba(0,182,122,.3);transition:.2s">📄 Alternativ: Banküberweisung · <strong>−2 % Rabatt</strong></button>
+      </div>
 
       <!-- Banküberweisung Form (zeigt sich wenn ausgewählt) -->
       <div id="lxd-bank-form" style="display:none;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:10px;padding:16px;margin-top:8px">
@@ -3336,26 +3329,20 @@ function validateShipAddress(showErr){
 }
 function onShipChange(){saveShipAddress();validateShipAddress(false);updateCart();}
 
-/* ═══ ZAHLUNGS-METHODEN-WECHSEL ═══ */
+/* ═══ BANKÜBERWEISUNG TOGGLE (Alternative zu PayPal) ═══ */
 window.lxdPayMethod='paypal';
-function lxdSelectPay(method){
-  window.lxdPayMethod=method;
-  document.querySelectorAll('.lxd-pay-opt').forEach(b=>{
-    const active=(b.dataset.method===method);
-    b.classList.toggle('active',active);
-    b.style.borderColor=active?'var(--neon)':'#1a1a1a';
-    b.style.color=active?'#fff':'#888';
-    const dot=b.querySelector('span span');
-    if(dot){dot.style.background=active?'var(--neon)':'#333';dot.style.boxShadow=active?'0 0 6px var(--neon)':'';}
-  });
-  const pp=document.getElementById('pp-btn-cont');
+function lxdToggleBank(){
   const bank=document.getElementById('lxd-bank-form');
-  if(method==='banktransfer'){
-    if(pp)pp.style.display='none';
-    if(bank)bank.style.display='block';
+  const toggle=document.getElementById('lxd-bank-toggle');
+  const isOpen=bank&&bank.style.display==='block';
+  if(isOpen){
+    bank.style.display='none';
+    window.lxdPayMethod='paypal';
+    if(toggle)toggle.innerHTML='📄 Alternativ: Banküberweisung · <strong>−2 % Rabatt</strong>';
   }else{
-    if(pp)pp.style.display='';
-    if(bank)bank.style.display='none';
+    if(bank)bank.style.display='block';
+    window.lxdPayMethod='banktransfer';
+    if(toggle)toggle.innerHTML='✕ Banküberweisung schließen';
   }
   updateCart();
 }

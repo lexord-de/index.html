@@ -116,7 +116,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 <!-- PayPal SDK -->
-<script src="https://www.paypal.com/sdk/js?client-id=AQOBIpaxy2Po_nxn9bZURvPzt4uS-ZYPdCueAT4WYbnOMsepoYD_k2WVFWAQiGyZ8i7hB9HucXYXAZ57&currency=EUR&intent=capture&components=buttons,funding-eligibility&enable-funding=card,paylater,sepa,giropay,ideal,sofort" data-sdk-integration-source="button-factory"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AQOBIpaxy2Po_nxn9bZURvPzt4uS-ZYPdCueAT4WYbnOMsepoYD_k2WVFWAQiGyZ8i7hB9HucXYXAZ57&currency=EUR&intent=capture&components=buttons,funding-eligibility,applepay,googlepay&enable-funding=card,paylater,sepa,giropay,ideal,sofort,bancontact,mybank,blik,p24,trustly,eps,multibanco&buyer-country=DE" data-sdk-integration-source="button-factory"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
@@ -1013,6 +1013,19 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
 .lxd-reviews-real a:hover{border-color:rgba(0,242,255,.3)!important;background:#0c0c0c!important;transform:translateY(-2px)}
 @media(max-width:600px){.lxd-reviews-real{grid-template-columns:1fr!important}}
 
+/* ═══ NATIVE PAYMENT BUTTONS — PREMIUM POLISH ═══ */
+@keyframes lxdPayIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.lxd-pay-btn-wrap{position:relative;border-radius:10px;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s,filter .25s;will-change:transform}
+.lxd-pay-btn-wrap:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.lxd-pay-btn-wrap::before{content:'';position:absolute;inset:-1px;border-radius:11px;background:linear-gradient(135deg,rgba(0,242,255,.0),rgba(0,242,255,.0));z-index:-1;transition:.3s;pointer-events:none}
+.lxd-pay-btn-wrap:hover::before{background:linear-gradient(135deg,rgba(0,242,255,.25),rgba(188,19,254,.18))}
+.lxd-pay-btn-wrap > div,.lxd-pay-btn-wrap iframe{border-radius:10px!important;overflow:hidden}
+#pp-btn-cont{position:relative;padding-top:4px}
+#pp-btn-cont::before{content:'';position:absolute;left:0;right:0;top:-2px;height:1px;background:linear-gradient(90deg,transparent,rgba(0,242,255,.4),rgba(188,19,254,.4),transparent)}
+
+/* Sub-grouping divider after first 5 buttons (visual rhythm) */
+.lxd-pay-btn-wrap:nth-child(5){margin-bottom:14px;padding-bottom:8px;border-bottom:1px dashed rgba(255,255,255,.06)}
+
 /* ═══ LXRD ATELIER TEASER ═══ */
 .lxd-atelier{position:relative;padding:90px 5%;background:linear-gradient(180deg,#000 0%,#040408 50%,#000 100%);overflow:hidden;border-top:1px solid #0a0a0a;border-bottom:1px solid #0a0a0a}
 .lxd-atelier::before{content:'';position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(0,242,255,.08),transparent 70%);filter:blur(60px);top:-150px;left:10%;pointer-events:none}
@@ -1328,8 +1341,15 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
       <div id="lxd-bank-form" style="display:none;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:10px;padding:16px;margin-top:8px">
         <div style="font-family:Orbitron;font-size:9.5px;color:var(--neon);letter-spacing:1.5px;margin-bottom:10px;text-align:center">📄 BANKÜBERWEISUNG · VORKASSE</div>
         <div style="font-size:11.5px;color:#aaa;line-height:1.6;margin-bottom:14px;text-align:center">Bestelle jetzt, überweise innerhalb 7 Tagen. Fertigung startet sofort nach Geldeingang.<br><strong style="color:#00b67a">−2 % Rabatt automatisch im Gesamtpreis</strong></div>
+        <div style="background:rgba(0,182,122,.04);border:1px dashed rgba(0,182,122,.3);border-radius:8px;padding:12px 14px;font-family:'Space Mono',monospace;font-size:10.5px;color:#bbb;line-height:1.85;margin-bottom:12px">
+          <div style="color:#666;font-family:Orbitron;font-size:8px;letter-spacing:2px;margin-bottom:6px">UNSERE BANKDATEN</div>
+          <strong style="color:#fff">Leon Schulz</strong><br>
+          IBAN&nbsp; <strong style="color:#00b67a">DE36 1001 2345 0271 3202 01</strong><br>
+          BIC&nbsp;&nbsp; <strong style="color:#00b67a">TRBKDEBBXXX</strong><br>
+          Bank&nbsp; <strong style="color:#fff">Deutsche Bank</strong>
+        </div>
         <button type="button" onclick="lxdBankCheckout()" style="width:100%;padding:13px;background:linear-gradient(135deg,#00b67a,#00a06b);color:#000;border:none;border-radius:9px;font-family:Orbitron;font-weight:900;font-size:10.5px;letter-spacing:1.5px;cursor:pointer">📄 PER ÜBERWEISUNG BESTELLEN</button>
-        <div style="font-size:9.5px;color:#666;text-align:center;margin-top:8px;letter-spacing:.5px">Bankdaten + Bestellbestätigung kommen per E-Mail</div>
+        <div style="font-size:9.5px;color:#666;text-align:center;margin-top:8px;letter-spacing:.5px">Bestellbestätigung + Verwendungszweck kommen per E-Mail</div>
       </div>
 
       <div class="vat-lbl">Gesamtpreis inkl. Versand · Keine MwSt. § 19 UStG</div>
@@ -3196,42 +3216,79 @@ function updateCart(){
 function renderPP(sub,ship,land){
   const c=document.getElementById('pp-btn-cont');c.innerHTML='';
   if(sub<=0||typeof paypal==='undefined')return;
-  try{paypal.Buttons({style:{layout:'vertical',color:'gold',shape:'rect',label:'paypal',height:42,tagline:false},
-    onClick:(d,a)=>{
-      if(!document.getElementById('cart-agb').checked){toast('Bitte AGB & Widerruf akzeptieren','err');return a.reject();}
-      if(!validateShipAddress(true)){toast('Bitte Lieferadresse vollständig ausfüllen','err');openShipForm();return a.reject();}
-      return a.resolve&&a.resolve();
-    },
-    createOrder:(d,a)=>{
-      const ad=getShipAddress();
-      const ppUnit=(it)=>{const isCustom=isCustomItem(it);return activeDiscount&&activeDiscount.customOnly&&isCustom?+(it.price*(1-activeDiscount.value/100)).toFixed(2):it.price;};
-      const itemTotal=cart.reduce((acc,i)=>acc+ppUnit(i)*i.qty,0);
-      const ppShipping={
-        name:{full_name:((ad.fn||'')+' '+(ad.ln||'')).trim().substring(0,300)||'Kunde'},
-        address:{
-          address_line_1:((ad.street||'')+' '+(ad.no||'')).trim().substring(0,300)||'-',
-          admin_area_2:(ad.city||'').substring(0,120)||'-',
-          postal_code:(ad.zip||'').substring(0,60)||'-',
-          country_code:countryToISO(ad.land||'DE')
-        }
-      };
-      return a.order.create({
-        intent:'CAPTURE',
-        purchase_units:[{
-          description:'LEXORD Bestellung · Custom PS5 Controller',
-          soft_descriptor:'LEXORD',
-          amount:{currency_code:'EUR',value:(itemTotal+ship).toFixed(2),breakdown:{item_total:{currency_code:'EUR',value:itemTotal.toFixed(2)},shipping:{currency_code:'EUR',value:ship.toFixed(2)}}},
-          items:cart.map(i=>({name:i.name.substring(0,127),description:(i.desc||'').substring(0,127)||undefined,quantity:String(i.qty),unit_amount:{currency_code:'EUR',value:ppUnit(i).toFixed(2)},category:'PHYSICAL_GOODS'})),
-          shipping:ppShipping
-        }],
-        payer:{email_address:ad.email||undefined,name:{given_name:ad.fn||undefined,surname:ad.ln||undefined},address:{country_code:countryToISO(ad.land||'DE')}},
-        application_context:{shipping_preference:'SET_PROVIDED_ADDRESS',user_action:'PAY_NOW',brand_name:'LEXORD Engineering',landing_page:'BILLING'}
-      });
-    },
-    onApprove:(d,a)=>a.order.capture().then(det=>{const ad=getShipAddress();const email=ad.email||det.payer?.email_address||'';const fn=ad.fn||det.payer?.name?.given_name||'Kunde';const ln=ad.ln||det.payer?.name?.surname||'';const orderNr='LXRD-'+Date.now().toString().slice(-7);processOrder(email,orderNr,fn,ln,det);showOrderSuccess(email,orderNr);}),
-    onCancel:()=>toast('Zahlung abgebrochen','err'),
-    onError:(err)=>{console.error('PayPal:',err);toast('PayPal Fehler. Erneut versuchen.','err');}
-  }).render('#pp-btn-cont').catch(e=>console.warn('PayPal render:',e));}catch(e){console.warn('PayPal:',e);}
+
+  // Shared handlers für alle Funding-Sources
+  const onClick=(d,a)=>{
+    if(!document.getElementById('cart-agb').checked){toast('Bitte AGB & Widerruf akzeptieren','err');return a.reject();}
+    if(!validateShipAddress(true)){toast('Bitte Lieferadresse vollständig ausfüllen','err');openShipForm();return a.reject();}
+    return a.resolve&&a.resolve();
+  };
+  const createOrder=(d,a)=>{
+    const ad=getShipAddress();
+    const ppUnit=(it)=>{const isCustom=isCustomItem(it);return activeDiscount&&activeDiscount.customOnly&&isCustom?+(it.price*(1-activeDiscount.value/100)).toFixed(2):it.price;};
+    const itemTotal=cart.reduce((acc,i)=>acc+ppUnit(i)*i.qty,0);
+    const ppShipping={
+      name:{full_name:((ad.fn||'')+' '+(ad.ln||'')).trim().substring(0,300)||'Kunde'},
+      address:{
+        address_line_1:((ad.street||'')+' '+(ad.no||'')).trim().substring(0,300)||'-',
+        admin_area_2:(ad.city||'').substring(0,120)||'-',
+        postal_code:(ad.zip||'').substring(0,60)||'-',
+        country_code:countryToISO(ad.land||'DE')
+      }
+    };
+    return a.order.create({
+      intent:'CAPTURE',
+      purchase_units:[{
+        description:'LEXORD Bestellung · Custom PS5 Controller',
+        soft_descriptor:'LEXORD',
+        amount:{currency_code:'EUR',value:(itemTotal+ship).toFixed(2),breakdown:{item_total:{currency_code:'EUR',value:itemTotal.toFixed(2)},shipping:{currency_code:'EUR',value:ship.toFixed(2)}}},
+        items:cart.map(i=>({name:i.name.substring(0,127),description:(i.desc||'').substring(0,127)||undefined,quantity:String(i.qty),unit_amount:{currency_code:'EUR',value:ppUnit(i).toFixed(2)},category:'PHYSICAL_GOODS'})),
+        shipping:ppShipping
+      }],
+      payer:{email_address:ad.email||undefined,name:{given_name:ad.fn||undefined,surname:ad.ln||undefined},address:{country_code:countryToISO(ad.land||'DE')}},
+      application_context:{shipping_preference:'SET_PROVIDED_ADDRESS',user_action:'PAY_NOW',brand_name:'LEXORD Engineering',landing_page:'BILLING'}
+    });
+  };
+  const onApprove=(d,a)=>a.order.capture().then(det=>{const ad=getShipAddress();const email=ad.email||det.payer?.email_address||'';const fn=ad.fn||det.payer?.name?.given_name||'Kunde';const ln=ad.ln||det.payer?.name?.surname||'';const orderNr='LXRD-'+Date.now().toString().slice(-7);processOrder(email,orderNr,fn,ln,det);showOrderSuccess(email,orderNr);});
+  const onCancel=()=>toast('Zahlung abgebrochen','err');
+  const onError=(err)=>{console.error('PayPal:',err);toast('Fehler bei der Zahlung. Erneut versuchen.','err');};
+
+  // Alle nativen Zahlungs-Buttons rendern (PayPal-SDK liefert echte Apple-Pay, Google-Pay etc.)
+  const fundingSources=[
+    {src:paypal.FUNDING.PAYPAL,    color:'gold',  label:'paypal',  delay:0},
+    {src:paypal.FUNDING.CARD,      color:'black', label:'',        delay:.05},
+    {src:paypal.FUNDING.APPLEPAY,  color:'black', label:'',        delay:.1},
+    {src:paypal.FUNDING.GOOGLEPAY, color:'white', label:'',        delay:.15},
+    {src:paypal.FUNDING.PAYLATER,  color:'gold',  label:'paylater',delay:.2},
+    {src:paypal.FUNDING.SEPA,      color:'',      label:'',        delay:.25},
+    {src:paypal.FUNDING.GIROPAY,   color:'',      label:'',        delay:.3},
+    {src:paypal.FUNDING.IDEAL,     color:'',      label:'',        delay:.35},
+    {src:paypal.FUNDING.SOFORT,    color:'',      label:'',        delay:.4},
+    {src:paypal.FUNDING.BANCONTACT,color:'',      label:'',        delay:.45},
+    {src:paypal.FUNDING.MYBANK,    color:'',      label:'',        delay:.5},
+    {src:paypal.FUNDING.EPS,       color:'',      label:'',        delay:.55},
+    {src:paypal.FUNDING.MULTIBANCO,color:'',      label:'',        delay:.6},
+    {src:paypal.FUNDING.BLIK,      color:'',      label:'',        delay:.65},
+    {src:paypal.FUNDING.P24,       color:'',      label:'',        delay:.7},
+    {src:paypal.FUNDING.TRUSTLY,   color:'',      label:'',        delay:.75}
+  ];
+
+  fundingSources.forEach(({src,color,label,delay})=>{
+    if(!src)return;
+    try{
+      const style={layout:'vertical',shape:'rect',height:48,tagline:false};
+      if(color)style.color=color;
+      if(label)style.label=label;
+      const btn=paypal.Buttons({fundingSource:src,style,onClick,createOrder,onApprove,onCancel,onError});
+      if(btn.isEligible&&!btn.isEligible())return;
+      const wrap=document.createElement('div');
+      wrap.className='lxd-pay-btn-wrap';
+      wrap.style.cssText=`margin-bottom:8px;opacity:0;transform:translateY(8px);animation:lxdPayIn .5s cubic-bezier(.2,.8,.2,1) ${delay}s forwards`;
+      c.appendChild(wrap);
+      btn.render(wrap).catch(()=>{wrap.remove();});
+    }catch(e){/* funding source nicht verfügbar in dieser Region */}
+  });
+}
 }
 
 /* === LIEFERADRESS-VERWALTUNG === */
@@ -3346,9 +3403,9 @@ async function lxdBankCheckout(){
     <div style="background:#fff3cd;border-left:4px solid #ffae00;padding:18px;border-radius:8px;margin:18px 0">
       <div style="font-family:monospace;font-size:13px;color:#222;line-height:1.9">
         <strong>Empfänger:</strong> Leon Schulz<br>
-        <strong>IBAN:</strong> DE__ ____ ____ ____ ____ __  (wird ergänzt)<br>
-        <strong>BIC:</strong> __________________ (wird ergänzt)<br>
-        <strong>Bank:</strong> __________________<br>
+        <strong>IBAN:</strong> DE36 1001 2345 0271 3202 01<br>
+        <strong>BIC:</strong> TRBKDEBBXXX<br>
+        <strong>Bank:</strong> Deutsche Bank<br>
         <strong>Verwendungszweck:</strong> <span style="background:#ffae00;color:#000;padding:2px 8px;border-radius:4px;font-weight:900">${orderNr}</span><br>
         <strong>Betrag:</strong> <span style="font-size:18px;font-weight:900;color:#009900">${total.toFixed(2)} €</span>
       </div>

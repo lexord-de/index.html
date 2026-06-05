@@ -1295,11 +1295,36 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/paypal.svg" style="height:16px;filter:invert(1);opacity:.45" alt="PayPal">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/visa.svg" style="height:14px;filter:invert(1);opacity:.45" alt="Visa">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/mastercard.svg" style="height:16px;filter:invert(1);opacity:.45" alt="MC">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/americanexpress.svg" style="height:15px;filter:invert(1);opacity:.45" alt="Amex">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/applepay.svg" style="height:15px;filter:invert(1);opacity:.45" alt="Apple Pay">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googlepay.svg" style="height:15px;filter:invert(1);opacity:.45" alt="Google Pay">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/klarna.svg" style="height:14px;filter:invert(1);opacity:.45" alt="Klarna">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/sepa.svg" style="height:14px;filter:invert(1);opacity:.45" alt="SEPA">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/maestro.svg" style="height:14px;filter:invert(1);opacity:.45" alt="Maestro">
       </div>
+
+      <!-- Zahlungs-Methoden-Auswahl: PayPal-Suite vs. Banküberweisung-Vorkasse -->
+      <div class="lxd-pay-methods" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+        <button type="button" class="lxd-pay-opt active" data-method="paypal" onclick="lxdSelectPay('paypal')" style="background:#0a0a0a;border:1px solid var(--neon);color:#fff;padding:11px 9px;border-radius:9px;cursor:pointer;font-family:Orbitron;font-size:9px;letter-spacing:1px;text-align:left;transition:.2s;display:flex;flex-direction:column;gap:4px">
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:var(--neon);box-shadow:0 0 6px var(--neon);display:inline-block;flex-shrink:0"></span>PAYPAL · KARTE · APPLE PAY</span>
+          <span style="font-size:8px;color:#888;letter-spacing:.5px;text-transform:none">Sofort bestätigt</span>
+        </button>
+        <button type="button" class="lxd-pay-opt" data-method="banktransfer" onclick="lxdSelectPay('banktransfer')" style="background:#0a0a0a;border:1px solid #1a1a1a;color:#888;padding:11px 9px;border-radius:9px;cursor:pointer;font-family:Orbitron;font-size:9px;letter-spacing:1px;text-align:left;transition:.2s;display:flex;flex-direction:column;gap:4px">
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#333;display:inline-block;flex-shrink:0"></span>BANKÜBERWEISUNG <span style="font-family:Orbitron;font-size:8px;background:rgba(0,182,122,.1);color:#00b67a;padding:2px 6px;border-radius:4px;border:1px solid rgba(0,182,122,.3);margin-left:auto;font-weight:900">−2 %</span></span>
+          <span style="font-size:8px;color:#666;letter-spacing:.5px;text-transform:none">Vorkasse · 2 % Rabatt</span>
+        </button>
+      </div>
+
       <div id="pp-btn-cont"></div>
+
+      <!-- Banküberweisung Form (zeigt sich wenn ausgewählt) -->
+      <div id="lxd-bank-form" style="display:none;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:10px;padding:16px;margin-top:8px">
+        <div style="font-family:Orbitron;font-size:9.5px;color:var(--neon);letter-spacing:1.5px;margin-bottom:10px;text-align:center">📄 BANKÜBERWEISUNG · VORKASSE</div>
+        <div style="font-size:11.5px;color:#aaa;line-height:1.6;margin-bottom:14px;text-align:center">Bestelle jetzt, überweise innerhalb 7 Tagen. Fertigung startet sofort nach Geldeingang.<br><strong style="color:#00b67a">−2 % Rabatt automatisch im Gesamtpreis</strong></div>
+        <button type="button" onclick="lxdBankCheckout()" style="width:100%;padding:13px;background:linear-gradient(135deg,#00b67a,#00a06b);color:#000;border:none;border-radius:9px;font-family:Orbitron;font-weight:900;font-size:10.5px;letter-spacing:1.5px;cursor:pointer">📄 PER ÜBERWEISUNG BESTELLEN</button>
+        <div style="font-size:9.5px;color:#666;text-align:center;margin-top:8px;letter-spacing:.5px">Bankdaten + Bestellbestätigung kommen per E-Mail</div>
+      </div>
+
       <div class="vat-lbl">Gesamtpreis inkl. Versand · Keine MwSt. § 19 UStG</div>
       <div class="trust-row">
         <span class="trust-chip">🔒 SSL</span><span class="trust-chip">✓ KÄUFERSCHUTZ</span>
@@ -3040,8 +3065,8 @@ async function applyDiscount(){
   } else if(hardcoded){
     activeDiscount={...hardcoded,code};
   } else if(isReferral){
-    // Referral-Code: 10 € fix Rabatt
-    activeDiscount={type:'fixed',value:10,label:'10 € Empfehlungs-Rabatt',code};
+    // Referral-Code: 10% Prozent-Rabatt (günstiger für Inhaber als 10 € fix)
+    activeDiscount={type:'percent',value:10,label:'10% Empfehlungs-Rabatt',code};
   } else {
     err.innerText='✗ UNGÜLTIGER RABATTCODE';err.style.display='block';
     activeDiscount=null;updateCart();return;
@@ -3124,7 +3149,12 @@ function changeQty(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);update
 
 function updateCart(){
   saveCart();const body=document.getElementById('cart-body');const land=document.getElementById('land-sel')?.value||'DE';
-  const sub=cart.reduce((a,i)=>a+i.price*i.qty,0);const disc=calcDiscount(sub);const discSub=sub-disc;const shipNum=getShipping(land,discSub);const total=discSub+shipNum;const totalItems=cart.reduce((a,i)=>a+i.qty,0);
+  const sub=cart.reduce((a,i)=>a+i.price*i.qty,0);const disc=calcDiscount(sub);const afterCode=sub-disc;
+  // Banküberweisung: 2% extra Rabatt auf (sub - code-rabatt)
+  const isBank=(window.lxdPayMethod==='banktransfer');
+  const bankDisc=isBank?afterCode*0.02:0;
+  const discSub=afterCode-bankDisc;
+  const shipNum=getShipping(land,discSub);const total=discSub+shipNum;const totalItems=cart.reduce((a,i)=>a+i.qty,0);
   if(!cart.length){body.innerHTML='<div class="c-empty"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><p>WARENKORB LEER</p></div>';}
   else{body.innerHTML=cart.map((it,i)=>`<div class="c-item"><img src="${it.img}" alt="${esc(it.name)}"><div class="c-item-info"><h4>${esc(it.name)}</h4><p style="color:var(--neon);font-size:10.5px;font-family:'Orbitron';margin:3px 0">${(it.price*it.qty).toFixed(2)} €</p><div class="c-qty"><div class="qty-b" onclick="changeQty(${i},-1)">−</div><span class="qty-n">${it.qty}</span><div class="qty-b" onclick="changeQty(${i},1)">+</div><span onclick="remFromCart(${i})" style="font-size:7.5px;color:#333;cursor:pointer;font-family:'Orbitron';margin-left:5px">ENTF.</span></div></div></div>`).join('');}
   if(land==='DE'){document.getElementById('ship-fill').style.width=Math.min((sub/50)*100,100)+'%';document.getElementById('ship-lbl').innerText=sub>=50?'✓ KOSTENLOSER VERSAND FREIGESCHALTET':'NOCH '+(50-sub).toFixed(2)+' € BIS KOSTENLOSER VERSAND';}
@@ -3133,6 +3163,17 @@ function updateCart(){
   const dRow=document.getElementById('discount-row');
   if(disc>0){dRow.style.display='flex';document.getElementById('discount-label').innerText=activeDiscount.label;document.getElementById('c-discount').innerText='-'+disc.toFixed(2).replace('.',',')+' €';}
   else{dRow.style.display='none';}
+  // Banküberweisungs-Rabatt anzeigen
+  let bRow=document.getElementById('bank-discount-row');
+  if(isBank&&bankDisc>0){
+    if(!bRow){
+      bRow=document.createElement('div');bRow.id='bank-discount-row';bRow.className='sum-row';bRow.style.color='#00b67a';
+      bRow.innerHTML='<span>📄 Vorkasse-Rabatt (-2%)</span><span id="c-bank-discount"></span>';
+      dRow.parentNode.insertBefore(bRow,dRow.nextSibling);
+    }
+    bRow.style.display='flex';
+    document.getElementById('c-bank-discount').innerText='-'+bankDisc.toFixed(2).replace('.',',')+' €';
+  }else if(bRow){bRow.style.display='none';}
   document.getElementById('c-ship').innerText=shipNum===0?'Kostenlos':shipNum.toFixed(2).replace('.',',')+' €';
   document.getElementById('c-total').innerText=total.toFixed(2).replace('.',',')+' €';
   document.getElementById('cart-count').innerText=totalItems;
@@ -3226,6 +3267,113 @@ function validateShipAddress(showErr){
   return allOk;
 }
 function onShipChange(){saveShipAddress();validateShipAddress(false);updateCart();}
+
+/* ═══ ZAHLUNGS-METHODEN-WECHSEL ═══ */
+window.lxdPayMethod='paypal';
+function lxdSelectPay(method){
+  window.lxdPayMethod=method;
+  document.querySelectorAll('.lxd-pay-opt').forEach(b=>{
+    const active=(b.dataset.method===method);
+    b.classList.toggle('active',active);
+    b.style.borderColor=active?'var(--neon)':'#1a1a1a';
+    b.style.color=active?'#fff':'#888';
+    const dot=b.querySelector('span span');
+    if(dot){dot.style.background=active?'var(--neon)':'#333';dot.style.boxShadow=active?'0 0 6px var(--neon)':'';}
+  });
+  const pp=document.getElementById('pp-btn-cont');
+  const bank=document.getElementById('lxd-bank-form');
+  if(method==='banktransfer'){
+    if(pp)pp.style.display='none';
+    if(bank)bank.style.display='block';
+  }else{
+    if(pp)pp.style.display='';
+    if(bank)bank.style.display='none';
+  }
+  updateCart();
+}
+
+/* ═══ BANKÜBERWEISUNG-CHECKOUT ═══ */
+async function lxdBankCheckout(){
+  // Validierungen wie bei PayPal
+  if(!cart.length){toast('Warenkorb ist leer','err');return;}
+  if(!document.getElementById('cart-agb').checked){toast('Bitte AGB akzeptieren','err');return;}
+  const valid=validateShipAddress(true);
+  if(!valid){toast('Bitte alle Lieferdaten ausfüllen','err');openShipForm();return;}
+  const ad=getShipAddress();
+  if(!ad.email||!ad.email.includes('@')){toast('Gültige E-Mail erforderlich','err');return;}
+
+  const sub=cart.reduce((a,i)=>a+i.price*i.qty,0);
+  const codeDisc=calcDiscount(sub);
+  const afterCode=sub-codeDisc;
+  const bankDisc=afterCode*0.02;
+  const land=document.getElementById('land-sel')?.value||'DE';
+  const ship=getShipping(land,afterCode-bankDisc);
+  const total=(afterCode-bankDisc)+ship;
+  const totalDisc=codeDisc+bankDisc;
+  const name=(ad.fn+' '+ad.ln).trim();
+  const orderNr='LXRD-'+Date.now().toString().slice(-7);
+  const email=ad.email;
+
+  // Bestellung an Worker
+  await saveOrderToCF({
+    orderNr,email,name,
+    items:cart.map(i=>({name:i.name,price:i.price,qty:i.qty,desc:i.desc||'',config:i.config||null})),
+    subtotal:sub,discount:totalDisc,shipping:ship,total,country:land,
+    payment:'Banküberweisung (Vorkasse)',
+    status:'awaiting-transfer',
+    discount_code:activeDiscount?.code||'',
+    bank_discount:bankDisc,
+    created:new Date().toISOString(),
+    shipping_address:{fn:ad.fn,ln:ad.ln,street:ad.street,no:ad.no,zip:ad.zip,city:ad.city,country:ad.land,phone:ad.phone,email:ad.email}
+  });
+
+  // Bestätigungs-Mail mit Bankdaten
+  const itemList=cart.map(i=>`<tr><td style="padding:6px 0;border-bottom:1px solid #eee">${esc(i.name)}${i.desc?`<br><span style="font-size:11px;color:#888">${esc(i.desc)}</span>`:''}</td><td style="text-align:center;border-bottom:1px solid #eee">${i.qty}×</td><td style="text-align:right;border-bottom:1px solid #eee">${(i.price*i.qty).toFixed(2)} €</td></tr>`).join('');
+  const bankHtml=`<p>Hallo <strong>${esc(name)}</strong>,</p>
+    <p>vielen Dank für deine Bestellung! Bitte überweise den Betrag innerhalb 7 Tagen — wir starten die Fertigung sofort nach Geldeingang.</p>
+    <div style="background:#fff3cd;border-left:4px solid #ffae00;padding:18px;border-radius:8px;margin:18px 0">
+      <div style="font-family:monospace;font-size:13px;color:#222;line-height:1.9">
+        <strong>Empfänger:</strong> Leon Schulz<br>
+        <strong>IBAN:</strong> DE__ ____ ____ ____ ____ __  (wird ergänzt)<br>
+        <strong>BIC:</strong> __________________ (wird ergänzt)<br>
+        <strong>Bank:</strong> __________________<br>
+        <strong>Verwendungszweck:</strong> <span style="background:#ffae00;color:#000;padding:2px 8px;border-radius:4px;font-weight:900">${orderNr}</span><br>
+        <strong>Betrag:</strong> <span style="font-size:18px;font-weight:900;color:#009900">${total.toFixed(2)} €</span>
+      </div>
+    </div>
+    <div style="background:#f9f9f9;border-radius:8px;padding:18px;margin:18px 0">
+      <div style="font-size:12px;color:#888;margin-bottom:10px">BESTELLUNG <strong>${orderNr}</strong></div>
+      <table style="width:100%;font-size:13px;border-collapse:collapse">
+        <tr style="font-weight:bold;border-bottom:2px solid #ddd"><td>Artikel</td><td style="text-align:center">Menge</td><td style="text-align:right">Preis</td></tr>
+        ${itemList}
+      </table>
+      <div style="margin-top:12px;font-size:13px;color:#555">
+        ${codeDisc>0?`<div>Rabatt-Code: <span style="color:#009900">-${codeDisc.toFixed(2)} €</span></div>`:''}
+        <div>📄 Vorkasse-Rabatt (-2%): <span style="color:#009900">-${bankDisc.toFixed(2)} €</span></div>
+        <div>Versand: ${ship===0?'Kostenlos':ship.toFixed(2)+' €'}</div>
+        <div style="font-weight:bold;font-size:15px;margin-top:8px;padding-top:8px;border-top:2px solid #ddd">GESAMT: <span style="color:#009900">${total.toFixed(2)} €</span></div>
+      </div>
+    </div>
+    <p style="font-size:13px"><strong>Wichtig:</strong> Bitte den Verwendungszweck <strong>${orderNr}</strong> bei der Überweisung angeben, sonst können wir den Zahlungseingang nicht zuordnen.</p>
+    <p style="font-size:13px"><strong>📍 Status verfolgen:</strong> Auf <a href="https://lexord.de" style="color:#00a8b5">lexord.de</a> oben rechts auf "LOGIN" klicken.</p>`;
+  await ejsSend(email,name,`📄 Bankdaten zu deiner Bestellung ${orderNr} | LEXORD®`,tplWrap('#00b67a','📄 BESTELLUNG · WARTET AUF ÜBERWEISUNG',bankHtml),ADMIN_EMAIL);
+  await ejsSend(ADMIN_EMAIL,'LEXORD Admin',`[VORKASSE] ${orderNr} · ${name} · ${total.toFixed(2)} €`,tplOrderAdmin(name,email,orderNr,total,land),email);
+
+  // Discount-Code als verwendet markieren
+  if(activeDiscount && activeDiscount.code){
+    try{await fetch(CF_WORKER_URL+'/api/discount/use',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:activeDiscount.code,email,fp:getDeviceFP()})});}catch(e){}
+    // Referral-Code als verwendet markieren
+    if(/^LXR[A-Z0-9]{5,8}$/.test(activeDiscount.code)){
+      try{let used=[];try{used=JSON.parse(localStorage.getItem('lxrd_ref_used')||'[]');}catch(e){}used.push({code:activeDiscount.code,at:new Date().toISOString(),order:orderNr});localStorage.setItem('lxrd_ref_used',JSON.stringify(used));}catch(e){}
+    }
+  }
+  if(window.lxrdTrack)lxrdTrack.purchase(orderNr,total,'EUR',cart);
+
+  // Cart leeren + Erfolg anzeigen
+  cart=[];saveCart();updateCart();closeCart();
+  document.getElementById('order-success-num').innerText=orderNr;
+  document.getElementById('order-success').style.display='flex';
+}
 function toggleShipForm(){const f=document.getElementById('ship-form');if(f)f.classList.toggle('open');}
 function openShipForm(){const f=document.getElementById('ship-form');if(f){f.classList.add('open');setTimeout(()=>document.getElementById('ship-fn')?.focus(),120);}}
 
@@ -3641,8 +3789,8 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLogin();closeA
       <div style="font-family:Orbitron;font-size:9px;color:#666;letter-spacing:2.5px;margin-bottom:24px">// SO FUNKTIONIERT'S</div>
       <div style="display:flex;flex-direction:column;gap:14px;text-align:left;margin-bottom:28px">
         <div style="display:flex;gap:14px;align-items:flex-start"><div style="width:32px;height:32px;border-radius:50%;background:rgba(0,242,255,.1);border:1px solid rgba(0,242,255,.3);color:#00f2ff;display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-weight:900;font-size:11px;flex-shrink:0">01</div><div><strong style="font-family:Orbitron;font-size:10px;letter-spacing:1.5px;color:#fff;display:block;margin-bottom:3px">REGISTRIEREN</strong><span style="font-size:12.5px;color:#999;line-height:1.55">Trag deine E-Mail ein und stimm den Bedingungen zu. Wir erstellen deinen persönlichen Code.</span></div></div>
-        <div style="display:flex;gap:14px;align-items:flex-start"><div style="width:32px;height:32px;border-radius:50%;background:rgba(0,242,255,.1);border:1px solid rgba(0,242,255,.3);color:#00f2ff;display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-weight:900;font-size:11px;flex-shrink:0">02</div><div><strong style="font-family:Orbitron;font-size:10px;letter-spacing:1.5px;color:#fff;display:block;margin-bottom:3px">EMPFEHLEN</strong><span style="font-size:12.5px;color:#999;line-height:1.55">Teile deinen Link mit Freunden. Sie bekommen <strong style="color:#fff">10 € Rabatt</strong> auf ihre erste Bestellung.</span></div></div>
-        <div style="display:flex;gap:14px;align-items:flex-start"><div style="width:32px;height:32px;border-radius:50%;background:rgba(255,174,0,.1);border:1px solid rgba(255,174,0,.3);color:#ffae00;display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-weight:900;font-size:11px;flex-shrink:0">03</div><div><strong style="font-family:Orbitron;font-size:10px;letter-spacing:1.5px;color:#fff;display:block;margin-bottom:3px">BELOHNUNG ERHALTEN</strong><span style="font-size:12.5px;color:#999;line-height:1.55">Sobald dein Freund bestellt: <strong style="color:#ffae00">10 € Gutschrift</strong> auf dein nächstes Produkt.</span></div></div>
+        <div style="display:flex;gap:14px;align-items:flex-start"><div style="width:32px;height:32px;border-radius:50%;background:rgba(0,242,255,.1);border:1px solid rgba(0,242,255,.3);color:#00f2ff;display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-weight:900;font-size:11px;flex-shrink:0">02</div><div><strong style="font-family:Orbitron;font-size:10px;letter-spacing:1.5px;color:#fff;display:block;margin-bottom:3px">EMPFEHLEN</strong><span style="font-size:12.5px;color:#999;line-height:1.55">Teile deinen Link mit Freunden. Sie bekommen <strong style="color:#fff">10 % Rabatt</strong> auf ihre erste Bestellung.</span></div></div>
+        <div style="display:flex;gap:14px;align-items:flex-start"><div style="width:32px;height:32px;border-radius:50%;background:rgba(255,174,0,.1);border:1px solid rgba(255,174,0,.3);color:#ffae00;display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-weight:900;font-size:11px;flex-shrink:0">03</div><div><strong style="font-family:Orbitron;font-size:10px;letter-spacing:1.5px;color:#fff;display:block;margin-bottom:3px">BELOHNUNG ERHALTEN</strong><span style="font-size:12.5px;color:#999;line-height:1.55">Sobald dein Freund bestellt: <strong style="color:#ffae00">10 % Gutschrift</strong> auf dein nächstes Produkt.</span></div></div>
       </div>
       <button onclick="lxdRefStep(2)" style="width:100%;padding:14px;background:linear-gradient(135deg,#00f2ff,#00bdd6);color:#000;border:none;border-radius:11px;font-family:Orbitron;font-weight:900;font-size:11px;letter-spacing:2px;cursor:pointer;transition:.2s">JETZT TEILNEHMEN →</button>
       <div style="font-family:Orbitron;font-size:8px;color:#444;letter-spacing:1.5px;margin-top:14px">KOSTENFREI · KEINE VERPFLICHTUNG · JEDERZEIT KÜNDBAR</div>
@@ -3677,7 +3825,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLogin();closeA
       <div style="background:linear-gradient(135deg,rgba(0,242,255,.06),rgba(188,19,254,.04));border:1px dashed rgba(255,174,0,.4);border-radius:12px;padding:22px;margin-bottom:22px">
         <div style="font-family:Orbitron;font-size:9px;color:#ffae00;letter-spacing:2px;margin-bottom:10px">// DEIN CODE</div>
         <div style="font-family:'Space Mono',monospace;font-size:22px;color:#ffae00;letter-spacing:8px;font-weight:900;margin-bottom:10px" id="lxd-ref-code">DEIN-CODE</div>
-        <div style="font-family:Orbitron;font-size:8.5px;color:#666;letter-spacing:1.5px">10 € RABATT · BEIDE SEITEN</div>
+        <div style="font-family:Orbitron;font-size:8.5px;color:#666;letter-spacing:1.5px">10 % RABATT · BEIDE SEITEN</div>
       </div>
       <div style="font-family:Orbitron;font-size:10px;color:#888;letter-spacing:1.5px;margin-bottom:12px;text-align:left">JETZT TEILEN VIA</div>
       <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-start;margin-bottom:14px">
@@ -3697,11 +3845,11 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLogin();closeA
 </div>
 
 <!-- Empfehlungs-Button — gleicher Stil wie KI-Button, direkt über KI-Button -->
-<button id="lxd-ref-btn" onclick="lxdOpenShare()" aria-label="Empfehlen & 10 € sparen" title="Empfehlen & 10 € sparen">🎁</button>
+<button id="lxd-ref-btn" onclick="lxdOpenShare()" aria-label="Empfehlen & 10 % sparen" title="Empfehlen & 10 % sparen">🎁</button>
 <style>
 #lxd-ref-btn{position:fixed;bottom:100px;right:28px;width:60px;height:60px;background:linear-gradient(135deg,var(--neon) 0%,var(--neon2) 100%);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:9000;box-shadow:0 8px 28px rgba(0,242,255,.4),0 4px 12px rgba(188,19,254,.25);color:#000;transition:.3s;font-size:24px}
 #lxd-ref-btn:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 12px 40px rgba(0,242,255,.55),0 6px 18px rgba(188,19,254,.35)}
-#lxd-ref-btn::after{content:'-10 €';position:absolute;bottom:-4px;right:-4px;background:#000;border:1.5px solid #00f2ff;color:#00f2ff;font-family:'Orbitron';font-size:8px;font-weight:900;letter-spacing:.5px;padding:2px 5px;border-radius:5px;line-height:1.2}
+#lxd-ref-btn::after{content:'-10 %';position:absolute;bottom:-4px;right:-4px;background:#000;border:1.5px solid #00f2ff;color:#00f2ff;font-family:'Orbitron';font-size:8px;font-weight:900;letter-spacing:.5px;padding:2px 5px;border-radius:5px;line-height:1.2}
 @media(max-width:760px){#lxd-ref-btn{bottom:90px;right:22px;width:56px;height:56px;font-size:22px}}
 </style>
 
@@ -3745,7 +3893,7 @@ function lxdGenRef(){
       if(t){
         const d=document.createElement('div');
         d.className='toast ok';
-        d.innerText='🎁 10 € Rabatt aktiviert! Code: '+r;
+        d.innerText='🎁 10 % Rabatt aktiviert! Code: '+r;
         t.appendChild(d);
         setTimeout(()=>d.remove(),5000);
       }
@@ -3818,7 +3966,7 @@ function lxdShare(platform){
   const code=lxdGenRef();
   const url='https://lexord.de/?ref='+code;
   const title='LEXORD® Custom PS5 Controller — handgefertigt in Germany';
-  const text=`Schau dir mal LEXORD an — Premium Custom PS5 Controller mit TMR-Sticks & Hall-Effect. Mit meinem Link bekommst du 10 € Rabatt: ${url}`;
+  const text=`Schau dir mal LEXORD an — Premium Custom PS5 Controller mit TMR-Sticks & Hall-Effect. Mit meinem Link bekommst du 10 % Rabatt: ${url}`;
   let target='';
   switch(platform){
     case 'whatsapp': target=`https://wa.me/?text=${encodeURIComponent(text)}`; break;
@@ -3892,7 +4040,7 @@ window.lxdNativeShare = async function(){
   try{
     await navigator.share({
       title:'LEXORD® Custom PS5 Controller',
-      text:'Schau dir mal LEXORD an — handgefertigt, ohne Drift, mit 10 € Rabatt für dich',
+      text:'Schau dir mal LEXORD an — handgefertigt, ohne Drift, mit 10 % Rabatt für dich',
       url:'https://lexord.de/?ref='+lxdGenRef()
     });
   }catch(e){}

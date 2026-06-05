@@ -426,6 +426,11 @@ header{position:fixed;top:30px;width:100%;z-index:9400;padding:11px 5%;display:f
 /* Variant-Image-Flip */
 .kit-card img{transition:opacity .3s,transform .5s cubic-bezier(.4,0,.2,1)}
 .kit-card img.flipping{transform:rotateY(180deg);opacity:0}
+
+/* Schwarzer Bild-Platzhalter (zum späteren Tausch durch echte Bilder) */
+.kit-img-empty{aspect-ratio:1/1;width:100%;background:#080808;border:1px solid #161616;border-radius:8px;position:relative;object-fit:cover}
+.kit-card:has(.kit-img-empty)::after{content:'LEX⚪RD';position:absolute;top:50%;left:50%;transform:translate(-50%,calc(-50% - 30px));font-family:'Orbitron';font-weight:900;font-size:1.6rem;letter-spacing:8px;color:#1a1a1a;pointer-events:none;z-index:1;white-space:nowrap}
+.kit-card:has(.kit-img-empty)::before{content:'BILD FOLGT';position:absolute;top:50%;left:50%;transform:translate(-50%,calc(-50% + 8px));font-family:'Orbitron';font-size:8px;letter-spacing:3px;color:#2a2a2a;pointer-events:none;z-index:1}
 /* Marketing-Banner-Overlay über Produktbild (TMR-Style) */
 .kit-card{position:relative}
 .kit-banner{position:absolute;top:18px;left:18px;right:18px;pointer-events:none;z-index:2}
@@ -1631,7 +1636,8 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
     <article class="card kit-card">
       <button class="wish-btn" onclick="toggleWish(this,'Paddle System V2')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
       <div class="kit-banner"><div class="kb-head">PADDLE<span class="lg">SYSTEM</span></div><div class="kb-sub">MAXIMALE KONTROLLE</div></div>
-      <img src="paddle-system-v2.PNG" alt="Paddle System V2" loading="lazy" onerror="this.onerror=function(){this.onerror=function(){this.src='Photoroom_20260304_212902.png'};this.src='paddle-system-v2.png'};">
+      <!-- BILD-PLATZHALTER: src="paddle-system-v2.PNG" hier eintragen wenn neues Bild bereit -->
+      <img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='%23080808'/%3E%3C/svg%3E" alt="Paddle System V2" loading="lazy" class="kit-img-empty">
       <h3>PADDLE SYSTEM V2</h3>
       <div class="kit-variants" data-product="Paddle System V2">
         <div class="kit-var black sel" data-name="Schwarz Matt" onclick="selVariant(this,'Schwarz Matt')"></div>
@@ -1645,7 +1651,8 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
     <article class="card kit-card">
       <button class="wish-btn" onclick="toggleWish(this,'TMR Stick Upgrade Kit')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
       <div class="kit-banner"><div class="kb-head">TMR<span class="lg">STICKS</span></div><div class="kb-sub">DRIFT-FREI</div></div>
-      <img src="tmr-upgrade-kit.PNG" alt="TMR Stick Kit" loading="lazy" onerror="this.onerror=function(){this.onerror=function(){this.src='Photoroom_20260305_123705.png';this.style.filter='brightness(.7) sepia(1) hue-rotate(160deg) saturate(3)'};this.src='tmr-upgrade-kit.png'};">
+      <!-- BILD-PLATZHALTER: src="tmr-upgrade-kit.PNG" hier eintragen wenn neues Bild bereit -->
+      <img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='%23080808'/%3E%3C/svg%3E" alt="TMR Stick Kit" loading="lazy" class="kit-img-empty">
       <h3>TMR STICK UPGRADE KIT</h3>
       <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
       <p class="c-price">55,00 €</p>
@@ -1655,7 +1662,8 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
     <article class="card kit-card">
       <button class="wish-btn" onclick="toggleWish(this,'Hall Effect Upgrade Kit')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
       <div class="kit-banner"><div class="kb-head">HALL<span class="lg">EFFECT</span></div><div class="kb-sub">DRIFT-FREI</div></div>
-      <img src="hall-effect-kit.PNG" alt="Hall Effect Kit" loading="lazy" onerror="this.onerror=function(){this.onerror=function(){this.src='tmr-upgrade-kit.PNG';this.style.filter='hue-rotate(140deg) saturate(1.6)'};this.src='hall-effect-kit.png'};">
+      <!-- BILD-PLATZHALTER: src="hall-effect-kit.PNG" hier eintragen wenn neues Bild bereit -->
+      <img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='%23080808'/%3E%3C/svg%3E" alt="Hall Effect Kit" loading="lazy" class="kit-img-empty">
       <h3>HALL EFFECT UPGRADE KIT</h3>
       <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
       <p class="c-price">35,00 €</p>
@@ -1665,7 +1673,8 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
     <article class="card kit-card">
       <button class="wish-btn" onclick="toggleWish(this,'GRIP Gehäuse Set')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
       <div class="kit-banner"><div class="kb-head">GRIP<span class="lg">UMBAU</span></div><div class="kb-sub">ANTI-RUTSCH</div></div>
-      <img src="grip-housing-set.PNG" alt="GRIP Set" loading="lazy" onerror="this.onerror=function(){this.onerror=function(){this.src='Photoroom_20260402_014813.png';this.style.filter='brightness(.6) sepia(1) hue-rotate(90deg) saturate(2)'};this.src='grip-housing-set.png'};">
+      <!-- BILD-PLATZHALTER: src="grip-housing-set.PNG" hier eintragen wenn neues Bild bereit -->
+      <img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='%23080808'/%3E%3C/svg%3E" alt="GRIP Set" loading="lazy" class="kit-img-empty">
       <h3>GRIP GEHÄUSE SET</h3>
       <div class="kit-variants" data-product="GRIP Gehäuse Set">
         <div class="kit-var black sel" data-name="Schwarz Matt" onclick="selVariant(this,'Schwarz Matt')"></div>
@@ -1679,7 +1688,8 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
     <article class="card kit-card">
       <button class="wish-btn" onclick="toggleWish(this,'Clicky Trigger Kit')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
       <div class="kit-banner"><div class="kb-head">CLICKY<span class="lg">TRIGGER</span></div><div class="kb-sub">MOUSE-CLICK FEEL</div></div>
-      <img src="clicky-trigger-kit.PNG" alt="Clicky Trigger Kit" loading="lazy" onerror="this.onerror=function(){this.onerror=function(){this.src='Photoroom_20260304_212902.png';this.style.filter='brightness(.6) sepia(1) hue-rotate(310deg) saturate(3)'};this.src='clicky-trigger-kit.png'};">
+      <!-- BILD-PLATZHALTER: src="clicky-trigger-kit.PNG" hier eintragen wenn neues Bild bereit -->
+      <img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='%23080808'/%3E%3C/svg%3E" alt="Clicky Trigger Kit" loading="lazy" class="kit-img-empty">
       <h3>CLICKY TRIGGER KIT</h3>
       <div class="stock-dot-wrap" style="justify-content:center"><div class="sdot"></div>AUF LAGER</div>
       <p class="c-price">22,00 €</p>

@@ -116,7 +116,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 <!-- PayPal SDK -->
-<script src="https://www.paypal.com/sdk/js?client-id=AQOBIpaxy2Po_nxn9bZURvPzt4uS-ZYPdCueAT4WYbnOMsepoYD_k2WVFWAQiGyZ8i7hB9HucXYXAZ57&currency=EUR&intent=capture&components=buttons,funding-eligibility,applepay,googlepay&enable-funding=card,paylater,sepa,giropay,ideal,sofort,bancontact,mybank,blik,p24,trustly,eps,multibanco&buyer-country=DE" data-sdk-integration-source="button-factory"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AQOBIpaxy2Po_nxn9bZURvPzt4uS-ZYPdCueAT4WYbnOMsepoYD_k2WVFWAQiGyZ8i7hB9HucXYXAZ57&currency=EUR&intent=capture&components=buttons,funding-eligibility&enable-funding=card,paylater,sepa,giropay,ideal,sofort" data-sdk-integration-source="button-factory"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
@@ -1013,18 +1013,6 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
 .lxd-reviews-real a:hover{border-color:rgba(0,242,255,.3)!important;background:#0c0c0c!important;transform:translateY(-2px)}
 @media(max-width:600px){.lxd-reviews-real{grid-template-columns:1fr!important}}
 
-/* ═══ NATIVE PAYMENT BUTTONS — PREMIUM POLISH ═══ */
-@keyframes lxdPayIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.lxd-pay-btn-wrap{position:relative;border-radius:10px;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s,filter .25s;will-change:transform}
-.lxd-pay-btn-wrap:hover{transform:translateY(-2px);filter:brightness(1.08)}
-.lxd-pay-btn-wrap::before{content:'';position:absolute;inset:-1px;border-radius:11px;background:linear-gradient(135deg,rgba(0,242,255,.0),rgba(0,242,255,.0));z-index:-1;transition:.3s;pointer-events:none}
-.lxd-pay-btn-wrap:hover::before{background:linear-gradient(135deg,rgba(0,242,255,.25),rgba(188,19,254,.18))}
-.lxd-pay-btn-wrap > div,.lxd-pay-btn-wrap iframe{border-radius:10px!important;overflow:hidden}
-#pp-btn-cont{position:relative;padding-top:4px}
-#pp-btn-cont::before{content:'';position:absolute;left:0;right:0;top:-2px;height:1px;background:linear-gradient(90deg,transparent,rgba(0,242,255,.4),rgba(188,19,254,.4),transparent)}
-
-/* Sub-grouping divider after first 5 buttons (visual rhythm) */
-.lxd-pay-btn-wrap:nth-child(5){margin-bottom:14px;padding-bottom:8px;border-bottom:1px dashed rgba(255,255,255,.06)}
 
 /* ═══ LXRD ATELIER TEASER ═══ */
 .lxd-atelier{position:relative;padding:90px 5%;background:linear-gradient(180deg,#000 0%,#040408 50%,#000 100%);overflow:hidden;border-top:1px solid #0a0a0a;border-bottom:1px solid #0a0a0a}

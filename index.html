@@ -116,7 +116,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 <!-- PayPal SDK -->
-<script src="https://www.paypal.com/sdk/js?client-id=AQOBIpaxy2Po_nxn9bZURvPzt4uS-ZYPdCueAT4WYbnOMsepoYD_k2WVFWAQiGyZ8i7hB9HucXYXAZ57&currency=EUR&intent=capture&components=buttons,funding-eligibility&enable-funding=card,paylater,sepa,giropay,ideal,sofort,bancontact,eps,mybank,blik,p24,trustly,multibanco,applepay,googlepay" data-sdk-integration-source="button-factory"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AQOBIpaxy2Po_nxn9bZURvPzt4uS-ZYPdCueAT4WYbnOMsepoYD_k2WVFWAQiGyZ8i7hB9HucXYXAZ57&currency=EUR&intent=capture&components=buttons,funding-eligibility&enable-funding=card,paylater,sepa,giropay,ideal,sofort" data-sdk-integration-source="button-factory"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
@@ -3234,54 +3234,14 @@ function renderPP(sub,ship,land){
   const onCancel=()=>toast('Zahlung abgebrochen','err');
   const onError=(err)=>{console.error('PayPal:',err);toast('Fehler bei der Zahlung. Erneut versuchen.','err');};
 
-  const sharedConfig={onClick,createOrder,onApprove,onCancel,onError};
-
-  // 1) PayPal Smart-Stack (PayPal · Karte · Klarna · SEPA · Giropay · Sofort etc.)
+  // PayPal Smart-Stack — rendert AUTOMATISCH alle vom Merchant freigeschalteten Methoden:
+  // PayPal · Karte · Klarna · SEPA · Giropay · Sofort · PayLater
   try{
     paypal.Buttons({
       style:{layout:'vertical',color:'gold',shape:'rect',label:'paypal',height:48,tagline:false},
-      ...sharedConfig
-    }).render('#pp-btn-cont').catch(()=>{});
-  }catch(e){}
-
-  // 2) Apple Pay — eigener Button (nur Safari/iOS mit aktivem Wallet)
-  try{
-    const apBtn=paypal.Buttons({
-      fundingSource:paypal.FUNDING.APPLEPAY,
-      style:{layout:'vertical',shape:'rect',height:48,color:'black'},
-      ...sharedConfig
-    });
-    if(apBtn.isEligible()){
-      const w=document.createElement('div');w.style.marginTop='8px';c.appendChild(w);
-      apBtn.render(w).catch(()=>w.remove());
-    }
-  }catch(e){}
-
-  // 3) Google Pay — eigener Button (nur Chrome/Android mit Karte)
-  try{
-    const gpBtn=paypal.Buttons({
-      fundingSource:paypal.FUNDING.GOOGLEPAY,
-      style:{layout:'vertical',shape:'rect',height:48,color:'white'},
-      ...sharedConfig
-    });
-    if(gpBtn.isEligible()){
-      const w=document.createElement('div');w.style.marginTop='8px';c.appendChild(w);
-      gpBtn.render(w).catch(()=>w.remove());
-    }
-  }catch(e){}
-
-  // 4) Kreditkarte (separater Button — manche User wollen direkt zur Karte)
-  try{
-    const cardBtn=paypal.Buttons({
-      fundingSource:paypal.FUNDING.CARD,
-      style:{layout:'vertical',shape:'rect',height:48,color:'black',label:'pay'},
-      ...sharedConfig
-    });
-    if(cardBtn.isEligible()){
-      const w=document.createElement('div');w.style.marginTop='8px';c.appendChild(w);
-      cardBtn.render(w).catch(()=>w.remove());
-    }
-  }catch(e){}
+      onClick,createOrder,onApprove,onCancel,onError
+    }).render('#pp-btn-cont').catch(e=>console.warn('PayPal render:',e));
+  }catch(e){console.warn('PayPal:',e);}
 }
 
 /* === LIEFERADRESS-VERWALTUNG === */

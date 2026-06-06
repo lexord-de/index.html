@@ -255,18 +255,6 @@ button{font-family:inherit}
   .r-sticky-cta{padding:11px 14px;font-size:9px;letter-spacing:1.5px}
 }
 
-/* ═══ LIVE ACTIVITY FEED ═══ */
-.r-feed{position:fixed;bottom:90px;left:24px;background:rgba(8,8,8,.95);backdrop-filter:blur(14px);border:1px solid rgba(0,242,255,.3);border-radius:14px;padding:14px 18px;max-width:300px;z-index:880;display:flex;align-items:center;gap:12px;transform:translateX(-120%);transition:.5s cubic-bezier(.2,.8,.2,1);box-shadow:0 14px 40px rgba(0,0,0,.5)}
-.r-feed.show{transform:translateX(0)}
-.r-feed-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--neon),var(--neon2));display:flex;align-items:center;justify-content:center;color:#000;font-family:'Orbitron';font-weight:900;font-size:14px;flex-shrink:0}
-.r-feed-info{flex:1;min-width:0}
-.r-feed-info .who{font-family:'Orbitron';font-size:10px;color:#fff;font-weight:700;letter-spacing:1px;margin-bottom:2px}
-.r-feed-info .what{font-size:11px;color:#aaa;line-height:1.4}
-.r-feed-info .when{font-family:'Orbitron';font-size:8px;color:#666;letter-spacing:1px;margin-top:3px}
-.r-feed-info .when::before{content:'●';color:var(--green);margin-right:4px;animation:blink 2s infinite}
-@keyframes blink{50%{opacity:.4}}
-@media(max-width:560px){.r-feed{bottom:160px;left:8px;right:8px;max-width:none}}
-
 /* ═══ INTERACTIVE DRIFT-TESTER ═══ */
 .r-tester{background:linear-gradient(135deg,#040404 0%,#0a0a0a 100%);border:1px solid var(--border);border-radius:22px;padding:40px 36px;position:relative;overflow:hidden;margin-top:6px}
 .r-tester::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(0,242,255,.06),transparent 60%);top:-200px;right:-100px}

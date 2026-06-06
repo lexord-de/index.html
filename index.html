@@ -115,8 +115,30 @@
 <link rel="preload" as="image" href="IMG_0556.jpeg" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-<!-- PayPal SDK -->
-<script src="https://www.paypal.com/sdk/js?client-id=AQOBIpaxy2Po_nxn9bZURvPzt4uS-ZYPdCueAT4WYbnOMsepoYD_k2WVFWAQiGyZ8i7hB9HucXYXAZ57&currency=EUR&intent=capture&components=buttons,funding-eligibility&enable-funding=card,paylater,sepa,giropay,ideal,sofort" data-sdk-integration-source="button-factory"></script>
+<!-- PayPal SDK · Apple Pay wird nur auf Safari/iOS geladen (vermeidet SDK-Crashes auf anderen Browsern) -->
+<script>
+(function(){
+  var hasApplePay = (window.ApplePaySession && ApplePaySession.canMakePayments && ApplePaySession.canMakePayments());
+  var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  var base = 'https://www.paypal.com/sdk/js?client-id=AQOBIpaxy2Po_nxn9bZURvPzt4uS-ZYPdCueAT4WYbnOMsepoYD_k2WVFWAQiGyZ8i7hB9HucXYXAZ57&currency=EUR&intent=capture';
+  var components = 'buttons,funding-eligibility';
+  var funding = 'card,paylater,sepa,giropay,ideal,sofort';
+  if (hasApplePay && isSafari) {
+    components += ',applepay';
+    funding += ',applepay';
+  }
+  var s = document.createElement('script');
+  s.src = base + '&components=' + components + '&enable-funding=' + funding;
+  s.setAttribute('data-sdk-integration-source','button-factory');
+  s.onerror = function(){
+    var f = document.createElement('script');
+    f.src = base + '&components=buttons,funding-eligibility&enable-funding=card,paylater,sepa,giropay,ideal,sofort';
+    f.setAttribute('data-sdk-integration-source','button-factory');
+    document.head.appendChild(f);
+  };
+  document.head.appendChild(s);
+})();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
@@ -3503,7 +3525,7 @@ async function subscribeEmail(){
     const d=await r.json();
     if(!d.ok){const m={disposable:'Wegwerf-E-Mail nicht erlaubt',duplicate:'Diese E-Mail ist bereits angemeldet',device:'Dieses Gerät hat bereits einen Willkommens-Code erhalten',rate:'Zu viele Anmeldungen von dieser IP (max. 3/Tag)',invalid:'E-Mail-Adresse ungültig'};toast('⚠ '+(m[d.reason]||d.msg||'Anmeldung nicht möglich'),'err');return;}
   }catch(e){/* offline OK — fallback auf alten Pfad */}
-  try{await fetch(CF_WORKER_URL+'/api/newsletter/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,fp})});}catch(e){}
+  try{await fetch(CF_WORKER_URL+'/api/newsletter/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,fp,source:'index',consent:true})});}catch(e){}
   document.getElementById('em-success').style.display='block';
   document.getElementById('em-email').value='';
   toast('✓ Angemeldet! Code kommt per Email','ok');

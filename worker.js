@@ -937,6 +937,46 @@ async function newsletterSubscribe(request, env) {
     await env.LEXORD_DATA.put("nl_fp:" + fp, email, { expirationTtl: 30 * 24 * 3600 });
   }
 
+  // Welcome-Mail (mit kleinem Begrüßungs-Rabatt) — damit Kunde direkt eine Bestätigung erhält
+  try {
+    const source = (body.source || "website").toString().slice(0, 32);
+    const welcomeHtml = `<!DOCTYPE html><html lang="de"><body style="margin:0;padding:0;background:#0a0a0a;font-family:Arial,Helvetica,sans-serif;color:#eee">
+      <div style="max-width:560px;margin:0 auto;padding:32px 28px">
+        <div style="text-align:center;font-family:'Arial Black',sans-serif;font-size:22px;letter-spacing:6px;color:#fff;margin-bottom:6px">LEX<span style="color:#00f2ff">O</span>RD<sup style="font-size:9px;color:#00f2ff">®</sup></div>
+        <div style="text-align:center;font-size:10px;letter-spacing:3px;color:#888;margin-bottom:28px">ENGINEERING · MADE IN GERMANY</div>
+        <div style="background:linear-gradient(135deg,#0e0e0e,#141414);border:1px solid #1c1c1c;border-radius:14px;padding:28px 24px;text-align:center">
+          <div style="font-size:18px;color:#fff;font-weight:700;margin-bottom:10px">Willkommen im LEXORD-Kreis.</div>
+          <div style="font-size:14px;color:#aaa;line-height:1.7;margin-bottom:22px">
+            Danke für deine Anmeldung. Du bekommst von uns ausschließlich <strong style="color:#00f2ff">exklusive Angebote, neue Drops und limitierte Releases</strong> — maximal 1–2 Mails pro Monat. Kein Spam, jederzeit abbestellbar.
+          </div>
+          <div style="background:#000;border:1px dashed #00f2ff;border-radius:10px;padding:18px;margin:18px 0">
+            <div style="font-size:10px;letter-spacing:3px;color:#888;margin-bottom:8px">DEIN WILLKOMMENS-CODE</div>
+            <div style="font-family:'Courier New',monospace;font-size:22px;letter-spacing:6px;color:#00f2ff;font-weight:900">WELCOME10</div>
+            <div style="font-size:11px;color:#888;margin-top:8px">10% Rabatt · gültig 30 Tage · einlösbar im Checkout</div>
+          </div>
+          <a href="https://lexord.de" style="display:inline-block;margin-top:12px;background:linear-gradient(135deg,#00f2ff,#bc13fe);color:#000;text-decoration:none;padding:13px 28px;border-radius:8px;font-weight:900;letter-spacing:2px;font-size:11px">JETZT SHOPPEN</a>
+        </div>
+        <div style="text-align:center;font-size:10px;color:#555;margin-top:22px;line-height:1.6">
+          LEXORD® · Leon Schulz · An Der Domsühler Str. 2 · 19374 Domsühl<br>
+          Du hast dich angemeldet auf: ${source}<br>
+          <a href="mailto:kontakt@lexord.de?subject=Newsletter%20abmelden&body=Bitte%20abmelden:%20${encodeURIComponent(email)}" style="color:#666">Abmelden</a>
+        </div>
+      </div>
+    </body></html>`;
+    if (env.BREVO_API_KEY) {
+      await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: { "api-key": env.BREVO_API_KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sender: { name: "LEXORD Engineering", email: env.FROM_EMAIL || "kontakt@lexord.de" },
+          to: [{ email }],
+          subject: "Willkommen bei LEXORD · 10% Rabatt für dich",
+          htmlContent: welcomeHtml
+        })
+      });
+    }
+  } catch (e) {}
+
   return json({ success: true });
 }
 

@@ -1911,6 +1911,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
     <a href="collections.html">PRODUKTE</a>
     <a href="zubehoer.html">ZUBEHÖR</a>
     <a href="konfigurator.html">KONFIGURATOR</a>
+    <a href="printing-service.html">3D PRINTING</a>
     <a href="b2b.html">B2B</a>
     <a href="agb.html">AGB</a>
     <a href="Datenschutz.html">DATENSCHUTZ</a>
@@ -1933,15 +1934,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
   <button class="r-sticky-close" onclick="closeSticky()" aria-label="Schließen">✕</button>
 </div>
 
-<!-- ═══ LIVE ACTIVITY FEED ═══ -->
-<div class="r-feed" id="r-feed">
-  <div class="r-feed-av" id="r-feed-av">M</div>
-  <div class="r-feed-info">
-    <div class="who" id="r-feed-who">Marcel K. · Berlin</div>
-    <div class="what" id="r-feed-what">Reparatur-Anfrage: PS5 Stick-Drift</div>
-    <div class="when" id="r-feed-when">vor 2 Min.</div>
-  </div>
-</div>
+<!-- LIVE ACTIVITY FEED entfernt — User-Feedback: unrealistisch + nervig -->
 
 <!-- ═══ LEXORD-KI CHAT WIDGET ═══ -->
 <button class="lxc-fab" onclick="lxcOpen()" aria-label="KI-Chat öffnen">
@@ -2023,21 +2016,24 @@ function tFaq(el){el.classList.toggle('open');}
   document.querySelectorAll('.rv').forEach(el=>io.observe(el));
 })();
 
-/* ═══ Animated number counters ═══ */
+/* ═══ Animated number counters (Hero-Stats + Impact-Counter) ═══ */
 (function(){
-  const targets=document.querySelectorAll('.r-stat-n[data-target]');
+  // Greift jetzt JEDES Element mit data-target — egal welche Klasse
+  const targets=document.querySelectorAll('[data-target]');
+  if(!targets.length||!('IntersectionObserver' in window))return;
   const io=new IntersectionObserver(es=>{
     es.forEach(e=>{
       if(!e.isIntersecting)return;
       const el=e.target;
       const target=parseFloat(el.dataset.target);
+      if(!target||isNaN(target))return;
       const suffix=el.dataset.suffix||'';
       const fmt=el.dataset.fmt||'';
-      const dur=1600;
+      const dur=1800;
       const start=performance.now();
       function step(t){
         const p=Math.min((t-start)/dur,1);
-        const ease=1-Math.pow(1-p,3);
+        const ease=1-Math.pow(1-p,4);
         const v=target*ease;
         let txt;
         if(fmt==='x.y')txt=(v/10).toFixed(1).replace('.',',');
@@ -2049,7 +2045,7 @@ function tFaq(el){el.classList.toggle('open');}
       requestAnimationFrame(step);
       io.unobserve(el);
     });
-  },{threshold:.3});
+  },{threshold:.25,rootMargin:'0px 0px -50px 0px'});
   targets.forEach(t=>io.observe(t));
 })();
 
@@ -2082,12 +2078,21 @@ function tFaq(el){el.classList.toggle('open');}
 
 function subNews(f){
   const e=document.getElementById('nl-email').value.trim();
-  if(!e)return;
-  const btn=f.querySelector('button');btn.disabled=true;btn.textContent='SENDE...';
-  fetch('https://lexord-api.leonschulz1420.workers.dev/api/newsletter',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e,source:'reparatur'})}).catch(()=>{}).finally(()=>{
-    btn.textContent='✓ ABONNIERT';btn.style.background='var(--green)';
+  if(!e||!e.includes('@'))return;
+  const btn=f.querySelector('button');
+  btn.disabled=true;btn.textContent='SENDE...';
+  // Korrekter Endpoint: /api/newsletter/subscribe (der bereits im Worker existiert)
+  let fp='';try{fp=Math.random().toString(36).slice(2,12);}catch(_){}
+  fetch('https://lexord-api.leonschulz1420.workers.dev/api/newsletter/subscribe',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({email:e,source:'reparatur',consent:true,fp})
+  }).catch(()=>{}).finally(()=>{
+    btn.textContent='✓ ABONNIERT · DANKE!';
+    btn.style.background='linear-gradient(135deg,#00b67a,#00ff88)';
+    btn.style.color='#000';
     document.getElementById('nl-email').value='';
-    setTimeout(()=>{btn.disabled=false;btn.textContent='ABONNIEREN';btn.style.background='';},3000);
+    // Keine Reset — Bestätigung bleibt sichtbar (kein wiederholtes Anmelden)
   });
 }
 
@@ -2213,32 +2218,7 @@ window.addEventListener('scroll',()=>{
   }
 },{passive:true});
 
-/* ═══ LIVE ACTIVITY FEED ═══ */
-const FEED_DATA=[
-  {n:'Marcel K.',c:'Berlin',w:'Reparatur-Anfrage: PS5 Stick-Drift',t:'vor 2 Min.'},
-  {n:'Lisa H.',c:'München',w:'DualSense Hall-Effect Upgrade bestellt',t:'vor 4 Min.'},
-  {n:'Tim R.',c:'Hamburg',w:'PS5 HDMI-Port Reparatur · Bestellung',t:'vor 7 Min.'},
-  {n:'Niklas B.',c:'Köln',w:'Express-Service · Trigger-Reparatur',t:'vor 12 Min.'},
-  {n:'André S.',c:'Stuttgart',w:'DualSense Edge Paddle-Reparatur',t:'vor 18 Min.'},
-  {n:'Julian W.',c:'Frankfurt',w:'TMR-Stick Upgrade · DualSense',t:'vor 23 Min.'},
-  {n:'Sophie T.',c:'Düsseldorf',w:'Akku-Tausch · DualSense',t:'vor 31 Min.'},
-  {n:'Daniel M.',c:'Leipzig',w:'PS5 USB-C Buchse getauscht',t:'vor 38 Min.'},
-  {n:'Kevin L.',c:'Hannover',w:'Custom-Paint + Stick-Reparatur',t:'vor 45 Min.'},
-  {n:'Anna F.',c:'Bremen',w:'Trigger-Stops + Clicky-Upgrade',t:'vor 1 Std.'}
-];
-let _feedIdx=0;
-function showFeed(){
-  const d=FEED_DATA[_feedIdx%FEED_DATA.length];
-  document.getElementById('r-feed-av').textContent=d.n[0];
-  document.getElementById('r-feed-who').textContent=d.n+' · '+d.c;
-  document.getElementById('r-feed-what').textContent=d.w;
-  document.getElementById('r-feed-when').textContent=d.t;
-  const f=document.getElementById('r-feed');
-  f.classList.add('show');
-  setTimeout(()=>{f.classList.remove('show');},5500);
-  _feedIdx++;
-}
-setTimeout(()=>{showFeed();setInterval(showFeed,11000);},6000);
+/* Live Activity Feed deaktiviert — User-Feedback: zu nervig */
 
 /* ═══ URGENCY TIMER (counts down to end of week) ═══ */
 (function(){

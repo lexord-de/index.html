@@ -1290,6 +1290,7 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
   <a href="collections.html" class="nav-link" data-i18n="nav_shop">PRODUKTE</a>
   <a href="zubehoer.html" class="nav-link">ZUBEHÖR</a>
   <a href="reparatur.html" class="nav-link" data-i18n="nav_repair">REPARATUR</a>
+  <a href="printing-service.html" class="nav-link">🖨️ 3D PRINTING</a>
   <a href="#tester-sec" class="nav-link" data-i18n="nav_tester" onclick="toggleMenu()">TESTER</a>
   <a href="#contact" class="nav-link" data-i18n="nav_contact" onclick="toggleMenu()">KONTAKT</a>
   <button class="nav-link" data-i18n="nav_review" onclick="document.getElementById('review-modal').style.display='flex';toggleMenu()">BEWERTEN</button>
@@ -3942,8 +3943,8 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLogin();closeA
 <!-- Empfehlungs-Button — gleicher Stil wie KI-Button, direkt über KI-Button -->
 <button id="lxd-ref-btn" onclick="lxdOpenShare()" aria-label="Empfehlen & 10 % sparen" title="Empfehlen & 10 % sparen">🎁</button>
 <style>
-#lxd-ref-btn{position:fixed;bottom:100px;right:28px;width:60px;height:60px;background:rgba(8,8,8,.9);backdrop-filter:blur(10px);border:1.5px solid var(--neon);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:9000;box-shadow:0 8px 24px rgba(0,0,0,.55),0 0 0 1px rgba(0,242,255,.1);color:var(--neon);transition:.3s;font-size:26px}
-#lxd-ref-btn:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 12px 32px rgba(0,242,255,.35),0 0 0 1px rgba(0,242,255,.3);background:rgba(0,242,255,.06)}
+#lxd-ref-btn{position:fixed;bottom:100px;right:28px;width:60px;height:60px;background:linear-gradient(135deg,var(--neon) 0%,var(--neon2) 100%);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:9000;box-shadow:0 8px 28px rgba(0,242,255,.4),0 4px 12px rgba(188,19,254,.25);color:#000;transition:.3s;font-size:26px}
+#lxd-ref-btn:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 12px 40px rgba(0,242,255,.55),0 6px 18px rgba(188,19,254,.35)}
 #lxd-ref-btn::after{content:'-10 %';position:absolute;bottom:-4px;right:-4px;background:#000;border:1.5px solid var(--neon);color:var(--neon);font-family:'Orbitron';font-size:8px;font-weight:900;letter-spacing:.5px;padding:2px 5px;border-radius:5px;line-height:1.2}
 @media(max-width:760px){#lxd-ref-btn{bottom:90px;right:22px;width:56px;height:56px;font-size:24px}}
 </style>

@@ -2083,9 +2083,9 @@ function nlPreview(){
 }
 
 async function loadNewsletter(){
-  const tk = sessionStorage.getItem('lxrd_admin_token');
+  const tk = localStorage.getItem(TOKEN_KEY);
   try{
-    const r = await fetch(CF_WORKER_URL+'/api/admin/newsletter/list',{headers:{'Authorization':'Bearer '+tk}});
+    const r = await fetch(WORKER_URL+'/api/admin/newsletter/list',{headers:{'Authorization':'Bearer '+tk}});
     const d = await r.json();
     NL_SUBSCRIBERS = d.subscribers || [];
   }catch(e){ NL_SUBSCRIBERS = []; }
@@ -2125,9 +2125,9 @@ function nlFilter(){
 
 async function nlUnsubscribe(email){
   if(!email || !confirm('Abonnent '+email+' wirklich abmelden?')) return;
-  const tk = sessionStorage.getItem('lxrd_admin_token');
+  const tk = localStorage.getItem(TOKEN_KEY);
   try{
-    const r = await fetch(CF_WORKER_URL+'/api/admin/newsletter/unsubscribe',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},body:JSON.stringify({email})});
+    const r = await fetch(WORKER_URL+'/api/admin/newsletter/unsubscribe',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},body:JSON.stringify({email})});
     const d = await r.json();
     if(d.success){ toast('✓ Abgemeldet','ok'); loadNewsletter(); }
     else toast('Fehler: '+(d.error||''),'err');
@@ -2152,9 +2152,9 @@ async function nlSendTest(){
   const to = prompt('Test-Mail an welche E-Mail senden?','kontakt@lexord.de');
   if(!to || !to.includes('@')) return;
   const html = nlBuildHtml();
-  const tk = sessionStorage.getItem('lxrd_admin_token');
+  const tk = localStorage.getItem(TOKEN_KEY);
   try{
-    const r = await fetch(CF_WORKER_URL+'/api/admin/newsletter/test',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},body:JSON.stringify({to,subject:'[TEST] '+subject,html})});
+    const r = await fetch(WORKER_URL+'/api/admin/newsletter/test',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},body:JSON.stringify({to,subject:'[TEST] '+subject,html})});
     const d = await r.json();
     if(d.success){ toast('✓ Test-Mail gesendet an '+to,'ok'); }
     else toast('Fehler: '+(d.error||''),'err');
@@ -2168,10 +2168,10 @@ async function nlSendAll(){
   if(!active.length){ toast('Keine Abonnenten','err'); return; }
   if(!confirm('Newsletter an '+active.length+' Abonnenten senden?\n\nBetreff: '+subject+'\n\nDieser Vorgang kann nicht rückgängig gemacht werden.')) return;
   const html = nlBuildHtml();
-  const tk = sessionStorage.getItem('lxrd_admin_token');
+  const tk = localStorage.getItem(TOKEN_KEY);
   toast('Sende an '+active.length+' Empfänger...','ok');
   try{
-    const r = await fetch(CF_WORKER_URL+'/api/admin/newsletter/send',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},body:JSON.stringify({subject,html})});
+    const r = await fetch(WORKER_URL+'/api/admin/newsletter/send',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},body:JSON.stringify({subject,html})});
     const d = await r.json();
     if(d.success){
       toast('✓ '+(d.sent||0)+' Mails gesendet, '+(d.failed||0)+' fehlgeschlagen','ok');

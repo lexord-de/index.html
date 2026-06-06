@@ -160,6 +160,9 @@ async function test(){
       if (path === "/api/newsletter/check" && request.method === "POST") return await newsletterCheck(request, env);
       if (path === "/api/admin/conversations" && request.method === "GET") return await adminConversations(request, env);
       if (path === "/api/admin/newsletter/send" && request.method === "POST") return await sendNewsletter(request, env);
+      if (path === "/api/admin/newsletter/list" && request.method === "GET") return await listNewsletter(request, env);
+      if (path === "/api/admin/newsletter/test" && request.method === "POST") return await sendNewsletterTest(request, env);
+      if (path === "/api/admin/newsletter/unsubscribe" && request.method === "POST") return await adminUnsubscribe(request, env);
       if (path === "/api/admin/products" && request.method === "GET") return await adminListProducts(request, env);
       if (path === "/api/admin/products" && request.method === "POST") return await adminCreateProduct(request, env);
       if (path === "/api/products" && request.method === "GET") return await listProducts(request, env);
@@ -1020,6 +1023,56 @@ async function sendNewsletter(request, env) {
   }
 
   return json({ success: true, sent, failed, total: recipients.length });
+}
+
+async function listNewsletter(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ subscribers: [] });
+  const list = await env.LEXORD_DATA.list({ prefix: "newsletter:" });
+  const subscribers = [];
+  for (const k of list.keys) {
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if (raw) {
+      try {
+        const s = JSON.parse(raw);
+        subscribers.push({
+          email: s.email,
+          subscribed: s.subscribed,
+          active: s.active !== false,
+          source: s.source || ""
+        });
+      } catch (e) {}
+    }
+  }
+  subscribers.sort((a, b) => (a.subscribed || "").localeCompare(b.subscribed || ""));
+  return json({ subscribers });
+}
+
+async function sendNewsletterTest(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.BREVO_API_KEY) return json({ success: false, error: "Brevo API key fehlt" });
+  const body = await request.json();
+  const to = (body.to || "").trim().toLowerCase();
+  if (!to || !to.includes("@")) return json({ success: false, error: "Empfaenger ungueltig" });
+  const subject = body.subject || "[TEST] Newsletter";
+  const html = body.html || "<p>Test</p>";
+  const ok = await sendBrevoMail(env, to, subject, html, { kind: "newsletter-test" });
+  return json({ success: ok });
+}
+
+async function adminUnsubscribe(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ success: false });
+  const body = await request.json();
+  const email = (body.email || "").trim().toLowerCase();
+  if (!email) return json({ success: false, error: "Email fehlt" });
+  const raw = await env.LEXORD_DATA.get("newsletter:" + email);
+  if (!raw) return json({ success: false, error: "Nicht gefunden" });
+  const s = JSON.parse(raw);
+  s.active = false;
+  s.unsubscribed = new Date().toISOString();
+  await env.LEXORD_DATA.put("newsletter:" + email, JSON.stringify(s));
+  return json({ success: true });
 }
 
 // ============ NEWSLETTER ANTI-FAKE CHECK ============

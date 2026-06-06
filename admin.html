@@ -321,6 +321,7 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
     <button class="dash-tab" onclick="switchTab('widerrufe',this)">🛡️ WIDERRUFE</button>
     <button class="dash-tab" onclick="switchTab('chats',this)">🤖 KI-CHATS <span id="chats-badge" style="display:none;background:#ff4d6d;color:#000;font-family:'Orbitron';font-size:9px;padding:2px 6px;border-radius:8px;margin-left:4px;font-weight:900"></span></button>
     <button class="dash-tab" onclick="switchTab('reviews',this)">⭐ BEWERTUNGEN</button>
+    <button class="dash-tab" onclick="switchTab('newsletter',this)">📧 NEWSLETTER</button>
   </div>
 
   <!-- PANEL: LIVE -->
@@ -472,6 +473,102 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
       <button class="dash-action" style="background:rgba(0,242,255,.1);color:#00f2ff;border-color:rgba(0,242,255,.3)" onclick="previewReviewEmail()">👁️ E-MAIL-VORSCHAU</button>
     </div>
     <div id="reviews-container"><div style="text-align:center;color:#666;padding:40px;font-family:Orbitron;font-size:11px;letter-spacing:2px">LADE BESTELLUNGEN ...</div></div>
+  </div>
+
+  <!-- PANEL: NEWSLETTER -->
+  <div class="dash-panel" id="panel-newsletter">
+    <div class="arch-banner" style="background:linear-gradient(135deg,rgba(0,242,255,.08),rgba(188,19,254,.05));border-color:rgba(0,242,255,.3)">
+      📧 <strong>Newsletter-Versand</strong> · Sende Angebote, neue Releases und News an alle Abonnenten · Maximal 1–2 Mails/Monat (kein Spam) · Brevo-API
+    </div>
+
+    <div id="nl-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:14px 0">
+      <div style="background:rgba(0,242,255,.05);border:1px solid rgba(0,242,255,.2);border-radius:10px;padding:14px">
+        <div style="font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">ABONNENTEN GESAMT</div>
+        <div style="font-family:Orbitron;font-size:24px;font-weight:900;color:var(--neon)" id="nl-count-total">–</div>
+      </div>
+      <div style="background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.2);border-radius:10px;padding:14px">
+        <div style="font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">AKTIV</div>
+        <div style="font-family:Orbitron;font-size:24px;font-weight:900;color:#00ff88" id="nl-count-active">–</div>
+      </div>
+      <div style="background:rgba(255,174,0,.05);border:1px solid rgba(255,174,0,.2);border-radius:10px;padding:14px">
+        <div style="font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">DIESE WOCHE NEU</div>
+        <div style="font-family:Orbitron;font-size:24px;font-weight:900;color:#ffae00" id="nl-count-week">–</div>
+      </div>
+      <div style="background:rgba(188,19,254,.05);border:1px solid rgba(188,19,254,.2);border-radius:10px;padding:14px">
+        <div style="font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">LETZTER VERSAND</div>
+        <div style="font-family:Orbitron;font-size:13px;font-weight:700;color:#bc13fe" id="nl-last-send">noch nie</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px" id="nl-grid">
+      <!-- COMPOSER -->
+      <div style="background:rgba(8,8,12,.6);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px">
+        <div style="font-family:Orbitron;font-size:12px;letter-spacing:3px;color:#fff;margin-bottom:14px">📝 NEUES ANGEBOT KOMPONIEREN</div>
+
+        <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">VORLAGE</label>
+        <select class="fin-sel" id="nl-template" onchange="nlLoadTemplate(this.value)" style="width:100%;margin-bottom:14px">
+          <option value="">— Eigene Mail —</option>
+          <option value="drop">🎮 Neues Produkt / Drop</option>
+          <option value="sale">🔥 Rabatt-Aktion</option>
+          <option value="repair">🔧 Reparatur-Angebot</option>
+          <option value="news">📰 Update / News</option>
+        </select>
+
+        <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">BETREFF</label>
+        <input type="text" id="nl-subject" placeholder="z.B. Neues LXRD Elite Pro · 15% nur diese Woche" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:14px;box-sizing:border-box">
+
+        <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">HEADLINE (groß im Header)</label>
+        <input type="text" id="nl-headline" placeholder="z.B. NEU EINGETROFFEN" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:14px;box-sizing:border-box">
+
+        <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">HAUPTTEXT</label>
+        <textarea id="nl-body" rows="6" placeholder="Schreibe hier deinen Angebotstext. HTML erlaubt (z.B. &lt;strong&gt;, &lt;br&gt;)" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:14px;box-sizing:border-box;resize:vertical;line-height:1.6"></textarea>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+          <div>
+            <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">RABATT-CODE (optional)</label>
+            <input type="text" id="nl-code" placeholder="z.B. ELITE15" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:'Courier New';font-size:14px;letter-spacing:3px;text-transform:uppercase;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">CTA-LINK</label>
+            <input type="text" id="nl-cta-url" value="https://lexord.de" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;box-sizing:border-box">
+          </div>
+        </div>
+
+        <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">CTA-BUTTON-TEXT</label>
+        <input type="text" id="nl-cta-text" value="JETZT ENTDECKEN" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:18px;box-sizing:border-box">
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="dash-action" onclick="nlPreview()" style="background:rgba(0,242,255,.1);color:#00f2ff;border:1px solid rgba(0,242,255,.3)">👁️ VORSCHAU</button>
+          <button class="dash-action" onclick="nlSendTest()" style="background:rgba(255,174,0,.1);color:#ffae00;border:1px solid rgba(255,174,0,.3)">📨 TEST AN MICH</button>
+          <button class="dash-action" onclick="nlSendAll()" style="background:linear-gradient(135deg,#00f2ff,#bc13fe);color:#000;font-weight:900;border:none">🚀 AN ALLE SENDEN (<span id="nl-target-count">0</span>)</button>
+        </div>
+      </div>
+
+      <!-- PREVIEW -->
+      <div style="background:rgba(8,8,12,.6);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px">
+        <div style="font-family:Orbitron;font-size:12px;letter-spacing:3px;color:#fff;margin-bottom:14px">📱 LIVE-VORSCHAU</div>
+        <div id="nl-preview" style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:10px;padding:8px;max-height:560px;overflow-y:auto">
+          <div style="color:#444;font-size:11px;text-align:center;padding:60px 20px;font-family:Orbitron;letter-spacing:2px">VORSCHAU ERSCHEINT HIER ↑</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABONNENTEN-LISTE -->
+    <div style="background:rgba(8,8,12,.6);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px;margin-top:18px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+        <div style="font-family:Orbitron;font-size:12px;letter-spacing:3px;color:#fff">👥 ABONNENTEN-LISTE</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input type="text" class="search-input" id="nl-search" placeholder="🔍 Suche E-Mail …" oninput="nlFilter()" style="min-width:200px">
+          <button class="dash-action" onclick="loadNewsletter()">↻ AKTUALISIEREN</button>
+          <button class="dash-action" onclick="nlExportCsv()">⤓ CSV EXPORT</button>
+        </div>
+      </div>
+      <div id="nl-list"><div style="text-align:center;color:#666;padding:30px;font-family:Orbitron;font-size:10px;letter-spacing:2px">LADE ABONNENTEN ...</div></div>
+    </div>
+
+    <div style="margin-top:14px;font-size:10px;color:#555;line-height:1.7;padding:14px;background:rgba(0,0,0,.4);border-radius:10px;border:1px solid rgba(255,255,255,.04)">
+      <strong style="color:#888">DSGVO-Hinweis:</strong> Jede Mail enthält automatisch den Abmelde-Link. Empfehlung: maximal 1–2 Mails pro Monat versenden, sonst Spam-Risiko. Vor jedem Versand „Test an mich" probieren.
+    </div>
   </div>
 
   <!-- PANEL: FINANZEN / STEUERAUFSTELLUNG -->
@@ -1906,7 +2003,184 @@ function switchTab(tab, btn){
   if(tab === 'widerrufe') loadWiderrufe();
   if(tab === 'chats') loadChats();
   if(tab === 'reviews') loadReviewOrders();
+  if(tab === 'newsletter') loadNewsletter();
   if(tab === 'live') { loadLive(); resizeGlobe(); }
+}
+
+/* ════════ NEWSLETTER-VERSAND ════════ */
+let NL_SUBSCRIBERS = [];
+const NL_TEMPLATES = {
+  drop: {
+    subject: 'Neu eingetroffen · ',
+    headline: 'NEU IM SHOP',
+    body: 'Wir haben etwas Neues für dich.<br><br>Ein neuer LEXORD-Controller ist soeben in den Shop gewandert — handgefertigt in Domsühl, performance-optimiert, individuell konfigurierbar.<br><br><strong>Sichere dir deinen Drop, solange die Stückzahl reicht.</strong>',
+    code: '',
+    ctaText: 'JETZT ANSEHEN'
+  },
+  sale: {
+    subject: 'Diese Woche · ',
+    headline: 'EXKLUSIV FÜR DICH',
+    body: 'Als Newsletter-Abonnent bekommst du diese Woche einen exklusiven Rabatt.<br><br>Gilt auf <strong>alle Controller im Shop</strong> — nur solange der Vorrat reicht. Code im Checkout einlösen.',
+    code: 'INSIDER10',
+    ctaText: 'CODE EINLÖSEN'
+  },
+  repair: {
+    subject: 'Stick-Drift? Wir reparieren das.',
+    headline: 'REPARATUR-SERVICE',
+    body: 'Dein Controller spinnt? Sticks driften, Tasten klemmen, HDMI defekt?<br><br>Wir reparieren <strong>alle gängigen Konsolen</strong> zu <strong>Festpreisen</strong>. 24-Monate-Garantie. Versand kostenlos.',
+    code: '',
+    ctaText: 'REPARATUR ANFRAGEN'
+  },
+  news: {
+    subject: 'Update aus dem LEXORD-Atelier',
+    headline: 'WAS WIR GEBAUT HABEN',
+    body: 'Hi,<br><br>kurzes Update aus dem Atelier in Domsühl. Wir haben in den letzten Wochen viel an unseren Controllern verbessert — neue Paddle-Systeme, präzisere Hall-Effect-Sticks, mehr Konfigurations-Optionen.<br><br>Schau gern vorbei.',
+    code: '',
+    ctaText: 'ENTDECKEN'
+  }
+};
+
+function nlLoadTemplate(key){
+  if(!key) return;
+  const t = NL_TEMPLATES[key];
+  if(!t) return;
+  document.getElementById('nl-subject').value = t.subject;
+  document.getElementById('nl-headline').value = t.headline;
+  document.getElementById('nl-body').value = t.body;
+  document.getElementById('nl-code').value = t.code;
+  document.getElementById('nl-cta-text').value = t.ctaText;
+  nlPreview();
+}
+
+function nlBuildHtml(){
+  const subject = (document.getElementById('nl-subject').value||'').trim();
+  const headline = (document.getElementById('nl-headline').value||'').trim();
+  const body = (document.getElementById('nl-body').value||'').trim();
+  const code = (document.getElementById('nl-code').value||'').trim().toUpperCase();
+  const ctaUrl = (document.getElementById('nl-cta-url').value||'https://lexord.de').trim();
+  const ctaText = (document.getElementById('nl-cta-text').value||'JETZT ENTDECKEN').trim();
+  const codeBlock = code ? `<div style="background:#000;border:1px dashed #00f2ff;border-radius:10px;padding:18px;margin:18px 0;text-align:center"><div style="font-size:10px;letter-spacing:3px;color:#888;margin-bottom:8px">DEIN CODE</div><div style="font-family:'Courier New',monospace;font-size:22px;letter-spacing:6px;color:#00f2ff;font-weight:900">${code}</div></div>` : '';
+  return `<!DOCTYPE html><html lang="de"><body style="margin:0;padding:0;background:#0a0a0a;font-family:Arial,Helvetica,sans-serif;color:#eee">
+  <div style="max-width:560px;margin:0 auto;padding:32px 24px">
+    <div style="text-align:center;font-family:'Arial Black',sans-serif;font-size:22px;letter-spacing:6px;color:#fff;margin-bottom:6px">LEX<span style="color:#00f2ff">O</span>RD<sup style="font-size:9px;color:#00f2ff">&reg;</sup></div>
+    <div style="text-align:center;font-size:10px;letter-spacing:3px;color:#888;margin-bottom:28px">ENGINEERING &middot; MADE IN GERMANY</div>
+    <div style="background:linear-gradient(135deg,#0e0e0e,#141414);border:1px solid #1c1c1c;border-radius:14px;padding:28px 24px">
+      <div style="text-align:center;font-size:11px;letter-spacing:4px;color:#00f2ff;font-weight:900;margin-bottom:14px">${headline||'NEWS'}</div>
+      <div style="font-size:14px;color:#bbb;line-height:1.8;margin-bottom:18px">${body}</div>
+      ${codeBlock}
+      <div style="text-align:center;margin-top:22px"><a href="${ctaUrl}" style="display:inline-block;background:linear-gradient(135deg,#00f2ff,#bc13fe);color:#000;text-decoration:none;padding:14px 32px;border-radius:8px;font-weight:900;letter-spacing:2px;font-size:11px">${ctaText}</a></div>
+    </div>
+    <div style="text-align:center;font-size:10px;color:#555;margin-top:22px;line-height:1.6">
+      LEXORD&reg; &middot; Leon Schulz &middot; An Der Domsühler Str. 2 &middot; 19374 Domsühl<br>
+      <a href="mailto:kontakt@lexord.de?subject=Newsletter%20abmelden" style="color:#666">Abmelden</a>
+    </div>
+  </div></body></html>`;
+}
+
+function nlPreview(){
+  const html = nlBuildHtml();
+  document.getElementById('nl-preview').innerHTML = '<iframe srcdoc="'+html.replace(/"/g,'&quot;')+'" style="width:100%;height:540px;border:0;border-radius:6px;background:#0a0a0a"></iframe>';
+}
+
+async function loadNewsletter(){
+  const tk = sessionStorage.getItem('lxrd_admin_token');
+  try{
+    const r = await fetch(CF_WORKER_URL+'/api/admin/newsletter/list',{headers:{'Authorization':'Bearer '+tk}});
+    const d = await r.json();
+    NL_SUBSCRIBERS = d.subscribers || [];
+  }catch(e){ NL_SUBSCRIBERS = []; }
+  nlRender();
+}
+
+function nlRender(){
+  const active = NL_SUBSCRIBERS.filter(s=>s.active!==false);
+  const total = NL_SUBSCRIBERS.length;
+  document.getElementById('nl-count-total').textContent = total;
+  document.getElementById('nl-count-active').textContent = active.length;
+  document.getElementById('nl-target-count').textContent = active.length;
+  const weekAgo = Date.now() - 7*24*3600*1000;
+  const newWeek = NL_SUBSCRIBERS.filter(s=>s.subscribed && new Date(s.subscribed).getTime()>weekAgo).length;
+  document.getElementById('nl-count-week').textContent = newWeek;
+  const last = localStorage.getItem('lxrd_nl_last_send');
+  document.getElementById('nl-last-send').textContent = last ? new Date(last).toLocaleDateString('de-DE') : 'noch nie';
+  nlFilter();
+}
+
+function nlFilter(){
+  const q = (document.getElementById('nl-search').value||'').toLowerCase().trim();
+  const list = q ? NL_SUBSCRIBERS.filter(s=>(s.email||'').toLowerCase().includes(q)) : NL_SUBSCRIBERS;
+  const c = document.getElementById('nl-list');
+  if(!list.length){ c.innerHTML = '<div style="text-align:center;color:#666;padding:30px;font-family:Orbitron;font-size:10px;letter-spacing:2px">KEINE ABONNENTEN GEFUNDEN</div>'; return; }
+  c.innerHTML = '<div style="max-height:340px;overflow-y:auto">' + list.slice().reverse().map(s=>{
+    const d = s.subscribed ? new Date(s.subscribed).toLocaleDateString('de-DE') : '–';
+    const status = s.active===false ? '<span style="color:#ff4d6d">abgemeldet</span>' : '<span style="color:#00ff88">aktiv</span>';
+    return `<div style="display:grid;grid-template-columns:1fr auto auto auto;gap:12px;align-items:center;padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px">
+      <span style="color:#ccc;font-family:'Courier New';word-break:break-all">${s.email||'–'}</span>
+      <span style="color:#666;font-size:10px;font-family:Orbitron">${d}</span>
+      <span style="font-size:10px;font-family:Orbitron;letter-spacing:1px">${status}</span>
+      <button onclick="nlUnsubscribe('${(s.email||'').replace(/'/g,'')}')" style="background:transparent;border:1px solid rgba(255,77,109,.3);color:#ff4d6d;border-radius:6px;padding:4px 10px;font-size:9px;cursor:pointer;font-family:Orbitron;letter-spacing:1px">ABMELDEN</button>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+async function nlUnsubscribe(email){
+  if(!email || !confirm('Abonnent '+email+' wirklich abmelden?')) return;
+  const tk = sessionStorage.getItem('lxrd_admin_token');
+  try{
+    const r = await fetch(CF_WORKER_URL+'/api/admin/newsletter/unsubscribe',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},body:JSON.stringify({email})});
+    const d = await r.json();
+    if(d.success){ toast('✓ Abgemeldet','ok'); loadNewsletter(); }
+    else toast('Fehler: '+(d.error||''),'err');
+  }catch(e){ toast('Fehler','err'); }
+}
+
+function nlExportCsv(){
+  const rows = [['email','subscribed','active','source']];
+  NL_SUBSCRIBERS.forEach(s=>rows.push([s.email||'',s.subscribed||'',(s.active!==false)?'1':'0',s.source||'']));
+  const csv = rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'newsletter-abonnenten-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+  toast('✓ CSV exportiert','ok');
+}
+
+async function nlSendTest(){
+  const subject = document.getElementById('nl-subject').value.trim();
+  if(!subject){ toast('Betreff fehlt','err'); return; }
+  const to = prompt('Test-Mail an welche E-Mail senden?','kontakt@lexord.de');
+  if(!to || !to.includes('@')) return;
+  const html = nlBuildHtml();
+  const tk = sessionStorage.getItem('lxrd_admin_token');
+  try{
+    const r = await fetch(CF_WORKER_URL+'/api/admin/newsletter/test',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},body:JSON.stringify({to,subject:'[TEST] '+subject,html})});
+    const d = await r.json();
+    if(d.success){ toast('✓ Test-Mail gesendet an '+to,'ok'); }
+    else toast('Fehler: '+(d.error||''),'err');
+  }catch(e){ toast('Fehler beim Senden','err'); }
+}
+
+async function nlSendAll(){
+  const subject = document.getElementById('nl-subject').value.trim();
+  if(!subject){ toast('Betreff fehlt','err'); return; }
+  const active = NL_SUBSCRIBERS.filter(s=>s.active!==false);
+  if(!active.length){ toast('Keine Abonnenten','err'); return; }
+  if(!confirm('Newsletter an '+active.length+' Abonnenten senden?\n\nBetreff: '+subject+'\n\nDieser Vorgang kann nicht rückgängig gemacht werden.')) return;
+  const html = nlBuildHtml();
+  const tk = sessionStorage.getItem('lxrd_admin_token');
+  toast('Sende an '+active.length+' Empfänger...','ok');
+  try{
+    const r = await fetch(CF_WORKER_URL+'/api/admin/newsletter/send',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},body:JSON.stringify({subject,html})});
+    const d = await r.json();
+    if(d.success){
+      toast('✓ '+(d.sent||0)+' Mails gesendet, '+(d.failed||0)+' fehlgeschlagen','ok');
+      localStorage.setItem('lxrd_nl_last_send', new Date().toISOString());
+      loadNewsletter();
+    } else {
+      toast('Fehler: '+(d.error||''),'err');
+    }
+  }catch(e){ toast('Fehler beim Senden','err'); }
 }
 
 /* ════════ BEWERTUNGS-KAMPAGNE — nutzt /admin/orders + lokales Tracking ════════ */

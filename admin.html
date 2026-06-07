@@ -2298,7 +2298,7 @@ const NL_TEMPLATES = {
   drop: {
     subject: 'Neu eingetroffen · ',
     headline: 'NEU IM SHOP',
-    body: 'Wir haben etwas Neues für dich.<br><br>Ein neuer LEXORD-Controller ist soeben in den Shop gewandert — handgefertigt in Domsühl, performance-optimiert, individuell konfigurierbar.<br><br><strong>Sichere dir deinen Drop, solange die Stückzahl reicht.</strong>',
+    body: 'Wir haben etwas Neues für dich.<br><br>Ein neuer LEXORD-Controller ist soeben in den Shop gewandert — handgefertigt in Deutschland, performance-optimiert, individuell konfigurierbar.<br><br><strong>Sichere dir deinen Drop, solange die Stückzahl reicht.</strong>',
     code: '',
     ctaText: 'JETZT ANSEHEN'
   },
@@ -2319,7 +2319,7 @@ const NL_TEMPLATES = {
   news: {
     subject: 'Update aus dem LEXORD-Atelier',
     headline: 'WAS WIR GEBAUT HABEN',
-    body: 'Hi,<br><br>kurzes Update aus dem Atelier in Domsühl. Wir haben in den letzten Wochen viel an unseren Controllern verbessert — neue Paddle-Systeme, präzisere Hall-Effect-Sticks, mehr Konfigurations-Optionen.<br><br>Schau gern vorbei.',
+    body: 'Hi,<br><br>kurzes Update aus dem Atelier. Wir haben in den letzten Wochen viel an unseren Controllern verbessert — neue Paddle-Systeme, präzisere Hall-Effect-Sticks, mehr Konfigurations-Optionen.<br><br>Schau gern vorbei.',
     code: '',
     ctaText: 'ENTDECKEN'
   }
@@ -2356,7 +2356,7 @@ function nlBuildHtml(){
       <div style="text-align:center;margin-top:22px"><a href="${ctaUrl}" style="display:inline-block;background:linear-gradient(135deg,#00f2ff,#bc13fe);color:#000;text-decoration:none;padding:14px 32px;border-radius:8px;font-weight:900;letter-spacing:2px;font-size:11px">${ctaText}</a></div>
     </div>
     <div style="text-align:center;font-size:10px;color:#555;margin-top:22px;line-height:1.6">
-      LEXORD&reg; &middot; Leon Schulz &middot; An Der Domsühler Str. 2 &middot; 19374 Domsühl<br>
+      LEXORD&reg; Engineering &middot; Leon Schulz &middot; Made in Germany &middot; <a href="https://lexord.de/#impressum" style="color:#666">Impressum</a><br>
       <a href="mailto:kontakt@lexord.de?subject=Newsletter%20abmelden" style="color:#666">Abmelden</a>
     </div>
   </div></body></html>`;
@@ -2727,7 +2727,7 @@ function buildReviewEmailBody(name){
     'Hi ' + n + ',',
     '',
     'danke fuer dein Vertrauen in LEXORD! Jeder Controller wird von mir',
-    'persoenlich in der Werkstatt in Domsuehl gebaut - und ich bin neugierig:',
+    'persoenlich in unserer deutschen Werkstatt gebaut - und ich bin neugierig:',
     'wie war\'s?',
     '',
     'Eine kurze Bewertung hilft uns sehr - und du bekommst 5 % Rabatt fuer',
@@ -2840,7 +2840,7 @@ function openMailtoFallback(o){
   const subject = encodeURIComponent("Wie war's? Bewerte uns - 5% Rabatt als Dankeschoen");
   const body = encodeURIComponent(
     'Hi ' + name + ',\n\n' +
-    'danke fuer dein Vertrauen in LEXORD! Jeder Controller wird von mir persoenlich in der Werkstatt in Domsuehl gebaut - und ich bin neugierig: wie war\'s?\n\n' +
+    'danke fuer dein Vertrauen in LEXORD! Jeder Controller wird von mir persoenlich in unserer deutschen Werkstatt gebaut - und ich bin neugierig: wie war\'s?\n\n' +
     'Eine kurze Bewertung hilft uns sehr:\n\n' +
     '★ Google:     https://share.google/LyDufjCSigZwLBLwS\n' +
     '★ Trustpilot: https://de.trustpilot.com/review/Lexord.de\n\n' +
@@ -2887,7 +2887,7 @@ function buildLocalReviewPreview(name){
     '</td></tr>'+
     '<tr><td style="background:#0a0a0a;padding:36px 40px 10px;color:#ccc;font-size:15px;line-height:1.75">'+
       '<p style="margin:0 0 14px;color:#fff;font-size:16px">Hi <strong>'+name+'</strong>,</p>'+
-      '<p style="margin:0 0 14px">danke, dass du LEXORD vertraut hast! Jeder Controller wird von <strong style="color:#fff">mir persönlich</strong> in der Werkstatt in Domsühl gebaut — und ich bin neugierig: <strong style="color:#00f2ff">wie war\'s?</strong></p>'+
+      '<p style="margin:0 0 14px">danke, dass du LEXORD vertraut hast! Jeder Controller wird von <strong style="color:#fff">mir persönlich</strong> in unserer deutschen Werkstatt gebaut — und ich bin neugierig: <strong style="color:#00f2ff">wie war\'s?</strong></p>'+
       '<p style="margin:0">Eine kurze Bewertung — Google oder Trustpilot — hilft anderen Gamern, uns zu finden. Als Dankeschön bekommst du <strong style="color:#ffae00">5 % Rabatt auf deine nächste Bestellung</strong>.</p>'+
     '</td></tr>'+
     '<tr><td style="background:#0a0a0a;padding:30px 40px">'+

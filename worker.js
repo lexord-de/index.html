@@ -660,7 +660,7 @@ async function updateRepair(request, env, repNr) {
       noteHtml + priceHtml + trackHtml +
       "<p style=\"margin-top:24px\">Status verfolgen: <a href=\"https://lexord.de\" style=\"color:" + msg.color + "\">lexord.de</a> &rarr; LOGIN</p>" +
       "</div>" +
-      "<div style=\"background:#0a0a0a;padding:24px;text-align:center;font-size:10px;color:#888\">LEXORD Engineering &middot; An Der Domsuehler Str. 2 &middot; 19374 Domsuehl<br>kontakt@lexord.de &middot; 0152 047 18720</div>" +
+      "<div style=\"background:#0a0a0a;padding:24px;text-align:center;font-size:10px;color:#888\">LEXORD Engineering &middot; Made in Germany &middot; kontakt@lexord.de &middot; 0152 047 18720 &middot; <a href=\"https://lexord.de/#impressum\" style=\"color:#888\">Impressum</a></div>" +
       "</div></body></html>";
 
     try {
@@ -689,7 +689,7 @@ async function chatWithAI(request, env) {
   const customerEmail = body.email || "";
   const source = body.source || (sessionId.startsWith("rep-") ? "reparatur" : "index");
 
-  const systemPrompt = `Du bist die freundliche KI-Assistentin von LEXORD Engineering, einem deutschen Custom PS5 Controller Shop aus Domsuehl.
+  const systemPrompt = `Du bist die freundliche KI-Assistentin von LEXORD Engineering, einem deutschen Custom PS5 Controller Shop.
 
 WICHTIG:
 - Antworte IMMER auf Deutsch
@@ -698,6 +698,7 @@ WICHTIG:
 - Bei komplexen Reklamationen / spezifischen Bestellungen: sage dass Leon Schulz sich innerhalb 24h persoenlich meldet
 - Bei Reparaturen: leite auf das Reparatur-Formular auf lexord.de hin
 - Bei Bestellungs-Tracking: leite auf "Login" oben rechts auf lexord.de hin
+- Nenne NIEMALS einen Ort, Stadtnamen, Dorfnamen oder ein Bundesland — sage stattdessen "Made in Germany" oder "deutsche Manufaktur"
 
 PRODUKTE / PREISE:
 - LXRD Performance Black: 240 EUR (TMR Sticks, Clicky Trigger, GRIP Gehaeuse, 2x Paddles)
@@ -971,7 +972,7 @@ async function newsletterSubscribe(request, env) {
           <a href="https://lexord.de" style="display:inline-block;margin-top:12px;background:linear-gradient(135deg,#00f2ff,#bc13fe);color:#000;text-decoration:none;padding:13px 28px;border-radius:8px;font-weight:900;letter-spacing:2px;font-size:11px">JETZT SHOPPEN</a>
         </div>
         <div style="text-align:center;font-size:10px;color:#555;margin-top:22px;line-height:1.6">
-          LEXORD® · Leon Schulz · An Der Domsühler Str. 2 · 19374 Domsühl<br>
+          LEXORD® Engineering · Leon Schulz · Made in Germany · <a href="https://lexord.de/#impressum" style="color:#555">Impressum</a><br>
           Du hast dich angemeldet auf: ${source}<br>
           <a href="mailto:kontakt@lexord.de?subject=Newsletter%20abmelden&body=Bitte%20abmelden:%20${encodeURIComponent(email)}" style="color:#666">Abmelden</a>
         </div>
@@ -1102,6 +1103,7 @@ REGELN:
 - Sprache: Deutsch
 - Tonfall: direkt, selbstbewusst, technisch-praezise. Nie kitschig.
 - Verkaufsargumente einbauen: handgefertigt, Hall-Effect/TMR Sticks, 24 Monate Garantie, schneller Versand aus Deutschland
+- Nenne NIEMALS einen konkreten Ort, Stadt, Dorf, Bundesland oder eine Adresse — nur "Made in Germany" / "deutsche Manufaktur"
 
 PRODUKTE (nutze nur diese, mit echten Preisen):
 - LXRD Elite Pro 280 EUR · LXRD Performance 240 EUR · LXRD Stealth 220 EUR · LXRD Plus 180 EUR · LXRD Basic 105 EUR
@@ -1707,7 +1709,7 @@ async function adminBlogAiGenerate(request, env) {
   const keywords = String(b.keywords || "").slice(0, 200);
   const tone = String(b.tone || "informativ-direkt").slice(0, 60);
 
-  const systemPrompt = `Du bist SEO-Redakteurin fuer LEXORD Engineering, deutscher Custom-PS5-Controller-Shop in Domsuehl. Du schreibst Magazin-Artikel auf Deutsch, die auf Google ranken sollen.
+  const systemPrompt = `Du bist SEO-Redakteurin fuer LEXORD Engineering, eine deutsche Custom-PS5-Controller-Manufaktur. Du schreibst Magazin-Artikel auf Deutsch, die auf Google ranken sollen.
 
 REGELN:
 - Antworte NUR mit reinem JSON. Kein Markdown. Kein Text davor oder danach.
@@ -1720,11 +1722,11 @@ REGELN:
 - Mindestens eine <ul>-Liste mit konkreten Punkten
 - Schluss-Absatz mit klarer Handlungs-Empfehlung + dezenter Verweis auf LEXORD-Produkt/Service (z.B. <a href="/reparatur.html">Reparatur-Service</a>, <a href="/printing-service.html">3D-Print-Service</a>, <a href="/konfigurator.html">Konfigurator</a>)
 - Keywords natuerlich einbauen, KEINE Keyword-Stuffing
+- Nenne NIEMALS einen konkreten Ort, Stadt, Dorf, Bundesland oder eine Adresse — schreibe immer nur "Made in Germany", "deutsche Manufaktur" oder "handgefertigt in Deutschland"
 
 LEXORD-KONTEXT:
 - Custom PS5 Controller ab 105 EUR · Reparatur ab 15 EUR · 3D-Printing-Service · Hall-Effect/TMR Upgrade-Kits
-- Standort: Domsuehl (Mecklenburg-Vorpommern), Made in Germany
-- 24 Monate Garantie · 1-3 Werktage Versand DE
+- Made in Germany · handgefertigt · 24 Monate Garantie · 1-3 Werktage Versand DE
 
 JSON-SCHEMA:
 {"title":"Titel max 70 Zeichen, SEO-stark","excerpt":"Meta-Description 140-160 Zeichen","content":"HTML 800-1400 Woerter","keywords":["array","mit","5-8","keywords"],"category":"${category}"}`;

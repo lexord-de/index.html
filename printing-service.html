@@ -199,7 +199,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 
 <!-- HERO -->
 <section class="hero">
-  <div class="eyebrow rv">⟫ 3D-DRUCK-WERKSTATT · DOMSÜHL ⟪</div>
+  <div class="eyebrow rv">⟫ 3D-DRUCK-WERKSTATT · MADE IN GERMANY ⟪</div>
   <h1 class="headline rv">3D-DRUCK <span class="accent">SERVICE</span></h1>
   <p class="sub rv">Custom Paddles &amp; kleine Ersatzteile für PS5 DualSense, DualSense Edge und PS4 DualShock. Aus Bio-PETG. Hochauflösend gedruckt. Made in Germany.</p>
 
@@ -208,42 +208,165 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
     <a href="#custom" class="btn s">CUSTOM ANFRAGE</a>
   </div>
 
-  <!-- Animated 3D Printer SVG -->
+  <!-- Realistic 3D Printer Animation (CoreXY · Bambu/Prusa-inspired) -->
   <div class="print-vis rv">
-    <svg viewBox="0 0 400 280">
+    <svg viewBox="0 0 500 360" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="prntBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1a24"/><stop offset="1" stop-color="#080812"/></linearGradient>
-        <linearGradient id="bed" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#333"/><stop offset="1" stop-color="#111"/></linearGradient>
-        <linearGradient id="paddle" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00f2ff"/><stop offset="1" stop-color="#bc13fe"/></linearGradient>
+        <linearGradient id="frame-g" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#2a2a30"/><stop offset="1" stop-color="#0e0e12"/>
+        </linearGradient>
+        <linearGradient id="hotend-g" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#3a3a40"/><stop offset=".5" stop-color="#1a1a1f"/><stop offset="1" stop-color="#0a0a0e"/>
+        </linearGradient>
+        <linearGradient id="bed-g" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#4a4a52"/><stop offset="1" stop-color="#1a1a22"/>
+        </linearGradient>
+        <linearGradient id="paddle-g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#0a0a0e"/><stop offset=".5" stop-color="#1a1a22"/><stop offset="1" stop-color="#0a0a0e"/>
+        </linearGradient>
+        <radialGradient id="nozzle-g"><stop offset="0" stop-color="#ff6b35"/><stop offset=".6" stop-color="#ff3300"/><stop offset="1" stop-color="#990000"/></radialGradient>
+        <radialGradient id="spool-g"><stop offset="0" stop-color="#00f2ff"/><stop offset=".7" stop-color="#0099cc"/><stop offset="1" stop-color="#005566"/></radialGradient>
+        <linearGradient id="glass-g" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="rgba(0,242,255,.04)"/><stop offset="1" stop-color="rgba(0,242,255,.01)"/>
+        </linearGradient>
+        <filter id="hot-glow"><feGaussianBlur stdDeviation="2.5"/></filter>
       </defs>
-      <!-- Frame -->
-      <rect x="40" y="30" width="320" height="220" rx="8" fill="none" stroke="#2a2a3a" stroke-width="2"/>
-      <!-- Top X-axis -->
-      <rect x="40" y="50" width="320" height="6" fill="#1a1a24" stroke="#2a2a3a" stroke-width=".5"/>
-      <!-- Print head moving -->
+
+      <!-- Glass enclosure backdrop -->
+      <rect x="40" y="20" width="420" height="320" rx="10" fill="url(#glass-g)" stroke="rgba(0,242,255,.15)" stroke-width="1"/>
+
+      <!-- Outer frame uprights -->
+      <rect x="40" y="20" width="14" height="320" fill="url(#frame-g)" stroke="#000" stroke-width=".5"/>
+      <rect x="446" y="20" width="14" height="320" fill="url(#frame-g)" stroke="#000" stroke-width=".5"/>
+      <rect x="40" y="20" width="420" height="14" fill="url(#frame-g)" stroke="#000" stroke-width=".5"/>
+      <rect x="40" y="326" width="420" height="14" fill="url(#frame-g)" stroke="#000" stroke-width=".5"/>
+
+      <!-- X-axis gantry (horizontal beam at top) -->
       <g>
-        <animateTransform attributeName="transform" type="translate" values="0 0; 220 0; 50 0; 280 0; 0 0" dur="8s" repeatCount="indefinite"/>
-        <rect x="80" y="48" width="22" height="20" rx="2" fill="#2a2a3a" stroke="var(--neon)" stroke-width="1"/>
-        <line x1="91" y1="68" x2="91" y2="85" stroke="#ff4d6d" stroke-width="2"/>
-        <circle cx="91" cy="88" r="3" fill="#ff4d6d"><animate attributeName="r" values="3;4;3" dur=".4s" repeatCount="indefinite"/></circle>
+        <animateTransform attributeName="transform" type="translate" values="0 0; 0 0; 0 0" dur="9s" repeatCount="indefinite" additive="sum"/>
+        <rect x="54" y="60" width="392" height="12" fill="#1a1a24" stroke="#2a2a30" stroke-width=".8"/>
+        <line x1="54" y1="66" x2="446" y2="66" stroke="#00f2ff" stroke-width=".6" opacity=".25"/>
+        <!-- Y-axis rails (going back) -->
+        <line x1="60" y1="40" x2="60" y2="60" stroke="#444" stroke-width=".6"/>
+        <line x1="440" y1="40" x2="440" y2="60" stroke="#444" stroke-width=".6"/>
       </g>
+
+      <!-- Print head carriage (moves on X-axis) -->
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0; 200 0; 60 0; 260 0; 100 0; 220 0; 40 0; 0 0" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1; 0.4 0 0.6 1; 0.4 0 0.6 1; 0.4 0 0.6 1; 0.4 0 0.6 1; 0.4 0 0.6 1; 0.4 0 0.6 1"/>
+        <!-- Carriage body -->
+        <rect x="120" y="56" width="34" height="22" rx="2" fill="#2a2a30" stroke="#1a1a1f"/>
+        <rect x="124" y="60" width="26" height="3" fill="#444"/>
+        <!-- Fan vents -->
+        <circle cx="130" cy="70" r="2.5" fill="#1a1a1f" stroke="#3a3a40" stroke-width=".4"/>
+        <circle cx="144" cy="70" r="2.5" fill="#1a1a1f" stroke="#3a3a40" stroke-width=".4"/>
+        <!-- Hotend body -->
+        <path d="M 130 78 L 144 78 L 142 95 L 132 95 Z" fill="url(#hotend-g)" stroke="#1a1a1f"/>
+        <!-- Heater block (hot, glowing) -->
+        <rect x="129" y="95" width="16" height="8" rx="1" fill="#3a1a0e" stroke="#5a1a0e"/>
+        <rect x="129" y="95" width="16" height="8" rx="1" fill="url(#nozzle-g)" opacity=".7" filter="url(#hot-glow)"/>
+        <!-- Nozzle -->
+        <path d="M 135 103 L 139 103 L 137 109 Z" fill="url(#nozzle-g)"/>
+        <!-- Heat shimmer -->
+        <circle cx="137" cy="109" r="2" fill="#ff6b35" filter="url(#hot-glow)">
+          <animate attributeName="opacity" values=".4;.9;.4" dur=".8s" repeatCount="indefinite"/>
+          <animate attributeName="r" values="1.8;2.4;1.8" dur=".8s" repeatCount="indefinite"/>
+        </circle>
+        <!-- Extruded filament stream -->
+        <line x1="137" y1="109" x2="137" y2="218" stroke="#00f2ff" stroke-width="1.2" opacity=".6">
+          <animate attributeName="opacity" values=".3;.85;.3" dur=".4s" repeatCount="indefinite"/>
+        </line>
+      </g>
+
+      <!-- Filament spool (left side, rotating) -->
+      <g transform="translate(75,150)">
+        <circle r="36" fill="none" stroke="#2a2a30" stroke-width="1.5"/>
+        <circle r="34" fill="url(#spool-g)" opacity=".25"/>
+        <g>
+          <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="20s" repeatCount="indefinite"/>
+          <circle r="32" fill="none" stroke="#00f2ff" stroke-width="1" stroke-dasharray="3 2" opacity=".55"/>
+          <circle r="28" fill="none" stroke="#00f2ff" stroke-width=".6" stroke-dasharray="2 3" opacity=".4"/>
+          <circle r="24" fill="none" stroke="#00f2ff" stroke-width=".4" stroke-dasharray="1 2" opacity=".35"/>
+        </g>
+        <circle r="10" fill="#0e0e14" stroke="#2a2a30" stroke-width=".8"/>
+        <circle r="3" fill="#444"/>
+      </g>
+
+      <!-- Filament path from spool to extruder -->
+      <path id="filament-path" d="M 75 116 Q 75 80 110 75 Q 130 70 137 60" fill="none" stroke="#00f2ff" stroke-width="1.5" opacity=".55"/>
+      <circle r="1.8" fill="#00f2ff" opacity=".95">
+        <animateMotion dur="3s" repeatCount="indefinite"><mpath href="#filament-path"/></animateMotion>
+      </circle>
+
       <!-- Print bed -->
-      <rect x="60" y="180" width="280" height="14" rx="2" fill="url(#bed)" stroke="#333" stroke-width=".5"/>
-      <!-- The printed paddle (growing) -->
-      <g transform="translate(150,140)">
-        <rect x="0" y="0" width="100" height="40" rx="4" fill="url(#paddle)" opacity=".85">
-          <animate attributeName="height" values="2;40;40" dur="6s" begin="0s" repeatCount="indefinite"/>
-          <animate attributeName="y" values="38;0;0" dur="6s" begin="0s" repeatCount="indefinite"/>
-        </rect>
-        <text x="50" y="26" text-anchor="middle" font-family="Orbitron" font-size="10" font-weight="900" fill="#000" letter-spacing="2">PADDLE</text>
+      <rect x="80" y="240" width="340" height="22" rx="2" fill="url(#bed-g)" stroke="#1a1a22" stroke-width=".8"/>
+      <!-- Bed grid lines -->
+      <g stroke="#00f2ff" stroke-width=".3" opacity=".15">
+        <line x1="80" y1="246" x2="420" y2="246"/>
+        <line x1="80" y1="252" x2="420" y2="252"/>
+        <line x1="80" y1="258" x2="420" y2="258"/>
+        <line x1="130" y1="240" x2="130" y2="262"/>
+        <line x1="180" y1="240" x2="180" y2="262"/>
+        <line x1="230" y1="240" x2="230" y2="262"/>
+        <line x1="280" y1="240" x2="280" y2="262"/>
+        <line x1="330" y1="240" x2="330" y2="262"/>
+        <line x1="380" y1="240" x2="380" y2="262"/>
       </g>
-      <!-- Filament spool -->
-      <circle cx="370" cy="80" r="22" fill="none" stroke="var(--neon)" stroke-width="1.5"/>
-      <circle cx="370" cy="80" r="8" fill="#1a1a24" stroke="#2a2a3a"/>
-      <path d="M 370 102 Q 350 130 320 100 Q 290 70 260 90 Q 230 110 200 80" fill="none" stroke="var(--neon)" stroke-width="1" opacity=".5" stroke-dasharray="2 3"/>
-      <!-- LED status -->
-      <circle cx="55" cy="240" r="3" fill="var(--neon)"><animate attributeName="opacity" values=".3;1;.3" dur="2s" repeatCount="indefinite"/></circle>
-      <text x="65" y="244" font-family="Orbitron" font-size="6" fill="#666" letter-spacing="1">PRINTING</text>
+
+      <!-- Printed paddle growing layer by layer -->
+      <g transform="translate(180,180)">
+        <!-- Paddle shape: rounded rectangle with curve -->
+        <path d="M 0 60 Q 0 0 70 0 L 140 0 Q 150 0 150 10 L 150 50 Q 150 60 140 60 Z" fill="url(#paddle-g)" stroke="#00f2ff" stroke-width=".5" opacity=".95">
+          <animate attributeName="opacity" values="0;.4;.95;.95" dur="9s" repeatCount="indefinite"/>
+        </path>
+        <!-- Layer lines (visible build-up) -->
+        <g stroke="#00f2ff" stroke-width=".25" opacity=".3">
+          <line x1="10" y1="6" x2="140" y2="6"/>
+          <line x1="6" y1="12" x2="144" y2="12"/>
+          <line x1="3" y1="18" x2="147" y2="18"/>
+          <line x1="2" y1="24" x2="148" y2="24"/>
+          <line x1="0" y1="30" x2="150" y2="30"/>
+          <line x1="0" y1="36" x2="150" y2="36"/>
+          <line x1="0" y1="42" x2="150" y2="42"/>
+          <line x1="0" y1="48" x2="150" y2="48"/>
+          <line x1="0" y1="54" x2="150" y2="54"/>
+        </g>
+        <!-- Paddle label -->
+        <text x="75" y="34" text-anchor="middle" font-family="Orbitron" font-size="9" font-weight="900" fill="#00f2ff" opacity=".55" letter-spacing="3">PADDLE V2</text>
+        <!-- Clipping mask to show progressive build -->
+        <rect x="-2" y="0" width="155" height="62" fill="#0a0a0e" opacity="0">
+          <animate attributeName="opacity" values="1;1;0;0" dur="9s" repeatCount="indefinite"/>
+        </rect>
+      </g>
+
+      <!-- LCD status display (bottom-left) -->
+      <g transform="translate(60,300)">
+        <rect width="120" height="22" rx="2" fill="#0a0a12" stroke="#1a1a24"/>
+        <rect x="2" y="2" width="116" height="18" rx="1" fill="#001a1f"/>
+        <text x="8" y="9" font-family="Orbitron" font-size="5" fill="#00f2ff" letter-spacing="1.2">BIO-PETG · 215°C / 60°C</text>
+        <text x="8" y="16" font-family="Orbitron" font-size="5" fill="#00ff88" letter-spacing="1.2">
+          <tspan>STATUS: PRINTING ▌ </tspan>
+          <tspan>
+            <animate attributeName="opacity" values="0;1;1;0" dur="1.2s" repeatCount="indefinite"/>
+          </tspan>
+        </text>
+        <circle cx="113" cy="6" r="1.5" fill="#00ff88">
+          <animate attributeName="opacity" values=".3;1;.3" dur="1.5s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+
+      <!-- Progress bar -->
+      <g transform="translate(200,300)">
+        <text x="0" y="6" font-family="Orbitron" font-size="6" fill="#666" letter-spacing="2">LAYER 87 / 124</text>
+        <rect y="10" width="240" height="6" rx="1" fill="#0a0a14" stroke="#1a1a24" stroke-width=".4"/>
+        <rect y="10" width="0" height="6" rx="1" fill="#00f2ff" opacity=".85">
+          <animate attributeName="width" values="0;240;240;0" dur="9s" repeatCount="indefinite"/>
+        </rect>
+      </g>
+
+      <!-- Logo top-right corner -->
+      <text x="430" y="44" text-anchor="end" font-family="Orbitron" font-size="8" font-weight="900" fill="#00f2ff" letter-spacing="3" opacity=".8">LEXORD®</text>
+      <text x="430" y="52" text-anchor="end" font-family="Orbitron" font-size="4" fill="#666" letter-spacing="2">3D-PRINT-LAB</text>
     </svg>
   </div>
 

@@ -111,26 +111,14 @@ button{font-family:inherit}
 .rv-s{transform:scale(.94)}.rv-s.in{transform:scale(1)}
 .rv-d1{transition-delay:.08s}.rv-d2{transition-delay:.16s}.rv-d3{transition-delay:.24s}.rv-d4{transition-delay:.32s}
 
-/* Animated Hero Visual */
-.r-hero-visual{position:relative;width:min(440px,80vw);height:min(440px,80vw);margin:30px auto 10px;perspective:1000px}
-.r-hero-visual .ring{position:absolute;inset:0;border-radius:50%;border:1px dashed rgba(0,242,255,.18);animation:spin360 32s linear infinite}
-.r-hero-visual .ring.r2{inset:14%;animation-duration:24s;animation-direction:reverse;border-color:rgba(188,19,254,.18)}
-.r-hero-visual .ring.r3{inset:28%;animation-duration:18s;border-color:rgba(0,242,255,.25);border-style:solid;opacity:.4}
-.r-hero-visual .glow{position:absolute;inset:0;background:radial-gradient(circle at center,rgba(0,242,255,.15) 0%,transparent 55%);filter:blur(20px);animation:flicker 4s ease-in-out infinite}
-.r-hero-visual .ctrl{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:62%;animation:floatY 6s ease-in-out infinite;filter:drop-shadow(0 30px 60px rgba(0,242,255,.25))}
-.r-hero-visual .tool{position:absolute;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.7);backdrop-filter:blur(12px);border:1px solid rgba(0,242,255,.4);display:flex;align-items:center;justify-content:center;font-size:18px;animation:floatY 4s ease-in-out infinite;box-shadow:0 8px 22px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.08)}
-.r-hero-visual .tool.t1{top:8%;left:12%;animation-delay:0s}
-.r-hero-visual .tool.t2{top:14%;right:8%;animation-delay:.5s}
-.r-hero-visual .tool.t3{bottom:18%;left:5%;animation-delay:1s}
-.r-hero-visual .tool.t4{bottom:8%;right:14%;animation-delay:1.5s}
-.r-hero-visual .tool.t5{top:48%;left:-2%;animation-delay:.8s}
-.r-hero-visual .tool.t6{top:48%;right:-2%;animation-delay:1.2s}
-.r-hero-visual .pulse{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--neon);box-shadow:0 0 14px var(--neon)}
-.r-hero-visual .pulse::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:1px solid var(--neon);animation:pulseRing 2s ease-out infinite}
-.r-hero-visual .pulse.p1{top:20%;left:30%;animation-delay:0s}
-.r-hero-visual .pulse.p2{bottom:25%;right:20%;animation-delay:1s;background:var(--neon2);box-shadow:0 0 14px var(--neon2)}
-.r-hero-visual .pulse.p2::before{border-color:var(--neon2)}
-@keyframes pulseRing{0%{inset:-6px;opacity:1}100%{inset:-26px;opacity:0}}
+/* Hero Visual mit LEXORD Logo */
+.r-hero-visual{position:relative;width:min(440px,80vw);height:min(280px,55vw);margin:30px auto 10px;display:flex;align-items:center;justify-content:center}
+.r-hero-visual .glow{position:absolute;inset:0;background:radial-gradient(circle at center,rgba(0,242,255,.18) 0%,transparent 60%);filter:blur(30px);animation:flicker 4s ease-in-out infinite}
+.r-hero-logo{position:relative;z-index:2;text-align:center;animation:floatY 6s ease-in-out infinite}
+.r-hero-logo-text{font-family:'Orbitron';font-weight:900;font-size:clamp(2.4rem,7vw,4.2rem);letter-spacing:.4em;color:#fff;line-height:1;text-shadow:0 0 40px rgba(0,242,255,.4),0 0 80px rgba(188,19,254,.2)}
+.r-hero-logo-text span{background:linear-gradient(90deg,var(--neon),var(--neon2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.r-hero-logo-text sup{font-size:.28em;color:var(--neon);margin-left:6px;letter-spacing:0}
+.r-hero-logo-sub{font-family:'Orbitron';font-weight:700;font-size:clamp(.55rem,1.4vw,.78rem);letter-spacing:.55em;color:#888;margin-top:18px;text-indent:.55em}
 
 /* Marquee */
 .r-marq{overflow:hidden;background:linear-gradient(90deg,transparent,rgba(0,242,255,.04),transparent);border-top:1px solid rgba(0,242,255,.1);border-bottom:1px solid rgba(0,242,255,.1);padding:18px 0;position:relative;margin:30px 0}
@@ -690,28 +678,17 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 
 <!-- ═══ HERO ═══ -->
 <section class="r-hero">
-  <div class="r-eyebrow rv">⟫ FACHWERKSTATT · DOMSÜHL · #1 IM CONTROLLER-REPAIR ⟪</div>
+  <div class="r-eyebrow rv">⟫ FACHWERKSTATT · MADE IN GERMANY · CONTROLLER-REPAIR ⟪</div>
   <h1 class="r-headline rv rv-d1">DEIN CONTROLLER<br><span class="accent">VERDIENT MEHR</span></h1>
   <p class="r-sub rv rv-d2">Stick-Drift? Defekter Trigger? HDMI-Port hin? Wir reparieren — bevor du wegwirfst.<br><strong style="color:#fff">Festpreis. Garantie. 3-5 Werktage.</strong> Made in Germany.</p>
-  <div class="rv rv-d2" style="display:inline-flex;align-items:center;gap:12px;font-family:'Orbitron';font-size:10px;color:var(--green);letter-spacing:1.5px;background:rgba(0,182,122,.06);border:1px solid rgba(0,182,122,.25);border-radius:30px;padding:8px 18px;margin-bottom:10px">
-    <span style="width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 10px var(--green);animation:blink 2s infinite"></span>
-    AKTUELL <strong style="color:#fff">8</strong> CONTROLLER IN REPARATUR · NÄCHSTER SLOT IN 4 STUNDEN
-  </div>
 
-  <!-- Animated Hero Visual -->
+  <!-- Hero Visual mit LEXORD Logo -->
   <div class="r-hero-visual rv rv-s rv-d3">
     <div class="glow"></div>
-    <div class="ring"></div>
-    <div class="ring r2"></div>
-    <div class="ring r3"></div>
-    <div class="pulse p1"></div>
-    <div class="pulse p2"></div>
-    <div class="tool t1">🔧</div>
-    <div class="tool t2">⚡</div>
-    <div class="tool t3">🛠️</div>
-    <div class="tool t4">🔩</div>
-    <div class="tool t5">🕹️</div>
-    <div class="tool t6">📐</div>
+    <div class="r-hero-logo">
+      <div class="r-hero-logo-text">LEX<span>O</span>RD<sup>®</sup></div>
+      <div class="r-hero-logo-sub">ENGINEERING · REPAIR</div>
+    </div>
     <!-- Inline animated controller SVG -->
     <svg class="ctrl" viewBox="0 0 240 160" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -775,8 +752,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 
   <!-- Device Showcase -->
   <div class="r-showcase rv rv-d4">
-    <div class="r-showcase-h">⟫ WIR REPARIEREN ALLE GERÄTE ⟪</div>
-    <div class="r-showcase-sub"><strong>PlayStation-Spezialist</strong> · PS5 &amp; PS4 Controller + Konsolen · Klick auf dein Gerät für Preise</div>
+    <div class="r-showcase-sub" style="margin-top:8px"><strong>PlayStation-Spezialist</strong> · PS5 &amp; PS4 Controller + Konsolen · Klick auf dein Gerät für Preise</div>
 
     <div class="r-dev-scroll">
       <div class="r-dev-track">
@@ -1029,7 +1005,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 <!-- ═══ MANUFACTURER COMPATIBILITY ═══ -->
 <section class="r-section" style="padding-top:0">
   <div class="r-compat rv">
-    <div class="r-compat-h">⟫ <strong>WIR REPARIEREN ALLE PLAYSTATION-MODELLE</strong> ⟪</div>
+    <div class="r-compat-h" style="display:none"></div>
     <div class="r-compat-logos">
       <div class="r-compat-logo"><span class="emoji">🎮</span> DUALSENSE</div>
       <div class="r-compat-logo"><span class="emoji">⭐</span> DUALSENSE EDGE</div>

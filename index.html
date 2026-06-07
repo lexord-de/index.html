@@ -2061,9 +2061,35 @@ document.addEventListener('DOMContentLoaded',()=>{
         <div class="rep-nav-row"><button class="rep-nav-btn back" onclick="repBack()">← ZURÜCK</button><button class="rep-nav-btn next" onclick="repNext()">WEITER →</button></div>
       </div>
       <div class="rep-panel" id="rp-2">
-        <div class="rep-section-title">🎮 CONTROLLER INFORMATIONEN</div>
-        <div><label class="rep-label">CONTROLLER-MODELL *</label><select class="rep-input" id="rep-model" style="margin-bottom:12px;cursor:pointer"><option value="">-- Bitte auswählen --</option><option>PS5 DualSense (Standard)</option><option>PS5 DualSense Edge</option><option>PS4 DualShock 4</option><option>LEXORD Custom Controller</option><option>Sonstiger Controller</option></select></div>
-        <div><label class="rep-label">SERIENNUMMER (optional)</label><input type="text" class="rep-input" id="rep-serial" placeholder="z.B. CFI-ZCT1W..." style="margin-bottom:12px"></div>
+        <div class="rep-section-title">🎮 GERÄTE-INFORMATIONEN</div>
+        <div><label class="rep-label">GERÄT / MODELL *</label><select class="rep-input" id="rep-model" onchange="toggleOtherDevice()" style="margin-bottom:12px;cursor:pointer">
+          <option value="">-- Bitte auswählen --</option>
+          <optgroup label="PlayStation Controller">
+            <option>PS5 DualSense (Standard)</option>
+            <option>PS5 DualSense Edge</option>
+            <option>PS4 DualShock 4</option>
+            <option>LEXORD Custom Controller</option>
+          </optgroup>
+          <optgroup label="PlayStation Konsolen">
+            <option>PS5 Konsole (Standard)</option>
+            <option>PS5 Slim</option>
+            <option>PS5 Pro</option>
+            <option>PS4 Konsole (Slim/Pro)</option>
+          </optgroup>
+          <optgroup label="Xbox">
+            <option>Xbox Series X / S Controller</option>
+            <option>Xbox One Controller</option>
+            <option>Xbox Elite Controller</option>
+          </optgroup>
+          <optgroup label="Nintendo">
+            <option>Nintendo Switch Joy-Con</option>
+            <option>Nintendo Switch Pro Controller</option>
+            <option>Nintendo Switch Konsole</option>
+          </optgroup>
+          <option value="other">⚙️ ANDERES GERÄT (Freitext)</option>
+        </select></div>
+        <div id="rep-other-wrap" style="display:none"><label class="rep-label">GERÄT BESCHREIBEN *</label><input type="text" class="rep-input" id="rep-other" placeholder="z.B. SteamDeck, Razer Wolverine, PS3-Controller …" style="margin-bottom:12px"></div>
+        <div><label class="rep-label">SERIENNUMMER / GERÄTEKENNUNG (optional — falls vorhanden)</label><input type="text" class="rep-input" id="rep-serial" placeholder="z.B. CFI-ZCT1W… oder leer lassen wenn keine vorhanden" style="margin-bottom:12px"></div>
         <div><label class="rep-label">SCHADENBESCHREIBUNG *</label><textarea class="rep-input" id="rep-desc" placeholder="Beschreibe den Schaden so genau wie möglich..." style="height:120px;resize:vertical;margin-bottom:12px"></textarea></div>
         <div><label class="rep-label">SEIT WANN BESTEHT DAS PROBLEM?</label><select class="rep-input" id="rep-since" style="margin-bottom:12px;cursor:pointer"><option>Seit wenigen Tagen</option><option>Seit 1–2 Wochen</option><option>Seit 1–3 Monaten</option><option>Seit mehr als 3 Monaten</option><option>Unbekannt</option></select></div>
         <div><label class="rep-label">GARANTIE GEWÜNSCHT?</label><select class="rep-input" id="rep-warranty" style="cursor:pointer"><option value="6">6 Monate Garantie (inklusive)</option><option value="12">12 Monate Garantie (+15€)</option></select></div>
@@ -3252,12 +3278,12 @@ const PRODUCTS=[
   // Atelier
   {name:'LXRD Wallet',price:39.90,img:'img/lxrd-wallet.jpg',cat:'Atelier',url:'zubehoer.html',tags:'portemonnaie bio petg rfid karten 3d druck'},
   // Reparatur-Kits & Zubehör
-  {name:'Stickzange Pro',price:5,img:'stickzange-pro.PNG',cat:'Werkzeug',tags:'tool werkzeug stick entfernen reparatur'},
-  {name:'Paddle System V2',price:40,img:'paddle-system-v2.PNG',cat:'Zubehör',tags:'paddle umbau back-buttons mod'},
-  {name:'TMR Stick Upgrade Kit',price:55,img:'tmr-upgrade-kit.PNG',cat:'Zubehör',tags:'tmr stick driftfrei upgrade kit tunnelmagnet'},
-  {name:'Hall Effect Upgrade Kit',price:35,img:'hall-effect-kit.PNG',cat:'Zubehör',tags:'hall effect stick driftfrei magnet upgrade'},
-  {name:'GRIP Gehäuse Set',price:28,img:'grip-housing-set.PNG',cat:'Zubehör',tags:'grip gehäuse soft touch case'},
-  {name:'Clicky Trigger Kit',price:22,img:'clicky-trigger-kit.PNG',cat:'Zubehör',tags:'clicky trigger mod L2 R2 mausklick'},
+  {name:'Stickzange Pro',price:5,img:'Stickzange.PNG',cat:'Werkzeug',tags:'tool werkzeug stick entfernen reparatur'},
+  {name:'Paddle System V2',price:40,img:'Photoroom_20260402_014813.png',cat:'Zubehör',tags:'paddle umbau back-buttons mod'},
+  {name:'TMR Stick Upgrade Kit',price:55,img:'Photoroom_20260402_172726.png',cat:'Zubehör',tags:'tmr stick driftfrei upgrade kit tunnelmagnet'},
+  {name:'Hall Effect Upgrade Kit',price:35,img:'Photoroom_20260402_014150.png',cat:'Zubehör',tags:'hall effect stick driftfrei magnet upgrade'},
+  {name:'GRIP Gehäuse Set',price:28,img:'Photoroom_20260422_123341.png',cat:'Zubehör',tags:'grip gehäuse soft touch case'},
+  {name:'Clicky Trigger Kit',price:22,img:'Photoroom_20260422_120907.png',cat:'Zubehör',tags:'clicky trigger mod L2 R2 mausklick'},
   {name:'Power Akku Umbau',price:45,img:'power-akku-umbau.PNG',cat:'Zubehör',tags:'akku batterie 2000mah upgrade laufzeit power'},
   {name:'Anti-Stickdrift Bundle',price:75,img:'ANTI STICKDRIFT BUNDLE.PNG',cat:'Zubehör',tags:'bundle anti drift tmr hall effect set'},
   // Service
@@ -3699,11 +3725,13 @@ function updateDriftDisplay(lx,ly,rx,ry){const lD=Math.sqrt(lx**2+ly**2),rD=Math
 /* ═══ REPARATUR WIZARD ═══ */
 let repStep=0,repDamage={key:'',label:'',price:''};
 function selectDamage(el,key,label,price){document.querySelectorAll('.rep-damage-opt').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');repDamage={key,label,price};document.getElementById('rep-price-est').style.display='flex';document.getElementById('rep-price-val').innerText=price;}
-function repNext(){if(repStep===0&&!repDamage.key){toast('Schadensart auswählen','err');return;}if(repStep===1){const f=document.getElementById('rep-fname').value,l=document.getElementById('rep-lname').value,e=document.getElementById('rep-email').value,a=document.getElementById('rep-addr').value,z=document.getElementById('rep-zip').value,c=document.getElementById('rep-city').value;if(!f||!l||!e||!a||!z||!c){toast('Pflichtfelder ausfüllen','err');return;}}if(repStep===2){if(!document.getElementById('rep-model').value||!document.getElementById('rep-desc').value){toast('Modell und Beschreibung ausfüllen','err');return;}buildRepairSummary();}if(repStep===3){submitRepair();return;}document.getElementById('rp-'+repStep).classList.remove('active');repStep++;document.getElementById('rp-'+repStep).classList.add('active');updateRepairSteps();}
+function toggleOtherDevice(){const sel=document.getElementById('rep-model');const wrap=document.getElementById('rep-other-wrap');if(!wrap)return;wrap.style.display = sel.value==='other' ? 'block' : 'none';}
+function getRepairModel(){const sel=document.getElementById('rep-model').value;if(sel==='other'){return (document.getElementById('rep-other').value||'').trim() || 'Sonstiges Gerät';}return sel;}
+function repNext(){if(repStep===0&&!repDamage.key){toast('Schadensart auswählen','err');return;}if(repStep===1){const f=document.getElementById('rep-fname').value,l=document.getElementById('rep-lname').value,e=document.getElementById('rep-email').value,a=document.getElementById('rep-addr').value,z=document.getElementById('rep-zip').value,c=document.getElementById('rep-city').value;if(!f||!l||!e||!a||!z||!c){toast('Pflichtfelder ausfüllen','err');return;}}if(repStep===2){const m=document.getElementById('rep-model').value;if(!m||(m==='other'&&!document.getElementById('rep-other').value.trim())||!document.getElementById('rep-desc').value){toast('Gerät und Beschreibung ausfüllen','err');return;}buildRepairSummary();}if(repStep===3){submitRepair();return;}document.getElementById('rp-'+repStep).classList.remove('active');repStep++;document.getElementById('rp-'+repStep).classList.add('active');updateRepairSteps();}
 function repBack(){if(repStep===0)return;document.getElementById('rp-'+repStep).classList.remove('active');repStep--;document.getElementById('rp-'+repStep).classList.add('active');updateRepairSteps();}
 function updateRepairSteps(){document.querySelectorAll('.rep-step').forEach((el,i)=>{el.classList.toggle('active',i===repStep);el.classList.toggle('done',i<repStep);});}
-function buildRepairSummary(){const fn=document.getElementById('rep-fname').value,ln=document.getElementById('rep-lname').value;const email=document.getElementById('rep-email').value,model=document.getElementById('rep-model').value;const warranty=document.getElementById('rep-warranty').value;document.getElementById('rep-summary-content').innerHTML=`<div class="rep-summary-item"><span>SCHADEN</span><span>${repDamage.label}</span></div><div class="rep-summary-item"><span>GESCHÄTZTE KOSTEN</span><span style="color:var(--neon)">${repDamage.price}</span></div><div class="rep-summary-item"><span>KUNDE</span><span>${esc(fn+' '+ln)}</span></div><div class="rep-summary-item"><span>E-MAIL</span><span>${esc(email)}</span></div><div class="rep-summary-item"><span>CONTROLLER</span><span>${esc(model)}</span></div><div class="rep-summary-item"><span>GARANTIE</span><span>${warranty} Monate</span></div>`;}
-async function submitRepair(){if(!document.getElementById('rep-agb').checked){toast('AGB akzeptieren','err');return;}const repNr='REP-'+Date.now().toString().slice(-7);const fn=document.getElementById('rep-fname').value,ln=document.getElementById('rep-lname').value;const email=document.getElementById('rep-email').value,model=document.getElementById('rep-model').value;const desc=document.getElementById('rep-desc').value,since=document.getElementById('rep-since').value;const warranty=document.getElementById('rep-warranty').value;const phone=document.getElementById('rep-phone')?.value||'-';const addr=document.getElementById('rep-addr').value+', '+document.getElementById('rep-zip').value+' '+document.getElementById('rep-city').value;const name=fn+' '+ln;
+function buildRepairSummary(){const fn=document.getElementById('rep-fname').value,ln=document.getElementById('rep-lname').value;const email=document.getElementById('rep-email').value,model=getRepairModel();const warranty=document.getElementById('rep-warranty').value;document.getElementById('rep-summary-content').innerHTML=`<div class="rep-summary-item"><span>SCHADEN</span><span>${repDamage.label}</span></div><div class="rep-summary-item"><span>GESCHÄTZTE KOSTEN</span><span style="color:var(--neon)">${repDamage.price}</span></div><div class="rep-summary-item"><span>KUNDE</span><span>${esc(fn+' '+ln)}</span></div><div class="rep-summary-item"><span>E-MAIL</span><span>${esc(email)}</span></div><div class="rep-summary-item"><span>GERÄT</span><span>${esc(model)}</span></div><div class="rep-summary-item"><span>GARANTIE</span><span>${warranty} Monate</span></div>`;}
+async function submitRepair(){if(!document.getElementById('rep-agb').checked){toast('AGB akzeptieren','err');return;}const repNr='REP-'+Date.now().toString().slice(-7);const fn=document.getElementById('rep-fname').value,ln=document.getElementById('rep-lname').value;const email=document.getElementById('rep-email').value,model=getRepairModel();const desc=document.getElementById('rep-desc').value,since=document.getElementById('rep-since').value;const warranty=document.getElementById('rep-warranty').value;const phone=document.getElementById('rep-phone')?.value||'-';const addr=document.getElementById('rep-addr').value+', '+document.getElementById('rep-zip').value+' '+document.getElementById('rep-city').value;const name=fn+' '+ln;
   await saveRepairToCF({repNr,fname:fn,lname:ln,email,phone,addr:document.getElementById('rep-addr').value,zip:document.getElementById('rep-zip').value,city:document.getElementById('rep-city').value,model,serial:document.getElementById('rep-serial').value,damage:repDamage.label,damageKey:repDamage.key,estPrice:repDamage.price,desc,since,warranty,status:'received',created:new Date().toISOString()});
   await ejsSend(email,fn,`🔧 Reparaturanfrage ${repNr} | LEXORD®`,tplRepair(fn,repNr,repDamage.label,model,repDamage.price),ADMIN_EMAIL);
   await ejsSend(ADMIN_EMAIL,'LEXORD Admin',`[REPARATUR] ${repNr} · ${name} · ${repDamage.label}`,tplRepairAdmin(name,email,phone,addr,repNr,repDamage.label,model,repDamage.price,desc),email);

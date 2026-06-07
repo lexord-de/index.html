@@ -71,7 +71,9 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 .cart-icon{position:relative;background:transparent;border:1px solid #1a1a1a;width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#888;cursor:pointer;transition:.2s}
 .cart-icon:hover{border-color:var(--neon);color:var(--neon);background:rgba(0,242,255,.04)}
 .cart-badge{position:absolute;top:-6px;right:-6px;background:var(--neon);color:#000;min-width:19px;height:19px;border-radius:50%;font-size:9.5px;font-weight:900;display:flex;align-items:center;justify-content:center;font-family:'Orbitron';padding:0 4px;box-shadow:0 0 10px rgba(0,242,255,.6)}
-@media(max-width:680px){header{padding:14px 5%}.brand{gap:12px}.brand-logo{font-size:1rem;letter-spacing:5px}.brand .tag{font-size:.52rem;padding:4px 8px 3px;letter-spacing:2.5px}.nav-l{display:none}}
+.back-fab{position:fixed;top:14px;left:14px;width:42px;height:42px;border-radius:50%;background:rgba(8,8,8,.92);backdrop-filter:blur(14px);border:1px solid rgba(0,242,255,.3);color:var(--neon);display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:20px;z-index:9500;transition:.25s;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.back-fab:hover{transform:translateX(-3px);border-color:var(--neon);box-shadow:0 10px 30px rgba(0,242,255,.25)}
+@media(max-width:680px){header{padding:14px 5% 14px 64px}.brand{gap:12px}.brand-logo{font-size:1rem;letter-spacing:5px}.brand .tag{font-size:.52rem;padding:4px 8px 3px;letter-spacing:2.5px}.nav-l{display:none}.back-fab{width:38px;height:38px;font-size:18px;top:12px;left:10px}}
 
 /* ═══ HERO CINEMATIC ═══ */
 .hero{position:relative;padding:60px 5% 40px;text-align:center;overflow:hidden;min-height:90vh;display:flex;flex-direction:column;justify-content:center}
@@ -422,6 +424,9 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 <div class="aurora"></div>
 <div class="stars"></div>
 <div class="particles" id="particles"></div>
+
+<!-- Floating Back-Button -->
+<a href="index.html" class="back-fab" aria-label="Zurück zur Startseite" title="Zurück zur Startseite">←</a>
 
 <!-- ═══ HEADER ═══ -->
 <header>

@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Bilder-Sitemap für Google Bildersuche.
+  Jedes Bild wird der relevantesten Seite zugeordnet, mit beschreibendem Titel & Caption.
+  Boost für „PS5 Custom Controller" Bildersuche.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <url>
+    <loc>https://lexord.de/</loc>
+    <image:image>
+      <image:loc>https://lexord.de/IMG_0556.jpeg</image:loc>
+      <image:title>LEXORD Custom PS5 Controller · Premium Made in Germany</image:title>
+      <image:caption>Handgefertigter Custom PS5 DualSense Controller, TMR Hall-Effect Sticks, individuell konfigurierbar</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/IMG_0611.jpeg</image:loc>
+      <image:title>LEXORD Controller-Lineup Übersicht</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/IMG_7023.png</image:loc>
+      <image:title>LEXORD Engineering · Markenlogo</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260305_124317.png</image:loc>
+      <image:title>Custom PS5 Controller Konfigurator Vorschau</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260305_124906.png</image:loc>
+      <image:title>LEXORD Controller in Action</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260511_142233.png</image:loc>
+      <image:title>LEXORD Premium-Konfiguration · Detailansicht</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/collections.html</loc>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260305_123705.png</image:loc>
+      <image:title>LXRD Performance Black · 240 EUR</image:title>
+      <image:caption>Custom PS5 Controller mit TMR Sticks, Clicky Trigger, GRIP Gehäuse</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260305_140346.png</image:loc>
+      <image:title>LXRD Plus Black · 180 EUR</image:title>
+      <image:caption>Hall Effect Sticks, Clicky Trigger, 2 Paddles</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260305_135532.png</image:loc>
+      <image:title>LXRD Basic Black · 105 EUR</image:title>
+      <image:caption>Einstiegs-Custom-Controller mit 2 Paddles</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260306_112425.png</image:loc>
+      <image:title>LXRD Elite Pro · 280 EUR</image:title>
+      <image:caption>Premium-Custom-Controller, Carbon, RGB, Lasergravur, 4 Paddles</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260306_112804.png</image:loc>
+      <image:title>LXRD Elite Pro Rückseite mit Paddles</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260501_094506.png</image:loc>
+      <image:title>LXRD Stealth Edition · 220 EUR</image:title>
+      <image:caption>Hall Effect, Matt-Finish, Limited Edition</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260501_090821.png</image:loc>
+      <image:title>LXRD Stealth Edition · Detail</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/konfigurator.html</loc>
+    <image:image>
+      <image:loc>https://lexord.de/mask-frontshell.PNG</image:loc>
+      <image:title>3D Konfigurator · Frontschale</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/mask-backshell.PNG</image:loc>
+      <image:title>3D Konfigurator · Backshell</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/mask-buttons.PNG</image:loc>
+      <image:title>3D Konfigurator · Tasten</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/mask-dpad.PNG</image:loc>
+      <image:title>3D Konfigurator · D-Pad</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/mask-stickcap.PNG</image:loc>
+      <image:title>3D Konfigurator · Stick-Caps</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/mask-triggercolor.PNG</image:loc>
+      <image:title>3D Konfigurator · Trigger-Farbe</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/zubehoer.html</loc>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260122_115126.png</image:loc>
+      <image:title>LXRD Wallet · 3D Print Premium Portemonnaie</image:title>
+      <image:caption>Limited Edition 3D-gedrucktes Portemonnaie aus Bio-PETG</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260122_120201.png</image:loc>
+      <image:title>LXRD Wallet · Detail-Ansicht</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260304_152839.png</image:loc>
+      <image:title>LEXORD Zubehör-Lineup</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260304_212902.png</image:loc>
+      <image:title>LEXORD Accessoires</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/reparatur.html</loc>
+    <image:image>
+      <image:loc>https://lexord.de/IMG_7023.png</image:loc>
+      <image:title>LEXORD Controller-Reparatur Service · Made in Germany</image:title>
+      <image:caption>PS5, PS4, Xbox, Nintendo Switch — Stick-Drift, Trigger, USB-C, HDMI Reparatur zu Festpreisen</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/IMG_9180.png</image:loc>
+      <image:title>Controller Stick-Drift Reparatur</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/IMG_9873.png</image:loc>
+      <image:title>Hall-Effect-Upgrade Reparatur</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/printing-service.html</loc>
+    <image:image>
+      <image:loc>https://lexord.de/IMG_7023.png</image:loc>
+      <image:title>LEXORD 3D Printing Service · Bio-PETG</image:title>
+      <image:caption>Custom-Paddles, Stick-Caps, D-Pad, Face-Buttons, Trigger-Mods aus Bio-PETG 3D-gedruckt</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/lxrd-elite-pro.html</loc>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260306_112425.png</image:loc>
+      <image:title>LXRD Elite Pro · TMR Pro · Carbon · 4 Paddles · RGB · Gravur</image:title>
+      <image:caption>Premium Custom PS5 Controller, höchste Konfiguration, 280 EUR</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260306_112804.png</image:loc>
+      <image:title>LXRD Elite Pro · Rückseite mit 4 Paddles</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/lxrd-performance.html</loc>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260305_123705.png</image:loc>
+      <image:title>LXRD Performance Black · TMR · Clicky Trigger · GRIP · 2 Paddles</image:title>
+      <image:caption>Custom PS5 Controller, 240 EUR</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260305_122147.png</image:loc>
+      <image:title>LXRD Performance Black · Detail</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260305_122914.png</image:loc>
+      <image:title>LXRD Performance Black · Seitenansicht</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/lxrd-plus.html</loc>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260305_140346.png</image:loc>
+      <image:title>LXRD Plus Black · Hall Effect · Clicky Trigger · 180 EUR</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260305_134504.jpeg</image:loc>
+      <image:title>LXRD Plus Black · Detail</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260305_124233.jpeg</image:loc>
+      <image:title>LXRD Plus Black · Side</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/lxrd-basic.html</loc>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260305_135532.png</image:loc>
+      <image:title>LXRD Basic Black · 2 Paddles · 105 EUR</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/lxrd-stealth.html</loc>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260501_094506.png</image:loc>
+      <image:title>LXRD Stealth Edition · Hall Effect · Matt-Finish · 220 EUR</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260501_090821.png</image:loc>
+      <image:title>LXRD Stealth · Detail</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260430_202425.png</image:loc>
+      <image:title>LXRD Stealth · Side-Profile</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260430_203009.png</image:loc>
+      <image:title>LXRD Stealth · Edition Limited</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/paddle-system-v2.html</loc>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260402_014813.png</image:loc>
+      <image:title>Paddle System V2 · Magnetisch · Quick-Change</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260402_000221.png</image:loc>
+      <image:title>Paddle System V2 · Detail</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/hall-effect-kit.html</loc>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260402_014150.png</image:loc>
+      <image:title>Hall Effect Upgrade Kit · DIY · 35 EUR</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260401_234509.jpeg</image:loc>
+      <image:title>Hall Effect Sensoren · Anti-Drift</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/tmr-upgrade-kit.html</loc>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260402_172726.png</image:loc>
+      <image:title>TMR Stick Upgrade Kit · Pro · 55 EUR</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/stickzange-pro.html</loc>
+    <image:image>
+      <image:loc>https://lexord.de/Stickzange.PNG</image:loc>
+      <image:title>Stickzange Pro · Profi-Werkzeug · 5 EUR</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/clicky-trigger.html</loc>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260422_120907.png</image:loc>
+      <image:title>Clicky Trigger Mod · Hair-Trigger</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260422_122323.png</image:loc>
+      <image:title>Clicky Trigger · Detail</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/grip-housing.html</loc>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260422_123341.png</image:loc>
+      <image:title>GRIP Gehäuse · 3D Print Backshell</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260422_124958.png</image:loc>
+      <image:title>GRIP Gehäuse · Rutschfest</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260422_120322.jpeg</image:loc>
+      <image:title>GRIP Gehäuse · Ergonomisch</image:title>
+    </image:image>
+  </url>
+
+</urlset>

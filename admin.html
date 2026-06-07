@@ -328,6 +328,12 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
 
   <!-- PANEL: LIVE -->
   <div class="dash-panel active" id="panel-live">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
+      <button class="dash-action" onclick="loadLive()" style="background:rgba(0,242,255,.1);color:#00f2ff;border:1px solid rgba(0,242,255,.3)">↻ JETZT AKTUALISIEREN</button>
+      <button class="dash-action" onclick="liveTestVisitor()" style="background:rgba(188,19,254,.1);color:#bc13fe;border:1px solid rgba(188,19,254,.3)">🧪 TEST-BESUCHER SENDEN</button>
+      <a href="https://lexord-api.leonschulz1420.workers.dev/track/status" target="_blank" class="dash-action" style="background:rgba(255,174,0,.1);color:#ffae00;border:1px solid rgba(255,174,0,.3);text-decoration:none">🔍 LIVE-STATUS PRÜFEN</a>
+      <span style="font-size:11px;color:#666;font-family:Orbitron;letter-spacing:1px">Letzte Aktualisierung: <span id="live-last-poll">–</span></span>
+    </div>
     <div class="live-grid">
       <div class="globe-wrap">
         <div class="globe-h">
@@ -1053,8 +1059,36 @@ async function loadStats(){
 function setText(id, val){ const e=document.getElementById(id); if(e) e.innerText = val; return e; }
 
 /* ════════ LIVE-DATA + GLOBE ════════ */
+async function liveTestVisitor(){
+  /* Sendet einen Test-Besucher direkt — damit du siehst ob der Pipeline funktioniert */
+  try{
+    const r = await fetch(WORKER_URL + '/track/visitor', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        sid: 'test-'+Date.now().toString(36),
+        page: '/admin-test',
+        ref: 'admin-panel-test',
+        event: 'view',
+        country: 'DE',
+        city: 'Test-Stadt'
+      })
+    });
+    const d = await r.json().catch(()=>({}));
+    if(d.success){
+      toast('✓ Test-Besucher gesendet — gleich erscheint er unten in der Liste','success');
+      setTimeout(loadLive, 1500);
+    } else {
+      toast('Fehler: '+(d.error||'unbekannt'),'error');
+    }
+  }catch(e){
+    toast('Verbindungsfehler: '+e.message,'error');
+  }
+}
+
 async function loadLive(){
   const d = await api('/admin/visitors');
+  setText('live-last-poll', new Date().toLocaleTimeString('de-DE'));
   if(!d){ return; }
   const visitors = d.visitors || [];
   const byCountry = d.byCountry || {};
@@ -1080,7 +1114,7 @@ async function loadLive(){
   const ss = document.getElementById('active-sessions');
   ss.innerHTML = visitors.length ? visitors.slice(0,10).map(v =>
     `<div class="session-row"><span class="flag">${flagEmoji(v.country)}</span><span class="src">${esc(v.page||'/')} · ${esc(v.city||'?')}</span><span class="ago">${ago(v.lastSeen)}</span></div>`
-  ).join('') : '<div style="color:#444;font-size:11px;padding:8px 0">Warten auf Daten…</div>';
+  ).join('') : '<div style="color:#888;font-size:11px;padding:8px 0;line-height:1.6">Keine aktiven Besucher (letzte 15 Min).<br><span style="color:#555;font-size:10px">Tipps:<br>• Öffne lexord.de auf dem Handy (anderes Netzwerk)<br>• Klick auf 🧪 TEST-BESUCHER SENDEN oben<br>• Wenn Adblocker an: Tracker wird geblockt</span></div>';
 
   /* Globe-Pins setzen */
   GLOBE.pins = visitors.filter(v => v.lat!=null && v.lng!=null).map(v=>({lat:+v.lat, lng:+v.lng, label:countryName(v.country)}));

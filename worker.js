@@ -177,6 +177,9 @@ async function test(){
       if (path.startsWith("/api/admin/blog/") && request.method === "DELETE") return await adminDeleteBlog(request, env, path.split("/").pop());
       if (path === "/api/admin/blog/ai-generate" && request.method === "POST") return await adminBlogAiGenerate(request, env);
       if (path === "/api/admin/reviews/approve" && request.method === "POST") return await adminApproveReview(request, env);
+      if (path === "/api/admin/expenses" && request.method === "GET") return await listExpenses(request, env);
+      if (path === "/api/admin/expenses" && request.method === "POST") return await createExpense(request, env);
+      if (path.startsWith("/api/admin/expenses/") && request.method === "DELETE") return await deleteExpense(request, env, path.split("/").pop());
       if (path === "/api/b2b/inquiry" && request.method === "POST") return await b2bInquiry(request, env);
       if (path === "/api/b2b/register" && request.method === "POST") return await b2bRegister(request, env);
       if (path === "/api/b2b/login" && request.method === "POST") return await b2bLogin(request, env);
@@ -1863,6 +1866,52 @@ async function adminApproveReview(request, env) {
   r.approved = b.approved !== false;
   r.approved_at = new Date().toISOString();
   await env.LEXORD_DATA.put("review:" + b.id, JSON.stringify(r));
+  return json({ success: true });
+}
+
+// ============ AUSGABEN / BETRIEBSKOSTEN ============
+async function listExpenses(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ expenses: [] });
+  const list = await env.LEXORD_DATA.list({ prefix: "expense:" });
+  const expenses = [];
+  for (const k of list.keys) {
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if (raw) { try { expenses.push(JSON.parse(raw)); } catch (e) {} }
+  }
+  expenses.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+  return json({ expenses });
+}
+
+async function createExpense(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ success: false, error: "KV not bound" });
+  const b = await request.json();
+  const amount = parseFloat(b.amount);
+  if (!amount || isNaN(amount) || amount <= 0) return json({ success: false, error: "Betrag ungueltig" });
+  const id = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 6);
+  const exp = {
+    id,
+    date: b.date || new Date().toISOString().slice(0, 10),
+    category: String(b.category || "Sonstiges").slice(0, 40),
+    description: String(b.description || "").slice(0, 200),
+    amount,
+    ustRate: parseFloat(b.ustRate || 0),
+    vendor: String(b.vendor || "").slice(0, 120),
+    invoiceNr: String(b.invoiceNr || "").slice(0, 60),
+    paymentMethod: String(b.paymentMethod || "").slice(0, 40),
+    deductible: b.deductible !== false,
+    note: String(b.note || "").slice(0, 400),
+    created: new Date().toISOString()
+  };
+  await env.LEXORD_DATA.put("expense:" + id, JSON.stringify(exp));
+  return json({ success: true, expense: exp });
+}
+
+async function deleteExpense(request, env, id) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA || !id) return json({ success: false });
+  await env.LEXORD_DATA.delete("expense:" + id);
   return json({ success: true });
 }
 

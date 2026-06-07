@@ -649,6 +649,27 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
     </div>
   </div>
 
+  <!-- ⚙️ PAYPAL-GEBÜHR EINSTELLUNGEN -->
+  <div id="pp-fee-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)">
+    <div style="background:#0a0a0a;border:1px solid rgba(0,102,255,.3);border-radius:16px;max-width:460px;width:100%;padding:26px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div style="font-family:Orbitron;font-size:13px;letter-spacing:2px;color:#fff;font-weight:900">⚙️ PAYPAL-GEBÜHREN</div>
+        <button onclick="ppFeeClose()" style="background:none;border:none;color:#888;font-size:22px;cursor:pointer">×</button>
+      </div>
+      <div style="font-size:11px;color:#888;line-height:1.6;margin-bottom:18px">Standard-Tarife PayPal-Geschäftskonto (DE, Stand 2026). Bei abweichenden Konditionen hier anpassen.</div>
+      <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">EU/EWR-ZAHLUNGEN (%)</label>
+      <input type="number" step="0.01" id="pp-eu" value="2.49" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:12px;box-sizing:border-box">
+      <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">INTERNATIONAL (%)</label>
+      <input type="number" step="0.01" id="pp-intl" value="3.99" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:12px;box-sizing:border-box">
+      <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">FIXBETRAG PRO TRANSAKTION (EUR)</label>
+      <input type="number" step="0.01" id="pp-fix" value="0.35" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:18px;box-sizing:border-box">
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button class="dash-action" onclick="ppFeeClose()" style="background:rgba(255,255,255,.05);color:#888">ABBRECHEN</button>
+        <button class="dash-action" onclick="ppFeeSave()" style="background:linear-gradient(135deg,#0066ff,#00f2ff);color:#000;font-weight:900;border:none">✓ SPEICHERN</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 🎮 PRODUKTE-AUSWAHL MODAL (Newsletter) -->
   <div id="nl-products-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)">
     <div style="background:#0a0a0a;border:1px solid rgba(188,19,254,.3);border-radius:16px;max-width:680px;width:100%;max-height:90vh;overflow-y:auto;padding:24px">
@@ -758,6 +779,7 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
       <button class="dash-action" onclick="loadFinanzen()">↻ AKTUALISIEREN</button>
       <button class="dash-action primary" onclick="exportFinanzenCSV()">⤓ CSV-EXPORT</button>
       <button class="dash-action" onclick="printFinanzen()">🖨️ DRUCKEN / PDF</button>
+      <button class="dash-action" onclick="ppFeeOpen()" style="background:rgba(0,102,255,.1);color:#0066ff;border:1px solid rgba(0,102,255,.3)">⚙️ PAYPAL-GEBÜHR</button>
     </div>
 
     <!-- Summary-Karten -->
@@ -1924,10 +1946,52 @@ function finPeriodFilter(date){
   if(period.startsWith('m')) return m === parseInt(period.slice(1));
   return true;
 }
+/* ════════ PAYPAL-GEBÜHR EINSTELLUNGEN ════════ */
+function ppFeeOpen(){
+  const cfg = JSON.parse(localStorage.getItem('lxrd_paypal_fee') || '{}');
+  document.getElementById('pp-eu').value = cfg.eu_percent || 2.49;
+  document.getElementById('pp-intl').value = cfg.intl_percent || 3.99;
+  document.getElementById('pp-fix').value = cfg.fix || 0.35;
+  document.getElementById('pp-fee-modal').style.display = 'flex';
+}
+function ppFeeClose(){ document.getElementById('pp-fee-modal').style.display = 'none'; }
+function ppFeeSave(){
+  const cfg = {
+    eu_percent: parseFloat(document.getElementById('pp-eu').value) || 2.49,
+    intl_percent: parseFloat(document.getElementById('pp-intl').value) || 3.99,
+    fix: parseFloat(document.getElementById('pp-fix').value) || 0.35
+  };
+  localStorage.setItem('lxrd_paypal_fee', JSON.stringify(cfg));
+  toast('✓ PayPal-Gebühren gespeichert','success');
+  ppFeeClose();
+  loadFinanzen();
+}
+
+/* PayPal-Gebühren (DE Geschäftskonto, Stand 2026):
+   - Kommerziell EU/EWR: 2.49 % + 0,35 €
+   - International: 3.99 % + 0,35 €
+   Wir verwenden die kommerzielle EU-Rate (anpassbar in localStorage) */
+function getPayPalFee(brutto, country){
+  const cfg = JSON.parse(localStorage.getItem('lxrd_paypal_fee') || '{}');
+  const isEU = ['DE','AT','CH','FR','NL','BE','LU','IT','ES','PL','CZ','SE','DK','EU_OTHER','GB','IE','PT','FI'].includes((country||'DE').toUpperCase());
+  const percent = isEU ? (cfg.eu_percent || 2.49) : (cfg.intl_percent || 3.99);
+  const fix = cfg.fix || 0.35;
+  return (brutto * percent / 100) + fix;
+}
+
+let FIN_EXPENSES = [];
+async function loadFinExpenses(){
+  try{
+    const d = await api('/admin/expenses');
+    FIN_EXPENSES = (d && d.expenses) || [];
+  }catch(e){ FIN_EXPENSES = []; }
+}
+
 async function loadFinanzen(){
   finFillYears();
   const wrap = document.getElementById('fin-table-wrap');
   wrap.innerHTML = '<div class="dash-loading"><div class="spinner"></div><div>LADE…</div></div>';
+  await loadFinExpenses();
   const d = await api('/admin/orders');
   if(!d || !d.orders){ wrap.innerHTML = empty('⚠','VERBINDUNGSFEHLER'); return; }
   const mode = document.getElementById('fin-mode').value; // kleinunt | regular
@@ -1940,6 +2004,10 @@ async function loadFinanzen(){
     const sign = cancelled ? -1 : 1;
     const netto = mode === 'regular' ? brutto / (1 + ustRate) : brutto;
     const ust = mode === 'regular' ? brutto - netto : 0;
+    const payment = (o.payment || '').toString();
+    const isPayPal = /paypal/i.test(payment);
+    const fee = isPayPal ? getPayPalFee(brutto, o.land) : 0;
+    const erlos = brutto - fee;
     return {
       lfd: i+1,
       date: o.date || o.created,
@@ -1947,42 +2015,70 @@ async function loadFinanzen(){
       name: o.name || '',
       email: o.email || '',
       land: (o.land || 'DE').toUpperCase(),
-      payment: o.payment || '',
+      payment,
       status: o.status || 'NEU',
       cancelled,
       brutto: sign * brutto,
       netto: sign * netto,
       ust: sign * ust,
+      fee: sign * fee,
+      erlos: sign * erlos,
       ustRate: mode === 'regular' ? '19%' : '–'
     };
   });
+  FIN_EXPENSES_FILTERED = FIN_EXPENSES.filter(e => finPeriodFilter(e.date));
   renderFinTable(FIN_ROWS, mode);
 }
+
+let FIN_EXPENSES_FILTERED = [];
 function renderFinTable(rows, mode){
   // Summary
   const totals = rows.reduce((acc,r) => {
     acc.brutto += r.brutto; acc.netto += r.netto; acc.ust += r.ust;
+    acc.fee += (r.fee||0); acc.erlos += (r.erlos||r.brutto);
     if(r.cancelled) acc.storno++; else acc.gueltig++;
     acc.byLand[r.land] = (acc.byLand[r.land] || 0) + r.brutto;
     return acc;
-  }, {brutto:0, netto:0, ust:0, gueltig:0, storno:0, byLand:{}});
+  }, {brutto:0, netto:0, ust:0, fee:0, erlos:0, gueltig:0, storno:0, byLand:{}});
+
+  // Ausgaben (aus localStorage)
+  const year=parseInt(document.getElementById('fin-year')?.value||new Date().getFullYear());
+  const period=document.getElementById('fin-period')?.value||'year';
+  const expFiltered = getExpenses().filter(e=>{
+    const d=new Date(e.date);
+    if(d.getFullYear()!==year)return false;
+    const m=d.getMonth()+1;
+    if(period.startsWith('m'))return m===parseInt(period.slice(1));
+    if(period==='q1')return m<=3; if(period==='q2')return m>=4&&m<=6;
+    if(period==='q3')return m>=7&&m<=9; if(period==='q4')return m>=10;
+    return true;
+  });
+  const expensesSum = expFiltered.reduce((a,e)=>a+(parseFloat(e.amount)||0), 0);
+  const gewinn = totals.erlos - expensesSum;
+
   const sumEl = document.getElementById('fin-summary');
   const topLand = Object.entries(totals.byLand).sort((a,b)=>b[1]-a[1])[0];
   sumEl.innerHTML = `
     <div class="fin-sum-card"><div class="fin-sum-lbl">⟫ BESTELLUNGEN</div><div class="fin-sum-val neon">${totals.gueltig}</div><div class="fin-sum-sub">${totals.storno} storniert</div></div>
     <div class="fin-sum-card"><div class="fin-sum-lbl">⟫ BRUTTO-UMSATZ</div><div class="fin-sum-val green">${totals.brutto.toFixed(2)} €</div></div>
-    <div class="fin-sum-card"><div class="fin-sum-lbl">⟫ NETTO-UMSATZ</div><div class="fin-sum-val">${totals.netto.toFixed(2)} €</div></div>
-    <div class="fin-sum-card"><div class="fin-sum-lbl">⟫ UMSATZSTEUER</div><div class="fin-sum-val warn">${totals.ust.toFixed(2)} €</div><div class="fin-sum-sub">${mode==='regular'?'19 % USt':'§ 19 UStG – keine USt'}</div></div>
+    <div class="fin-sum-card"><div class="fin-sum-lbl">⟫ PAYPAL-GEBÜHREN</div><div class="fin-sum-val warn">-${totals.fee.toFixed(2)} €</div><div class="fin-sum-sub">${(totals.brutto>0?(totals.fee/totals.brutto*100):0).toFixed(1)} %</div></div>
+    <div class="fin-sum-card"><div class="fin-sum-lbl">⟫ ECHTER ERLÖS</div><div class="fin-sum-val green">${totals.erlos.toFixed(2)} €</div><div class="fin-sum-sub">nach Gebühren</div></div>
+    <div class="fin-sum-card"><div class="fin-sum-lbl">⟫ AUSGABEN</div><div class="fin-sum-val warn">-${expensesSum.toFixed(2)} €</div><div class="fin-sum-sub">${expFiltered.length} Posten</div></div>
+    <div class="fin-sum-card" style="border:1px solid ${gewinn>=0?'#00ff88':'#ff4d6d'}"><div class="fin-sum-lbl">⟫ GEWINN</div><div class="fin-sum-val" style="color:${gewinn>=0?'#00ff88':'#ff4d6d'}">${gewinn.toFixed(2)} €</div><div class="fin-sum-sub">Erlös - Ausgaben</div></div>
+    ${mode==='regular'?`<div class="fin-sum-card"><div class="fin-sum-lbl">⟫ UMSATZSTEUER</div><div class="fin-sum-val warn">${totals.ust.toFixed(2)} €</div><div class="fin-sum-sub">19 % USt</div></div>`:`<div class="fin-sum-card"><div class="fin-sum-lbl">⟫ STEUER</div><div class="fin-sum-val">§ 19 UStG</div><div class="fin-sum-sub">keine USt</div></div>`}
     ${topLand?`<div class="fin-sum-card"><div class="fin-sum-lbl">⟫ TOP-LAND</div><div class="fin-sum-val">${flagEmoji(topLand[0])} ${topLand[0]}</div><div class="fin-sum-sub">${topLand[1].toFixed(2)} €</div></div>`:''}
   `;
-  // Tabelle
+  // Tabelle mit Gebühren + Erlös
   const tableHtml = rows.length ? `
     <table class="fin-table">
       <thead><tr>
         <th>#</th><th>Datum</th><th>Bestell-Nr.</th><th>Kunde</th><th>E-Mail</th>
         <th>Land</th><th>Zahlung</th><th>Status</th>
-        <th style="text-align:right">Brutto</th><th style="text-align:center">USt %</th>
-        <th style="text-align:right">USt-Betrag</th><th style="text-align:right">Netto</th>
+        <th style="text-align:right">Brutto</th>
+        <th style="text-align:right;color:#ff4d6d">PayPal-Gebühr</th>
+        <th style="text-align:right;color:#00ff88">Erlös</th>
+        <th style="text-align:center">USt %</th>
+        <th style="text-align:right">USt</th><th style="text-align:right">Netto</th>
       </tr></thead>
       <tbody>
         ${rows.map(r => `<tr class="${r.cancelled?'cancelled':''}">
@@ -1995,6 +2091,8 @@ function renderFinTable(rows, mode){
           <td style="color:#999;font-size:10px">${esc(r.payment)}</td>
           <td><span class="stat ${r.cancelled?'cancel':''}">${esc(r.status)}</span></td>
           <td class="brutto">${r.brutto.toFixed(2)} €</td>
+          <td style="text-align:right;color:#ff8888">${r.fee?'-'+Math.abs(r.fee).toFixed(2):'–'} €</td>
+          <td style="text-align:right;color:#00ff88;font-weight:700">${(r.erlos||r.brutto).toFixed(2)} €</td>
           <td class="ustp">${r.ustRate}</td>
           <td class="ust">${r.ust.toFixed(2)} €</td>
           <td class="netto">${r.netto.toFixed(2)} €</td>
@@ -2004,6 +2102,8 @@ function renderFinTable(rows, mode){
         <tr>
           <td colspan="8" style="text-align:right">SUMME</td>
           <td style="text-align:right;color:var(--green)">${totals.brutto.toFixed(2)} €</td>
+          <td style="text-align:right;color:#ff8888">-${totals.fee.toFixed(2)} €</td>
+          <td style="text-align:right;color:#00ff88;font-weight:900">${totals.erlos.toFixed(2)} €</td>
           <td></td>
           <td style="text-align:right;color:var(--warn)">${totals.ust.toFixed(2)} €</td>
           <td style="text-align:right">${totals.netto.toFixed(2)} €</td>
@@ -2137,38 +2237,90 @@ function renderBilanz(){
     '<div style="background:#080808;border:1px solid #1a1a1a;border-radius:12px;padding:18px;text-align:center"><div style="font-family:Orbitron;font-size:9px;color:#888;letter-spacing:2px;margin-bottom:8px">📊 MARGE</div><div style="font-family:Orbitron;font-weight:900;font-size:1.4rem;color:#fff">'+margin.toFixed(1).replace('.',',')+' %</div></div>';
 }
 
+function fmt(v){return (parseFloat(v)||0).toFixed(2).replace('.',',');}
 function exportFinanzenCSV(){
-  if(!FIN_ROWS.length) return toast('Keine Daten zum Export','warn');
+  if(!FIN_ROWS.length && !FIN_EXPENSES_FILTERED.length) return toast('Keine Daten zum Export','warn');
   const year = document.getElementById('fin-year').value;
   const period = document.getElementById('fin-period').options[document.getElementById('fin-period').selectedIndex].text;
   const mode = document.getElementById('fin-mode').value;
-  // Header (DATEV-kompatibel light)
-  const header = ['Lfd-Nr','Datum','Bestell-Nr','Kunde','E-Mail','Land','Zahlung','Status','Brutto','USt-%','USt-Betrag','Netto'];
-  const rows = FIN_ROWS.map(r => [
-    r.lfd, new Date(r.date).toLocaleDateString('de-DE'), r.orderNr, r.name, r.email,
-    r.land, r.payment, r.status,
-    r.brutto.toFixed(2).replace('.',','),
-    r.ustRate,
-    r.ust.toFixed(2).replace('.',','),
-    r.netto.toFixed(2).replace('.',',')
-  ]);
-  // Totals
-  const totals = FIN_ROWS.reduce((a,r)=>{a.b+=r.brutto;a.n+=r.netto;a.u+=r.ust;return a;},{b:0,n:0,u:0});
-  rows.push([]);
-  rows.push(['','','','','','','','SUMME', totals.b.toFixed(2).replace('.',','), '', totals.u.toFixed(2).replace('.',','), totals.n.toFixed(2).replace('.',',')]);
-  const csv = [header, ...rows].map(r => r.map(c => {
+  const lines = [];
+
+  // ═══ TEIL 1: METADATEN ═══
+  lines.push(['LEXORD® Engineering · Finanzauswertung']);
+  lines.push(['Zeitraum:', year + ' · ' + period]);
+  lines.push(['Steuermodus:', mode==='regular' ? 'Regelbesteuerung (19% USt)' : '§ 19 UStG (Kleinunternehmer)']);
+  lines.push(['Exportiert am:', new Date().toLocaleString('de-DE')]);
+  lines.push([]);
+
+  // ═══ TEIL 2: EINNAHMEN (BESTELLUNGEN) ═══
+  lines.push(['═══ EINNAHMEN · BESTELLUNGEN ═══']);
+  lines.push(['Lfd-Nr','Datum','Bestell-Nr','Kunde','E-Mail','Land','Zahlung','Status','Brutto (EUR)','PayPal-Gebühr (EUR)','Echter Erlös (EUR)','USt-Satz','USt-Betrag (EUR)','Netto (EUR)']);
+  FIN_ROWS.forEach(r => {
+    lines.push([
+      r.lfd, new Date(r.date).toLocaleDateString('de-DE'),
+      r.orderNr, r.name, r.email, r.land, r.payment, r.status,
+      fmt(r.brutto), fmt(-Math.abs(r.fee||0)), fmt(r.erlos||r.brutto),
+      r.ustRate, fmt(r.ust), fmt(r.netto)
+    ]);
+  });
+  const T = FIN_ROWS.reduce((a,r)=>{
+    a.b+=r.brutto; a.n+=r.netto; a.u+=r.ust;
+    a.f+=(r.fee||0); a.e+=(r.erlos||r.brutto);
+    return a;
+  },{b:0,n:0,u:0,f:0,e:0});
+  lines.push(['','','','','','','','SUMME EINNAHMEN', fmt(T.b), fmt(-T.f), fmt(T.e), '', fmt(T.u), fmt(T.n)]);
+  lines.push([]);
+
+  // ═══ TEIL 3: AUSGABEN ═══
+  const expFiltered = (typeof getExpenses==='function' ? getExpenses() : []).filter(e=>{
+    const d=new Date(e.date);
+    if(d.getFullYear()!==parseInt(year))return false;
+    const pv = document.getElementById('fin-period').value;
+    const m=d.getMonth()+1;
+    if(pv.startsWith('m'))return m===parseInt(pv.slice(1));
+    if(pv==='q1')return m<=3; if(pv==='q2')return m>=4&&m<=6;
+    if(pv==='q3')return m>=7&&m<=9; if(pv==='q4')return m>=10;
+    return true;
+  });
+  lines.push(['═══ AUSGABEN · BETRIEBSKOSTEN ═══']);
+  lines.push(['Lfd-Nr','Datum','Kategorie','Beschreibung','Beleg-Nr / Lieferant','Betrag (EUR)']);
+  let expSum = 0;
+  expFiltered.forEach((e,i) => {
+    const cat = (typeof EX_CATS==='object' && EX_CATS[e.cat]) ? EX_CATS[e.cat].replace(/^\S+ /,'') : (e.cat||'Sonstiges');
+    const amt = parseFloat(e.amount)||0; expSum += amt;
+    lines.push([i+1, new Date(e.date).toLocaleDateString('de-DE'), cat, e.desc||'', e.receipt||'', fmt(amt)]);
+  });
+  lines.push(['','','','','SUMME AUSGABEN', fmt(expSum)]);
+  lines.push([]);
+
+  // ═══ TEIL 4: BILANZ ═══
+  const gewinn = T.e - expSum;
+  lines.push(['═══ BILANZ · GEWINN-VERLUST-RECHNUNG ═══']);
+  lines.push(['Position','Betrag (EUR)']);
+  lines.push(['Brutto-Umsatz (Bestellungen)', fmt(T.b)]);
+  lines.push(['PayPal-Gebühren (abzgl.)', fmt(-T.f)]);
+  lines.push(['= Echter Erlös', fmt(T.e)]);
+  lines.push(['Betriebsausgaben (abzgl.)', fmt(-expSum)]);
+  lines.push(['= GEWINN VOR STEUER', fmt(gewinn)]);
+  if(mode==='regular'){
+    lines.push(['Davon Umsatzsteuer (19%)', fmt(T.u)]);
+    lines.push(['Davon Netto-Umsatz', fmt(T.n)]);
+  } else {
+    lines.push(['Steuerstatus', '§ 19 UStG Kleinunternehmer · keine USt']);
+  }
+
+  const csv = lines.map(r => r.map(c => {
     const s = String(c==null?'':c);
     return /[";,\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
   }).join(';')).join('\r\n');
-  // BOM fuer Excel
   const blob = new Blob(['﻿' + csv], {type:'text/csv;charset=utf-8'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'LEXORD-Steueraufstellung-'+year+'-'+document.getElementById('fin-period').value+'-'+mode+'.csv';
+  a.download = 'LEXORD-Finanzauswertung-'+year+'-'+document.getElementById('fin-period').value+'-'+mode+'.csv';
   a.click();
   URL.revokeObjectURL(url);
-  toast('CSV exportiert','success');
+  toast('CSV exportiert: Einnahmen + Gebühren + Ausgaben + Gewinn','success');
 }
 function printFinanzen(){
   if(!FIN_ROWS.length) return toast('Keine Daten zum Drucken','warn');

@@ -1078,73 +1078,102 @@ async function adminUnsubscribe(request, env) {
 
 async function newsletterAiSuggest(request, env) {
   if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
-  if (!env.AI) return json({ success: false, error: "KI nicht konfiguriert" });
+  if (!env.AI) return json({ success: false, error: "Workers-AI-Binding 'AI' fehlt im Worker (Cloudflare Dashboard → Worker → Settings → AI Bindings → Variable name 'AI')" });
   const body = await request.json();
   const campaign = (body.campaign || "drop").toString();
   const product = (body.product || "").toString().slice(0, 200);
   const hint = (body.hint || "").toString().slice(0, 400);
   const season = (body.season || "").toString().slice(0, 60);
 
-  const systemPrompt = `Du bist eine Top-Copywriterin fuer E-Commerce-Newsletter im Premium-Gaming-Segment. Du schreibst fuer LEXORD Engineering — deutsche Custom-PS5-Controller, handgefertigt in Domsuehl, Made in Germany.
+  const systemPrompt = `Du bist Top-Copywriterin fuer LEXORD Engineering — deutsche Custom-PS5-Controller, Made in Germany.
 
-DEINE AUFGABE: Erzeuge einen verkaufsstarken Newsletter-Text auf Deutsch im LEXORD-Tone:
-- direkt, selbstbewusst, technisch-praezise
-- nie kitschig, nie marktschreierisch, kein "Jetzt zugreifen!!!"-Stil
-- max 4 kurze Absaetze im body
-- HTML-Tags erlaubt: <strong>, <br>, <em>
-- spricht Gamer ab 18 an, die Wert auf Qualitaet legen
-- Verkaufsargumente einbauen: handgefertigt, Hall-Effect/TMR Sticks, 24-Monate-Garantie, schneller Versand aus DE
+REGELN:
+- Antworte NUR mit reinem JSON. Kein Markdown. Keine Code-Fences. Kein Text davor oder danach.
+- Sprache: Deutsch
+- Tonfall: direkt, selbstbewusst, technisch-praezise. Nie kitschig.
+- Verkaufsargumente einbauen: handgefertigt, Hall-Effect/TMR Sticks, 24 Monate Garantie, schneller Versand aus Deutschland
 
-PRODUKT-KATALOG (verwende NUR diese):
+PRODUKTE (nutze nur diese, mit echten Preisen):
 - LXRD Elite Pro 280 EUR · LXRD Performance 240 EUR · LXRD Stealth 220 EUR · LXRD Plus 180 EUR · LXRD Basic 105 EUR
 - Custom-Paddles ab 19,90 EUR · 3D-Print-Service · Stickzange Pro 5 EUR
-- Reparatur-Service: Stick-Drift ab 25 EUR, Festpreise
+- Reparatur: Stick-Drift ab 25 EUR, Festpreise
 - LXRD Wallet · Hall-Effect-Kit 35 EUR · TMR-Upgrade 55 EUR
 
-ANTWORTE STRENG ALS JSON, KEIN MARKDOWN, KEINE ERKLAERUNGEN. SCHEMA:
-{"subject":"<max 60 Zeichen, Betreff>","headline":"<max 30 Zeichen, GROSS>","body":"<HTML, max 600 Zeichen>","code":"<optional, 4-10 Zeichen GROSS, leer wenn kein Rabatt passt>","ctaText":"<max 22 Zeichen GROSS, z.B. JETZT ENTDECKEN>"}`;
+AUSGABE-SCHEMA (NUR JSON):
+{"subject":"max 60 Zeichen","headline":"max 30 Zeichen GROSS","body":"max 600 Zeichen HTML mit <strong> und <br>","code":"4-10 Zeichen GROSS oder leer","ctaText":"max 22 Zeichen GROSS"}`;
 
   const campaignDescriptions = {
-    drop: "Neues Produkt / Drop angekuendigt — Headline 'NEU EINGETROFFEN' o.ae., CTA 'JETZT SICHERN'",
-    sale: "Rabatt-Aktion mit Code — kraftvolle Headline, klarer Rabatt im body (z.B. 10-15%), CTA 'CODE EINLOESEN'",
-    repair: "Reparatur-Service bewerben — Headline 'REPARATUR-SERVICE', Festpreise hervorheben, CTA 'REPARATUR ANFRAGEN'",
-    news: "Atelier-Update / News — persoenlich, hinter den Kulissen, Headline 'AUS DEM ATELIER', CTA 'ENTDECKEN'",
-    paddles: "3D-Druck-Paddles & Ersatzteile — Bio-PETG, Custom, Headline '3D-PRINT-SERVICE', CTA 'JETZT KONFIGURIEREN'",
-    wallet: "LXRD Wallet bewerben — Premium-Lifestyle-Accessoire, Headline 'LXRD WALLET', CTA 'ENTDECKEN'"
+    drop: "Neues Produkt / Drop ankuendigen. Headline z.B. 'NEU EINGETROFFEN', CTA z.B. 'JETZT SICHERN'.",
+    sale: "Rabatt-Aktion mit Code (10-15%). Code in body erwaehnen, klare Ersparnis. CTA 'CODE EINLOESEN'.",
+    repair: "Reparatur-Service bewerben mit Festpreisen. Headline 'REPARATUR-SERVICE', CTA 'REPARATUR ANFRAGEN'.",
+    news: "Persoenliches Atelier-Update, hinter den Kulissen. Headline 'AUS DEM ATELIER', CTA 'ENTDECKEN'.",
+    paddles: "3D-Druck-Paddles & kleine Ersatzteile (Bio-PETG, Custom). Headline '3D-PRINT-SERVICE', CTA 'JETZT KONFIGURIEREN'.",
+    wallet: "LXRD Wallet bewerben — Premium-Lifestyle. Headline 'LXRD WALLET', CTA 'ENTDECKEN'."
   };
   const camp = campaignDescriptions[campaign] || campaignDescriptions.drop;
   const seasonLine = season ? "\nSAISON/ANLASS: " + season : "";
   const productLine = product ? "\nFOKUS-PRODUKT: " + product : "";
-  const hintLine = hint ? "\nZUSAETZLICHER HINWEIS DES ADMIN: " + hint : "";
+  const hintLine = hint ? "\nADMIN-HINWEIS: " + hint : "";
 
-  const userPrompt = "KAMPAGNEN-TYP: " + camp + seasonLine + productLine + hintLine + "\n\nErzeuge jetzt das JSON.";
+  const userPrompt = "KAMPAGNE: " + camp + seasonLine + productLine + hintLine + "\n\nAntworte JETZT mit reinem JSON gemaess Schema.";
 
-  try {
-    const r = await env.AI.run("@cf/meta/llama-3.3-70b-instruct-fp8-fast", {
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt }
-      ],
-      max_tokens: 700,
-      temperature: 0.8
-    });
-    let txt = (r.response || "").trim();
-    const m = txt.match(/\{[\s\S]*\}/);
-    if (m) txt = m[0];
-    let data;
-    try { data = JSON.parse(txt); }
-    catch (e) { return json({ success: false, error: "KI-Antwort nicht parsebar", raw: txt }); }
-    return json({
-      success: true,
-      subject: (data.subject || "").slice(0, 120),
-      headline: (data.headline || "").slice(0, 60),
-      body: (data.body || "").slice(0, 1500),
-      code: (data.code || "").toUpperCase().slice(0, 16),
-      ctaText: (data.ctaText || "JETZT ENTDECKEN").slice(0, 40)
-    });
-  } catch (e) {
-    return json({ success: false, error: String(e) });
+  // Versuche zuerst das groessere Modell, dann Fallback aufs kleinere
+  const models = [
+    "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+    "@cf/meta/llama-3.1-8b-instruct"
+  ];
+
+  let lastErr = "";
+  let rawResponse = "";
+
+  for (const model of models) {
+    try {
+      const r = await env.AI.run(model, {
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt }
+        ],
+        max_tokens: 700,
+        temperature: 0.75
+      });
+      let txt = (r && r.response ? r.response : "").trim();
+      rawResponse = txt;
+      if (!txt) { lastErr = "Leere KI-Antwort von " + model; continue; }
+
+      // Markdown-Fences entfernen
+      txt = txt.replace(/```(?:json)?\s*/gi, "").replace(/```/g, "").trim();
+
+      // Erstes JSON-Objekt herauspicken
+      const m = txt.match(/\{[\s\S]*\}/);
+      if (m) txt = m[0];
+
+      let data;
+      try {
+        data = JSON.parse(txt);
+      } catch (e) {
+        // Reparatur-Versuch: trailing commas
+        const cleaned = txt.replace(/,(\s*[}\]])/g, "$1");
+        try { data = JSON.parse(cleaned); }
+        catch (e2) { lastErr = "JSON-Parse fehlgeschlagen (" + model + "): " + e2.message; continue; }
+      }
+
+      if (!data || (!data.subject && !data.body)) { lastErr = "JSON ohne Inhalt"; continue; }
+
+      return json({
+        success: true,
+        model,
+        subject: String(data.subject || "").slice(0, 120),
+        headline: String(data.headline || "").slice(0, 60),
+        body: String(data.body || "").slice(0, 1500),
+        code: String(data.code || "").toUpperCase().slice(0, 16),
+        ctaText: String(data.ctaText || "JETZT ENTDECKEN").slice(0, 40)
+      });
+    } catch (e) {
+      lastErr = String(e && e.message ? e.message : e);
+    }
   }
+
+  return json({ success: false, error: lastErr || "Beide KI-Modelle fehlgeschlagen", raw: rawResponse.slice(0, 400) });
 }
 
 // ============ NEWSLETTER ANTI-FAKE CHECK ============

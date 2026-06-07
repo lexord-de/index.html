@@ -2251,7 +2251,9 @@ async function nlAiGenerate(){
     });
     const d = await r.json();
     if(!d.success){
-      status.textContent = '⚠ ' + (d.error || 'KI-Fehler');
+      console.error('[KI-Newsletter]', d);
+      const msg = (d.error || 'KI-Fehler') + (d.raw ? '\n\nKI-Antwort: '+d.raw : '');
+      status.textContent = '⚠ ' + (d.error || 'KI-Fehler') + ' (Details in Console)';
       status.style.color = '#ff4d6d';
       btn.disabled = false;
       btn.textContent = '✨ TEXT GENERIEREN';

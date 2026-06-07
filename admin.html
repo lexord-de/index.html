@@ -293,6 +293,7 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
     <div class="dash-header-r">
       <span class="live-pill"><span class="live-dot"></span><span id="live-count">0</span> LIVE</span>
       <button class="dash-logout" onclick="testPush()" title="Test-Push an dein Handy">📲 TEST</button>
+      <button class="dash-logout" onclick="resetPushSubscription()" title="Alte Push-Subscription löschen + neue erstellen (bei neuen VAPID-Keys notwendig)">🔄 RESET</button>
       <button class="dash-logout" id="notif-toggle" onclick="toggleNotifications()" title="Sound + Push-Benachrichtigungen">🔔 ON</button>
       <button class="dash-logout" onclick="doLogout()">↩ LOGOUT</button>
     </div>
@@ -3506,6 +3507,37 @@ async function testPush(){
   const r = await api('/admin/push/test', { method:'POST', body: JSON.stringify({}) });
   if(r && r.success) toast('Test-Push gesendet — schau auf dein Handy 📱','success');
   else toast('Test-Push fehlgeschlagen — VAPID-Keys im Worker setzen','error');
+}
+
+/* Hartes Reset: alle alten Service Worker + Subscriptions + Permissions clearen, neu registrieren.
+   Notwendig wenn VAPID-Keys im Worker neu generiert wurden — die alte Subscription wird sonst
+   nicht mehr akzeptiert (HTTP 410 vom Push-Service). */
+async function resetPushSubscription(){
+  if(!confirm('Push-Subscription zurücksetzen?\n\nLöscht:\n• alte Service-Worker-Registrierung\n• alte Push-Subscription im Browser\n• gespeicherte Subscription im Worker-KV\n\nDanach kannst du mit 🔔 ON neu abonnieren.')) return;
+  let cleared = 0;
+  try{
+    // 1. Alte Subscription im Browser holen
+    const regs = await navigator.serviceWorker.getRegistrations();
+    for(const reg of regs){
+      const sub = await reg.pushManager.getSubscription();
+      if(sub){
+        // 2. Im Worker-KV löschen
+        try{
+          await api('/admin/push/unsubscribe', { method:'POST', body: JSON.stringify({ endpoint: sub.endpoint }) });
+        }catch(e){}
+        // 3. Im Browser unsubscriben
+        try{ await sub.unsubscribe(); cleared++; }catch(e){}
+      }
+      // 4. Service Worker komplett deregistrieren
+      try{ await reg.unregister(); cleared++; }catch(e){}
+    }
+    // 5. Cached VAPID Key clearen
+    VAPID_PUB = null;
+    SW_REG = null;
+    toast('✓ '+cleared+' Sachen gelöscht — klick jetzt 🔔 ON um neu zu abonnieren','success');
+  }catch(e){
+    toast('Reset-Fehler: '+e.message,'error');
+  }
 }
 
 async function toggleNotifications(){

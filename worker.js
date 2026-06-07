@@ -1623,9 +1623,23 @@ async function adminIndexNowPing(request, env) {
 
 // ============ BLOG ============
 function slugify(s) {
-  return String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
-    .replace(/[ä]/g, "ae").replace(/[ö]/g, "oe").replace(/[ü]/g, "ue").replace(/[ß]/g, "ss")
-    .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
+  var str = String(s || "").toLowerCase();
+  str = str.split("ä").join("ae")
+           .split("ö").join("oe")
+           .split("ü").join("ue")
+           .split("ß").join("ss")
+           .split("é").join("e")
+           .split("è").join("e")
+           .split("ê").join("e")
+           .split("à").join("a")
+           .split("á").join("a")
+           .split("â").join("a")
+           .split("ó").join("o")
+           .split("ô").join("o")
+           .split("í").join("i")
+           .split("ú").join("u")
+           .split("ñ").join("n");
+  return str.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80);
 }
 
 async function listBlog(request, env) {

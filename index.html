@@ -2870,10 +2870,64 @@ function tplBase(opts){
   return `<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>LEXORD®</title></head><body style="margin:0;padding:0;background:#f4f4f6;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#1a1a1a"><div style="display:none;max-height:0;overflow:hidden;font-size:1px;line-height:1px;color:#f4f4f6">${preheader}</div><table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" bgcolor="#f4f4f6"><tr><td align="center" style="padding:32px 12px"><table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" style="width:600px;max-width:600px;background:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.06)" bgcolor="#ffffff"><tr><td bgcolor="#000000" style="background:#000000;background:radial-gradient(ellipse at top center,#001824 0%,#000000 70%);padding:46px 36px 36px;text-align:center" align="center"><div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:32px;font-weight:300;letter-spacing:16px;color:#ffffff;line-height:1">LEXORD<span style="color:${accent};font-weight:400">®</span></div><div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:5px;color:${accent};margin-top:14px;text-transform:uppercase;font-weight:600">Engineering · Made in Germany</div></td></tr><tr><td height="3" style="height:3px;line-height:3px;font-size:0;background:${accent}" bgcolor="${accent}">&nbsp;</td></tr><tr><td style="background:#f9f9fb;padding:24px 36px;text-align:center;border-bottom:1px solid #ececec"><div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;font-weight:600;letter-spacing:3px;color:#1a1a1a;text-transform:uppercase">${opts.headerTitle||'BENACHRICHTIGUNG'}</div>${opts.headerSubtitle?`<div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;color:#888;margin-top:5px;letter-spacing:1px">${opts.headerSubtitle}</div>`:''}</td></tr><tr><td bgcolor="#ffffff" style="padding:36px;background:#ffffff;color:#1a1a1a;font-size:14px;line-height:1.7">${opts.customerName?`<p style="font-size:16px;color:#1a1a1a;margin:0 0 22px"><strong>Hallo ${esc(opts.customerName)},</strong></p>`:''}${opts.body}</td></tr>${cta}${opts.germanyBanner?`<tr><td style="padding:0 36px 8px">${germanyBanner()}</td></tr>`:''}<tr><td bgcolor="#0a0a0a" style="background:#0a0a0a;padding:32px 36px 28px;text-align:center"><div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;font-weight:300;letter-spacing:8px;color:#ffffff;margin-bottom:12px">LEXORD<span style="color:${accent}">®</span></div><div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;color:#aaa;line-height:1.8">Leon Schulz · An Der Domsühler Str. 2 · 19374 Domsühl<br><a href="mailto:Kontakt@Lexord.de" style="color:${accent};text-decoration:none">Kontakt@Lexord.de</a> · <a href="tel:+4915204718720" style="color:${accent};text-decoration:none">0152 047 18720</a></div><div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;color:#555;margin-top:16px;line-height:1.7">Kleinunternehmer gem. § 19 UStG · keine MwSt. ausgewiesen</div></td></tr></table></td></tr></table></body></html>`;
 }
 function tplWrap(c,t,b){return tplBase({accentColor:c,headerTitle:t,body:b});}
-function tplOrderAdmin(name,email,nr,total,country){
-  return tplBase({accentColor:'#ff9500',headerTitle:'Neue Bestellung',preheader:`${nr} · ${name} · ${total.toFixed(2)} €`,
-    body:`<p><strong>${esc(name)}</strong> (<a href="mailto:${esc(email)}">${esc(email)}</a>)</p><p>Land: ${esc(country||'DE')}</p><p style="font-size:20px;color:#00b67a;font-weight:600">Gesamt: ${total.toFixed(2)} €</p>`,
-    ctaButton:'Admin-Panel öffnen',ctaUrl:'https://lexord.de/?admin=1'});
+function tplOrderAdmin(name,email,nr,total,country,items,subtotal,discount,shipping,addrBlock,payment){
+  items = items || [];
+  subtotal = subtotal || total;
+  discount = discount || 0;
+  shipping = shipping || 0;
+  payment = payment || 'PayPal';
+  const itemRows = items.map(i=>{
+    const cfg = i.config && typeof i.config === 'object' ? Object.entries(i.config).map(([k,v])=>`<div style="font-size:11px;color:#888;margin-top:2px">${esc(k)}: <strong style="color:#444">${esc(String(v))}</strong></div>`).join('') : '';
+    const sub = ((i.price||0) * (i.qty||1)).toFixed(2);
+    return `<tr>
+      <td valign="top" style="padding:10px 8px 10px 0;border-bottom:1px solid #eee;font-size:13px;color:#222">
+        <strong>${esc(i.name||'Artikel')}</strong>
+        ${i.desc ? `<div style="font-size:11px;color:#888;margin-top:3px">${esc(i.desc)}</div>` : ''}
+        ${cfg}
+      </td>
+      <td valign="top" align="center" style="padding:10px 6px;border-bottom:1px solid #eee;font-size:13px;color:#444;width:40px">${i.qty||1}×</td>
+      <td valign="top" align="right" style="padding:10px 0 10px 8px;border-bottom:1px solid #eee;font-size:13px;color:#000;font-weight:bold;width:70px">${sub} €</td>
+    </tr>`;
+  }).join('');
+  const body = `
+    <p style="margin:0 0 14px;font-size:15px"><strong style="color:#1a1a1a">${esc(name)}</strong> &middot; <a href="mailto:${esc(email)}" style="color:#0066ff">${esc(email)}</a></p>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:6px 0 16px;background:#f9f9f9;border-radius:8px;border-left:4px solid #ff9500">
+      <tr><td style="padding:14px 16px">
+        <div style="font-size:11px;color:#888;letter-spacing:1.5px;margin-bottom:6px">BESTELLNUMMER</div>
+        <div style="font-size:18px;font-weight:900;color:#1a1a1a;font-family:Courier New,monospace">${esc(nr)}</div>
+      </td></tr>
+    </table>
+
+    <div style="font-size:11px;letter-spacing:2px;color:#666;margin:18px 0 8px">📦 BESTELLPOSITIONEN (${items.length})</div>
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="font-size:13px">
+      <thead><tr style="background:#1a1a1a;color:#fff">
+        <th align="left" style="padding:9px 8px;font-size:10px;letter-spacing:1.5px;font-weight:bold">ARTIKEL</th>
+        <th align="center" style="padding:9px 6px;font-size:10px;letter-spacing:1.5px;font-weight:bold">MENGE</th>
+        <th align="right" style="padding:9px 8px;font-size:10px;letter-spacing:1.5px;font-weight:bold">PREIS</th>
+      </tr></thead>
+      <tbody>${itemRows || '<tr><td colspan="3" style="padding:14px;text-align:center;color:#999">Keine Artikel</td></tr>'}</tbody>
+    </table>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:16px;font-size:13px">
+      <tr><td align="right" style="padding:3px 0;color:#666">Zwischensumme:</td><td align="right" style="padding:3px 0 3px 12px;color:#1a1a1a;width:90px;font-weight:bold">${(subtotal||0).toFixed(2)} €</td></tr>
+      ${discount>0 ? `<tr><td align="right" style="padding:3px 0;color:#009900">Rabatt:</td><td align="right" style="padding:3px 0 3px 12px;color:#009900;font-weight:bold">-${discount.toFixed(2)} €</td></tr>` : ''}
+      <tr><td align="right" style="padding:3px 0;color:#666">Versand:</td><td align="right" style="padding:3px 0 3px 12px;color:#1a1a1a;font-weight:bold">${shipping===0?'Kostenlos':shipping.toFixed(2)+' €'}</td></tr>
+      <tr><td align="right" style="padding:12px 0 0;border-top:2px solid #1a1a1a;font-size:16px;font-weight:900;color:#1a1a1a">GESAMT:</td><td align="right" style="padding:12px 0 0 12px;border-top:2px solid #1a1a1a;font-size:18px;font-weight:900;color:#00b67a">${total.toFixed(2)} €</td></tr>
+    </table>
+
+    <div style="margin-top:22px;padding:14px 16px;background:#0c0c0c;color:#fff;border-radius:8px">
+      <div style="font-size:11px;color:#aaa;letter-spacing:2px;margin-bottom:8px">📍 LIEFERADRESSE</div>
+      <div style="font-size:13px;line-height:1.7;color:#fff">${addrBlock || '<em style="color:#666">(keine Adresse)</em>'}</div>
+    </div>
+
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:14px;font-size:12px">
+      <tr><td style="padding:8px 12px;background:#f5f5f5;border-radius:6px">
+        <strong>Zahlung:</strong> ${esc(payment)} &middot; <strong>Land:</strong> ${esc(country||'DE')}
+      </td></tr>
+    </table>`;
+  return tplBase({accentColor:'#ff9500',headerTitle:'Neue Bestellung',preheader:`${nr} · ${name} · ${total.toFixed(2)} €`,body,
+    ctaButton:'Im Admin-Panel öffnen',ctaUrl:'https://lexord.de/admin.html'});
 }
 function tplRepair(name,nr,damage,model,price){
   return tplBase({accentColor:'#00f2ff',headerTitle:'Reparaturanfrage eingegangen',headerSubtitle:'Wir melden uns binnen 24h',customerName:name,
@@ -3552,7 +3606,8 @@ async function lxdBankCheckout(){
     <p style="font-size:13px"><strong>Wichtig:</strong> Bitte den Verwendungszweck <strong>${orderNr}</strong> bei der Überweisung angeben, sonst können wir den Zahlungseingang nicht zuordnen.</p>
     <p style="font-size:13px"><strong>📍 Status verfolgen:</strong> Auf <a href="https://lexord.de" style="color:#00a8b5">lexord.de</a> oben rechts auf "LOGIN" klicken.</p>`;
   await ejsSend(email,name,`📄 Bankdaten zu deiner Bestellung ${orderNr} | LEXORD®`,tplWrap('#00b67a','📄 BESTELLUNG · WARTET AUF ÜBERWEISUNG',bankHtml),ADMIN_EMAIL);
-  await ejsSend(ADMIN_EMAIL,'LEXORD Admin',`[VORKASSE] ${orderNr} · ${name} · ${total.toFixed(2)} €`,tplOrderAdmin(name,email,orderNr,total,land),email);
+  const vkAddrBlock=`${esc(ad.fn)} ${esc(ad.ln)}<br>${esc(ad.street)} ${esc(ad.no)}<br>${esc(ad.zip)} ${esc(ad.city)}<br>${esc(ad.land||'DE')}${ad.phone?'<br>Tel: '+esc(ad.phone):''}`;
+  await ejsSend(ADMIN_EMAIL,'LEXORD Admin',`[VORKASSE] ${orderNr} · ${name} · ${total.toFixed(2)} €`,tplOrderAdmin(name,email,orderNr,total,land,cart.slice(),sub,totalDisc,ship,vkAddrBlock,'Überweisung'),email);
 
   // Discount-Code als verwendet markieren
   if(activeDiscount && activeDiscount.code){
@@ -3592,7 +3647,7 @@ async function processOrder(email,orderNr,fn,ln,paypalDet){
   await saveOrderToCF({orderNr,email,name,items:cart.map(i=>({name:i.name,price:i.price,qty:i.qty,desc:i.desc||'',config:i.config||null})),subtotal:sub,discount:disc,shipping:ship,total,country:land,payment:'PayPal',paypal_id:paypalDet?.id||'',status:'paid',created:new Date().toISOString(),shipping_address:{fn:ad.fn,ln:ad.ln,street:ad.street,no:ad.no,zip:ad.zip,city:ad.city,country:ad.land,phone:ad.phone,email:ad.email}});
   const itemList=cart.map(i=>`<tr><td style="padding:6px 0;border-bottom:1px solid #eee">${esc(i.name)}${i.desc?`<br><span style="font-size:11px;color:#888">${esc(i.desc)}</span>`:''}</td><td style="text-align:center;border-bottom:1px solid #eee">${i.qty}×</td><td style="text-align:right;border-bottom:1px solid #eee">${(i.price*i.qty).toFixed(2)} €</td></tr>`).join('');
   await ejsSend(email,name,`✅ Bestellbestätigung ${orderNr} | LEXORD®`,tplWrap('#00f2ff','✅ BESTELLUNG BESTÄTIGT',`<p>Hallo <strong>${esc(name)}</strong>,</p><p>vielen Dank für deine Bestellung! Versand in 1-3 Werktagen per DHL.</p><div style="background:#f9f9f9;border-radius:8px;padding:18px;margin:18px 0;border-left:4px solid #00f2ff"><div style="font-size:12px;color:#888;margin-bottom:10px">BESTELLNUMMER: <strong>${orderNr}</strong></div><table style="width:100%;font-size:13px;border-collapse:collapse"><tr style="font-weight:bold;border-bottom:2px solid #ddd"><td style="padding:6px 0">Artikel</td><td style="text-align:center">Menge</td><td style="text-align:right">Preis</td></tr>${itemList}</table><div style="margin-top:12px;font-size:13px;color:#555">${disc>0?`<div>Rabatt: <span style="color:#009900">-${disc.toFixed(2)} €</span></div>`:''}<div>Versand: ${ship===0?'Kostenlos':ship.toFixed(2)+' €'}</div><div style="font-weight:bold;font-size:15px;margin-top:8px;padding-top:8px;border-top:2px solid #ddd">GESAMT: <span style="color:#009900">${total.toFixed(2)} €</span></div></div><div style="font-size:11px;color:#999;margin-top:8px">Kleinunternehmer gem. § 19 UStG - keine MwSt. ausgewiesen</div></div><div style="background:#0c0c0c;color:#fff;border-radius:8px;padding:18px;margin:18px 0"><div style="font-size:11px;color:#aaa;letter-spacing:2px;margin-bottom:8px">📦 LIEFERADRESSE</div><div style="font-size:13px;line-height:1.7">${addrBlock}</div></div><p style="font-size:13px"><strong>📍 Status verfolgen:</strong> Auf <a href="https://lexord.de" style="color:#00a8b5">lexord.de</a> oben rechts auf "LOGIN" klicken.</p>`),ADMIN_EMAIL);
-  await ejsSend(ADMIN_EMAIL,'LEXORD Admin',`[BESTELLUNG] ${orderNr} · ${name} · ${total.toFixed(2)} €`,tplOrderAdmin(name,email,orderNr,total,land),email);
+  await ejsSend(ADMIN_EMAIL,'LEXORD Admin',`[BESTELLUNG] ${orderNr} · ${name} · ${total.toFixed(2)} €`,tplOrderAdmin(name,email,orderNr,total,land,cart.slice(),sub,disc,ship,addrBlock,'PayPal · ID '+(paypalDet?.id||'?')),email);
   if(activeDiscount && activeDiscount.code){
     const isWelcome=WELCOME_CODES.includes(activeDiscount.code)||activeDiscount.welcome;
     try{await fetch(CF_WORKER_URL+'/api/discount/use',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:activeDiscount.code,email,fp:getDeviceFP()})});}catch(e){}

@@ -167,6 +167,7 @@ async function test(){
       if (path === "/api/admin/seo/indexnow" && request.method === "POST") return await adminIndexNowPing(request, env);
       if (path === "/api/admin/products" && request.method === "GET") return await adminListProducts(request, env);
       if (path === "/api/admin/products" && request.method === "POST") return await adminCreateProduct(request, env);
+      if (path === "/api/admin/products/ai-generate" && request.method === "POST") return await adminProductAiGenerate(request, env);
       if (path === "/api/products" && request.method === "GET") return await listProducts(request, env);
       if (path === "/api/blog" && request.method === "GET") return await listBlog(request, env);
       if (path.startsWith("/api/blog/") && request.method === "GET") return await getBlogArticle(request, env, path.split("/").pop());
@@ -1586,6 +1587,74 @@ async function adminCreateProduct(request, env) {
   return json({ success: true, slug: p.slug });
 }
 
+async function adminProductAiGenerate(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.AI) return json({ success: false, error: "Workers-AI-Binding 'AI' fehlt im Worker" });
+  const b = await request.json();
+  const idea = String(b.idea || "").slice(0, 400);
+  const category = String(b.category || "Custom Controller").slice(0, 40);
+  const targetPrice = parseFloat(b.targetPrice) || 0;
+  if (!idea) return json({ success: false, error: "Produkt-Idee fehlt" });
+
+  const systemPrompt = `Du bist Produkttexter fuer LEXORD Engineering — deutsche Custom-PS5-Controller-Manufaktur. Erzeuge professionelle Produktdaten fuer den LEXORD-Shop.
+
+REGELN:
+- Antworte NUR mit reinem JSON. Kein Markdown. Kein Text davor oder danach.
+- Sprache: Deutsch
+- Tonfall: technisch-praezise, selbstbewusst, hochwertig
+- Made in Germany betonen, NIE einen konkreten Ort nennen
+- Slug: kebab-case, max 40 Zeichen, nur a-z 0-9 und Bindestriche
+- shortDesc: 1 Satz, max 140 Zeichen, Verkaufsargument
+- features: Array mit 4-6 Stichpunkten (je max 60 Zeichen)
+- specs: Array von [Label,Wert]-Paaren (z.B. ["Sticks","TMR Hall-Effect"])
+- longDesc: HTML mit <h3>, <p>, <ul>, <li>, <strong>. 200-400 Woerter. Verkaufsorientiert.
+- price: realistische EUR-Zahl im LEXORD-Sortiment (Controller 105-280, Mods 5-55, Werkzeug ab 5)
+
+KATEGORIEN: Premium Controller, Upgrade-Kit, Zubehör, Werkzeug, Gehäuse, Mod
+
+JSON-SCHEMA:
+{"slug":"kebab-case","name":"Produktname","category":"...","price":129.90,"shortDesc":"...","features":["...","..."],"specs":[["Label","Wert"]],"longDesc":"HTML"}`;
+
+  const userPrompt = "PRODUKT-IDEE: " + idea + "\nKATEGORIE: " + category + (targetPrice ? "\nZIEL-PREIS (EUR): " + targetPrice : "") + "\n\nErzeuge jetzt die Produktdaten als reines JSON.";
+
+  const models = ["@cf/meta/llama-3.3-70b-instruct-fp8-fast", "@cf/meta/llama-3.1-8b-instruct"];
+  let lastErr = "", rawResp = "";
+  for (const model of models) {
+    try {
+      const r = await env.AI.run(model, {
+        messages: [{ role: "system", content: systemPrompt }, { role: "user", content: userPrompt }],
+        max_tokens: 2200,
+        temperature: 0.75
+      });
+      let txt = (r && r.response ? r.response : "").trim();
+      rawResp = txt;
+      if (!txt) { lastErr = "leere Antwort"; continue; }
+      txt = txt.replace(/```(?:json)?\s*/gi, "").replace(/```/g, "").trim();
+      const m = txt.match(/\{[\s\S]*\}/);
+      if (m) txt = m[0];
+      let data;
+      try { data = JSON.parse(txt); }
+      catch (e) { try { data = JSON.parse(txt.replace(/,(\s*[}\]])/g, "$1")); } catch (e2) { lastErr = "JSON-Parse: " + e2.message; continue; } }
+      if (!data || !data.name) { lastErr = "Kein name"; continue; }
+      // Slug-Sanitizer
+      const slug = (data.slug || slugify(data.name)).replace(/[^a-z0-9-]/g, "").slice(0, 40);
+      return json({
+        success: true,
+        model,
+        slug,
+        name: String(data.name).slice(0, 100),
+        category: String(data.category || category).slice(0, 40),
+        price: parseFloat(data.price) || targetPrice || 0,
+        shortDesc: String(data.shortDesc || "").slice(0, 300),
+        features: Array.isArray(data.features) ? data.features.slice(0, 8).map(f => String(f).slice(0, 100)) : [],
+        specs: Array.isArray(data.specs) ? data.specs.slice(0, 12).map(s => Array.isArray(s) && s.length >= 2 ? [String(s[0]).slice(0, 40), String(s[1]).slice(0, 80)] : null).filter(Boolean) : [],
+        longDesc: String(data.longDesc || "").slice(0, 5000)
+      });
+    } catch (e) { lastErr = String(e && e.message ? e.message : e); }
+  }
+  return json({ success: false, error: lastErr || "KI-Modelle fehlgeschlagen", raw: rawResp.slice(0, 400) });
+}
+
 // ===== IndexNow — push new/updated URLs to Bing/Yandex/DuckDuckGo (kein Google-Support) =====
 const INDEXNOW_KEY = "6b37ed6a83a2f2ab019e337055e7a660";
 const SITE_URLS = [
@@ -1983,17 +2052,20 @@ async function admin2Login(request, env) {
 
 // Visitor-Tracking (Frontend ruft das auf, kein Auth noetig)
 async function trackVisitor(request, env) {
-  if (!env.LEXORD_DATA) return json({ success: false }, 200);
+  if (!env.LEXORD_DATA) return json({ success: false, error: "KV_NOT_BOUND" }, 200);
   try {
     const body = await request.json().catch(() => ({}));
     const sid = body.sid || (request.headers.get("CF-Connecting-IP") || "anon") + "-" + Math.floor(Date.now() / (5 * 60 * 1000));
     const cf = request.cf || {};
     const ip = request.headers.get("CF-Connecting-IP") || "?";
+    // Country aus mehreren Quellen: request.cf > Header > Body > Fallback
+    const country = cf.country || request.headers.get("CF-IPCountry") || body.country || "XX";
+    const city = cf.city || request.headers.get("CF-IPCity") || body.city || "";
     const data = {
       sid,
       ip: ip.split(".").slice(0, 3).concat(["x"]).join("."), // privacy: last octet masked
-      country: cf.country || body.country || "XX",
-      city: cf.city || body.city || "",
+      country,
+      city,
       region: cf.region || "",
       lat: cf.latitude ? parseFloat(cf.latitude) : null,
       lng: cf.longitude ? parseFloat(cf.longitude) : null,
@@ -2002,7 +2074,7 @@ async function trackVisitor(request, env) {
       ua: (request.headers.get("User-Agent") || "").slice(0, 120),
       mobile: /Mobile|Android|iPhone/.test(request.headers.get("User-Agent") || ""),
       lastSeen: Date.now(),
-      event: body.event || "view" // view | config_start | cart_add | checkout
+      event: body.event || "view"
     };
     // Live-Visitor: nur schreiben wenn noch nicht vorhanden ODER echtes Event (spart ~80% Writes)
     const existingVisitor = await env.LEXORD_DATA.get("visitor:" + sid);

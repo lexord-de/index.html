@@ -324,6 +324,7 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
     <button class="dash-tab" onclick="switchTab('reviews',this)">⭐ BEWERTUNGEN</button>
     <button class="dash-tab" onclick="switchTab('newsletter',this)">📧 NEWSLETTER</button>
     <button class="dash-tab" onclick="switchTab('blog',this)">📝 BLOG</button>
+    <button class="dash-tab" onclick="switchTab('produkte',this)">📦 PRODUKTE</button>
   </div>
 
   <!-- PANEL: LIVE -->
@@ -726,6 +727,115 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
         <button class="dash-action" id="blog-ai-go" onclick="blogAiGenerate()" style="background:linear-gradient(135deg,#00f2ff,#bc13fe);color:#000;font-weight:900;border:none">✨ ARTIKEL GENERIEREN</button>
       </div>
       <div id="blog-ai-status" style="margin-top:14px;font-size:11px;color:#666;text-align:center;font-family:Orbitron;letter-spacing:1px"></div>
+    </div>
+  </div>
+
+  <!-- PANEL: PRODUKTE -->
+  <div class="dash-panel" id="panel-produkte">
+    <div class="arch-banner" style="background:linear-gradient(135deg,rgba(0,242,255,.08),rgba(188,19,254,.05));border-color:rgba(0,242,255,.3)">
+      📦 <strong>Produkt-Manager</strong> · Erstelle neue Produkte für den Shop · KI generiert Beschreibung, Features, Specs · Automatischer IndexNow-Ping
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px">
+      <!-- Editor -->
+      <div style="background:rgba(8,8,12,.6);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px">
+        <div style="font-family:Orbitron;font-size:12px;letter-spacing:3px;color:#fff;margin-bottom:14px">📦 NEUES PRODUKT</div>
+
+        <button class="dash-action" onclick="prodAiOpen()" style="background:linear-gradient(135deg,#00f2ff,#bc13fe);color:#000;font-weight:900;border:none;width:100%;margin-bottom:14px">✨ MIT KI ERSTELLEN</button>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+          <div>
+            <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">SLUG (URL) *</label>
+            <input type="text" id="pu-slug" placeholder="z.b. lxrd-elite-2026" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:'Courier New';font-size:13px;box-sizing:border-box">
+          </div>
+          <div>
+            <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">PREIS (€) *</label>
+            <input type="number" step="0.01" id="pu-price" placeholder="129.90" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;box-sizing:border-box">
+          </div>
+        </div>
+
+        <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">PRODUKTNAME *</label>
+        <input type="text" id="pu-name" placeholder="z.B. LXRD Elite 2026" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:12px;box-sizing:border-box">
+
+        <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">KATEGORIE</label>
+        <select id="pu-cat" class="fin-sel" style="width:100%;margin-bottom:12px">
+          <option>Premium Controller</option><option>Upgrade-Kit</option>
+          <option>Zubehör</option><option>Werkzeug</option>
+          <option>Gehäuse</option><option>Mod</option>
+        </select>
+
+        <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">BILD-URL</label>
+        <input type="text" id="pu-image" placeholder="/Photoroom_xyz.png oder https://..." value="/IMG_7023.png" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:12px;box-sizing:border-box">
+
+        <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">KURZBESCHREIBUNG (für Karten)</label>
+        <textarea id="pu-short" rows="2" placeholder="1 Satz Verkaufsargument" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:12px;box-sizing:border-box;resize:vertical"></textarea>
+
+        <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">FEATURES (eine pro Zeile)</label>
+        <textarea id="pu-feat" rows="5" placeholder="TMR Hall-Effect Sticks&#10;Clicky Trigger&#10;2× Paddles V2" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:12px;box-sizing:border-box;resize:vertical"></textarea>
+
+        <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">SPECS (Format: Label|Wert pro Zeile)</label>
+        <textarea id="pu-specs" rows="5" placeholder="Sticks|TMR Hall-Effect&#10;Trigger|Clicky 1mm&#10;Garantie|24 Monate" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:12px;box-sizing:border-box;resize:vertical"></textarea>
+
+        <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">LANGE BESCHREIBUNG (HTML)</label>
+        <textarea id="pu-desc" rows="7" placeholder="<h3>Titel</h3><p>Beschreibung…</p>" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:'Courier New';font-size:12px;margin-bottom:14px;box-sizing:border-box;resize:vertical;line-height:1.6"></textarea>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="dash-action" onclick="prodPreview()" style="background:rgba(0,242,255,.1);color:#00f2ff;border:1px solid rgba(0,242,255,.3)">👁️ VORSCHAU</button>
+          <button class="dash-action" onclick="prodSave()" style="background:linear-gradient(135deg,#00ff88,#00b67a);color:#000;font-weight:900;border:none">🚀 SPEICHERN + LIVE STELLEN</button>
+        </div>
+        <div id="pu-status" style="margin-top:12px;font-size:11px;color:#666;font-family:Orbitron;letter-spacing:1px"></div>
+      </div>
+
+      <!-- Vorschau -->
+      <div style="background:rgba(8,8,12,.6);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px">
+        <div style="font-family:Orbitron;font-size:12px;letter-spacing:3px;color:#fff;margin-bottom:14px">📱 VORSCHAU</div>
+        <div id="pu-preview" style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:10px;padding:18px;max-height:720px;overflow-y:auto">
+          <div style="color:#444;font-size:11px;text-align:center;padding:80px 20px;font-family:Orbitron;letter-spacing:2px">VORSCHAU ERSCHEINT HIER ↑</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alle Produkte -->
+    <div style="background:rgba(8,8,12,.6);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px;margin-top:18px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div style="font-family:Orbitron;font-size:12px;letter-spacing:3px;color:#fff">📋 ALLE PRODUKTE</div>
+        <button class="dash-action" onclick="loadAdminProductsList()">↻ AKTUALISIEREN</button>
+      </div>
+      <div id="pu-list"><div style="text-align:center;color:#666;padding:30px;font-family:Orbitron;font-size:10px;letter-spacing:2px">LADE PRODUKTE…</div></div>
+    </div>
+  </div>
+
+  <!-- ✨ KI-PRODUKT-MODAL -->
+  <div id="prod-ai-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)">
+    <div style="background:#0a0a0a;border:1px solid rgba(0,242,255,.3);border-radius:16px;max-width:540px;width:100%;padding:28px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+        <div style="font-family:Orbitron;font-size:14px;letter-spacing:3px;color:#fff;font-weight:900">✨ KI-PRODUKT ERSTELLEN</div>
+        <button onclick="prodAiClose()" style="background:none;border:none;color:#888;font-size:22px;cursor:pointer">×</button>
+      </div>
+
+      <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">PRODUKT-IDEE *</label>
+      <textarea id="prod-ai-idea" rows="3" placeholder="z.B. 'Limited Edition Controller mit Carbon-Optik und blauen RGB-Sticks' oder 'Stick-Cap-Set in 5 Farben'" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:14px;box-sizing:border-box;resize:vertical"></textarea>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+        <div>
+          <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">KATEGORIE</label>
+          <select id="prod-ai-cat" class="fin-sel" style="width:100%">
+            <option>Premium Controller</option><option>Upgrade-Kit</option>
+            <option>Zubehör</option><option>Werkzeug</option>
+            <option>Gehäuse</option><option>Mod</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">ZIEL-PREIS (€, optional)</label>
+          <input type="number" step="0.01" id="prod-ai-price" placeholder="z.B. 150" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;box-sizing:border-box">
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button class="dash-action" onclick="prodAiClose()" style="background:rgba(255,255,255,.05);color:#888">ABBRECHEN</button>
+        <button class="dash-action" id="prod-ai-go" onclick="prodAiGenerate()" style="background:linear-gradient(135deg,#00f2ff,#bc13fe);color:#000;font-weight:900;border:none">✨ GENERIEREN</button>
+      </div>
+      <div id="prod-ai-status" style="margin-top:14px;font-size:11px;color:#666;text-align:center;font-family:Orbitron;letter-spacing:1px"></div>
     </div>
   </div>
 
@@ -2279,17 +2389,25 @@ function exportFinanzenCSV(){
   const period = document.getElementById('fin-period').options[document.getElementById('fin-period').selectedIndex].text;
   const mode = document.getElementById('fin-mode').value;
   const lines = [];
+  const SEP = ['','','','','','','','','','','','','',''];
+  const HR = ['────────────────────────────────────────────────────────────'];
 
-  // ═══ TEIL 1: METADATEN ═══
-  lines.push(['LEXORD® Engineering · Finanzauswertung']);
-  lines.push(['Zeitraum:', year + ' · ' + period]);
-  lines.push(['Steuermodus:', mode==='regular' ? 'Regelbesteuerung (19% USt)' : '§ 19 UStG (Kleinunternehmer)']);
-  lines.push(['Exportiert am:', new Date().toLocaleString('de-DE')]);
+  // ╔═══ DECKBLATT ═══╗
+  lines.push(['LEXORD ENGINEERING - FINANZAUSWERTUNG']);
+  lines.push(['────────────────────────────────────────']);
+  lines.push(['Geschäftsinhaber','Leon Schulz']);
+  lines.push(['Steuerstatus', mode==='regular' ? 'Regelbesteuerung (19% USt)' : '§ 19 UStG Kleinunternehmerregelung']);
+  lines.push(['Berichtszeitraum', year + ' · ' + period]);
+  lines.push(['Exportiert am', new Date().toLocaleString('de-DE')]);
+  lines.push(['Dokumenttyp', 'Einnahmen-Überschuss-Rechnung (EÜR)']);
+  lines.push([]);
   lines.push([]);
 
-  // ═══ TEIL 2: EINNAHMEN (BESTELLUNGEN) ═══
-  lines.push(['═══ EINNAHMEN · BESTELLUNGEN ═══']);
-  lines.push(['Lfd-Nr','Datum','Bestell-Nr','Kunde','E-Mail','Land','Zahlung','Status','Brutto (EUR)','PayPal-Gebühr (EUR)','Echter Erlös (EUR)','USt-Satz','USt-Betrag (EUR)','Netto (EUR)']);
+  // ╔═══ I. EINNAHMEN ═══╗
+  lines.push(['I. EINNAHMEN AUS BESTELLUNGEN']);
+  lines.push(['════════════════════════════════']);
+  lines.push([]);
+  lines.push(['Pos.','Datum','Bestell-Nr.','Kunde','E-Mail','Land','Zahlungsart','Status','Brutto (EUR)','PayPal-Gebühr (EUR)','Netto-Erlös (EUR)','USt-%','USt-Betrag (EUR)','Netto-Umsatz (EUR)']);
   FIN_ROWS.forEach(r => {
     lines.push([
       r.lfd, new Date(r.date).toLocaleDateString('de-DE'),
@@ -2301,12 +2419,19 @@ function exportFinanzenCSV(){
   const T = FIN_ROWS.reduce((a,r)=>{
     a.b+=r.brutto; a.n+=r.netto; a.u+=r.ust;
     a.f+=(r.fee||0); a.e+=(r.erlos||r.brutto);
+    if(!r.cancelled) a.cnt++;
     return a;
-  },{b:0,n:0,u:0,f:0,e:0});
-  lines.push(['','','','','','','','SUMME EINNAHMEN', fmt(T.b), fmt(-T.f), fmt(T.e), '', fmt(T.u), fmt(T.n)]);
+  },{b:0,n:0,u:0,f:0,e:0,cnt:0});
+  lines.push([]);
+  lines.push(['','','','','','','','ZWISCHENSUMME EINNAHMEN', fmt(T.b), fmt(-T.f), fmt(T.e), '', fmt(T.u), fmt(T.n)]);
+  lines.push([]);
+  lines.push(['Anzahl Bestellungen', T.cnt]);
+  lines.push(['Durchschnittlicher Warenkorb (Brutto)', T.cnt > 0 ? fmt(T.b / T.cnt) : '0,00']);
+  lines.push(['Durchschnittliche PayPal-Gebühr', T.cnt > 0 ? fmt(T.f / T.cnt) : '0,00']);
+  lines.push([]);
   lines.push([]);
 
-  // ═══ TEIL 3: AUSGABEN ═══
+  // ╔═══ II. AUSGABEN ═══╗
   const expFiltered = (typeof getExpenses==='function' ? getExpenses() : []).filter(e=>{
     const d=new Date(e.date);
     if(d.getFullYear()!==parseInt(year))return false;
@@ -2317,32 +2442,61 @@ function exportFinanzenCSV(){
     if(pv==='q3')return m>=7&&m<=9; if(pv==='q4')return m>=10;
     return true;
   });
-  lines.push(['═══ AUSGABEN · BETRIEBSKOSTEN ═══']);
-  lines.push(['Lfd-Nr','Datum','Kategorie','Beschreibung','Beleg-Nr / Lieferant','Betrag (EUR)']);
+
+  lines.push(['II. BETRIEBSAUSGABEN']);
+  lines.push(['════════════════════════════════']);
+  lines.push([]);
+  lines.push(['Pos.','Datum','Kategorie','Beschreibung','Beleg-Nr. / Lieferant','Betrag (EUR)']);
   let expSum = 0;
-  expFiltered.forEach((e,i) => {
+  const expByCategory = {};
+  expFiltered.sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach((e,i) => {
     const cat = (typeof EX_CATS==='object' && EX_CATS[e.cat]) ? EX_CATS[e.cat].replace(/^\S+ /,'') : (e.cat||'Sonstiges');
     const amt = parseFloat(e.amount)||0; expSum += amt;
+    expByCategory[cat] = (expByCategory[cat]||0) + amt;
     lines.push([i+1, new Date(e.date).toLocaleDateString('de-DE'), cat, e.desc||'', e.receipt||'', fmt(amt)]);
   });
-  lines.push(['','','','','SUMME AUSGABEN', fmt(expSum)]);
+  lines.push([]);
+  lines.push(['','','','','ZWISCHENSUMME AUSGABEN', fmt(expSum)]);
   lines.push([]);
 
-  // ═══ TEIL 4: BILANZ ═══
-  const gewinn = T.e - expSum;
-  lines.push(['═══ BILANZ · GEWINN-VERLUST-RECHNUNG ═══']);
-  lines.push(['Position','Betrag (EUR)']);
-  lines.push(['Brutto-Umsatz (Bestellungen)', fmt(T.b)]);
-  lines.push(['PayPal-Gebühren (abzgl.)', fmt(-T.f)]);
-  lines.push(['= Echter Erlös', fmt(T.e)]);
-  lines.push(['Betriebsausgaben (abzgl.)', fmt(-expSum)]);
-  lines.push(['= GEWINN VOR STEUER', fmt(gewinn)]);
-  if(mode==='regular'){
-    lines.push(['Davon Umsatzsteuer (19%)', fmt(T.u)]);
-    lines.push(['Davon Netto-Umsatz', fmt(T.n)]);
-  } else {
-    lines.push(['Steuerstatus', '§ 19 UStG Kleinunternehmer · keine USt']);
+  // Ausgaben pro Kategorie
+  if(Object.keys(expByCategory).length){
+    lines.push(['Aufschlüsselung nach Kategorie:']);
+    Object.entries(expByCategory).sort((a,b)=>b[1]-a[1]).forEach(([cat,amt])=>{
+      const pct = expSum > 0 ? ((amt/expSum)*100).toFixed(1) : 0;
+      lines.push(['', '', cat, '', pct+' %', fmt(amt)]);
+    });
   }
+  lines.push([]);
+  lines.push([]);
+
+  // ╔═══ III. ERGEBNIS ═══╗
+  const gewinn = T.e - expSum;
+  const marge = T.b > 0 ? (gewinn / T.b * 100) : 0;
+  lines.push(['III. GEWINN-/VERLUST-RECHNUNG']);
+  lines.push(['════════════════════════════════']);
+  lines.push([]);
+  lines.push(['Position','','','','','Betrag (EUR)']);
+  lines.push(['(+) Brutto-Umsatz Bestellungen','','','','', fmt(T.b)]);
+  lines.push(['(-) PayPal-Transaktionsgebühren','','','','', fmt(-T.f)]);
+  lines.push(['','','','','=  Netto-Erlös', fmt(T.e)]);
+  lines.push(['(-) Betriebsausgaben (siehe II.)','','','','', fmt(-expSum)]);
+  lines.push(['','','','','=  ERGEBNIS VOR STEUER', fmt(gewinn)]);
+  lines.push([]);
+  lines.push(['Umsatzrendite (Gewinn / Brutto)', '', '', '', '', marge.toFixed(2).replace('.',',') + ' %']);
+  if(mode==='regular'){
+    lines.push([]);
+    lines.push(['Steuerliche Aufteilung:']);
+    lines.push(['  enthaltene Umsatzsteuer (19%)','','','','', fmt(T.u)]);
+    lines.push(['  Netto-Umsatz (ohne USt)','','','','', fmt(T.n)]);
+  } else {
+    lines.push([]);
+    lines.push(['Hinweis: Kleinunternehmer gem. § 19 UStG - kein USt-Ausweis']);
+  }
+  lines.push([]);
+  lines.push([]);
+  lines.push(['Diese Auswertung dient als Grundlage für deine Steuererklärung / EÜR.']);
+  lines.push(['Kontoauszüge, Rechnungen und Belege bleiben weiterhin aufbewahrungspflichtig (10 Jahre).']);
 
   const csv = lines.map(r => r.map(c => {
     const s = String(c==null?'':c);
@@ -2351,11 +2505,12 @@ function exportFinanzenCSV(){
   const blob = new Blob(['﻿' + csv], {type:'text/csv;charset=utf-8'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
+  const yyyy = year, p = document.getElementById('fin-period').value;
   a.href = url;
-  a.download = 'LEXORD-Finanzauswertung-'+year+'-'+document.getElementById('fin-period').value+'-'+mode+'.csv';
+  a.download = 'LEXORD_EUR_' + yyyy + '_' + p + '_' + (mode==='regular'?'Regelbest':'19UStG') + '.csv';
   a.click();
   URL.revokeObjectURL(url);
-  toast('CSV exportiert: Einnahmen + Gebühren + Ausgaben + Gewinn','success');
+  toast('✓ Einnahmen-Überschuss-Rechnung exportiert','success');
 }
 function printFinanzen(){
   if(!FIN_ROWS.length) return toast('Keine Daten zum Drucken','warn');
@@ -2403,7 +2558,140 @@ function switchTab(tab, btn){
   if(tab === 'reviews') loadReviewOrders();
   if(tab === 'newsletter') loadNewsletter();
   if(tab === 'blog') loadBlogList();
+  if(tab === 'produkte') loadAdminProductsList();
   if(tab === 'live') { loadLive(); resizeGlobe(); }
+}
+
+/* ════════ PRODUKT-MANAGER ════════ */
+function prodAiOpen(){ document.getElementById('prod-ai-modal').style.display = 'flex'; document.getElementById('prod-ai-status').textContent = ''; }
+function prodAiClose(){ document.getElementById('prod-ai-modal').style.display = 'none'; }
+
+async function prodAiGenerate(){
+  const idea = document.getElementById('prod-ai-idea').value.trim();
+  if(!idea){ document.getElementById('prod-ai-status').textContent = '⚠ Produkt-Idee fehlt'; return; }
+  const category = document.getElementById('prod-ai-cat').value;
+  const targetPrice = parseFloat(document.getElementById('prod-ai-price').value) || 0;
+  const btn = document.getElementById('prod-ai-go');
+  const status = document.getElementById('prod-ai-status');
+  btn.disabled = true; btn.textContent = '⏳ DENKT (10–30 Sek)…';
+  status.textContent = 'KI generiert Produktbeschreibung, Features, Specs…';
+  status.style.color = '#00f2ff';
+  const tk = localStorage.getItem(TOKEN_KEY);
+  try{
+    const r = await fetch(WORKER_URL+'/api/admin/products/ai-generate',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},
+      body: JSON.stringify({idea, category, targetPrice})
+    });
+    const d = await r.json();
+    if(!d.success){
+      console.error('[Produkt-KI]', d);
+      status.textContent = '⚠ ' + (d.error || 'KI-Fehler');
+      status.style.color = '#ff4d6d';
+      btn.disabled = false; btn.textContent = '✨ GENERIEREN';
+      return;
+    }
+    // Felder ausfüllen
+    document.getElementById('pu-slug').value = d.slug || '';
+    document.getElementById('pu-name').value = d.name || '';
+    document.getElementById('pu-cat').value = d.category || category;
+    document.getElementById('pu-price').value = d.price || targetPrice;
+    document.getElementById('pu-short').value = d.shortDesc || '';
+    document.getElementById('pu-feat').value = (d.features || []).join('\n');
+    document.getElementById('pu-specs').value = (d.specs || []).map(s=>Array.isArray(s)?s[0]+'|'+s[1]:'').join('\n');
+    document.getElementById('pu-desc').value = d.longDesc || '';
+    prodPreview();
+    status.textContent = '✓ Generiert (Modell: '+(d.model||'?')+') — Bild noch hinzufügen, dann speichern';
+    status.style.color = '#00ff88';
+    setTimeout(()=>{ prodAiClose(); btn.disabled = false; btn.textContent = '✨ GENERIEREN'; }, 1500);
+  }catch(e){
+    status.textContent = '⚠ Verbindungsfehler';
+    status.style.color = '#ff4d6d';
+    btn.disabled = false; btn.textContent = '✨ GENERIEREN';
+  }
+}
+
+function prodPreview(){
+  const name = document.getElementById('pu-name').value || 'Produktname';
+  const price = parseFloat(document.getElementById('pu-price').value) || 0;
+  const cat = document.getElementById('pu-cat').value;
+  const img = document.getElementById('pu-image').value;
+  const short = document.getElementById('pu-short').value;
+  const feat = document.getElementById('pu-feat').value.split('\n').filter(Boolean);
+  const specs = document.getElementById('pu-specs').value.split('\n').filter(Boolean).map(l=>l.split('|'));
+  const desc = document.getElementById('pu-desc').value;
+  document.getElementById('pu-preview').innerHTML = `
+    <img src="${img}" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;background:#000;margin-bottom:14px" onerror="this.style.opacity=0.3">
+    <div style="font-family:Orbitron;font-size:9px;letter-spacing:2px;color:#00f2ff;margin-bottom:6px">${cat.toUpperCase()}</div>
+    <h2 style="font-family:Orbitron;font-weight:900;color:#fff;font-size:18px;margin-bottom:8px">${name}</h2>
+    <div style="font-family:Orbitron;font-size:24px;color:#00f2ff;font-weight:900;margin-bottom:12px">${price.toFixed(2).replace('.',',')} €</div>
+    <p style="color:#bbb;font-size:13px;line-height:1.6;margin-bottom:16px">${short}</p>
+    ${feat.length ? '<div style="font-size:12px;color:#fff;margin-bottom:14px">'+feat.map(f=>'✓ '+f).join('<br>')+'</div>' : ''}
+    ${specs.length ? '<div style="background:#040404;border-radius:8px;padding:12px;margin-bottom:14px;font-size:12px">'+specs.map(s=>`<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #111"><span style="color:#888">${s[0]||''}</span><span style="color:#fff">${s[1]||''}</span></div>`).join('')+'</div>' : ''}
+    <div style="color:#ccc;font-size:13px;line-height:1.7">${desc}</div>`;
+}
+
+async function prodSave(){
+  const slug = document.getElementById('pu-slug').value.trim();
+  const name = document.getElementById('pu-name').value.trim();
+  const price = parseFloat(document.getElementById('pu-price').value);
+  if(!slug || !name || !price){ toast('Slug, Name, Preis erforderlich','error'); return; }
+  const status = document.getElementById('pu-status');
+  status.textContent = '⏳ speichere…';
+  status.style.color = '#00f2ff';
+  const tk = localStorage.getItem(TOKEN_KEY);
+  const data = {
+    slug, name, price,
+    category: document.getElementById('pu-cat').value,
+    image: document.getElementById('pu-image').value.trim() || '/IMG_7023.png',
+    shortDesc: document.getElementById('pu-short').value.trim(),
+    features: document.getElementById('pu-feat').value.split('\n').map(s=>s.trim()).filter(Boolean),
+    specs: document.getElementById('pu-specs').value.split('\n').map(l=>l.split('|').map(p=>p.trim())).filter(p=>p.length>=2),
+    longDesc: document.getElementById('pu-desc').value.trim()
+  };
+  try{
+    const r = await fetch(WORKER_URL+'/api/admin/products',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},body:JSON.stringify(data)});
+    const d = await r.json();
+    if(d.success){
+      status.textContent = '✓ Live: lexord.de/product.html?p='+d.slug+' · Suchmaschinen gepingt';
+      status.style.color = '#00ff88';
+      toast('✓ Produkt online','success');
+      loadAdminProductsList();
+    } else {
+      status.textContent = '⚠ '+(d.error||'Fehler');
+      status.style.color = '#ff4d6d';
+    }
+  }catch(e){ status.textContent = '⚠ Verbindungsfehler'; status.style.color = '#ff4d6d'; }
+}
+
+async function loadAdminProductsList(){
+  const tk = localStorage.getItem(TOKEN_KEY);
+  let list = [];
+  try{
+    const r = await fetch(WORKER_URL+'/api/admin/products',{headers:{'Authorization':'Bearer '+tk}});
+    const d = await r.json();
+    list = d.products || [];
+  }catch(e){}
+  const c = document.getElementById('pu-list');
+  if(!list.length){ c.innerHTML = '<div style="text-align:center;color:#666;padding:30px;font-family:Orbitron;font-size:10px;letter-spacing:2px">NOCH KEINE PRODUKTE</div>'; return; }
+  c.innerHTML = list.map(p=>`<div style="display:grid;grid-template-columns:auto 1fr auto auto auto;gap:14px;align-items:center;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.04)">
+    <img src="${p.image||p.img||'/IMG_7023.png'}" style="width:50px;height:50px;object-fit:cover;border-radius:6px;background:#000" onerror="this.style.opacity=0.3">
+    <div><div style="color:#fff;font-weight:700;font-size:13px">${esc2(p.name)}</div><div style="color:#666;font-size:10px">/product.html?p=${p.slug}</div></div>
+    <span style="color:#888;font-family:Orbitron;font-size:10px">${esc2(p.category||'–')}</span>
+    <span style="color:#00f2ff;font-family:Orbitron;font-weight:900;font-size:13px">${parseFloat(p.price||0).toFixed(2).replace('.',',')} €</span>
+    <button onclick="prodDelete('${p.slug}')" style="background:transparent;border:1px solid rgba(255,77,109,.3);color:#ff4d6d;border-radius:6px;padding:5px 12px;font-size:9px;cursor:pointer;font-family:Orbitron;letter-spacing:1px">LÖSCHEN</button>
+  </div>`).join('');
+}
+
+async function prodDelete(slug){
+  if(!confirm('Produkt "'+slug+'" wirklich löschen?')) return;
+  const tk = localStorage.getItem(TOKEN_KEY);
+  try{
+    const r = await fetch(WORKER_URL+'/api/admin/products/'+encodeURIComponent(slug),{method:'DELETE',headers:{'Authorization':'Bearer '+tk}});
+    const d = await r.json();
+    if(d.success){ toast('✓ Gelöscht','success'); loadAdminProductsList(); }
+    else toast('Fehler','error');
+  }catch(e){ toast('Fehler','error'); }
 }
 
 /* ════════ BLOG-MANAGER ════════ */

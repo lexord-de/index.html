@@ -1235,15 +1235,50 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
 <div id="admin-modal" role="dialog" style="display:none!important"></div>
 
 <!-- REVIEW MODAL -->
-<div id="review-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:60000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(12px);padding:20px" role="dialog">
-  <div style="background:#050505;border:1px solid var(--neon);padding:40px;border-radius:18px;text-align:center;max-width:360px;width:100%">
-    <h3 style="font-family:'Orbitron';font-size:12px;margin-bottom:20px;color:var(--neon);letter-spacing:3px">BEWERTUNG ABGEBEN</h3>
-    <a href="https://www.google.com/search?q=lexord.de+reviews" target="_blank" rel="noopener" style="display:block;padding:13px;margin-bottom:11px;border-radius:8px;text-decoration:none;color:#fff;font-family:'Orbitron';font-size:9.5px;letter-spacing:1px;border:1px solid #4285F4">⭐ AUF GOOGLE BEWERTEN</a>
-    <a href="https://de.trustpilot.com/review/lexord.de" target="_blank" rel="noopener" style="display:block;padding:13px;margin-bottom:11px;border-radius:8px;text-decoration:none;color:#fff;font-family:'Orbitron';font-size:9.5px;letter-spacing:1px;border:1px solid var(--green)">⭐ AUF TRUSTPILOT</a>
-    <a href="https://www.ebay.de/usr/lexord-de" target="_blank" rel="noopener" style="display:block;padding:13px;margin-bottom:18px;border-radius:8px;text-decoration:none;color:#fff;font-family:'Orbitron';font-size:9.5px;letter-spacing:1px;border:1px solid #e53238">⭐ AUF EBAY</a>
-    <button onclick="document.getElementById('review-modal').style.display='none'" style="font-size:9px;color:#444;cursor:pointer;font-family:'Orbitron';background:none;border:none">← ZURÜCK</button>
+<div id="review-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:60000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(12px);padding:20px;overflow-y:auto" role="dialog">
+  <div style="background:#050505;border:1px solid var(--neon);padding:32px 28px;border-radius:18px;max-width:440px;width:100%;max-height:90vh;overflow-y:auto">
+    <h3 style="font-family:'Orbitron';font-size:13px;margin-bottom:6px;color:var(--neon);letter-spacing:3px;text-align:center">BEWERTUNG ABGEBEN</h3>
+    <p style="font-size:12px;color:#888;text-align:center;margin-bottom:22px">Direkt hier oder auf einer Plattform deiner Wahl</p>
+
+    <!-- Direkt-Form (kommt ins LEXORD-Carousel) -->
+    <form id="rev-form" onsubmit="submitReviewForm(event)">
+      <div style="text-align:center;margin-bottom:14px">
+        <div style="display:inline-flex;gap:4px" id="rev-stars">
+          <input type="radio" name="rev-r" value="1" id="rev-r1" style="display:none"><label for="rev-r1" style="font-size:28px;cursor:pointer;color:#333;transition:.2s" data-rev>★</label>
+          <input type="radio" name="rev-r" value="2" id="rev-r2" style="display:none"><label for="rev-r2" style="font-size:28px;cursor:pointer;color:#333;transition:.2s" data-rev>★</label>
+          <input type="radio" name="rev-r" value="3" id="rev-r3" style="display:none"><label for="rev-r3" style="font-size:28px;cursor:pointer;color:#333;transition:.2s" data-rev>★</label>
+          <input type="radio" name="rev-r" value="4" id="rev-r4" style="display:none"><label for="rev-r4" style="font-size:28px;cursor:pointer;color:#333;transition:.2s" data-rev>★</label>
+          <input type="radio" name="rev-r" value="5" id="rev-r5" checked style="display:none"><label for="rev-r5" style="font-size:28px;cursor:pointer;color:var(--neon);transition:.2s" data-rev>★</label>
+        </div>
+      </div>
+      <input type="text" id="rev-name" placeholder="Dein Name (optional)" style="width:100%;padding:11px 13px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:9px;box-sizing:border-box">
+      <input type="email" id="rev-email" placeholder="E-Mail (für ✓ Verifizierung)" style="width:100%;padding:11px 13px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:9px;box-sizing:border-box">
+      <input type="text" id="rev-product" placeholder="Produkt (optional, z.B. LXRD Performance)" style="width:100%;padding:11px 13px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:9px;box-sizing:border-box">
+      <textarea id="rev-text" placeholder="Wie war deine Erfahrung? Mind. 10 Zeichen" rows="3" required style="width:100%;padding:11px 13px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:12px;box-sizing:border-box;resize:vertical"></textarea>
+      <button type="submit" id="rev-submit-btn" style="width:100%;padding:13px;border-radius:8px;background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;font-family:'Orbitron';font-size:11px;letter-spacing:2px;font-weight:900;border:none;cursor:pointer;margin-bottom:18px">★ BEWERTUNG SENDEN</button>
+    </form>
+
+    <div style="position:relative;text-align:center;color:#444;font-size:9px;font-family:Orbitron;letter-spacing:2px;margin:8px 0 14px"><span style="background:#050505;padding:0 10px;position:relative;z-index:1">ODER</span><div style="position:absolute;top:50%;left:0;right:0;height:1px;background:#1a1a1a;z-index:0"></div></div>
+
+    <a href="https://www.google.com/search?q=lexord.de+reviews" target="_blank" rel="noopener" style="display:block;padding:11px;margin-bottom:9px;border-radius:8px;text-decoration:none;color:#fff;font-family:'Orbitron';font-size:9.5px;letter-spacing:1px;border:1px solid #4285F4;text-align:center">⭐ AUF GOOGLE</a>
+    <a href="https://de.trustpilot.com/review/lexord.de" target="_blank" rel="noopener" style="display:block;padding:11px;margin-bottom:9px;border-radius:8px;text-decoration:none;color:#fff;font-family:'Orbitron';font-size:9.5px;letter-spacing:1px;border:1px solid #00b67a;text-align:center">⭐ AUF TRUSTPILOT</a>
+    <a href="https://www.ebay.de/usr/lexord-de" target="_blank" rel="noopener" style="display:block;padding:11px;margin-bottom:16px;border-radius:8px;text-decoration:none;color:#fff;font-family:'Orbitron';font-size:9.5px;letter-spacing:1px;border:1px solid #e53238;text-align:center">⭐ AUF EBAY</a>
+
+    <button onclick="document.getElementById('review-modal').style.display='none'" style="width:100%;font-size:9px;color:#666;cursor:pointer;font-family:'Orbitron';background:none;border:none;letter-spacing:2px;padding:8px">SCHLIESSEN</button>
   </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('#rev-stars label').forEach((lbl,i,arr)=>{
+    lbl.addEventListener('mouseenter',()=>arr.forEach((l,j)=>l.style.color=j<=i?'#00f2ff':'#333'));
+    lbl.addEventListener('click',()=>{ const r=lbl.previousElementSibling; r.checked=true; arr.forEach((l,j)=>l.style.color=j<=i?'#00f2ff':'#333'); });
+  });
+  document.getElementById('rev-stars').addEventListener('mouseleave',()=>{
+    const v=parseInt(document.querySelector('input[name="rev-r"]:checked')?.value||'0');
+    document.querySelectorAll('#rev-stars label').forEach((l,j)=>l.style.color=j<v?'#00f2ff':'#333');
+  });
+});
+</script>
 
 <!-- MOBILE SEARCH -->
 <div id="mob-srch-ov">
@@ -1317,6 +1352,7 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
   <a href="zubehoer.html" class="nav-link">ZUBEHÖR</a>
   <a href="reparatur.html" class="nav-link" data-i18n="nav_repair">REPARATUR</a>
   <a href="printing-service.html" class="nav-link">🖨️ 3D PRINTING</a>
+  <a href="blog.html" class="nav-link">📝 MAGAZIN</a>
   <a href="#tester-sec" class="nav-link" data-i18n="nav_tester" onclick="toggleMenu()">TESTER</a>
   <a href="#contact" class="nav-link" data-i18n="nav_contact" onclick="toggleMenu()">KONTAKT</a>
   <button class="nav-link" data-i18n="nav_review" onclick="document.getElementById('review-modal').style.display='flex';toggleMenu()">BEWERTEN</button>
@@ -1875,6 +1911,32 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
     <div id="em-success" style="display:none;font-family:'Orbitron';font-size:10px;color:var(--neon);margin-top:15px;letter-spacing:2px">✓ DEIN RABATTCODE: <strong>WILLKOMMEN10</strong> — SCHAU IN DEIN POSTFACH!</div>
   </div>
 </section>
+
+<!-- ECHTE BEWERTUNGEN CAROUSEL (lädt live vom Worker) -->
+<section id="reviews-sec" class="reveal lxd-reveal" style="padding:80px 5% 40px;text-align:center;position:relative;z-index:1;border-top:1px solid #0a0a0a;background:#030303">
+  <h2 class="sec-title">★ ECHTE KUNDEN · ECHTE BEWERTUNGEN</h2>
+  <p class="sec-sub" style="margin-bottom:34px">VERIFIZIERTE KÄUFE · DIREKT VON LEXORD-KUNDEN</p>
+  <div id="rev-carousel" style="max-width:1200px;margin:0 auto;position:relative">
+    <div id="rev-track" style="display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px 5px 20px;scrollbar-width:none;-webkit-overflow-scrolling:touch"></div>
+    <button onclick="revScroll(-1)" aria-label="zurück" style="position:absolute;left:-6px;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;background:rgba(8,8,8,.92);backdrop-filter:blur(8px);border:1px solid #1a1a1a;color:var(--neon);cursor:pointer;font-size:18px;z-index:5;display:none" id="rev-prev">‹</button>
+    <button onclick="revScroll(1)" aria-label="weiter" style="position:absolute;right:-6px;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;background:rgba(8,8,8,.92);backdrop-filter:blur(8px);border:1px solid #1a1a1a;color:var(--neon);cursor:pointer;font-size:18px;z-index:5;display:none" id="rev-next">›</button>
+  </div>
+  <div style="margin-top:24px;display:flex;gap:22px;justify-content:center;align-items:center;flex-wrap:wrap;font-family:'Orbitron';font-size:10px;letter-spacing:2px;color:#888">
+    <span><strong style="color:var(--neon);font-size:18px">★★★★★</strong> 4.9 / 5</span>
+    <span id="rev-count-total">— Bewertungen</span>
+    <a href="#" onclick="document.getElementById('review-modal').style.display='flex';return false" style="color:var(--neon);border-bottom:1px solid rgba(0,242,255,.3)">+ EIGENE BEWERTUNG ABGEBEN</a>
+  </div>
+</section>
+<style>
+#rev-track::-webkit-scrollbar{display:none}
+.rev-card{flex:0 0 320px;scroll-snap-align:start;background:linear-gradient(180deg,#0e0e0e,#0a0a0a);border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:22px;text-align:left;transition:.3s}
+.rev-card:hover{border-color:rgba(0,242,255,.3);transform:translateY(-3px)}
+.rev-stars{color:var(--neon);font-size:14px;letter-spacing:2px;margin-bottom:10px}
+.rev-text{color:#ccc;font-size:13px;line-height:1.7;margin-bottom:14px;min-height:90px}
+.rev-meta{display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid rgba(255,255,255,.05);font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;color:#888}
+.rev-meta .verified{background:rgba(0,255,136,.1);color:#00ff88;padding:3px 7px;border-radius:5px;font-size:8px}
+@media(max-width:560px){.rev-card{flex:0 0 280px;padding:18px}}
+</style>
 
 <!-- CONTACT -->
 <section id="contact" class="reveal lxd-reveal">
@@ -3517,6 +3579,74 @@ async function processOrder(email,orderNr,fn,ln,paypalDet){
 
 /* ═══ NEWSLETTER ANTI-FAKE (NEU) ═══ */
 function fpHash(){return btoa(navigator.userAgent+screen.width+screen.height+navigator.language).slice(0,32);}
+/* ═══ REVIEWS CAROUSEL (echte Bewertungen vom Worker) ═══ */
+async function loadReviews(){
+  try{
+    const r = await fetch(CF_WORKER_URL+'/api/reviews/public');
+    const d = await r.json();
+    const list = d.reviews || [];
+    const track = document.getElementById('rev-track');
+    if(!track) return;
+    if(!list.length){
+      track.innerHTML = '<div style="color:#555;font-family:Orbitron;letter-spacing:2px;font-size:11px;padding:40px;text-align:center;width:100%">NOCH KEINE VERÖFFENTLICHTEN BEWERTUNGEN — SEI DIE/DER ERSTE!</div>';
+      document.getElementById('rev-count-total').textContent = '— Bewertungen';
+      return;
+    }
+    document.getElementById('rev-count-total').textContent = list.length + (list.length === 1 ? ' Bewertung' : ' Bewertungen');
+    // Schema.org AggregateRating dynamisch
+    try{
+      const avg = (list.reduce((a,r)=>a+(r.rating||5),0) / list.length).toFixed(1);
+      const ld = {"@context":"https://schema.org","@type":"AggregateRating","ratingValue":avg,"reviewCount":list.length,"bestRating":"5","worstRating":"1","itemReviewed":{"@type":"Organization","name":"LEXORD Engineering","url":"https://lexord.de"}};
+      const s = document.createElement('script'); s.type='application/ld+json'; s.textContent = JSON.stringify(ld); document.head.appendChild(s);
+    }catch(e){}
+    track.innerHTML = list.map(r=>{
+      const stars = '★'.repeat(r.rating||5);
+      const d2 = r.date ? new Date(r.date).toLocaleDateString('de-DE',{day:'2-digit',month:'short',year:'2-digit'}) : '';
+      return `<div class="rev-card">
+        <div class="rev-stars">${stars}</div>
+        <div class="rev-text">„${escRev(r.text||'')}"</div>
+        <div class="rev-meta">
+          <span>${escRev(r.name||'Anonym')} · ${d2}</span>
+          ${r.verified ? '<span class="verified">✓ VERIFIZIERT</span>' : ''}
+        </div>
+      </div>`;
+    }).join('');
+    if(list.length > 3){
+      document.getElementById('rev-prev').style.display = 'block';
+      document.getElementById('rev-next').style.display = 'block';
+    }
+  }catch(e){ /* silent */ }
+}
+function escRev(s){return String(s||'').replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function revScroll(dir){
+  const t = document.getElementById('rev-track');
+  if(t) t.scrollBy({left: dir * 340, behavior:'smooth'});
+}
+setTimeout(loadReviews, 800);
+
+async function submitReviewForm(e){
+  e.preventDefault();
+  const rating = parseInt(document.querySelector('input[name="rev-r"]:checked')?.value || '0');
+  const text = document.getElementById('rev-text').value.trim();
+  const name = document.getElementById('rev-name').value.trim() || 'Anonym';
+  const email = document.getElementById('rev-email').value.trim();
+  const product = document.getElementById('rev-product').value.trim();
+  const btn = document.getElementById('rev-submit-btn');
+  if(!rating){ toast('Bitte Sterne wählen','err'); return; }
+  if(text.length < 10){ toast('Bitte mind. 10 Zeichen','err'); return; }
+  btn.disabled = true; btn.textContent = 'SENDE…';
+  try{
+    const r = await fetch(CF_WORKER_URL+'/api/reviews/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({rating,text,name,email,product})});
+    const d = await r.json();
+    if(d.success){
+      toast('✓ '+(d.message||'Danke!'),'ok');
+      document.getElementById('rev-form').reset();
+      setTimeout(()=>{ document.getElementById('review-modal').style.display='none'; }, 1500);
+    } else { toast(d.error||'Fehler','err'); }
+  }catch(e){ toast('Verbindungsfehler','err'); }
+  btn.disabled = false; btn.textContent = '★ BEWERTUNG SENDEN';
+}
+
 async function subscribeEmail(){
   const email=document.getElementById('em-email').value.trim().toLowerCase();
   if(!email||!email.includes('@')){toast('Bitte gültige E-Mail eingeben','err');return;}

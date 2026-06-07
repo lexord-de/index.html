@@ -74,6 +74,16 @@
   </url>
 
   <url>
+    <loc>https://lexord.de/blog.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="de" href="https://lexord.de/blog.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lexord.de/blog.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lexord.de/blog.html"/>
+  </url>
+
+  <url>
     <loc>https://lexord.de/b2b.html</loc>
     <lastmod>2026-06-07</lastmod>
     <changefreq>monthly</changefreq>

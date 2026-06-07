@@ -168,6 +168,15 @@ async function test(){
       if (path === "/api/admin/products" && request.method === "GET") return await adminListProducts(request, env);
       if (path === "/api/admin/products" && request.method === "POST") return await adminCreateProduct(request, env);
       if (path === "/api/products" && request.method === "GET") return await listProducts(request, env);
+      if (path === "/api/blog" && request.method === "GET") return await listBlog(request, env);
+      if (path.startsWith("/api/blog/") && request.method === "GET") return await getBlogArticle(request, env, path.split("/").pop());
+      if (path === "/api/reviews/public" && request.method === "GET") return await listPublicReviews(request, env);
+      if (path === "/api/reviews/submit" && request.method === "POST") return await submitReview(request, env);
+      if (path === "/api/admin/blog" && request.method === "GET") return await adminListBlog(request, env);
+      if (path === "/api/admin/blog" && request.method === "POST") return await adminCreateBlog(request, env);
+      if (path.startsWith("/api/admin/blog/") && request.method === "DELETE") return await adminDeleteBlog(request, env, path.split("/").pop());
+      if (path === "/api/admin/blog/ai-generate" && request.method === "POST") return await adminBlogAiGenerate(request, env);
+      if (path === "/api/admin/reviews/approve" && request.method === "POST") return await adminApproveReview(request, env);
       if (path === "/api/b2b/inquiry" && request.method === "POST") return await b2bInquiry(request, env);
       if (path === "/api/b2b/register" && request.method === "POST") return await b2bRegister(request, env);
       if (path === "/api/b2b/login" && request.method === "POST") return await b2bLogin(request, env);
@@ -1566,6 +1575,7 @@ const SITE_URLS = [
   "https://lexord.de/reparatur.html",
   "https://lexord.de/printing-service.html",
   "https://lexord.de/b2b.html",
+  "https://lexord.de/blog.html",
   "https://lexord.de/links.html",
   "https://lexord.de/lxrd-elite-pro.html",
   "https://lexord.de/lxrd-performance.html",
@@ -1607,6 +1617,237 @@ async function adminIndexNowPing(request, env) {
   const urls = (body && body.urls && body.urls.length) ? body.urls : SITE_URLS;
   const result = await indexNowPing(env, urls);
   return json({ success: result.ok, status: result.status, count: urls.length, urls });
+}
+
+// ============ BLOG ============
+function slugify(s) {
+  return String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/[ä]/g, "ae").replace(/[ö]/g, "oe").replace(/[ü]/g, "ue").replace(/[ß]/g, "ss")
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 80);
+}
+
+async function listBlog(request, env) {
+  if (!env.LEXORD_DATA) return json({ articles: [] });
+  const list = await env.LEXORD_DATA.list({ prefix: "blog:" });
+  const articles = [];
+  for (const k of list.keys) {
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if (raw) {
+      try {
+        const a = JSON.parse(raw);
+        if (a.published !== false) {
+          articles.push({ slug: a.slug, title: a.title, excerpt: a.excerpt, image: a.image, category: a.category, published_at: a.published_at, author: a.author || "Leon Schulz" });
+        }
+      } catch (e) {}
+    }
+  }
+  articles.sort((a, b) => (b.published_at || "").localeCompare(a.published_at || ""));
+  return json({ articles });
+}
+
+async function getBlogArticle(request, env, slug) {
+  if (!env.LEXORD_DATA || !slug) return json({ error: "Not found" }, 404);
+  const raw = await env.LEXORD_DATA.get("blog:" + slug);
+  if (!raw) return json({ error: "Not found" }, 404);
+  const a = JSON.parse(raw);
+  if (a.published === false) return json({ error: "Not found" }, 404);
+  return json(a);
+}
+
+async function adminListBlog(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ articles: [] });
+  const list = await env.LEXORD_DATA.list({ prefix: "blog:" });
+  const articles = [];
+  for (const k of list.keys) {
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if (raw) { try { articles.push(JSON.parse(raw)); } catch (e) {} }
+  }
+  articles.sort((a, b) => (b.published_at || b.created || "").localeCompare(a.published_at || a.created || ""));
+  return json({ articles });
+}
+
+async function adminCreateBlog(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ error: "KV not bound" }, 500);
+  const b = await request.json();
+  if (!b.title || !b.content) return json({ error: "title und content noetig" }, 400);
+  const slug = b.slug || slugify(b.title) + "-" + Date.now().toString(36);
+  const article = {
+    slug,
+    title: String(b.title).slice(0, 160),
+    excerpt: String(b.excerpt || "").slice(0, 300),
+    content: String(b.content).slice(0, 30000),
+    category: String(b.category || "News").slice(0, 40),
+    image: String(b.image || "/IMG_7023.png").slice(0, 300),
+    author: String(b.author || "Leon Schulz").slice(0, 60),
+    keywords: Array.isArray(b.keywords) ? b.keywords.slice(0, 12) : [],
+    published: b.published !== false,
+    published_at: b.published_at || new Date().toISOString(),
+    created: new Date().toISOString()
+  };
+  await env.LEXORD_DATA.put("blog:" + slug, JSON.stringify(article));
+  try { await indexNowPing(env, ["https://lexord.de/blog-article.html?slug=" + slug, "https://lexord.de/blog.html", "https://lexord.de/"]); } catch (e) {}
+  return json({ success: true, slug, article });
+}
+
+async function adminDeleteBlog(request, env, slug) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA || !slug) return json({ error: "bad request" }, 400);
+  await env.LEXORD_DATA.delete("blog:" + slug);
+  return json({ success: true });
+}
+
+async function adminBlogAiGenerate(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.AI) return json({ success: false, error: "Workers-AI-Binding 'AI' fehlt" });
+  const b = await request.json();
+  const topic = String(b.topic || "PS5 Stick-Drift selbst reparieren").slice(0, 200);
+  const category = String(b.category || "Guide").slice(0, 40);
+  const keywords = String(b.keywords || "").slice(0, 200);
+  const tone = String(b.tone || "informativ-direkt").slice(0, 60);
+
+  const systemPrompt = `Du bist SEO-Redakteurin fuer LEXORD Engineering, deutscher Custom-PS5-Controller-Shop in Domsuehl. Du schreibst Magazin-Artikel auf Deutsch, die auf Google ranken sollen.
+
+REGELN:
+- Antworte NUR mit reinem JSON. Kein Markdown. Kein Text davor oder danach.
+- Sprache: Deutsch (Du-Form)
+- Tonfall: ${tone}
+- Laenge: 800-1400 Woerter im content
+- content ist HTML mit <h2>, <h3>, <p>, <ul>, <li>, <strong>, <em>, <blockquote>
+- Erste Zeile in content: ein einleitender <p>-Absatz der das Problem ansprechen
+- Mindestens 3 <h2>-Zwischenueberschriften
+- Mindestens eine <ul>-Liste mit konkreten Punkten
+- Schluss-Absatz mit klarer Handlungs-Empfehlung + dezenter Verweis auf LEXORD-Produkt/Service (z.B. <a href="/reparatur.html">Reparatur-Service</a>, <a href="/printing-service.html">3D-Print-Service</a>, <a href="/konfigurator.html">Konfigurator</a>)
+- Keywords natuerlich einbauen, KEINE Keyword-Stuffing
+
+LEXORD-KONTEXT:
+- Custom PS5 Controller ab 105 EUR · Reparatur ab 15 EUR · 3D-Printing-Service · Hall-Effect/TMR Upgrade-Kits
+- Standort: Domsuehl (Mecklenburg-Vorpommern), Made in Germany
+- 24 Monate Garantie · 1-3 Werktage Versand DE
+
+JSON-SCHEMA:
+{"title":"Titel max 70 Zeichen, SEO-stark","excerpt":"Meta-Description 140-160 Zeichen","content":"HTML 800-1400 Woerter","keywords":["array","mit","5-8","keywords"],"category":"${category}"}`;
+
+  const userPrompt = "THEMA: " + topic + "\nFOKUS-KEYWORDS: " + (keywords || "von dir wählen") + "\n\nErzeuge jetzt den Artikel als reines JSON gemaess Schema.";
+
+  const models = ["@cf/meta/llama-3.3-70b-instruct-fp8-fast", "@cf/meta/llama-3.1-8b-instruct"];
+  let lastErr = "", rawResponse = "";
+  for (const model of models) {
+    try {
+      const r = await env.AI.run(model, {
+        messages: [{ role: "system", content: systemPrompt }, { role: "user", content: userPrompt }],
+        max_tokens: 3500,
+        temperature: 0.7
+      });
+      let txt = (r && r.response ? r.response : "").trim();
+      rawResponse = txt;
+      if (!txt) { lastErr = "leere Antwort"; continue; }
+      txt = txt.replace(/```(?:json)?\s*/gi, "").replace(/```/g, "").trim();
+      const m = txt.match(/\{[\s\S]*\}/);
+      if (m) txt = m[0];
+      let data;
+      try { data = JSON.parse(txt); }
+      catch (e) { try { data = JSON.parse(txt.replace(/,(\s*[}\]])/g, "$1")); } catch (e2) { lastErr = "JSON-Parse: " + e2.message; continue; } }
+      if (!data || !data.content) { lastErr = "kein content"; continue; }
+      return json({
+        success: true,
+        model,
+        title: String(data.title || topic).slice(0, 160),
+        excerpt: String(data.excerpt || "").slice(0, 300),
+        content: String(data.content || "").slice(0, 30000),
+        keywords: Array.isArray(data.keywords) ? data.keywords.slice(0, 12) : [],
+        category: String(data.category || category).slice(0, 40)
+      });
+    } catch (e) { lastErr = String(e && e.message ? e.message : e); }
+  }
+  return json({ success: false, error: lastErr || "Alle KI-Modelle fehlgeschlagen", raw: rawResponse.slice(0, 400) });
+}
+
+// ============ PUBLIC REVIEWS CAROUSEL ============
+async function listPublicReviews(request, env) {
+  if (!env.LEXORD_DATA) return json({ reviews: [] });
+  const list = await env.LEXORD_DATA.list({ prefix: "review:" });
+  const reviews = [];
+  for (const k of list.keys) {
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if (raw) {
+      try {
+        const r = JSON.parse(raw);
+        if (r.approved && r.rating >= 4) {
+          reviews.push({
+            name: (r.name || "Anonym").split(" ")[0] + ".",
+            rating: r.rating,
+            text: String(r.text || "").slice(0, 400),
+            product: r.product || "",
+            verified: !!r.verified,
+            date: r.date || r.created
+          });
+        }
+      } catch (e) {}
+    }
+  }
+  reviews.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+  return json({ reviews: reviews.slice(0, 30) });
+}
+
+async function submitReview(request, env) {
+  if (!env.LEXORD_DATA) return json({ success: false, error: "DB nicht bereit" });
+  const b = await request.json();
+  const rating = parseInt(b.rating, 10);
+  if (!rating || rating < 1 || rating > 5) return json({ success: false, error: "Bitte Sterne wählen" });
+  const text = String(b.text || "").trim().slice(0, 600);
+  const name = String(b.name || "Anonym").trim().slice(0, 60);
+  const email = String(b.email || "").trim().toLowerCase().slice(0, 120);
+  const product = String(b.product || "").trim().slice(0, 80);
+  if (!text || text.length < 10) return json({ success: false, error: "Bitte mindestens 10 Zeichen" });
+  const ip = request.headers.get("CF-Connecting-IP") || "0.0.0.0";
+  // Rate-limit: max 1 review per IP per hour
+  const rlKey = "review_rl:" + ip;
+  const rl = await env.LEXORD_DATA.get(rlKey);
+  if (rl) return json({ success: false, error: "Bitte etwas warten vor der nächsten Bewertung" });
+  // Verify if email matches a completed order
+  let verified = false;
+  if (email) {
+    const ordersList = await env.LEXORD_DATA.list({ prefix: "order:" });
+    for (const k of ordersList.keys) {
+      const raw = await env.LEXORD_DATA.get(k.name);
+      if (raw) {
+        try { const o = JSON.parse(raw); if ((o.email || "").toLowerCase() === email) { verified = true; break; } } catch (e) {}
+      }
+    }
+  }
+  const id = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+  const review = {
+    id, name, email, rating, text, product, verified,
+    approved: false, ip,
+    created: new Date().toISOString(),
+    date: new Date().toISOString()
+  };
+  await env.LEXORD_DATA.put("review:" + id, JSON.stringify(review));
+  await env.LEXORD_DATA.put(rlKey, "1", { expirationTtl: 3600 });
+  // Notify admin
+  if (env.BREVO_API_KEY) {
+    const adminHtml = `<h2>Neue Bewertung eingegangen</h2><p><strong>${name}</strong> (${email || "anonym"}) — ${rating}/5 Sterne${verified ? " ✓ verifiziert" : ""}</p><blockquote style="background:#f5f5f5;padding:14px;border-left:4px solid #00f2ff">${escapeHtml(text)}</blockquote>${product ? "<p>Produkt: " + escapeHtml(product) + "</p>" : ""}<p>Im Admin-Panel freischalten → Tab ⭐ BEWERTUNGEN.</p>`;
+    try {
+      await sendBrevoMail(env, env.FROM_EMAIL || "kontakt@lexord.de", "Neue Bewertung · " + rating + "★ · " + name, adminHtml, { kind: "review-new", id });
+    } catch (e) {}
+  }
+  return json({ success: true, id, message: verified ? "Danke! Deine Bewertung wurde gespeichert (verifizierter Kauf)." : "Danke! Deine Bewertung wird kurz geprüft und dann veröffentlicht." });
+}
+
+async function adminApproveReview(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ success: false });
+  const b = await request.json();
+  if (!b.id) return json({ success: false, error: "id fehlt" });
+  const raw = await env.LEXORD_DATA.get("review:" + b.id);
+  if (!raw) return json({ success: false, error: "nicht gefunden" });
+  const r = JSON.parse(raw);
+  r.approved = b.approved !== false;
+  r.approved_at = new Date().toISOString();
+  await env.LEXORD_DATA.put("review:" + b.id, JSON.stringify(r));
+  return json({ success: true });
 }
 
 async function adminDeleteProduct(request, env, slug) {

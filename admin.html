@@ -322,6 +322,7 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
     <button class="dash-tab" onclick="switchTab('chats',this)">🤖 KI-CHATS <span id="chats-badge" style="display:none;background:#ff4d6d;color:#000;font-family:'Orbitron';font-size:9px;padding:2px 6px;border-radius:8px;margin-left:4px;font-weight:900"></span></button>
     <button class="dash-tab" onclick="switchTab('reviews',this)">⭐ BEWERTUNGEN</button>
     <button class="dash-tab" onclick="switchTab('newsletter',this)">📧 NEWSLETTER</button>
+    <button class="dash-tab" onclick="switchTab('blog',this)">📝 BLOG</button>
   </div>
 
   <!-- PANEL: LIVE -->
@@ -573,6 +574,112 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
 
     <div style="margin-top:14px;font-size:10px;color:#555;line-height:1.7;padding:14px;background:rgba(0,0,0,.4);border-radius:10px;border:1px solid rgba(255,255,255,.04)">
       <strong style="color:#888">DSGVO-Hinweis:</strong> Jede Mail enthält automatisch den Abmelde-Link. Empfehlung: maximal 1–2 Mails pro Monat versenden, sonst Spam-Risiko. Vor jedem Versand „Test an mich" probieren.
+    </div>
+  </div>
+
+  <!-- PANEL: BLOG -->
+  <div class="dash-panel" id="panel-blog">
+    <div class="arch-banner" style="background:linear-gradient(135deg,rgba(0,242,255,.08),rgba(188,19,254,.05));border-color:rgba(0,242,255,.3)">
+      📝 <strong>Magazin-Manager</strong> · KI-generierte SEO-Artikel · Automatischer IndexNow-Ping bei Veröffentlichung · Schema.org BlogPosting markup
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px" id="blog-grid">
+      <!-- Editor -->
+      <div style="background:rgba(8,8,12,.6);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px">
+        <div style="font-family:Orbitron;font-size:12px;letter-spacing:3px;color:#fff;margin-bottom:14px">📝 NEUER ARTIKEL</div>
+
+        <div style="display:flex;gap:10px;margin-bottom:14px">
+          <button class="dash-action" onclick="blogAiOpen()" style="background:linear-gradient(135deg,#00f2ff,#bc13fe);color:#000;font-weight:900;border:none;flex:1">✨ KI ARTIKEL GENERIEREN</button>
+        </div>
+
+        <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">TITEL</label>
+        <input type="text" id="blog-title" placeholder="z.B. PS5 Stick-Drift selbst reparieren — Schritt für Schritt" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:12px;box-sizing:border-box">
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+          <div>
+            <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">KATEGORIE</label>
+            <select id="blog-category" class="fin-sel" style="width:100%">
+              <option>Guide</option><option>News</option><option>Review</option>
+              <option>Mod</option><option>Reparatur</option><option>Atelier</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">AUTOR</label>
+            <input type="text" id="blog-author" value="Leon Schulz" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;box-sizing:border-box">
+          </div>
+        </div>
+
+        <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">META-DESCRIPTION (140–160 Zeichen)</label>
+        <textarea id="blog-excerpt" rows="2" placeholder="Kurze Beschreibung für Google-Vorschau" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:12px;box-sizing:border-box;resize:vertical"></textarea>
+
+        <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">HERO-BILD URL</label>
+        <input type="text" id="blog-image" value="/IMG_0556.jpeg" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:12px;box-sizing:border-box">
+
+        <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">CONTENT (HTML erlaubt)</label>
+        <textarea id="blog-content" rows="14" placeholder="HTML mit &lt;h2&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;strong&gt; …" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:'Courier New';font-size:12px;margin-bottom:12px;box-sizing:border-box;resize:vertical;line-height:1.6"></textarea>
+
+        <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">KEYWORDS (komma-getrennt)</label>
+        <input type="text" id="blog-keywords" placeholder="z.B. stick drift, ps5 reparatur, hall effect" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:18px;box-sizing:border-box">
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="dash-action" onclick="blogPreview()" style="background:rgba(0,242,255,.1);color:#00f2ff;border:1px solid rgba(0,242,255,.3)">👁️ VORSCHAU</button>
+          <button class="dash-action" onclick="blogPublish()" style="background:linear-gradient(135deg,#00ff88,#00b67a);color:#000;font-weight:900;border:none">🚀 VERÖFFENTLICHEN + INDEXNOW</button>
+        </div>
+        <div id="blog-status" style="margin-top:12px;font-size:11px;color:#666;font-family:Orbitron;letter-spacing:1px"></div>
+      </div>
+
+      <!-- Preview -->
+      <div style="background:rgba(8,8,12,.6);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px">
+        <div style="font-family:Orbitron;font-size:12px;letter-spacing:3px;color:#fff;margin-bottom:14px">📱 VORSCHAU</div>
+        <div id="blog-preview" style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:10px;padding:24px;max-height:680px;overflow-y:auto">
+          <div style="color:#444;font-size:11px;text-align:center;padding:80px 20px;font-family:Orbitron;letter-spacing:2px">VORSCHAU ERSCHEINT HIER ↑</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bereits veröffentlichte Artikel -->
+    <div style="background:rgba(8,8,12,.6);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px;margin-top:18px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+        <div style="font-family:Orbitron;font-size:12px;letter-spacing:3px;color:#fff">📚 ALLE ARTIKEL</div>
+        <button class="dash-action" onclick="loadBlogList()">↻ AKTUALISIEREN</button>
+      </div>
+      <div id="blog-list"><div style="text-align:center;color:#666;padding:30px;font-family:Orbitron;font-size:10px;letter-spacing:2px">LADE ARTIKEL ...</div></div>
+    </div>
+  </div>
+
+  <!-- ✨ KI-BLOG-MODAL -->
+  <div id="blog-ai-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)">
+    <div style="background:#0a0a0a;border:1px solid rgba(0,242,255,.3);border-radius:16px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;padding:28px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <div style="font-family:Orbitron;font-size:14px;letter-spacing:3px;color:#fff;font-weight:900">✨ KI-ARTIKEL GENERIEREN</div>
+        <button onclick="blogAiClose()" style="background:none;border:none;color:#888;font-size:22px;cursor:pointer">×</button>
+      </div>
+
+      <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">THEMA / TITEL-IDEE</label>
+      <input type="text" id="blog-ai-topic" placeholder="z.B. 'PS5 Stick-Drift selbst reparieren' oder 'Hall-Effect vs TMR Sticks'" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:14px;box-sizing:border-box">
+
+      <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">KATEGORIE</label>
+      <select id="blog-ai-category" class="fin-sel" style="width:100%;margin-bottom:14px">
+        <option>Guide</option><option>News</option><option>Review</option>
+        <option>Mod</option><option>Reparatur</option><option>Atelier</option>
+      </select>
+
+      <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">KEYWORDS (komma-getrennt, optional)</label>
+      <input type="text" id="blog-ai-keywords" placeholder="z.B. stick drift, dualsense, reparatur" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:14px;box-sizing:border-box">
+
+      <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">TONFALL</label>
+      <select id="blog-ai-tone" class="fin-sel" style="width:100%;margin-bottom:18px">
+        <option value="informativ-direkt">Informativ & direkt</option>
+        <option value="locker und persönlich">Locker & persönlich</option>
+        <option value="technisch-präzise">Technisch-präzise</option>
+        <option value="anfaengerfreundlich">Anfängerfreundlich</option>
+      </select>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button class="dash-action" onclick="blogAiClose()" style="background:rgba(255,255,255,.05);color:#888">ABBRECHEN</button>
+        <button class="dash-action" id="blog-ai-go" onclick="blogAiGenerate()" style="background:linear-gradient(135deg,#00f2ff,#bc13fe);color:#000;font-weight:900;border:none">✨ ARTIKEL GENERIEREN</button>
+      </div>
+      <div id="blog-ai-status" style="margin-top:14px;font-size:11px;color:#666;text-align:center;font-family:Orbitron;letter-spacing:1px"></div>
     </div>
   </div>
 
@@ -2051,8 +2158,139 @@ function switchTab(tab, btn){
   if(tab === 'chats') loadChats();
   if(tab === 'reviews') loadReviewOrders();
   if(tab === 'newsletter') loadNewsletter();
+  if(tab === 'blog') loadBlogList();
   if(tab === 'live') { loadLive(); resizeGlobe(); }
 }
+
+/* ════════ BLOG-MANAGER ════════ */
+let BLOG_ARTICLES = [];
+
+function blogAiOpen(){ document.getElementById('blog-ai-modal').style.display = 'flex'; document.getElementById('blog-ai-status').textContent = ''; }
+function blogAiClose(){ document.getElementById('blog-ai-modal').style.display = 'none'; }
+
+async function blogAiGenerate(){
+  const topic = document.getElementById('blog-ai-topic').value.trim();
+  if(!topic){ document.getElementById('blog-ai-status').textContent = '⚠ Thema fehlt'; return; }
+  const category = document.getElementById('blog-ai-category').value;
+  const keywords = document.getElementById('blog-ai-keywords').value;
+  const tone = document.getElementById('blog-ai-tone').value;
+  const btn = document.getElementById('blog-ai-go');
+  const status = document.getElementById('blog-ai-status');
+  btn.disabled = true; btn.textContent = '⏳ SCHREIBT (15–40 Sek)…';
+  status.textContent = 'KI schreibt einen 800–1400-Wort-Artikel mit SEO-Optimierung …';
+  status.style.color = '#00f2ff';
+  const tk = localStorage.getItem(TOKEN_KEY);
+  try{
+    const r = await fetch(WORKER_URL+'/api/admin/blog/ai-generate',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},
+      body: JSON.stringify({topic, category, keywords, tone})
+    });
+    const d = await r.json();
+    if(!d.success){
+      console.error('[Blog-KI]', d);
+      status.textContent = '⚠ ' + (d.error || 'KI-Fehler') + ' (Details: Console)';
+      status.style.color = '#ff4d6d';
+      btn.disabled = false; btn.textContent = '✨ ARTIKEL GENERIEREN';
+      return;
+    }
+    document.getElementById('blog-title').value = d.title || '';
+    document.getElementById('blog-excerpt').value = d.excerpt || '';
+    document.getElementById('blog-content').value = d.content || '';
+    document.getElementById('blog-category').value = d.category || category;
+    document.getElementById('blog-keywords').value = (d.keywords || []).join(', ');
+    blogPreview();
+    status.textContent = '✓ Artikel fertig (Modell: ' + (d.model || '?') + ')';
+    status.style.color = '#00ff88';
+    setTimeout(()=>{ blogAiClose(); btn.disabled = false; btn.textContent = '✨ ARTIKEL GENERIEREN'; }, 1200);
+  }catch(e){
+    status.textContent = '⚠ Verbindungsfehler';
+    status.style.color = '#ff4d6d';
+    btn.disabled = false; btn.textContent = '✨ ARTIKEL GENERIEREN';
+  }
+}
+
+function blogPreview(){
+  const t = document.getElementById('blog-title').value;
+  const c = document.getElementById('blog-content').value;
+  const e = document.getElementById('blog-excerpt').value;
+  const cat = document.getElementById('blog-category').value;
+  const img = document.getElementById('blog-image').value;
+  document.getElementById('blog-preview').innerHTML = `
+    <div style="font-family:Orbitron;font-size:9px;letter-spacing:2px;color:#00f2ff;margin-bottom:10px">${cat ? cat.toUpperCase() : 'NEWS'}</div>
+    <h1 style="font-family:Orbitron;font-weight:900;font-size:22px;line-height:1.2;color:#fff;margin-bottom:14px">${t || 'Titel'}</h1>
+    ${e ? '<div style="font-size:14px;color:#bbb;line-height:1.6;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.05)">'+e+'</div>' : ''}
+    ${img ? '<img src="'+img+'" style="width:100%;border-radius:10px;margin-bottom:18px;aspect-ratio:16/9;object-fit:cover" onerror="this.style.display=\\'none\\'">' : ''}
+    <div style="color:#ddd;font-size:14px;line-height:1.7">${c}</div>`;
+}
+
+async function blogPublish(){
+  const title = document.getElementById('blog-title').value.trim();
+  const content = document.getElementById('blog-content').value.trim();
+  if(!title || !content){ toast('Titel und Inhalt erforderlich','err'); return; }
+  const status = document.getElementById('blog-status');
+  status.textContent = '⏳ veröffentliche …';
+  status.style.color = '#00f2ff';
+  const tk = localStorage.getItem(TOKEN_KEY);
+  const data = {
+    title,
+    excerpt: document.getElementById('blog-excerpt').value.trim(),
+    content,
+    category: document.getElementById('blog-category').value,
+    author: document.getElementById('blog-author').value.trim(),
+    image: document.getElementById('blog-image').value.trim(),
+    keywords: document.getElementById('blog-keywords').value.split(',').map(s=>s.trim()).filter(Boolean)
+  };
+  try{
+    const r = await fetch(WORKER_URL+'/api/admin/blog',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},body:JSON.stringify(data)});
+    const d = await r.json();
+    if(d.success){
+      status.textContent = '✓ Veröffentlicht: /blog-article.html?slug=' + d.slug;
+      status.style.color = '#00ff88';
+      toast('✓ Artikel live + Bing/Yandex informiert','ok');
+      ['blog-title','blog-excerpt','blog-content','blog-keywords'].forEach(id=>document.getElementById(id).value='');
+      loadBlogList();
+    } else {
+      status.textContent = '⚠ ' + (d.error || 'Fehler');
+      status.style.color = '#ff4d6d';
+    }
+  }catch(e){ status.textContent = '⚠ Verbindungsfehler'; status.style.color = '#ff4d6d'; }
+}
+
+async function loadBlogList(){
+  const tk = localStorage.getItem(TOKEN_KEY);
+  try{
+    const r = await fetch(WORKER_URL+'/api/admin/blog',{headers:{'Authorization':'Bearer '+tk}});
+    const d = await r.json();
+    BLOG_ARTICLES = d.articles || [];
+  }catch(e){ BLOG_ARTICLES = []; }
+  const c = document.getElementById('blog-list');
+  if(!BLOG_ARTICLES.length){ c.innerHTML = '<div style="text-align:center;color:#666;padding:30px;font-family:Orbitron;font-size:10px;letter-spacing:2px">NOCH KEINE ARTIKEL</div>'; return; }
+  c.innerHTML = BLOG_ARTICLES.map(a=>{
+    const d = a.published_at ? new Date(a.published_at).toLocaleDateString('de-DE') : '–';
+    return `<div style="display:grid;grid-template-columns:1fr auto auto auto;gap:12px;align-items:center;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.04);font-size:12px">
+      <div><div style="color:#fff;font-weight:700">${esc2(a.title)}</div><div style="color:#666;font-size:10px;margin-top:2px">/blog-article.html?slug=${a.slug}</div></div>
+      <span style="color:#888;font-size:10px;font-family:Orbitron">${esc2(a.category||'–')}</span>
+      <span style="color:#666;font-size:10px;font-family:Orbitron">${d}</span>
+      <button onclick="blogDelete('${a.slug}')" style="background:transparent;border:1px solid rgba(255,77,109,.3);color:#ff4d6d;border-radius:6px;padding:4px 10px;font-size:9px;cursor:pointer;font-family:Orbitron;letter-spacing:1px">LÖSCHEN</button>
+    </div>`;
+  }).join('');
+}
+
+function esc2(s){return String(s||'').replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+
+async function blogDelete(slug){
+  if(!confirm('Artikel "' + slug + '" wirklich löschen?')) return;
+  const tk = localStorage.getItem(TOKEN_KEY);
+  try{
+    const r = await fetch(WORKER_URL+'/api/admin/blog/'+encodeURIComponent(slug),{method:'DELETE',headers:{'Authorization':'Bearer '+tk}});
+    const d = await r.json();
+    if(d.success){ toast('✓ Gelöscht','ok'); loadBlogList(); }
+    else toast('Fehler','err');
+  }catch(e){ toast('Fehler','err'); }
+}
+
+/* ════════ SEO: IndexNow-Ping (Bing/Yandex/DuckDuckGo) ════════ */
 
 /* ════════ NEWSLETTER-VERSAND ════════ */
 let NL_SUBSCRIBERS = [];

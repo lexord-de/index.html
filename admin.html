@@ -721,7 +721,14 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
 
   <!-- PANEL: STATS -->
   <div class="dash-panel" id="panel-stats">
-    <div class="dash-actions"><button class="dash-action" onclick="loadDeepStats()">↻ AKTUALISIEREN</button></div>
+    <div class="dash-actions">
+      <button class="dash-action" onclick="loadDeepStats()">↻ AKTUALISIEREN</button>
+      <button class="dash-action" onclick="seoPingNow()" style="background:linear-gradient(135deg,#00f2ff,#bc13fe);color:#000;font-weight:900;border:none">🔍 SUCHMASCHINEN-UPDATE SENDEN</button>
+      <span id="seo-ping-status" style="font-size:10px;color:#666;font-family:Orbitron;letter-spacing:1px;align-self:center"></span>
+    </div>
+    <div style="background:rgba(0,242,255,.05);border:1px solid rgba(0,242,255,.2);border-radius:10px;padding:14px;margin-bottom:14px;font-size:11px;color:#aaa;line-height:1.7">
+      <strong style="color:#00f2ff">🚀 IndexNow:</strong> Mit einem Klick werden Bing, Yandex &amp; DuckDuckGo direkt informiert, dass deine Seiten neu/aktualisiert sind. Indexierung dann in Minuten statt Wochen. <strong style="color:#888">Hinweis:</strong> Google nutzt IndexNow noch nicht offiziell, indexiert aber automatisch über deine Sitemap (kein Login nötig).
+    </div>
     <div class="stats-row">
       <div class="stat-block">
         <div class="stat-block-h">🏆 TOP PRODUKTE (30 Tage)</div>
@@ -2274,6 +2281,36 @@ async function nlAiGenerate(){
     btn.disabled = false;
     btn.textContent = '✨ TEXT GENERIEREN';
   }
+}
+
+/* ════════ SEO: IndexNow-Ping (Bing/Yandex/DuckDuckGo) ════════ */
+async function seoPingNow(){
+  const status = document.getElementById('seo-ping-status');
+  status.textContent = '⏳ sende…';
+  status.style.color = '#00f2ff';
+  const tk = localStorage.getItem(TOKEN_KEY);
+  try{
+    const r = await fetch(WORKER_URL+'/api/admin/seo/indexnow',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},
+      body: JSON.stringify({})
+    });
+    const d = await r.json();
+    if(d.success){
+      status.textContent = '✓ '+d.count+' URLs gesendet (HTTP '+d.status+')';
+      status.style.color = '#00ff88';
+      toast('✓ Suchmaschinen informiert ('+d.count+' URLs)','ok');
+    } else {
+      status.textContent = '⚠ HTTP '+(d.status||'?');
+      status.style.color = '#ff4d6d';
+      toast('Ping fehlgeschlagen','err');
+    }
+  }catch(e){
+    status.textContent = '⚠ Verbindungsfehler';
+    status.style.color = '#ff4d6d';
+    toast('Verbindungsfehler','err');
+  }
+  setTimeout(()=>{ status.textContent = ''; }, 6000);
 }
 
 /* ════════ BEWERTUNGS-KAMPAGNE — nutzt /admin/orders + lokales Tracking ════════ */

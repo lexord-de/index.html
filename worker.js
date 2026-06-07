@@ -164,6 +164,7 @@ async function test(){
       if (path === "/api/admin/newsletter/test" && request.method === "POST") return await sendNewsletterTest(request, env);
       if (path === "/api/admin/newsletter/unsubscribe" && request.method === "POST") return await adminUnsubscribe(request, env);
       if (path === "/api/admin/newsletter/ai-suggest" && request.method === "POST") return await newsletterAiSuggest(request, env);
+      if (path === "/api/admin/seo/indexnow" && request.method === "POST") return await adminIndexNowPing(request, env);
       if (path === "/api/admin/products" && request.method === "GET") return await adminListProducts(request, env);
       if (path === "/api/admin/products" && request.method === "POST") return await adminCreateProduct(request, env);
       if (path === "/api/products" && request.method === "GET") return await listProducts(request, env);
@@ -1550,7 +1551,58 @@ async function adminCreateProduct(request, env) {
   p.created = p.created || new Date().toISOString();
   p.updated = new Date().toISOString();
   await env.LEXORD_DATA.put("product:" + p.slug, JSON.stringify(p));
+  // IndexNow: Suchmaschinen sofort informieren (Bing, Yandex, DuckDuckGo)
+  try { await indexNowPing(env, ["https://lexord.de/product.html?slug=" + encodeURIComponent(p.slug), "https://lexord.de/collections.html", "https://lexord.de/"]); } catch (e) {}
   return json({ success: true, slug: p.slug });
+}
+
+// ===== IndexNow — push new/updated URLs to Bing/Yandex/DuckDuckGo (kein Google-Support) =====
+const INDEXNOW_KEY = "6b37ed6a83a2f2ab019e337055e7a660";
+const SITE_URLS = [
+  "https://lexord.de/",
+  "https://lexord.de/konfigurator.html",
+  "https://lexord.de/collections.html",
+  "https://lexord.de/zubehoer.html",
+  "https://lexord.de/reparatur.html",
+  "https://lexord.de/printing-service.html",
+  "https://lexord.de/b2b.html",
+  "https://lexord.de/links.html",
+  "https://lexord.de/lxrd-elite-pro.html",
+  "https://lexord.de/lxrd-performance.html",
+  "https://lexord.de/lxrd-stealth.html",
+  "https://lexord.de/lxrd-plus.html",
+  "https://lexord.de/lxrd-basic.html",
+  "https://lexord.de/paddle-system-v2.html",
+  "https://lexord.de/hall-effect-kit.html",
+  "https://lexord.de/tmr-upgrade-kit.html",
+  "https://lexord.de/stickzange-pro.html",
+  "https://lexord.de/clicky-trigger.html",
+  "https://lexord.de/grip-housing.html"
+];
+
+async function indexNowPing(env, urls) {
+  if (!urls || !urls.length) return { ok: false, status: 0 };
+  try {
+    const r = await fetch("https://api.indexnow.org/IndexNow", {
+      method: "POST",
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify({
+        host: "lexord.de",
+        key: INDEXNOW_KEY,
+        keyLocation: "https://lexord.de/" + INDEXNOW_KEY + ".txt",
+        urlList: urls
+      })
+    });
+    return { ok: r.ok, status: r.status };
+  } catch (e) { return { ok: false, status: 0, error: String(e) }; }
+}
+
+async function adminIndexNowPing(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  const body = await request.json().catch(() => ({}));
+  const urls = (body && body.urls && body.urls.length) ? body.urls : SITE_URLS;
+  const result = await indexNowPing(env, urls);
+  return json({ success: result.ok, status: result.status, count: urls.length, urls });
 }
 
 async function adminDeleteProduct(request, env, slug) {

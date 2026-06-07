@@ -208,6 +208,22 @@ async function test(){
 
       // Visitor-Tracking (kein Auth — Frontend schickt fuer Live-Globe)
       if (path === "/track/visitor" && request.method === "POST") return await trackVisitor(request, env);
+      if (path === "/track/status") {
+        // Öffentliche Diagnose — zeigt nur Anzahl, keine Details
+        if (!env.LEXORD_DATA) return json({ ok: false, error: "KV-Namespace LEXORD_DATA ist nicht im Worker gebunden" });
+        const list = await env.LEXORD_DATA.list({ prefix: "visitor:" });
+        const today = new Date().toISOString().slice(0, 10);
+        const aggRaw = await env.LEXORD_DATA.get("agg:" + today);
+        const agg = aggRaw ? JSON.parse(aggRaw) : null;
+        return json({
+          ok: true,
+          live_now: list.keys.length,
+          today_visitors: agg ? Object.keys(agg.visitors || {}).length : 0,
+          today_views: agg ? agg.views : 0,
+          worker_cf_country: (request.cf && request.cf.country) || "(nicht verfügbar — workers.dev hat keine CF-Daten)",
+          info: "Live-Besucher werden 15 Minuten nach letzter Aktivität gelöscht. Heute-Zähler bleibt 24h."
+        });
+      }
 
       // Admin-Daten (Auth required)
       if (path === "/admin/stats" && request.method === "GET") return await admin2Stats(request, env);

@@ -163,6 +163,7 @@ async function test(){
       if (path === "/api/admin/newsletter/list" && request.method === "GET") return await listNewsletter(request, env);
       if (path === "/api/admin/newsletter/test" && request.method === "POST") return await sendNewsletterTest(request, env);
       if (path === "/api/admin/newsletter/unsubscribe" && request.method === "POST") return await adminUnsubscribe(request, env);
+      if (path === "/api/admin/newsletter/ai-suggest" && request.method === "POST") return await newsletterAiSuggest(request, env);
       if (path === "/api/admin/products" && request.method === "GET") return await adminListProducts(request, env);
       if (path === "/api/admin/products" && request.method === "POST") return await adminCreateProduct(request, env);
       if (path === "/api/products" && request.method === "GET") return await listProducts(request, env);
@@ -1073,6 +1074,77 @@ async function adminUnsubscribe(request, env) {
   s.unsubscribed = new Date().toISOString();
   await env.LEXORD_DATA.put("newsletter:" + email, JSON.stringify(s));
   return json({ success: true });
+}
+
+async function newsletterAiSuggest(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.AI) return json({ success: false, error: "KI nicht konfiguriert" });
+  const body = await request.json();
+  const campaign = (body.campaign || "drop").toString();
+  const product = (body.product || "").toString().slice(0, 200);
+  const hint = (body.hint || "").toString().slice(0, 400);
+  const season = (body.season || "").toString().slice(0, 60);
+
+  const systemPrompt = `Du bist eine Top-Copywriterin fuer E-Commerce-Newsletter im Premium-Gaming-Segment. Du schreibst fuer LEXORD Engineering — deutsche Custom-PS5-Controller, handgefertigt in Domsuehl, Made in Germany.
+
+DEINE AUFGABE: Erzeuge einen verkaufsstarken Newsletter-Text auf Deutsch im LEXORD-Tone:
+- direkt, selbstbewusst, technisch-praezise
+- nie kitschig, nie marktschreierisch, kein "Jetzt zugreifen!!!"-Stil
+- max 4 kurze Absaetze im body
+- HTML-Tags erlaubt: <strong>, <br>, <em>
+- spricht Gamer ab 18 an, die Wert auf Qualitaet legen
+- Verkaufsargumente einbauen: handgefertigt, Hall-Effect/TMR Sticks, 24-Monate-Garantie, schneller Versand aus DE
+
+PRODUKT-KATALOG (verwende NUR diese):
+- LXRD Elite Pro 280 EUR · LXRD Performance 240 EUR · LXRD Stealth 220 EUR · LXRD Plus 180 EUR · LXRD Basic 105 EUR
+- Custom-Paddles ab 19,90 EUR · 3D-Print-Service · Stickzange Pro 5 EUR
+- Reparatur-Service: Stick-Drift ab 25 EUR, Festpreise
+- LXRD Wallet · Hall-Effect-Kit 35 EUR · TMR-Upgrade 55 EUR
+
+ANTWORTE STRENG ALS JSON, KEIN MARKDOWN, KEINE ERKLAERUNGEN. SCHEMA:
+{"subject":"<max 60 Zeichen, Betreff>","headline":"<max 30 Zeichen, GROSS>","body":"<HTML, max 600 Zeichen>","code":"<optional, 4-10 Zeichen GROSS, leer wenn kein Rabatt passt>","ctaText":"<max 22 Zeichen GROSS, z.B. JETZT ENTDECKEN>"}`;
+
+  const campaignDescriptions = {
+    drop: "Neues Produkt / Drop angekuendigt — Headline 'NEU EINGETROFFEN' o.ae., CTA 'JETZT SICHERN'",
+    sale: "Rabatt-Aktion mit Code — kraftvolle Headline, klarer Rabatt im body (z.B. 10-15%), CTA 'CODE EINLOESEN'",
+    repair: "Reparatur-Service bewerben — Headline 'REPARATUR-SERVICE', Festpreise hervorheben, CTA 'REPARATUR ANFRAGEN'",
+    news: "Atelier-Update / News — persoenlich, hinter den Kulissen, Headline 'AUS DEM ATELIER', CTA 'ENTDECKEN'",
+    paddles: "3D-Druck-Paddles & Ersatzteile — Bio-PETG, Custom, Headline '3D-PRINT-SERVICE', CTA 'JETZT KONFIGURIEREN'",
+    wallet: "LXRD Wallet bewerben — Premium-Lifestyle-Accessoire, Headline 'LXRD WALLET', CTA 'ENTDECKEN'"
+  };
+  const camp = campaignDescriptions[campaign] || campaignDescriptions.drop;
+  const seasonLine = season ? "\nSAISON/ANLASS: " + season : "";
+  const productLine = product ? "\nFOKUS-PRODUKT: " + product : "";
+  const hintLine = hint ? "\nZUSAETZLICHER HINWEIS DES ADMIN: " + hint : "";
+
+  const userPrompt = "KAMPAGNEN-TYP: " + camp + seasonLine + productLine + hintLine + "\n\nErzeuge jetzt das JSON.";
+
+  try {
+    const r = await env.AI.run("@cf/meta/llama-3.3-70b-instruct-fp8-fast", {
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt }
+      ],
+      max_tokens: 700,
+      temperature: 0.8
+    });
+    let txt = (r.response || "").trim();
+    const m = txt.match(/\{[\s\S]*\}/);
+    if (m) txt = m[0];
+    let data;
+    try { data = JSON.parse(txt); }
+    catch (e) { return json({ success: false, error: "KI-Antwort nicht parsebar", raw: txt }); }
+    return json({
+      success: true,
+      subject: (data.subject || "").slice(0, 120),
+      headline: (data.headline || "").slice(0, 60),
+      body: (data.body || "").slice(0, 1500),
+      code: (data.code || "").toUpperCase().slice(0, 16),
+      ctaText: (data.ctaText || "JETZT ENTDECKEN").slice(0, 40)
+    });
+  } catch (e) {
+    return json({ success: false, error: String(e) });
+  }
 }
 
 // ============ NEWSLETTER ANTI-FAKE CHECK ============

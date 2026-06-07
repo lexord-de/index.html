@@ -4125,10 +4125,11 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLogin();closeA
 <!-- Empfehlungs-Button — gleicher Stil wie KI-Button, direkt über KI-Button -->
 <button id="lxd-ref-btn" onclick="lxdOpenShare()" aria-label="Empfehlen & 10 % sparen" title="Empfehlen & 10 % sparen">🎁</button>
 <style>
-#lxd-ref-btn{position:fixed;bottom:100px;right:28px;width:60px;height:60px;background:linear-gradient(135deg,var(--neon) 0%,var(--neon2) 100%);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:9000;box-shadow:0 8px 28px rgba(0,242,255,.4),0 4px 12px rgba(188,19,254,.25);color:#000;transition:.3s;font-size:26px}
-#lxd-ref-btn:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 12px 40px rgba(0,242,255,.55),0 6px 18px rgba(188,19,254,.35)}
-#lxd-ref-btn::after{content:'-10 %';position:absolute;bottom:-4px;right:-4px;background:#000;border:1.5px solid var(--neon);color:var(--neon);font-family:'Orbitron';font-size:8px;font-weight:900;letter-spacing:.5px;padding:2px 5px;border-radius:5px;line-height:1.2}
-@media(max-width:760px){#lxd-ref-btn{bottom:90px;right:22px;width:56px;height:56px;font-size:24px}}
+#lxd-ref-btn{position:fixed;bottom:104px;right:24px;width:44px;height:44px;background:rgba(10,10,10,.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:9000;box-shadow:0 4px 14px rgba(0,0,0,.4);color:#bbb;transition:.3s ease;font-size:18px;opacity:.65}
+#lxd-ref-btn:hover{opacity:1;color:#fff;border-color:rgba(0,242,255,.4);background:rgba(15,15,20,.85);transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.5),0 0 0 1px rgba(0,242,255,.15)}
+#lxd-ref-btn::after{content:'';position:absolute;top:-2px;right:-2px;width:8px;height:8px;background:var(--neon);border-radius:50%;opacity:.55;transition:.3s;box-shadow:0 0 6px rgba(0,242,255,.4)}
+#lxd-ref-btn:hover::after{opacity:1;transform:scale(1.15)}
+@media(max-width:760px){#lxd-ref-btn{bottom:92px;right:18px;width:40px;height:40px;font-size:16px}}
 </style>
 
 <script>

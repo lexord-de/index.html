@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- ═══ CONTROLLER ═══ -->
+  <url>
+    <loc>https://lexord.de/lxrd-elite-pro.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260306_112425.png</image:loc>
+      <image:title>LXRD Elite Pro · TMR Sticks · Carbon · 4x Paddles</image:title>
+      <image:caption>Premium Custom PS5 Controller, Hall Effect TMR Sticks, Carbon Frontschale, 4 Paddles, RGB, Lasergravur · 280 EUR</image:caption>
+    </image:image>
+    <xhtml:link rel="alternate" hreflang="de" href="https://lexord.de/lxrd-elite-pro.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lexord.de/lxrd-elite-pro.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lexord.de/lxrd-elite-pro.html"/>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/lxrd-performance.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260305_123705.png</image:loc>
+      <image:title>LXRD Performance Black · TMR · Clicky Trigger · 2 Paddles</image:title>
+      <image:caption>Custom PS5 Controller, TMR Sticks, Clicky Trigger, GRIP Gehäuse, 2 Paddles · 240 EUR</image:caption>
+    </image:image>
+    <xhtml:link rel="alternate" hreflang="de" href="https://lexord.de/lxrd-performance.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lexord.de/lxrd-performance.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lexord.de/lxrd-performance.html"/>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/lxrd-stealth.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260501_094506.png</image:loc>
+      <image:title>LXRD Stealth Edition · Hall Effect · Matt-Finish</image:title>
+      <image:caption>Custom PS5 Controller, Hall Effect Sticks, Matt-Finish, Limited Edition · 220 EUR</image:caption>
+    </image:image>
+    <xhtml:link rel="alternate" hreflang="de" href="https://lexord.de/lxrd-stealth.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lexord.de/lxrd-stealth.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lexord.de/lxrd-stealth.html"/>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/lxrd-plus.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260305_140346.png</image:loc>
+      <image:title>LXRD Plus Black · Hall Effect Sticks · Clicky Trigger</image:title>
+      <image:caption>Custom PS5 Controller, Hall Effect, Clicky Trigger, 2 Paddles · 180 EUR</image:caption>
+    </image:image>
+    <xhtml:link rel="alternate" hreflang="de" href="https://lexord.de/lxrd-plus.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lexord.de/lxrd-plus.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lexord.de/lxrd-plus.html"/>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/lxrd-basic.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260305_135532.png</image:loc>
+      <image:title>LXRD Basic Black · Einstiegs-Controller mit 2 Paddles</image:title>
+      <image:caption>Custom PS5 Controller mit 2 Paddles, Made in Germany · 105 EUR</image:caption>
+    </image:image>
+    <xhtml:link rel="alternate" hreflang="de" href="https://lexord.de/lxrd-basic.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lexord.de/lxrd-basic.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lexord.de/lxrd-basic.html"/>
+  </url>
+
+  <!-- ═══ MODS · UPGRADES · TOOLS ═══ -->
+  <url>
+    <loc>https://lexord.de/paddle-system-v2.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260402_014813.png</image:loc>
+      <image:title>Paddle System V2 · Magnetisches Schnellwechsel-System</image:title>
+      <image:caption>Magnetisches Paddle-System für PS5 DualSense, schneller Wechsel · 40 EUR</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/hall-effect-kit.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260402_014150.png</image:loc>
+      <image:title>Hall Effect Kit · Anti-Drift Upgrade DIY</image:title>
+      <image:caption>Hall-Effect-Sticks Upgrade-Kit gegen Stick-Drift, mit Anleitung · 35 EUR</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/tmr-upgrade-kit.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260402_172726.png</image:loc>
+      <image:title>TMR Stick Upgrade Kit · Pro-Gamer-Präzision</image:title>
+      <image:caption>TMR (Tunnel-Magnetoresistive) Sticks Upgrade, präziser als Hall-Effect · 55 EUR</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/stickzange-pro.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://lexord.de/Stickzange.PNG</image:loc>
+      <image:title>Stickzange Pro · Werkzeug zum Stick-Wechsel</image:title>
+      <image:caption>Profi-Werkzeug zum sicheren Entfernen und Aufsetzen von Stick-Caps · 5 EUR</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/clicky-trigger.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260422_120907.png</image:loc>
+      <image:title>Clicky Trigger Mod · Hair-Trigger für PS5</image:title>
+      <image:caption>Clicky Trigger Modifikation, Hair-Trigger-Feeling für schnellere Reaktion</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/grip-housing.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+    <image:image>
+      <image:loc>https://lexord.de/Photoroom_20260422_122323.png</image:loc>
+      <image:title>GRIP Gehäuse · Rutschfeste Backshell</image:title>
+      <image:caption>GRIP Backshell aus 3D-gedrucktem Bio-PETG, rutschfest, ergonomisch</image:caption>
+    </image:image>
+  </url>
+
+</urlset>

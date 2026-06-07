@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- ═══ STARTSEITE ═══ -->
+  <url>
+    <loc>https://lexord.de/</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://lexord.de/"/>
+    <xhtml:link rel="alternate" hreflang="de-AT" href="https://lexord.de/?lang=de-AT"/>
+    <xhtml:link rel="alternate" hreflang="de-CH" href="https://lexord.de/?lang=de-CH"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lexord.de/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="en-GB" href="https://lexord.de/?lang=en-GB"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="https://lexord.de/?lang=en-US"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://lexord.de/?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://lexord.de/?lang=nl"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://lexord.de/?lang=it"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://lexord.de/?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pl" href="https://lexord.de/?lang=pl"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lexord.de/"/>
+  </url>
+
+  <!-- ═══ KERN-SEITEN ═══ -->
+  <url>
+    <loc>https://lexord.de/konfigurator.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+    <xhtml:link rel="alternate" hreflang="de" href="https://lexord.de/konfigurator.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lexord.de/konfigurator.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lexord.de/konfigurator.html"/>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/collections.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+    <xhtml:link rel="alternate" hreflang="de" href="https://lexord.de/collections.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lexord.de/collections.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lexord.de/collections.html"/>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/reparatur.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="de" href="https://lexord.de/reparatur.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lexord.de/reparatur.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lexord.de/reparatur.html"/>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/printing-service.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="de" href="https://lexord.de/printing-service.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lexord.de/printing-service.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lexord.de/printing-service.html"/>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/zubehoer.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="de" href="https://lexord.de/zubehoer.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lexord.de/zubehoer.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lexord.de/zubehoer.html"/>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/b2b.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="de" href="https://lexord.de/b2b.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lexord.de/b2b.html?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lexord.de/b2b.html"/>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/links.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- ═══ RECHTLICHES ═══ -->
+  <url>
+    <loc>https://lexord.de/agb.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://lexord.de/Datenschutz.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://lexord.de/Widerrufsbelehrung.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+</urlset>

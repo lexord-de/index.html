@@ -1,6 +1,6 @@
 # robots.txt — LEXORD® Engineering
 # https://lexord.de
-# Letzte Aktualisierung: 2026-06-04
+# Letzte Aktualisierung: 2026-06-07
 
 User-agent: *
 Allow: /
@@ -10,17 +10,31 @@ Disallow: /api/
 Disallow: /worker.js
 Disallow: /diag.html
 Disallow: /vapid-setup.html
+Disallow: /login.html
+Disallow: /product.html
 Disallow: /lxrd-tracker.js
 Disallow: /sw.js
 Disallow: /*.json$
 Disallow: /functions/
 Disallow: /Reperaturen/
 
-# Sitemap
+# Sitemap-Index (zeigt automatisch auf alle Sub-Sitemaps)
 Sitemap: https://lexord.de/sitemap.xml
+# Explizit (für Crawler die Sitemap-Index nicht unterstützen)
+Sitemap: https://lexord.de/sitemap-pages.xml
+Sitemap: https://lexord.de/sitemap-products.xml
+Sitemap: https://lexord.de/sitemap-images.xml
 
 # Bilder & Assets explizit erlauben (für Google Images)
 User-agent: Googlebot-Image
+Allow: /
+
+# Bing-Image-Crawler
+User-agent: bingbot
+Allow: /
+
+# Google-Shopping-Crawler (Merchant Center)
+User-agent: Googlebot-Merchant
 Allow: /
 
 # Crawler-Throttling für gierige Bots (LLMs, Scraper)

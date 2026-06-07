@@ -1577,7 +1577,11 @@ const SITE_URLS = [
   "https://lexord.de/tmr-upgrade-kit.html",
   "https://lexord.de/stickzange-pro.html",
   "https://lexord.de/clicky-trigger.html",
-  "https://lexord.de/grip-housing.html"
+  "https://lexord.de/grip-housing.html",
+  "https://lexord.de/sitemap.xml",
+  "https://lexord.de/sitemap-pages.xml",
+  "https://lexord.de/sitemap-products.xml",
+  "https://lexord.de/sitemap-images.xml"
 ];
 
 async function indexNowPing(env, urls) {

@@ -877,28 +877,67 @@ let LIVE_POLL = null;
 /* ════════ AUTH ════════ */
 async function doLogin(){
   const code = document.getElementById('login-code').value;
-  if(!code) return showErr();
+  if(!code) return showErr('Bitte Code eingeben');
+
+  // Schritt 1: Worker-Healthcheck
   try{
-    /* Versuche neuen Endpoint, Fallback auf alten */
+    const hc = await fetch(WORKER_URL + '/', {cache:'no-store'});
+    if(!hc.ok){
+      return showErr('Worker antwortet mit HTTP '+hc.status+' (lexord-api nicht deployed?)');
+    }
+    const hcData = await hc.json().catch(()=>null);
+    console.log('[Worker-Health]', hcData);
+    if(hcData && hcData.config){
+      if(!hcData.config.admin){
+        return showErr('Worker läuft, aber ADMIN_PASSWORD ist nicht in Cloudflare Secrets gesetzt');
+      }
+      if(!hcData.config.kv){
+        return showErr('Worker läuft, aber KV-Namespace LEXORD_DATA ist nicht gebunden');
+      }
+    }
+  }catch(e){
+    return showErr('Worker nicht erreichbar: '+e.message+' (Internet/Cloudflare prüfen)');
+  }
+
+  // Schritt 2: Login versuchen
+  try{
     let r = await fetch(WORKER_URL + '/admin/login', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({code})});
-    let d = await r.json().catch(()=>({error:'Keine JSON-Antwort'}));
+    let d = await r.json().catch(()=>({error:'Keine JSON-Antwort vom Worker (HTTP '+r.status+')'}));
     if(d.error && (d.error==='Not found' || d.path)){
-      /* Alter Worker: /api/admin/login mit {password} */
       r = await fetch(WORKER_URL + '/api/admin/login', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({password:code})});
       d = await r.json().catch(()=>({error:'Keine JSON-Antwort'}));
     }
-    if(!d.success) return showErr(d.error || 'Falscher Code');
+    console.log('[Admin-Login]', r.status, d);
+    if(r.status === 429){
+      return showErr('Zu viele Login-Versuche · 15 Min warten');
+    }
+    if(r.status === 500 && d.error){
+      return showErr('Server-Fehler: '+d.error);
+    }
+    if(!d.success){
+      return showErr(d.error || 'Falscher Code (HTTP '+r.status+')');
+    }
     localStorage.setItem(TOKEN_KEY, d.token);
     showDashboard();
-  }catch(e){ showErr('Server nicht erreichbar: '+e.message); }
+  }catch(e){
+    showErr('Login-Request fehlgeschlagen: '+e.message);
+  }
 }
 function showErr(msg){
   const e = document.getElementById('login-err');
-  e.innerText = '⚠ ' + (msg || 'FALSCHER CODE');
+  const text = msg || 'FALSCHER CODE';
+  e.innerText = '⚠ ' + text;
   e.style.display = 'block';
-  document.getElementById('login-code').value = '';
+  e.style.whiteSpace = 'normal';
+  e.style.lineHeight = '1.5';
+  e.style.padding = '12px 16px';
+  e.style.fontSize = '11px';
+  e.style.maxWidth = '380px';
+  e.style.wordBreak = 'break-word';
   if('vibrate' in navigator) navigator.vibrate([100,50,100]);
-  setTimeout(()=>e.style.display='none', 2500);
+  // Detail-Fehler 8 Sek anzeigen, Standard-Fehler 2.5 Sek
+  const long = text.length > 30;
+  setTimeout(()=>e.style.display='none', long ? 8000 : 2500);
 }
 async function doLogout(){
   const t = localStorage.getItem(TOKEN_KEY);

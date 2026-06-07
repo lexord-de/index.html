@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  LEXORD® Engineering · Sitemap-Index
+  Aufgeteilt nach Inhaltstyp für maximale Crawl-Effizienz und schnellere Indexierung.
+  Standard: Google, Bing, Yandex, DuckDuckGo, Baidu (alle unterstützen sitemap-index).
+-->
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://lexord.de/sitemap-pages.xml</loc>
+    <lastmod>2026-06-07</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://lexord.de/sitemap-products.xml</loc>
+    <lastmod>2026-06-07</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://lexord.de/sitemap-images.xml</loc>
+    <lastmod>2026-06-07</lastmod>
+  </sitemap>
+</sitemapindex>

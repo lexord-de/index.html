@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Magazin · LEXORD® Engineering — Guides, News & Reviews</title>
+<meta name="description" content="LEXORD Magazin: Guides zu Custom PS5 Controllern, Stick-Drift-Reparatur, Hall-Effect/TMR-Upgrades, 3D-Druck-Mods und News aus dem deutschem Atelier.">
+<meta name="keywords" content="ps5 controller guide, stick drift reparatur, hall effect upgrade, tmr stick, custom controller blog, lexord magazin">
+<meta name="author" content="LEXORD Engineering">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="canonical" href="https://lexord.de/blog.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="LEXORD Magazin · Guides für PS5 Controller">
+<meta property="og:description" content="Guides, Tipps & News zu Custom PS5 Controllern, Reparatur und 3D-Druck-Mods.">
+<meta property="og:image" content="https://lexord.de/IMG_0556.jpeg">
+<meta property="og:url" content="https://lexord.de/blog.html">
+<meta property="og:site_name" content="LEXORD Engineering">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LEXORD Magazin">
+<meta name="twitter:description" content="Guides & News rund um Custom PS5 Controller.">
+<meta name="twitter:image" content="https://lexord.de/IMG_0556.jpeg">
+<link rel="icon" href="IMG_7023.png">
+<link rel="apple-touch-icon" href="IMG_7023.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Blog",
+  "name":"LEXORD Magazin",
+  "description":"Magazin für Custom PS5 Controller, Stick-Drift-Reparatur, Hall-Effect/TMR-Upgrades und 3D-Druck-Mods.",
+  "url":"https://lexord.de/blog.html",
+  "publisher":{"@type":"Organization","name":"LEXORD Engineering","logo":{"@type":"ImageObject","url":"https://lexord.de/IMG_7023.png"}},
+  "inLanguage":"de-DE"
+}
+</script>
+<style>
+:root{--neon:#00f2ff;--neon2:#bc13fe;--bg:#0a0a0a;--card:#111;--border:rgba(255,255,255,.07);--text:#fff;--muted:#888}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--neon);text-decoration:none}
+header{position:sticky;top:0;background:rgba(10,10,10,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:100;padding:14px 22px;display:flex;justify-content:space-between;align-items:center}
+.brand{font-family:'Orbitron';font-weight:900;letter-spacing:5px;font-size:18px;color:#fff;display:flex;align-items:center;gap:8px}
+.brand span{color:var(--neon)}
+.brand sup{font-size:9px;color:var(--neon)}
+.tag{font-family:'Orbitron';font-size:8px;letter-spacing:2px;color:#000;background:linear-gradient(135deg,var(--neon),var(--neon2));padding:3px 7px;border-radius:4px;margin-left:8px}
+.nav-r a{font-family:'Orbitron';font-size:10px;letter-spacing:2px;color:#aaa;margin-left:18px;transition:.2s}
+.nav-r a:hover{color:var(--neon)}
+.hero{padding:80px 24px 60px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(0,242,255,.08),transparent 60%);top:-300px;left:50%;transform:translateX(-50%);z-index:0}
+.hero-inner{position:relative;z-index:1;max-width:880px;margin:0 auto}
+.hero h1{font-family:'Orbitron';font-weight:900;font-size:clamp(2rem,6vw,3.6rem);letter-spacing:-1px;line-height:1.05;margin-bottom:18px}
+.hero h1 span{background:linear-gradient(90deg,var(--neon),var(--neon2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:16px;color:#999;max-width:600px;margin:0 auto}
+.container{max-width:1200px;margin:0 auto;padding:0 24px 100px}
+.cats{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-bottom:40px}
+.cat{padding:8px 16px;background:#0f0f0f;border:1px solid var(--border);border-radius:20px;font-family:'Orbitron';font-size:10px;letter-spacing:1.5px;color:#bbb;cursor:pointer;transition:.2s}
+.cat:hover,.cat.on{background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;border-color:transparent}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px}
+.card{background:linear-gradient(180deg,#0e0e0e,#0a0a0a);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:.3s;cursor:pointer;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-4px);border-color:rgba(0,242,255,.4);box-shadow:0 18px 50px rgba(0,242,255,.12)}
+.card-img{aspect-ratio:16/9;background:#000;overflow:hidden;position:relative}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:.5s}
+.card:hover .card-img img{transform:scale(1.05)}
+.card-img .cat-tag{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);color:var(--neon);font-family:'Orbitron';font-size:9px;letter-spacing:2px;padding:5px 10px;border-radius:5px;border:1px solid rgba(0,242,255,.3)}
+.card-body{padding:20px;flex:1;display:flex;flex-direction:column}
+.card-meta{font-family:'Orbitron';font-size:9px;letter-spacing:2px;color:#666;margin-bottom:10px}
+.card h2{font-family:'Orbitron';font-weight:700;font-size:16px;line-height:1.3;margin-bottom:10px;color:#fff}
+.card p{font-size:13px;color:#999;line-height:1.6;flex:1}
+.card .more{margin-top:14px;font-family:'Orbitron';font-size:9px;letter-spacing:2px;color:var(--neon)}
+.empty{text-align:center;padding:80px 20px;color:#666;font-family:'Orbitron';font-size:12px;letter-spacing:3px}
+.loader{display:flex;justify-content:center;padding:60px;color:#444;font-family:'Orbitron';font-size:11px;letter-spacing:3px}
+footer{border-top:1px solid var(--border);padding:40px 24px;text-align:center;color:#555;font-size:11px}
+footer a{color:#888;margin:0 10px}
+@media(max-width:560px){
+  .hero{padding:50px 18px 40px}
+  .grid{grid-template-columns:1fr;gap:18px}
+  .nav-r a{margin-left:10px;font-size:9px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="brand">LEX<span>O</span>RD<sup>®</sup><span class="tag">MAGAZIN</span></a>
+  <div class="nav-r">
+    <a href="index.html">← STARTSEITE</a>
+    <a href="collections.html">SHOP</a>
+    <a href="reparatur.html">REPARATUR</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <h1>Das LEXORD <span>Magazin</span></h1>
+    <p>Guides, Tipps, Mod-Anleitungen und News aus dem deutschem Atelier. Alles rund um Custom PS5 Controller, Reparatur und 3D-Druck.</p>
+  </div>
+</section>
+
+<div class="container">
+  <div class="cats" id="cats">
+    <div class="cat on" data-cat="">ALLE</div>
+    <div class="cat" data-cat="Guide">GUIDES</div>
+    <div class="cat" data-cat="News">NEWS</div>
+    <div class="cat" data-cat="Review">REVIEWS</div>
+    <div class="cat" data-cat="Mod">MODS</div>
+    <div class="cat" data-cat="Reparatur">REPARATUR</div>
+  </div>
+  <div id="grid" class="grid"><div class="loader">LADE ARTIKEL ...</div></div>
+</div>
+
+<footer>
+  <div>© 2026 LEXORD® Engineering · Made in Germany</div>
+  <div style="margin-top:8px">
+    <a href="index.html">Startseite</a> ·
+    <a href="agb.html">AGB</a> ·
+    <a href="Datenschutz.html">Datenschutz</a> ·
+    <a href="Widerrufsbelehrung.html">Widerruf</a>
+  </div>
+</footer>
+
+<script>
+const API = 'https://lexord-api.leonschulz1420.workers.dev';
+let ARTICLES = [], CURRENT_CAT = '';
+
+async function loadArticles(){
+  try{
+    const r = await fetch(API + '/api/blog');
+    const d = await r.json();
+    ARTICLES = d.articles || [];
+    render();
+  }catch(e){
+    document.getElementById('grid').innerHTML = '<div class="empty">FEHLER BEIM LADEN — BITTE SPÄTER ERNEUT VERSUCHEN</div>';
+  }
+}
+
+function render(){
+  const list = CURRENT_CAT ? ARTICLES.filter(a=>a.category===CURRENT_CAT) : ARTICLES;
+  const g = document.getElementById('grid');
+  if(!list.length){ g.innerHTML = '<div class="empty">NOCH KEINE ARTIKEL IN DIESER KATEGORIE</div>'; return; }
+  g.innerHTML = list.map(a=>{
+    const date = a.published_at ? new Date(a.published_at).toLocaleDateString('de-DE',{day:'2-digit',month:'short',year:'numeric'}) : '';
+    const img = a.image && a.image.startsWith('http') ? a.image : (a.image || '/IMG_0556.jpeg');
+    return `<article class="card" onclick="window.location='blog-article.html?slug=${encodeURIComponent(a.slug)}'">
+      <div class="card-img">
+        <img src="${img}" alt="${esc(a.title)}" loading="lazy">
+        <div class="cat-tag">${esc(a.category || 'NEWS')}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">${date} · ${esc(a.author || 'LEXORD')}</div>
+        <h2>${esc(a.title)}</h2>
+        <p>${esc(a.excerpt || '')}</p>
+        <div class="more">WEITERLESEN →</div>
+      </div>
+    </article>`;
+  }).join('');
+}
+
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+
+document.querySelectorAll('.cat').forEach(c=>c.addEventListener('click',e=>{
+  document.querySelectorAll('.cat').forEach(x=>x.classList.remove('on'));
+  e.currentTarget.classList.add('on');
+  CURRENT_CAT = e.currentTarget.dataset.cat;
+  render();
+}));
+
+loadArticles();
+</script>
+
+</body>
+</html>

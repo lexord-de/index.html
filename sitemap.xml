@@ -82,7 +82,103 @@
   </url>
 
   <url>
+    <loc>https://lexord.de/printing-service.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <priority>0.85</priority>
+    <changefreq>weekly</changefreq>
+    <image:image>
+      <image:loc>https://lexord.de/IMG_7023.png</image:loc>
+      <image:title>3D Printing Service · Custom Paddles &amp; Ersatzteile</image:title>
+      <image:caption>Bio-PETG 3D-Druck Service für PS5 Custom-Paddles, Stick-Caps, D-Pad, Face-Buttons</image:caption>
+    </image:image>
+  </url>
+
+  <url>
     <loc>https://lexord.de/b2b.html</loc>
+    <lastmod>2026-06-04</lastmod>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/links.html</loc>
+    <lastmod>2026-06-07</lastmod>
+    <priority>0.5</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/lxrd-elite-pro.html</loc>
+    <lastmod>2026-06-04</lastmod>
+    <priority>0.85</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/lxrd-performance.html</loc>
+    <lastmod>2026-06-04</lastmod>
+    <priority>0.85</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/lxrd-stealth.html</loc>
+    <lastmod>2026-06-04</lastmod>
+    <priority>0.85</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/lxrd-plus.html</loc>
+    <lastmod>2026-06-04</lastmod>
+    <priority>0.85</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/lxrd-basic.html</loc>
+    <lastmod>2026-06-04</lastmod>
+    <priority>0.85</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/paddle-system-v2.html</loc>
+    <lastmod>2026-06-04</lastmod>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/hall-effect-kit.html</loc>
+    <lastmod>2026-06-04</lastmod>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/tmr-upgrade-kit.html</loc>
+    <lastmod>2026-06-04</lastmod>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/stickzange-pro.html</loc>
+    <lastmod>2026-06-04</lastmod>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/clicky-trigger.html</loc>
+    <lastmod>2026-06-04</lastmod>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://lexord.de/grip-housing.html</loc>
     <lastmod>2026-06-04</lastmod>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>

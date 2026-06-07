@@ -115,22 +115,26 @@
 <link rel="preload" as="image" href="IMG_0556.jpeg" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-<!-- PayPal SDK · Apple Pay wird nur auf Safari/iOS geladen (vermeidet SDK-Crashes auf anderen Browsern) -->
+<!-- PayPal SDK · Apple Pay (Safari) + Google Pay (Chrome) dynamisch + EU-Methoden, mit Crash-Fallback -->
 <script>
 (function(){
-  var hasApplePay = (window.ApplePaySession && ApplePaySession.canMakePayments && ApplePaySession.canMakePayments());
-  var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-  var base = 'https://www.paypal.com/sdk/js?client-id=AQOBIpaxy2Po_nxn9bZURvPzt4uS-ZYPdCueAT4WYbnOMsepoYD_k2WVFWAQiGyZ8i7hB9HucXYXAZ57&currency=EUR&intent=capture';
-  var components = 'buttons,funding-eligibility';
-  var funding = 'card,paylater,sepa,giropay,ideal,sofort';
-  if (hasApplePay && isSafari) {
-    components += ',applepay';
-    funding += ',applepay';
-  }
+  var ua = navigator.userAgent || '';
+  var hasApplePay = !!(window.ApplePaySession && ApplePaySession.canMakePayments && ApplePaySession.canMakePayments());
+  var isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+  var isChrome = /chrome|chromium|crios/i.test(ua) && !/edg|opr/i.test(ua);
+  var canGooglePay = isChrome && (window.PaymentRequest || /android/i.test(ua));
+  var base = 'https://www.paypal.com/sdk/js?client-id=AQOBIpaxy2Po_nxn9bZURvPzt4uS-ZYPdCueAT4WYbnOMsepoYD_k2WVFWAQiGyZ8i7hB9HucXYXAZ57&currency=EUR&intent=capture&locale=de_DE';
+  var components = ['buttons','funding-eligibility'];
+  // PayPal-Funding-Quellen in DE/EU, die ohne extra Merchant-Setup auftauchen sobald aktiviert
+  var funding = ['card','paylater','sepa','giropay','ideal','sofort','blik','bancontact','eps','mybank','p24','trustly'];
+  if (hasApplePay && isSafari) { components.push('applepay'); funding.push('applepay'); }
+  if (canGooglePay) { components.push('googlepay'); funding.push('googlepay'); }
+  var url = base + '&components=' + components.join(',') + '&enable-funding=' + funding.join(',');
   var s = document.createElement('script');
-  s.src = base + '&components=' + components + '&enable-funding=' + funding;
+  s.src = url;
   s.setAttribute('data-sdk-integration-source','button-factory');
   s.onerror = function(){
+    // Fallback: nur garantiert verfügbare Methoden — Apple/Google Pay raus
     var f = document.createElement('script');
     f.src = base + '&components=buttons,funding-eligibility&enable-funding=card,paylater,sepa,giropay,ideal,sofort';
     f.setAttribute('data-sdk-integration-source','button-factory');

@@ -178,6 +178,9 @@ async function test(){
       if (path.startsWith("/api/admin/blog/") && request.method === "DELETE") return await adminDeleteBlog(request, env, path.split("/").pop());
       if (path === "/api/admin/blog/ai-generate" && request.method === "POST") return await adminBlogAiGenerate(request, env);
       if (path === "/api/admin/reviews/approve" && request.method === "POST") return await adminApproveReview(request, env);
+      if (path === "/api/admin/reviews" && request.method === "GET") return await adminListReviews(request, env);
+      if (path === "/api/admin/reviews" && request.method === "POST") return await adminCreateReview(request, env);
+      if (path.startsWith("/api/admin/reviews/") && request.method === "DELETE") return await adminDeleteReview(request, env, path.split("/").pop());
       if (path === "/api/admin/expenses" && request.method === "GET") return await listExpenses(request, env);
       if (path === "/api/admin/expenses" && request.method === "POST") return await createExpense(request, env);
       if (path.startsWith("/api/admin/expenses/") && request.method === "DELETE") return await deleteExpense(request, env, path.split("/").pop());
@@ -1905,39 +1908,106 @@ async function submitReview(request, env) {
   const email = String(b.email || "").trim().toLowerCase().slice(0, 120);
   const product = String(b.product || "").trim().slice(0, 80);
   if (!text || text.length < 10) return json({ success: false, error: "Bitte mindestens 10 Zeichen" });
+  if (!email || !email.includes("@")) return json({ success: false, error: "E-Mail ist Pflicht — wir prüfen damit, ob du wirklich bei uns gekauft hast" });
   const ip = request.headers.get("CF-Connecting-IP") || "0.0.0.0";
   // Rate-limit: max 1 review per IP per hour
   const rlKey = "review_rl:" + ip;
   const rl = await env.LEXORD_DATA.get(rlKey);
   if (rl) return json({ success: false, error: "Bitte etwas warten vor der nächsten Bewertung" });
-  // Verify if email matches a completed order
+  // Verifizieren: Email muss zu einer abgeschlossenen Bestellung gehören
   let verified = false;
-  if (email) {
-    const ordersList = await env.LEXORD_DATA.list({ prefix: "order:" });
-    for (const k of ordersList.keys) {
+  let matchedOrderNr = "";
+  const ordersList = await env.LEXORD_DATA.list({ prefix: "order:" });
+  for (const k of ordersList.keys) {
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if (raw) {
+      try { const o = JSON.parse(raw); if ((o.email || "").toLowerCase() === email) { verified = true; matchedOrderNr = o.orderNr || ""; break; } } catch (e) {}
+    }
+  }
+  // Auch Reparaturen prüfen (Reparatur-Kunden dürfen bewerten)
+  if (!verified) {
+    const repList = await env.LEXORD_DATA.list({ prefix: "repair:" });
+    for (const k of repList.keys) {
       const raw = await env.LEXORD_DATA.get(k.name);
       if (raw) {
-        try { const o = JSON.parse(raw); if ((o.email || "").toLowerCase() === email) { verified = true; break; } } catch (e) {}
+        try { const r = JSON.parse(raw); if ((r.email || "").toLowerCase() === email) { verified = true; matchedOrderNr = r.repNr || ""; break; } } catch (e) {}
       }
     }
+  }
+  // Strenge Verifizierung: keine Bestellung/Reparatur gefunden → ablehnen
+  if (!verified) {
+    return json({ success: false, error: "Diese E-Mail ist bei uns nicht als Käufer bekannt. Bewertungen sind nur für verifizierte Kunden möglich." });
   }
   const id = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
   const review = {
     id, name, email, rating, text, product, verified,
-    approved: false, ip,
+    matchedOrderNr,
+    approved: false,
+    source: "customer",
+    ip,
     created: new Date().toISOString(),
     date: new Date().toISOString()
   };
   await env.LEXORD_DATA.put("review:" + id, JSON.stringify(review));
   await env.LEXORD_DATA.put(rlKey, "1", { expirationTtl: 3600 });
-  // Notify admin
+  // Admin-Mail
   if (env.BREVO_API_KEY) {
-    const adminHtml = `<h2>Neue Bewertung eingegangen</h2><p><strong>${name}</strong> (${email || "anonym"}) — ${rating}/5 Sterne${verified ? " ✓ verifiziert" : ""}</p><blockquote style="background:#f5f5f5;padding:14px;border-left:4px solid #00f2ff">${escapeHtml(text)}</blockquote>${product ? "<p>Produkt: " + escapeHtml(product) + "</p>" : ""}<p>Im Admin-Panel freischalten → Tab ⭐ BEWERTUNGEN.</p>`;
+    const adminHtml = `<h2>Neue Bewertung von verifiziertem Kunde</h2><p><strong>${name}</strong> (${email}) — ${rating}/5 Sterne ✓ verifiziert via ${matchedOrderNr || "Email-Match"}</p><blockquote style="background:#f5f5f5;padding:14px;border-left:4px solid #00f2ff">${escapeHtml(text)}</blockquote>${product ? "<p>Produkt: " + escapeHtml(product) + "</p>" : ""}<p>Im Admin-Panel freischalten → Tab ⭐ BEWERTUNGEN.</p>`;
     try {
       await sendBrevoMail(env, env.FROM_EMAIL || "kontakt@lexord.de", "Neue Bewertung · " + rating + "★ · " + name, adminHtml, { kind: "review-new", id });
     } catch (e) {}
   }
-  return json({ success: true, id, message: verified ? "Danke! Deine Bewertung wurde gespeichert (verifizierter Kauf)." : "Danke! Deine Bewertung wird kurz geprüft und dann veröffentlicht." });
+  return json({ success: true, id, message: "Danke! Deine Bewertung wird kurz geprüft und dann veröffentlicht." });
+}
+
+// Admin: alle Bewertungen (pending + approved + rejected)
+async function adminListReviews(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ reviews: [] });
+  const list = await env.LEXORD_DATA.list({ prefix: "review:" });
+  const reviews = [];
+  for (const k of list.keys) {
+    const raw = await env.LEXORD_DATA.get(k.name);
+    if (raw) { try { reviews.push(JSON.parse(raw)); } catch (e) {} }
+  }
+  reviews.sort((a, b) => (b.created || b.date || "").localeCompare(a.created || a.date || ""));
+  return json({ reviews });
+}
+
+// Admin: eigene Bewertung erstellen (z.B. von eBay, Trustpilot importieren)
+async function adminCreateReview(request, env) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA) return json({ success: false });
+  const b = await request.json();
+  const rating = parseInt(b.rating, 10);
+  if (!rating || rating < 1 || rating > 5) return json({ success: false, error: "Rating 1-5" });
+  const text = String(b.text || "").trim().slice(0, 600);
+  if (!text || text.length < 5) return json({ success: false, error: "Text zu kurz" });
+  const id = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+  const review = {
+    id,
+    name: String(b.name || "Anonym").slice(0, 60),
+    email: String(b.email || "").toLowerCase().slice(0, 120),
+    rating,
+    text,
+    product: String(b.product || "").slice(0, 80),
+    verified: b.verified !== false,
+    source: String(b.source || "admin").slice(0, 40),
+    approved: b.approved !== false,
+    approved_at: new Date().toISOString(),
+    created: new Date().toISOString(),
+    date: b.date || new Date().toISOString()
+  };
+  await env.LEXORD_DATA.put("review:" + id, JSON.stringify(review));
+  return json({ success: true, review });
+}
+
+// Admin: Bewertung löschen
+async function adminDeleteReview(request, env, id) {
+  if (!checkAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+  if (!env.LEXORD_DATA || !id) return json({ success: false });
+  await env.LEXORD_DATA.delete("review:" + id);
+  return json({ success: true });
 }
 
 async function adminApproveReview(request, env) {

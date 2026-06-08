@@ -482,6 +482,90 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
       <button class="dash-action" style="background:rgba(0,242,255,.1);color:#00f2ff;border-color:rgba(0,242,255,.3)" onclick="previewReviewEmail()">👁️ E-MAIL-VORSCHAU</button>
     </div>
     <div id="reviews-container"><div style="text-align:center;color:#666;padding:40px;font-family:Orbitron;font-size:11px;letter-spacing:2px">LADE BESTELLUNGEN ...</div></div>
+
+    <!-- ═══ BEWERTUNGS-MANAGER: Eingehende Bewertungen + Eigene erstellen ═══ -->
+    <div style="margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,.05)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+        <div style="font-family:Orbitron;font-size:13px;letter-spacing:3px;color:#fff;font-weight:900">⭐ BEWERTUNGEN VERWALTEN</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="dash-action" onclick="loadAllReviews()">↻ AKTUALISIEREN</button>
+          <button class="dash-action" onclick="revAdminCreate()" style="background:linear-gradient(135deg,#00f2ff,#bc13fe);color:#000;font-weight:900;border:none">✏️ EIGENE BEWERTUNG SCHREIBEN</button>
+        </div>
+      </div>
+
+      <div id="rev-mgmt-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px"></div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
+        <select class="fin-sel" id="rev-mgmt-filter" onchange="renderReviewsMgmt()">
+          <option value="pending">⏳ Wartend auf Freigabe</option>
+          <option value="approved">✓ Freigeschaltet (öffentlich)</option>
+          <option value="rejected">✕ Nicht freigeschaltet</option>
+          <option value="all">Alle Bewertungen</option>
+        </select>
+        <input type="text" class="search-input" id="rev-mgmt-search" placeholder="🔍 Suche Name/Email/Text…" oninput="renderReviewsMgmt()">
+      </div>
+
+      <div id="rev-mgmt-list"><div style="text-align:center;color:#666;padding:30px;font-family:Orbitron;font-size:10px;letter-spacing:2px">LADE BEWERTUNGEN…</div></div>
+
+      <div style="margin-top:14px;font-size:10px;color:#555;line-height:1.7;padding:14px;background:rgba(0,0,0,.4);border-radius:10px">
+        <strong style="color:#888">Verifizierungs-Regel:</strong> Kunden können nur Bewertungen abgeben, wenn ihre E-Mail mit einer bestehenden Bestellung oder Reparatur übereinstimmt. Alle Bewertungen sind erst nach deiner Freigabe öffentlich sichtbar.
+      </div>
+    </div>
+  </div>
+
+  <!-- ✏️ EIGENE BEWERTUNG MODAL -->
+  <div id="rev-admin-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(8px)">
+    <div style="background:#0a0a0a;border:1px solid rgba(0,242,255,.3);border-radius:16px;max-width:520px;width:100%;padding:26px;max-height:90vh;overflow-y:auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+        <div style="font-family:Orbitron;font-size:13px;letter-spacing:3px;color:#fff;font-weight:900">✏️ BEWERTUNG SELBST EINTRAGEN</div>
+        <button onclick="revAdminClose()" style="background:none;border:none;color:#888;font-size:22px;cursor:pointer">×</button>
+      </div>
+      <div style="font-size:11px;color:#888;line-height:1.5;margin-bottom:18px">Nutze diese Funktion z.B. um Bewertungen von eBay, Trustpilot oder per Mail erhaltene Bewertungen ins Carousel zu übernehmen.</div>
+
+      <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">STERNE *</label>
+      <select id="rev-adm-rating" class="fin-sel" style="width:100%;margin-bottom:12px">
+        <option value="5">★★★★★ (5/5)</option><option value="4">★★★★☆ (4/5)</option>
+        <option value="3">★★★☆☆ (3/5)</option><option value="2">★★☆☆☆ (2/5)</option>
+        <option value="1">★☆☆☆☆ (1/5)</option>
+      </select>
+
+      <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">NAME (oder Initialen) *</label>
+      <input type="text" id="rev-adm-name" placeholder="z.B. Max M." style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:12px;box-sizing:border-box">
+
+      <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">E-MAIL (optional, nicht öffentlich)</label>
+      <input type="email" id="rev-adm-email" placeholder="kunde@example.de" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:12px;box-sizing:border-box">
+
+      <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">PRODUKT (optional)</label>
+      <input type="text" id="rev-adm-product" placeholder="z.B. LXRD Performance Black" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:12px;box-sizing:border-box">
+
+      <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">BEWERTUNGSTEXT *</label>
+      <textarea id="rev-adm-text" rows="4" placeholder="Der Bewertungstext wie er angezeigt werden soll" style="width:100%;padding:11px 14px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Inter;font-size:13px;margin-bottom:12px;box-sizing:border-box;resize:vertical;line-height:1.6"></textarea>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+        <div>
+          <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">QUELLE</label>
+          <select id="rev-adm-source" class="fin-sel" style="width:100%">
+            <option value="admin">Direkt eingetragen</option>
+            <option value="ebay">eBay</option><option value="trustpilot">Trustpilot</option>
+            <option value="google">Google</option><option value="email">Per E-Mail</option>
+            <option value="whatsapp">WhatsApp</option><option value="instagram">Instagram</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:10px;letter-spacing:2px;color:#888;margin-bottom:6px">VERIFIZIERT-BADGE</label>
+          <select id="rev-adm-verified" class="fin-sel" style="width:100%">
+            <option value="1">✓ Verifiziert anzeigen</option>
+            <option value="0">ohne Badge</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button class="dash-action" onclick="revAdminClose()" style="background:rgba(255,255,255,.05);color:#888">ABBRECHEN</button>
+        <button class="dash-action" onclick="revAdminSave()" style="background:linear-gradient(135deg,#00ff88,#00b67a);color:#000;font-weight:900;border:none">✓ SOFORT VERÖFFENTLICHEN</button>
+      </div>
+      <div id="rev-adm-status" style="margin-top:14px;font-size:11px;text-align:center;font-family:Orbitron;letter-spacing:1px"></div>
+    </div>
   </div>
 
   <!-- PANEL: NEWSLETTER -->
@@ -2555,7 +2639,7 @@ function switchTab(tab, btn){
   if(tab === 'archiv') loadArchive();
   if(tab === 'widerrufe') loadWiderrufe();
   if(tab === 'chats') loadChats();
-  if(tab === 'reviews') loadReviewOrders();
+  if(tab === 'reviews') { loadReviewOrders(); loadAllReviews(); }
   if(tab === 'newsletter') loadNewsletter();
   if(tab === 'blog') loadBlogList();
   if(tab === 'produkte') loadAdminProductsList();
@@ -2692,6 +2776,155 @@ async function prodDelete(slug){
     if(d.success){ toast('✓ Gelöscht','success'); loadAdminProductsList(); }
     else toast('Fehler','error');
   }catch(e){ toast('Fehler','error'); }
+}
+
+/* ════════ BEWERTUNGS-MANAGER ════════ */
+let ALL_REVIEWS = [];
+
+async function loadAllReviews(){
+  const tk = localStorage.getItem(TOKEN_KEY);
+  try{
+    const r = await fetch(WORKER_URL+'/api/admin/reviews',{headers:{'Authorization':'Bearer '+tk}});
+    const d = await r.json();
+    ALL_REVIEWS = d.reviews || [];
+  }catch(e){ ALL_REVIEWS = []; }
+  renderReviewsMgmt();
+}
+
+function renderReviewsMgmt(){
+  const filter = document.getElementById('rev-mgmt-filter').value;
+  const q = (document.getElementById('rev-mgmt-search').value||'').toLowerCase().trim();
+  let list = ALL_REVIEWS.slice();
+
+  // Stats
+  const stats = {total:ALL_REVIEWS.length, pending:0, approved:0, rejected:0, verified:0, avg:0};
+  let sum = 0;
+  ALL_REVIEWS.forEach(r=>{
+    if(r.approved===true) stats.approved++;
+    else if(r.approved===false && r.approved_at) stats.rejected++;
+    else stats.pending++;
+    if(r.verified) stats.verified++;
+    sum += parseInt(r.rating)||0;
+  });
+  stats.avg = stats.total > 0 ? (sum/stats.total).toFixed(1) : '0';
+  document.getElementById('rev-mgmt-stats').innerHTML = `
+    <div style="background:rgba(255,174,0,.05);border:1px solid rgba(255,174,0,.2);border-radius:10px;padding:12px"><div style="font-size:10px;letter-spacing:2px;color:#888;margin-bottom:4px">WARTEN</div><div style="font-family:Orbitron;font-size:22px;font-weight:900;color:#ffae00">${stats.pending}</div></div>
+    <div style="background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.2);border-radius:10px;padding:12px"><div style="font-size:10px;letter-spacing:2px;color:#888;margin-bottom:4px">FREIGEGEBEN</div><div style="font-family:Orbitron;font-size:22px;font-weight:900;color:#00ff88">${stats.approved}</div></div>
+    <div style="background:rgba(255,77,109,.05);border:1px solid rgba(255,77,109,.2);border-radius:10px;padding:12px"><div style="font-size:10px;letter-spacing:2px;color:#888;margin-bottom:4px">ABGELEHNT</div><div style="font-family:Orbitron;font-size:22px;font-weight:900;color:#ff4d6d">${stats.rejected}</div></div>
+    <div style="background:rgba(0,242,255,.05);border:1px solid rgba(0,242,255,.2);border-radius:10px;padding:12px"><div style="font-size:10px;letter-spacing:2px;color:#888;margin-bottom:4px">⌀ STERNE</div><div style="font-family:Orbitron;font-size:22px;font-weight:900;color:#00f2ff">${stats.avg}</div></div>
+    <div style="background:rgba(188,19,254,.05);border:1px solid rgba(188,19,254,.2);border-radius:10px;padding:12px"><div style="font-size:10px;letter-spacing:2px;color:#888;margin-bottom:4px">VERIFIZIERT</div><div style="font-family:Orbitron;font-size:22px;font-weight:900;color:#bc13fe">${stats.verified}</div></div>
+  `;
+
+  // Filter
+  if(filter==='pending') list = list.filter(r=>r.approved!==true && !r.approved_at);
+  else if(filter==='approved') list = list.filter(r=>r.approved===true);
+  else if(filter==='rejected') list = list.filter(r=>r.approved===false && r.approved_at);
+
+  if(q) list = list.filter(r=>(r.name||'').toLowerCase().includes(q)||(r.email||'').toLowerCase().includes(q)||(r.text||'').toLowerCase().includes(q));
+
+  const c = document.getElementById('rev-mgmt-list');
+  if(!list.length){ c.innerHTML = '<div style="text-align:center;color:#666;padding:30px;font-family:Orbitron;font-size:10px;letter-spacing:2px">KEINE BEWERTUNGEN IN DIESER ANSICHT</div>'; return; }
+
+  c.innerHTML = list.map(r=>{
+    const stars = '★'.repeat(r.rating||5) + '☆'.repeat(5-(r.rating||5));
+    const dt = r.created || r.date;
+    const dStr = dt ? new Date(dt).toLocaleDateString('de-DE') : '–';
+    const status = r.approved===true
+      ? '<span style="background:rgba(0,255,136,.15);color:#00ff88;font-size:9px;padding:3px 8px;border-radius:4px;font-family:Orbitron;letter-spacing:1px">✓ ÖFFENTLICH</span>'
+      : (r.approved===false && r.approved_at)
+        ? '<span style="background:rgba(255,77,109,.15);color:#ff4d6d;font-size:9px;padding:3px 8px;border-radius:4px;font-family:Orbitron;letter-spacing:1px">✕ ABGELEHNT</span>'
+        : '<span style="background:rgba(255,174,0,.15);color:#ffae00;font-size:9px;padding:3px 8px;border-radius:4px;font-family:Orbitron;letter-spacing:1px">⏳ WARTET</span>';
+    const verifBadge = r.verified ? '<span style="background:rgba(188,19,254,.15);color:#bc13fe;font-size:9px;padding:3px 8px;border-radius:4px;font-family:Orbitron;letter-spacing:1px;margin-left:6px">✓ VERIFIZIERT</span>' : '';
+    const srcBadge = r.source ? '<span style="background:rgba(255,255,255,.05);color:#888;font-size:9px;padding:3px 8px;border-radius:4px;font-family:Orbitron;letter-spacing:1px;margin-left:6px">'+esc2(r.source.toUpperCase())+'</span>' : '';
+    const actionBtns = r.approved===true
+      ? `<button onclick="revToggleApprove('${r.id}',false)" style="background:rgba(255,174,0,.1);border:1px solid rgba(255,174,0,.3);color:#ffae00;border-radius:6px;padding:6px 12px;font-size:10px;cursor:pointer;font-family:Orbitron;letter-spacing:1px">⏸ SPERREN</button>`
+      : `<button onclick="revToggleApprove('${r.id}',true)" style="background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);color:#00ff88;border-radius:6px;padding:6px 12px;font-size:10px;cursor:pointer;font-family:Orbitron;letter-spacing:1px">✓ FREIGEBEN</button>`;
+    return `<div style="background:#0e0e0e;border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:16px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+        <div>
+          <span style="color:#00f2ff;font-size:14px;letter-spacing:2px">${stars}</span>
+          <span style="color:#fff;font-weight:700;margin-left:10px">${esc2(r.name||'Anonym')}</span>
+          ${verifBadge}${srcBadge}
+        </div>
+        ${status}
+      </div>
+      <div style="color:#ccc;font-size:13px;line-height:1.6;margin-bottom:10px">„${esc2(r.text||'')}"</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-family:Orbitron;font-size:9px;letter-spacing:1px;color:#666">
+        <div>
+          ${r.email ? esc2(r.email) + ' · ' : ''}${dStr}${r.product ? ' · '+esc2(r.product) : ''}${r.matchedOrderNr ? ' · Match: '+esc2(r.matchedOrderNr) : ''}
+        </div>
+        <div style="display:flex;gap:6px">
+          ${actionBtns}
+          <button onclick="revDelete('${r.id}')" style="background:transparent;border:1px solid rgba(255,77,109,.3);color:#ff4d6d;border-radius:6px;padding:6px 12px;font-size:10px;cursor:pointer;font-family:Orbitron;letter-spacing:1px">🗑 LÖSCHEN</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function revToggleApprove(id, approved){
+  const tk = localStorage.getItem(TOKEN_KEY);
+  try{
+    const r = await fetch(WORKER_URL+'/api/admin/reviews/approve',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},body:JSON.stringify({id,approved})});
+    const d = await r.json();
+    if(d.success){ toast(approved?'✓ Freigegeben — jetzt öffentlich sichtbar':'⏸ Gesperrt','success'); loadAllReviews(); }
+    else toast(d.error||'Fehler','error');
+  }catch(e){ toast('Verbindungsfehler','error'); }
+}
+
+async function revDelete(id){
+  if(!confirm('Bewertung dauerhaft löschen?')) return;
+  const tk = localStorage.getItem(TOKEN_KEY);
+  try{
+    const r = await fetch(WORKER_URL+'/api/admin/reviews/'+encodeURIComponent(id),{method:'DELETE',headers:{'Authorization':'Bearer '+tk}});
+    const d = await r.json();
+    if(d.success){ toast('✓ Gelöscht','success'); loadAllReviews(); }
+    else toast('Fehler','error');
+  }catch(e){ toast('Fehler','error'); }
+}
+
+/* ════════ EIGENE BEWERTUNG EINTRAGEN ════════ */
+function revAdminCreate(){
+  document.getElementById('rev-adm-name').value = '';
+  document.getElementById('rev-adm-email').value = '';
+  document.getElementById('rev-adm-product').value = '';
+  document.getElementById('rev-adm-text').value = '';
+  document.getElementById('rev-adm-rating').value = '5';
+  document.getElementById('rev-adm-source').value = 'admin';
+  document.getElementById('rev-adm-verified').value = '1';
+  document.getElementById('rev-adm-status').textContent = '';
+  document.getElementById('rev-admin-modal').style.display = 'flex';
+}
+function revAdminClose(){ document.getElementById('rev-admin-modal').style.display = 'none'; }
+async function revAdminSave(){
+  const rating = parseInt(document.getElementById('rev-adm-rating').value);
+  const name = document.getElementById('rev-adm-name').value.trim();
+  const email = document.getElementById('rev-adm-email').value.trim();
+  const product = document.getElementById('rev-adm-product').value.trim();
+  const text = document.getElementById('rev-adm-text').value.trim();
+  const source = document.getElementById('rev-adm-source').value;
+  const verified = document.getElementById('rev-adm-verified').value === '1';
+  if(!name || !text || text.length < 5){
+    document.getElementById('rev-adm-status').textContent = '⚠ Name + Text Pflicht';
+    document.getElementById('rev-adm-status').style.color = '#ff4d6d';
+    return;
+  }
+  const tk = localStorage.getItem(TOKEN_KEY);
+  try{
+    const r = await fetch(WORKER_URL+'/api/admin/reviews',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},body:JSON.stringify({rating,name,email,product,text,source,verified,approved:true})});
+    const d = await r.json();
+    if(d.success){
+      toast('✓ Bewertung sofort live','success');
+      revAdminClose();
+      loadAllReviews();
+    } else {
+      document.getElementById('rev-adm-status').textContent = '⚠ '+(d.error||'Fehler');
+      document.getElementById('rev-adm-status').style.color = '#ff4d6d';
+    }
+  }catch(e){
+    document.getElementById('rev-adm-status').textContent = '⚠ Verbindungsfehler';
+    document.getElementById('rev-adm-status').style.color = '#ff4d6d';
+  }
 }
 
 /* ════════ BLOG-MANAGER ════════ */

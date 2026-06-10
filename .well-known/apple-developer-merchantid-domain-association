@@ -1,0 +1,14 @@
+# PLATZHALTER — diese Datei MUSST du ersetzen!
+#
+# WO BEKOMMST DU SIE:
+# 1. Öffne PayPal Business Dashboard: https://www.paypal.com/businessmanage/
+# 2. Account Settings → Website payments → Apple Pay
+# 3. Klick "Add Domain" → "lexord.de" eingeben
+# 4. PayPal lädt dir eine .txt-Datei herunter mit Inhalt wie:
+#    7B227073704964223A22394441343646...
+# 5. Den GESAMTEN Inhalt dieser Datei hier reinkopieren und überschreiben
+# 6. Datei muss erreichbar sein unter:
+#    https://lexord.de/.well-known/apple-developer-merchantid-domain-association
+# 7. Im PayPal Dashboard auf "Verify" klicken
+#
+# OHNE DIESEN SCHRITT KANN APPLE PAY NICHT FUNKTIONIEREN — egal wie viel Code wir schreiben.

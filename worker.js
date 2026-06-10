@@ -845,7 +845,7 @@ function escapeHtml(s) {
 
 // ============ SINGLE-USE DISCOUNT CODES ============
 // Welcome-Codes: einmal pro Geraet/IP/Email einloesbar, nur fuer konfigurierte Controller
-const WELCOME_CODES = ["WILLKOMMEN10", "WELCOME10", "WELCOME"];
+const WELCOME_CODES = ["WILLKOMMEN10", "WELCOME10", "WELCOME", "WAIT10"];
 
 async function checkDiscountCode(request, env) {
   if (!env.LEXORD_DATA) return json({ valid: false, error: "DB nicht konfiguriert" });

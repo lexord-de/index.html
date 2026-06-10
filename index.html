@@ -234,9 +234,14 @@ header{position:fixed;top:30px;width:100%;z-index:9400;padding:11px 5%;display:f
 .c-empty{text-align:center;padding:60px 20px;color:#222}
 .c-empty p{font-family:'Orbitron';font-size:9px;letter-spacing:2px;margin-top:12px}
 .cart-ft{border-top:1px solid #0f0f0f;padding:18px 22px 90px;background:#050505}
-.ship-bar-lbl{font-family:'Orbitron';font-size:7.5px;letter-spacing:1.5px;color:#444;margin-bottom:5px}
-.ship-bar{background:#0d0d0d;border-radius:3px;height:3px;margin-bottom:14px;overflow:hidden}
-.ship-fill{height:100%;background:var(--neon);border-radius:3px;transition:.5s}
+.ship-bar-lbl{font-family:'Orbitron';font-size:8.5px;letter-spacing:2px;color:#888;margin-bottom:6px;transition:.3s;text-align:center}
+.ship-bar-lbl.close{color:var(--neon);text-shadow:0 0 12px rgba(0,242,255,.4);animation:shipPulse 1.4s ease-in-out infinite}
+.ship-bar-lbl.done{color:#00ff88;font-weight:900}
+.ship-bar{background:#0d0d0d;border-radius:3px;height:5px;margin-bottom:14px;overflow:hidden;position:relative;border:1px solid #161616}
+.ship-fill{height:100%;background:linear-gradient(90deg,var(--neon),var(--neon2));border-radius:3px;transition:width .6s cubic-bezier(.2,.8,.2,1);position:relative;box-shadow:0 0 12px rgba(0,242,255,.4)}
+.ship-fill::after{content:'';position:absolute;top:0;right:0;width:30px;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6));animation:shipGleam 2s ease-in-out infinite}
+@keyframes shipPulse{0%,100%{opacity:.85}50%{opacity:1;letter-spacing:2.4px}}
+@keyframes shipGleam{0%{transform:translateX(-30px);opacity:0}50%{opacity:1}100%{transform:translateX(0);opacity:0}}
 .sum-row{display:flex;justify-content:space-between;font-size:10.5px;color:#666;margin-bottom:5px;font-family:'Inter'}
 .sum-row.total{color:#fff;font-weight:700;font-size:13px;border-top:1px solid #0f0f0f;padding-top:9px;margin-top:6px;font-family:'Orbitron'}
 .land-row{display:flex;align-items:center;gap:10px;margin:10px 0;background:#0c0c0c;border:1px solid #111;border-radius:8px;padding:10px 13px}
@@ -1061,10 +1066,28 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
 @media(hover:hover){
   body::after{content:'';position:fixed;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(0,242,255,.06),transparent 60%);pointer-events:none;z-index:99998;left:var(--mx,-999px);top:var(--my,-999px);transform:translate(-50%,-50%);transition:opacity .3s;opacity:0;mix-blend-mode:screen}
   body.cursor-on::after{opacity:1}
+  /* Magnetic-Button-Klasse: smooth translate via CSS-Variablen */
+  .lxd-magnetic{transition:transform .25s cubic-bezier(.2,.8,.2,1)}
 }
+/* Smooth scroll für alle Anchor-Klicks */
+html{scroll-behavior:smooth}
+/* ═══ 3D-Hero-Stage ═══ */
+.lxd-3d-stage{position:relative;perspective:1500px;perspective-origin:50% 50%;transform-style:preserve-3d;width:100%;display:flex;justify-content:center;align-items:center;cursor:grab;user-select:none;-webkit-user-select:none}
+.lxd-3d-stage.dragging{cursor:grabbing}
+.lxd-3d-obj{transform:rotateY(var(--ry,0deg)) rotateX(var(--rx,0deg)) scale3d(1,1,1);transition:transform .35s cubic-bezier(.2,.8,.2,1);will-change:transform;filter:drop-shadow(0 30px 60px rgba(0,242,255,.25)) drop-shadow(0 60px 100px rgba(188,19,254,.15))}
+.lxd-3d-stage.dragging .lxd-3d-obj{transition:none}
+.lxd-3d-stage.idle .lxd-3d-obj{animation:lxd3dFloat 8s ease-in-out infinite}
+@keyframes lxd3dFloat{
+  0%,100%{transform:rotateY(-6deg) rotateX(2deg) translateY(0)}
+  50%{transform:rotateY(6deg) rotateX(-2deg) translateY(-10px)}
+}
+.lxd-3d-hint{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:3px;color:#666;background:rgba(0,0,0,.6);padding:6px 14px;border-radius:20px;border:1px solid rgba(0,242,255,.2);backdrop-filter:blur(8px);opacity:.6;transition:.3s;pointer-events:none}
+.lxd-3d-stage:hover .lxd-3d-hint{opacity:1;color:var(--neon)}
+.lxd-3d-stage.touched .lxd-3d-hint{opacity:0}
+@media(max-width:560px){.lxd-3d-hint{font-size:8px;padding:5px 10px}}
 </style>
 <script>
-// Cursor-Glow nur auf Desktop aktivieren nach kurzer Bewegung
+// Cursor-Glow + Magnetic Buttons (nur Desktop)
 (function(){
   if(!matchMedia('(hover:hover)').matches)return;
   let on=false;
@@ -1074,6 +1097,121 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
     if(!on){document.body.classList.add('cursor-on');on=true;}
   },{passive:true});
   document.addEventListener('mouseleave',function(){document.body.classList.remove('cursor-on');on=false;});
+
+  // Magnetic Buttons — attract to mouse within ~80px
+  function bindMagnetic(){
+    const sels='.cta,.btn-primary,.btn,.lxd-compare-btn,.lxd-at-cta,.hero-cta,#lxd-ref-btn,.lxd-at-btn,.btn.p,.btn.s,.dash-action.primary';
+    document.querySelectorAll(sels).forEach(el=>{
+      if(el.dataset.magnetic)return;
+      el.dataset.magnetic='1';
+      el.classList.add('lxd-magnetic');
+      el.addEventListener('mousemove',function(e){
+        const r=el.getBoundingClientRect();
+        const cx=r.left+r.width/2, cy=r.top+r.height/2;
+        const dx=(e.clientX-cx)*.25, dy=(e.clientY-cy)*.35;
+        el.style.transform='translate('+dx+'px,'+dy+'px)';
+      });
+      el.addEventListener('mouseleave',function(){el.style.transform='';});
+    });
+  }
+  if(document.readyState==='complete'||document.readyState==='interactive') bindMagnetic();
+  else document.addEventListener('DOMContentLoaded',bindMagnetic);
+  // Rebind nach 2s falls dynamische Buttons (Modals) später kommen
+  setTimeout(bindMagnetic,2000);
+})();
+
+/* ═══ 3D-Hero-Controller — Drag-Rotate + Gyro-Tilt + Idle-Float ═══ */
+(function(){
+  function init(){
+    const stage=document.getElementById('lxd-hero-3d');
+    if(!stage)return;
+    const obj=stage.querySelector('.lxd-3d-obj');
+    if(!obj)return;
+    let ry=0, rx=0, vy=0, vx=0;
+    let dragging=false, startX=0, startY=0, startRy=0, startRx=0;
+    let idleTimer=null;
+    stage.classList.add('idle');
+    function setRot(){
+      // Idle-Float-Animation bei reset
+      obj.style.setProperty('--ry',ry+'deg');
+      obj.style.setProperty('--rx',rx+'deg');
+    }
+    function startDrag(x,y){
+      dragging=true;
+      stage.classList.add('dragging','touched');
+      stage.classList.remove('idle');
+      startX=x; startY=y; startRy=ry; startRx=rx;
+      if(idleTimer)clearTimeout(idleTimer);
+    }
+    function moveDrag(x,y){
+      if(!dragging)return;
+      ry=startRy+(x-startX)*0.6;
+      rx=Math.max(-25,Math.min(25,startRx-(y-startY)*0.4));
+      setRot();
+    }
+    function endDrag(){
+      if(!dragging)return;
+      dragging=false;
+      stage.classList.remove('dragging');
+      // Nach 4 Sek inactivity → idle float zurück
+      idleTimer=setTimeout(function(){
+        ry=0; rx=0;
+        obj.style.transition='transform 1.2s cubic-bezier(.2,.8,.2,1)';
+        setRot();
+        setTimeout(function(){
+          stage.classList.add('idle');
+          obj.style.transition='';
+          obj.style.removeProperty('--ry');
+          obj.style.removeProperty('--rx');
+        },1300);
+      },4000);
+    }
+    // Mouse
+    stage.addEventListener('mousedown',function(e){startDrag(e.clientX,e.clientY);e.preventDefault();});
+    document.addEventListener('mousemove',function(e){moveDrag(e.clientX,e.clientY);});
+    document.addEventListener('mouseup',endDrag);
+    // Touch
+    stage.addEventListener('touchstart',function(e){const t=e.touches[0];startDrag(t.clientX,t.clientY);},{passive:true});
+    document.addEventListener('touchmove',function(e){if(!dragging)return;const t=e.touches[0];moveDrag(t.clientX,t.clientY);},{passive:true});
+    document.addEventListener('touchend',endDrag);
+    // Hover-Parallax auf Desktop bei idle
+    if(matchMedia('(hover:hover)').matches){
+      stage.addEventListener('mousemove',function(e){
+        if(dragging||!stage.classList.contains('idle'))return;
+        const r=stage.getBoundingClientRect();
+        const px=(e.clientX-r.left)/r.width-0.5;
+        const py=(e.clientY-r.top)/r.height-0.5;
+        ry=px*16; rx=-py*10;
+        stage.classList.remove('idle');
+        setRot();
+      });
+      stage.addEventListener('mouseleave',function(){
+        if(dragging)return;
+        ry=0; rx=0;
+        obj.style.transition='transform .8s cubic-bezier(.2,.8,.2,1)';
+        setRot();
+        setTimeout(function(){
+          obj.style.transition='';
+          stage.classList.add('idle');
+          obj.style.removeProperty('--ry');
+          obj.style.removeProperty('--rx');
+        },800);
+      });
+    }
+    // Gyroscope (mobile, falls Permission gegeben)
+    if(window.DeviceOrientationEvent && /Mobile|Android|iPhone/.test(navigator.userAgent)){
+      function gyroHandler(e){
+        if(dragging||!stage.classList.contains('idle'))return;
+        const beta=e.beta||0, gamma=e.gamma||0;
+        ry=Math.max(-20,Math.min(20,gamma*0.4));
+        rx=Math.max(-12,Math.min(12,(beta-45)*0.18));
+        setRot();
+      }
+      window.addEventListener('deviceorientation',gyroHandler);
+    }
+  }
+  if(document.readyState==='complete'||document.readyState==='interactive') init();
+  else document.addEventListener('DOMContentLoaded',init);
 })();
 </script>
 <a href="#hero" class="sr-only">Zum Hauptinhalt springen</a>
@@ -1478,7 +1616,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     <a href="konfigurator.html" class="hero-btn-main" data-i18n="cta_main">🎮 JETZT KONFIGURIEREN</a>
     <a href="#shop" class="hero-btn-sec" data-i18n="cta_sec">SHOP ANSEHEN →</a>
   </div>
-  <img src="IMG_0556.jpeg" class="hero-banner" id="lxd-hero-banner" alt="LEXORD Custom PS5 Controller" loading="lazy">
+  <div class="lxd-3d-stage" id="lxd-hero-3d">
+    <img src="IMG_0556.jpeg" class="hero-banner lxd-3d-obj" id="lxd-hero-banner" alt="LEXORD Custom PS5 Controller" loading="lazy" draggable="false">
+    <div class="lxd-3d-hint">↺ ZIEHEN ZUM DREHEN</div>
+  </div>
   <div class="lxd-live-status">
     <span><strong>8</strong> CONTROLLER GERADE IN PRODUKTION · NÄCHSTER VERSAND IN <strong>4 STUNDEN</strong></span>
   </div>
@@ -3440,8 +3581,16 @@ function updateCart(){
   const shipNum=getShipping(land,discSub);const total=discSub+shipNum;const totalItems=cart.reduce((a,i)=>a+i.qty,0);
   if(!cart.length){body.innerHTML='<div class="c-empty"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><p>WARENKORB LEER</p></div>';}
   else{body.innerHTML=cart.map((it,i)=>`<div class="c-item"><img src="${it.img}" alt="${esc(it.name)}"><div class="c-item-info"><h4>${esc(it.name)}</h4><p style="color:var(--neon);font-size:10.5px;font-family:'Orbitron';margin:3px 0">${(it.price*it.qty).toFixed(2)} €</p><div class="c-qty"><div class="qty-b" onclick="changeQty(${i},-1)">−</div><span class="qty-n">${it.qty}</span><div class="qty-b" onclick="changeQty(${i},1)">+</div><span onclick="remFromCart(${i})" style="font-size:7.5px;color:#333;cursor:pointer;font-family:'Orbitron';margin-left:5px">ENTF.</span></div></div></div>`).join('');}
-  if(land==='DE'){document.getElementById('ship-fill').style.width=Math.min((sub/50)*100,100)+'%';document.getElementById('ship-lbl').innerText=sub>=50?'✓ KOSTENLOSER VERSAND FREIGESCHALTET':'NOCH '+(50-sub).toFixed(2)+' € BIS KOSTENLOSER VERSAND';}
-  else{document.getElementById('ship-fill').style.width='0%';document.getElementById('ship-lbl').innerText='VERSANDKOSTEN NACH LIEFERLAND';}
+  const shipLbl=document.getElementById('ship-lbl');const shipFill=document.getElementById('ship-fill');
+  shipLbl.classList.remove('close','done');
+  if(land==='DE'){
+    const pct=Math.min((sub/50)*100,100);
+    shipFill.style.width=pct+'%';
+    if(sub>=50){ shipLbl.innerHTML='🎉 KOSTENLOSER VERSAND FREIGESCHALTET'; shipLbl.classList.add('done'); }
+    else if(sub>=35){ shipLbl.innerHTML='✨ NUR NOCH <strong>'+(50-sub).toFixed(2)+' €</strong> BIS KOSTENLOSER VERSAND'; shipLbl.classList.add('close'); }
+    else { shipLbl.innerHTML='NOCH '+(50-sub).toFixed(2)+' € BIS KOSTENLOSER VERSAND (DE)'; }
+  }
+  else{shipFill.style.width='0%';shipLbl.innerText='VERSANDKOSTEN NACH LIEFERLAND';}
   document.getElementById('c-sub').innerText=sub.toFixed(2).replace('.',',')+' €';
   const dRow=document.getElementById('discount-row');
   if(disc>0){dRow.style.display='flex';document.getElementById('discount-label').innerText=activeDiscount.label;document.getElementById('c-discount').innerText='-'+disc.toFixed(2).replace('.',',')+' €';}
@@ -4216,6 +4365,90 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLogin();closeA
 
 <!-- Empfehlungs-Button — gleicher Stil wie KI-Button, direkt über KI-Button -->
 <button id="lxd-ref-btn" onclick="lxdOpenShare()" aria-label="Empfehlen & 10 % sparen" title="Empfehlen & 10 % sparen">🎁</button>
+
+<!-- ═══ EXIT-INTENT-POPUP ═══ -->
+<div id="lxd-exit" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(12px);z-index:99999;align-items:center;justify-content:center;padding:20px">
+  <div id="lxd-exit-box" style="position:relative;background:linear-gradient(180deg,#0a0a0a,#050505);border:1px solid rgba(0,242,255,.3);border-radius:20px;max-width:440px;width:100%;padding:42px 32px 32px;text-align:center;box-shadow:0 30px 80px rgba(0,242,255,.2),0 0 0 1px rgba(0,242,255,.1) inset;animation:lxdExitIn .5s cubic-bezier(.2,.8,.2,1)">
+    <button onclick="lxdExitClose(false)" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,.05);border:1px solid #1a1a1a;color:#666;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:18px;line-height:1">×</button>
+    <div style="font-family:Orbitron;font-size:8px;letter-spacing:4px;color:var(--neon);margin-bottom:14px">⟫ NUR FÜR DICH ⟪</div>
+    <div style="font-family:Orbitron;font-weight:900;font-size:clamp(1.4rem,4vw,2rem);letter-spacing:2px;color:#fff;line-height:1.15;margin-bottom:14px">WARTE — BEVOR DU GEHST</div>
+    <div style="font-size:14px;color:#aaa;line-height:1.6;margin-bottom:24px">Hol dir <strong style="color:#fff">10 % Rabatt</strong> auf deine erste Bestellung. Code gilt 24h — gültig für alle Custom Controller.</div>
+    <div style="background:#000;border:1.5px dashed var(--neon);border-radius:12px;padding:18px;margin-bottom:22px;position:relative;cursor:pointer" id="lxd-exit-code" onclick="lxdExitCopyCode()">
+      <div style="font-family:Orbitron;font-size:9px;letter-spacing:3px;color:#888;margin-bottom:8px">DEIN CODE</div>
+      <div style="font-family:'Courier New',monospace;font-weight:900;font-size:26px;letter-spacing:8px;color:var(--neon);text-shadow:0 0 16px rgba(0,242,255,.5)">WAIT10</div>
+      <div style="font-family:Orbitron;font-size:8px;color:#666;letter-spacing:2px;margin-top:8px" id="lxd-exit-copy-hint">→ TIPPEN ZUM KOPIEREN</div>
+    </div>
+    <a href="konfigurator.html" onclick="lxdExitClose(true)" style="display:block;background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;text-decoration:none;padding:15px;border-radius:11px;font-family:Orbitron;font-weight:900;font-size:11px;letter-spacing:2.5px">⚡ CODE EINLÖSEN — JETZT KONFIGURIEREN</a>
+    <div style="margin-top:14px;font-size:10px;color:#555;letter-spacing:1px;font-family:Orbitron">CODE LÄUFT IN <span id="lxd-exit-timer" style="color:#ffae00">23:59:42</span> AB</div>
+  </div>
+</div>
+<style>
+@keyframes lxdExitIn{from{opacity:0;transform:scale(.92) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@media(max-width:560px){#lxd-exit-box{padding:32px 22px 24px}}
+</style>
+<script>
+(function(){
+  const SHOWN_KEY='lxd_exit_shown';
+  let shown=false, lastY=0;
+  function show(){
+    if(shown)return;
+    if(sessionStorage.getItem(SHOWN_KEY))return;
+    if(localStorage.getItem('lxd_exit_used_24h')){
+      const t=parseInt(localStorage.getItem('lxd_exit_used_24h'))||0;
+      if(Date.now()-t<24*3600*1000)return;
+    }
+    shown=true;
+    sessionStorage.setItem(SHOWN_KEY,'1');
+    document.getElementById('lxd-exit').style.display='flex';
+    document.body.style.overflow='hidden';
+    startTimer();
+  }
+  // Desktop: Maus verlässt Browser oben
+  document.addEventListener('mouseleave',function(e){
+    if(e.clientY<10) show();
+  });
+  // Mobile: Schnelles Hochscrollen = Intent zum Schließen
+  let scrollTimer;
+  window.addEventListener('scroll',function(){
+    const y=window.scrollY;
+    const dy=y-lastY;
+    if(dy<-40 && y<200){
+      clearTimeout(scrollTimer);
+      scrollTimer=setTimeout(show,80);
+    }
+    lastY=y;
+  },{passive:true});
+  // Timer
+  let timerInterval=null;
+  function startTimer(){
+    const start=Date.now();
+    const endIn=24*3600*1000;
+    timerInterval=setInterval(function(){
+      const left=endIn-(Date.now()-start);
+      if(left<=0){ clearInterval(timerInterval); return; }
+      const h=Math.floor(left/3600000);
+      const m=Math.floor((left%3600000)/60000);
+      const s=Math.floor((left%60000)/1000);
+      const el=document.getElementById('lxd-exit-timer');
+      if(el)el.textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    },1000);
+  }
+  window.lxdExitClose=function(used){
+    const m=document.getElementById('lxd-exit');
+    if(m)m.style.display='none';
+    document.body.style.overflow='';
+    if(used)localStorage.setItem('lxd_exit_used_24h',String(Date.now()));
+    if(timerInterval)clearInterval(timerInterval);
+  };
+  window.lxdExitCopyCode=function(){
+    try{
+      navigator.clipboard.writeText('WAIT10');
+      const h=document.getElementById('lxd-exit-copy-hint');
+      if(h){ h.textContent='✓ KOPIERT'; h.style.color='#00ff88'; }
+    }catch(e){}
+  };
+})();
+</script>
 <style>
 #lxd-ref-btn{position:fixed;bottom:104px;right:24px;width:44px;height:44px;background:rgba(10,10,10,.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:9000;box-shadow:0 4px 14px rgba(0,0,0,.4);color:#bbb;transition:.3s ease;font-size:18px;opacity:.65}
 #lxd-ref-btn:hover{opacity:1;color:#fff;border-color:rgba(0,242,255,.4);background:rgba(15,15,20,.85);transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.5),0 0 0 1px rgba(0,242,255,.15)}

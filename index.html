@@ -1055,6 +1055,53 @@ header[role="banner"]{background:rgba(0,0,0,.78)!important;backdrop-filter:blur(
 </style>
 </head>
 <body>
+
+<!-- ═══ PREMIUM LOADING SPLASH ═══ -->
+<div id="lxd-splash" style="position:fixed;inset:0;background:#000;z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity .6s ease,visibility .6s">
+  <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,rgba(0,242,255,.08),transparent 60%)"></div>
+  <div style="position:relative;font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(2rem,6vw,3.4rem);letter-spacing:.7em;color:#fff;line-height:1;text-shadow:0 0 60px rgba(0,242,255,.5);animation:lxdSplashPulse 2s ease-in-out infinite">
+    LEX<span style="background:linear-gradient(90deg,#00f2ff,#bc13fe);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">O</span>RD<sup style="font-size:.25em;color:#00f2ff;margin-left:8px">®</sup>
+  </div>
+  <div style="position:relative;margin-top:24px;font-family:'Orbitron',sans-serif;font-size:.62rem;letter-spacing:.55em;color:#666;text-indent:.55em">ENGINEERING · MADE IN GERMANY</div>
+  <div style="position:relative;margin-top:36px;width:180px;height:2px;background:#1a1a1a;border-radius:1px;overflow:hidden">
+    <div style="height:100%;background:linear-gradient(90deg,#00f2ff,#bc13fe);animation:lxdSplashBar 1.6s ease-in-out infinite;border-radius:1px"></div>
+  </div>
+</div>
+<style>
+@keyframes lxdSplashPulse{0%,100%{opacity:.85}50%{opacity:1}}
+@keyframes lxdSplashBar{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+#lxd-splash.hide{opacity:0;visibility:hidden;pointer-events:none}
+body.lxd-loading{overflow:hidden}
+/* Premium Cursor-Glow (nur Desktop) */
+@media(hover:hover){
+  body{cursor:auto}
+  body::after{content:'';position:fixed;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(0,242,255,.06),transparent 60%);pointer-events:none;z-index:99998;left:var(--mx,-999px);top:var(--my,-999px);transform:translate(-50%,-50%);transition:opacity .3s;opacity:0;mix-blend-mode:screen}
+  body.cursor-on::after{opacity:1}
+}
+</style>
+<script>
+document.documentElement.classList.add('lxd-loading');
+window.addEventListener('load',function(){
+  setTimeout(function(){
+    const s=document.getElementById('lxd-splash');
+    if(s)s.classList.add('hide');
+    document.body.classList.remove('lxd-loading');
+    document.documentElement.classList.remove('lxd-loading');
+    setTimeout(()=>{if(s)s.remove();},700);
+  },650);
+});
+// Cursor-Glow nur auf Desktop aktivieren nach kurzer Bewegung
+(function(){
+  if(!matchMedia('(hover:hover)').matches)return;
+  let on=false;
+  document.addEventListener('mousemove',function(e){
+    document.body.style.setProperty('--mx',e.clientX+'px');
+    document.body.style.setProperty('--my',e.clientY+'px');
+    if(!on){document.body.classList.add('cursor-on');on=true;}
+  },{passive:true});
+  document.addEventListener('mouseleave',function(){document.body.classList.remove('cursor-on');on=false;});
+})();
+</script>
 <a href="#hero" class="sr-only">Zum Hauptinhalt springen</a>
 
 <!-- INTRO -->
@@ -1491,6 +1538,112 @@ document.addEventListener('DOMContentLoaded',()=>{
     <div class="feat-card"><div class="feat-icon">🇩🇪</div><div class="feat-title">MADE IN GERMANY</div><div class="feat-desc">Handgefertigt in Germany — direkt vom Hersteller</div></div>
   </div>
 </div>
+
+<!-- ═══ SO FUNKTIONIERT'S · 3 STEPS ═══ -->
+<section class="lxd-howto reveal lxd-reveal" aria-label="So funktioniert es">
+  <div class="lxd-howto-pre">⟫ SO EINFACH GEHT'S ⟪</div>
+  <h2 class="lxd-howto-title">VON DER IDEE ZUM <span class="acc">PERFEKTEN CONTROLLER</span></h2>
+  <div class="lxd-howto-grid">
+    <div class="lxd-step">
+      <div class="lxd-step-num">01</div>
+      <div class="lxd-step-icon">🎨</div>
+      <h3>KONFIGURIEREN</h3>
+      <p>Im 3D-Konfigurator über 100 Farben, Sticks, Trigger, Paddles und Gravur frei kombinieren. Echtzeit-Vorschau in 360°.</p>
+    </div>
+    <div class="lxd-step">
+      <div class="lxd-step-num">02</div>
+      <div class="lxd-step-icon">🔧</div>
+      <h3>WIR BAUEN</h3>
+      <p>Jeder Controller wird in Handarbeit montiert, getestet und qualitätsgeprüft. 24 Monate Garantie auf alle mechanischen Komponenten.</p>
+    </div>
+    <div class="lxd-step">
+      <div class="lxd-step-num">03</div>
+      <div class="lxd-step-icon">📦</div>
+      <h3>BLITZVERSAND</h3>
+      <p>Versand binnen 24h per DHL, kostenlos ab 50 €. Mit Tracking-Link und Bestellbestätigung. EU- und Weltversand.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LEXORD vs KONKURRENZ ═══ -->
+<section class="lxd-compare reveal lxd-reveal" aria-label="Vergleich">
+  <div class="lxd-compare-pre">⟫ WARUM LEXORD ⟪</div>
+  <h2 class="lxd-compare-title">DEINE <span class="acc">PREMIUM-ALTERNATIVE</span></h2>
+  <p class="lxd-compare-sub">Wir vergleichen ehrlich. Kein Marketing-Bla.</p>
+  <div class="lxd-compare-table-wrap">
+    <table class="lxd-compare-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th class="us">LEXORD<sup>®</sup></th>
+          <th>Original DualSense</th>
+          <th>Scuf Reflex</th>
+          <th>eBay-Custom</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Anti-Drift Sticks</td><td class="us">✓ TMR / Hall-Effect</td><td>✕</td><td>✓ Hall-Effect</td><td>~</td></tr>
+        <tr><td>Programmierbare Paddles</td><td class="us">✓ 2× oder 4× V3</td><td>✕</td><td>✓ 2–4×</td><td>~</td></tr>
+        <tr><td>Clicky Trigger</td><td class="us">✓ 1 mm Auslöseweg</td><td>✕</td><td>✓</td><td>✕</td></tr>
+        <tr><td>Individuelle Konfiguration</td><td class="us">✓ 100+ Farben + Gravur</td><td>✕</td><td>~</td><td>✓</td></tr>
+        <tr><td>Made in Germany</td><td class="us">✓ Handgefertigt</td><td>✕ Asien</td><td>✕ Asien</td><td>~</td></tr>
+        <tr><td>Garantie</td><td class="us">✓ 24 Monate</td><td>12 Monate</td><td>6 Monate</td><td>0–14 Tage</td></tr>
+        <tr><td>Käuferschutz</td><td class="us">✓ PayPal / Klarna</td><td>✓</td><td>✓</td><td>~</td></tr>
+        <tr><td>Direkter Kontakt z. Hersteller</td><td class="us">✓ Leon Schulz</td><td>✕</td><td>✕</td><td>✕</td></tr>
+        <tr class="lxd-compare-price"><td>Ab-Preis</td><td class="us">105 €</td><td>79 €</td><td>249 €</td><td>30–200 €</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="lxd-compare-cta">
+    <a href="konfigurator.html" class="lxd-compare-btn">→ JETZT KONFIGURIEREN</a>
+    <a href="collections.html" class="lxd-compare-btn s">ALLE CONTROLLER</a>
+  </div>
+</section>
+
+<style>
+/* ═══ SO FUNKTIONIERT'S ═══ */
+.lxd-howto{padding:90px 5% 70px;background:linear-gradient(180deg,#000 0%,#040408 50%,#000 100%);text-align:center;position:relative;border-top:1px solid #0a0a0a}
+.lxd-howto-pre{font-family:'Orbitron';font-size:9px;color:var(--neon);letter-spacing:4px;margin-bottom:14px;display:inline-flex;align-items:center;gap:12px}
+.lxd-howto-title{font-family:'Orbitron';font-weight:900;font-size:clamp(1.4rem,3.5vw,2.4rem);letter-spacing:3px;color:#fff;margin-bottom:48px;line-height:1.2}
+.lxd-howto-title .acc{background:linear-gradient(90deg,var(--neon),var(--neon2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.lxd-howto-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1100px;margin:0 auto}
+@media(max-width:780px){.lxd-howto-grid{grid-template-columns:1fr;gap:18px}}
+.lxd-step{background:linear-gradient(180deg,#0e0e0e,#080808);border:1px solid #161616;border-radius:18px;padding:36px 28px;text-align:left;position:relative;transition:.3s;overflow:hidden}
+.lxd-step:hover{border-color:rgba(0,242,255,.3);transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,242,255,.08)}
+.lxd-step::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--neon),var(--neon2));transform:scaleX(0);transform-origin:left;transition:.4s}
+.lxd-step:hover::before{transform:scaleX(1)}
+.lxd-step-num{font-family:'Orbitron';font-weight:900;font-size:3.4rem;line-height:1;background:linear-gradient(135deg,rgba(0,242,255,.18),rgba(188,19,254,.12));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.lxd-step-icon{font-size:32px;margin-bottom:14px}
+.lxd-step h3{font-family:'Orbitron';font-weight:900;font-size:14px;letter-spacing:3px;color:#fff;margin-bottom:10px}
+.lxd-step p{font-size:13px;color:#999;line-height:1.7}
+
+/* ═══ VERGLEICHS-TABELLE ═══ */
+.lxd-compare{padding:80px 5% 90px;background:#020203;text-align:center;border-top:1px solid #0a0a0a;border-bottom:1px solid #0a0a0a;position:relative}
+.lxd-compare-pre{font-family:'Orbitron';font-size:9px;color:var(--neon);letter-spacing:4px;margin-bottom:14px}
+.lxd-compare-title{font-family:'Orbitron';font-weight:900;font-size:clamp(1.4rem,3.5vw,2.4rem);letter-spacing:3px;color:#fff;margin-bottom:10px;line-height:1.2}
+.lxd-compare-title .acc{background:linear-gradient(90deg,var(--neon),var(--neon2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.lxd-compare-sub{font-size:13px;color:#888;margin-bottom:34px}
+.lxd-compare-table-wrap{max-width:980px;margin:0 auto;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.lxd-compare-table{width:100%;min-width:680px;border-collapse:separate;border-spacing:0;background:#0a0a0e;border:1px solid #161616;border-radius:14px;overflow:hidden}
+.lxd-compare-table th,.lxd-compare-table td{padding:14px 12px;text-align:center;font-size:12.5px;border-bottom:1px solid rgba(255,255,255,.04)}
+.lxd-compare-table th{background:#0e0e14;font-family:'Orbitron';font-weight:700;font-size:10px;letter-spacing:1.5px;color:#aaa;text-transform:uppercase}
+.lxd-compare-table th.us{background:linear-gradient(135deg,rgba(0,242,255,.12),rgba(188,19,254,.08));color:#fff;font-size:13px;letter-spacing:3px}
+.lxd-compare-table th.us sup{color:var(--neon);font-size:.55em}
+.lxd-compare-table tbody td:first-child{text-align:left;color:#bbb;font-weight:500;padding-left:18px}
+.lxd-compare-table td.us{color:#00ff88;font-weight:700;background:rgba(0,242,255,.025);border-left:1px solid rgba(0,242,255,.1);border-right:1px solid rgba(0,242,255,.1)}
+.lxd-compare-table tbody tr:last-child td{border-bottom:none}
+.lxd-compare-table tr.lxd-compare-price td{padding-top:18px;padding-bottom:18px;font-family:'Orbitron';font-weight:900;font-size:14px;background:rgba(0,0,0,.5);border-top:1px solid rgba(255,255,255,.06)}
+.lxd-compare-table tr.lxd-compare-price td.us{font-size:18px;color:var(--neon);background:rgba(0,242,255,.06)}
+.lxd-compare-cta{margin-top:32px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.lxd-compare-btn{padding:14px 26px;border-radius:10px;font-family:'Orbitron';font-weight:900;font-size:10px;letter-spacing:2.5px;text-decoration:none;background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;transition:.3s;box-shadow:0 8px 22px rgba(0,242,255,.3)}
+.lxd-compare-btn:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(0,242,255,.5)}
+.lxd-compare-btn.s{background:transparent;color:#fff;border:1px solid #222;box-shadow:none}
+.lxd-compare-btn.s:hover{border-color:var(--neon);color:var(--neon);background:rgba(0,242,255,.04)}
+@media(max-width:560px){
+  .lxd-compare-table th,.lxd-compare-table td{padding:11px 8px;font-size:11.5px}
+  .lxd-compare-table th.us{font-size:12px}
+}
+</style>
 
 <!-- KONFIGURATOR LAUNCHER -->
 <section id="configurator" class="reveal lxd-reveal">

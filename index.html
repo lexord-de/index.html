@@ -1642,6 +1642,42 @@ document.addEventListener('DOMContentLoaded',()=>{
   <span class="lxd-press-logo">🛡️ TRUSTED SHOPS</span>
 </div>
 
+<!-- ═══ MASSIVE MARQUEE (OMGN-Style Brand Statement) ═══ -->
+<section class="lxd-massive" aria-hidden="true">
+  <div class="lxd-massive-track">
+    <span>ENGINEERED TO WIN</span>
+    <span class="lxd-massive-dot">●</span>
+    <span class="lxd-massive-outline">BEYOND LIMITS</span>
+    <span class="lxd-massive-dot">●</span>
+    <span>BORN TO PERFORM</span>
+    <span class="lxd-massive-dot">●</span>
+    <span class="lxd-massive-outline">MADE IN GERMANY</span>
+    <span class="lxd-massive-dot">●</span>
+    <span>ENGINEERED TO WIN</span>
+    <span class="lxd-massive-dot">●</span>
+    <span class="lxd-massive-outline">BEYOND LIMITS</span>
+    <span class="lxd-massive-dot">●</span>
+    <span>BORN TO PERFORM</span>
+    <span class="lxd-massive-dot">●</span>
+    <span class="lxd-massive-outline">MADE IN GERMANY</span>
+    <span class="lxd-massive-dot">●</span>
+  </div>
+</section>
+<style>
+.lxd-massive{padding:60px 0;overflow:hidden;position:relative;border-top:1px solid #0a0a0a;border-bottom:1px solid #0a0a0a;background:linear-gradient(180deg,#000,#040408,#000)}
+.lxd-massive::before,.lxd-massive::after{content:'';position:absolute;top:0;bottom:0;width:200px;z-index:2;pointer-events:none}
+.lxd-massive::before{left:0;background:linear-gradient(90deg,#000,transparent)}
+.lxd-massive::after{right:0;background:linear-gradient(270deg,#000,transparent)}
+.lxd-massive-track{display:flex;align-items:center;gap:60px;white-space:nowrap;animation:lxdMassive 40s linear infinite;font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(2.8rem,10vw,9rem);letter-spacing:-.02em;line-height:.95;will-change:transform}
+.lxd-massive-track span{color:#fff;text-shadow:0 0 60px rgba(0,242,255,.18)}
+.lxd-massive-track .lxd-massive-outline{color:transparent;-webkit-text-stroke:2px #444;text-shadow:none}
+.lxd-massive-track .lxd-massive-dot{color:var(--neon);font-size:.4em;text-shadow:0 0 24px var(--neon);animation:lxdMassiveDotPulse 2s ease-in-out infinite}
+@keyframes lxdMassive{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes lxdMassiveDotPulse{0%,100%{opacity:.6;text-shadow:0 0 16px var(--neon)}50%{opacity:1;text-shadow:0 0 32px var(--neon),0 0 60px var(--neon2)}}
+@media(max-width:560px){.lxd-massive{padding:40px 0}.lxd-massive-track{gap:32px;animation-duration:30s}.lxd-massive-track .lxd-massive-outline{-webkit-text-stroke-width:1.5px}}
+</style>
+</div>
+
 <!-- FEATURES STRIP -->
 <div class="features-strip reveal">
   <div class="features-grid">
@@ -1653,6 +1689,129 @@ document.addEventListener('DOMContentLoaded',()=>{
     <div class="feat-card"><div class="feat-icon">🇩🇪</div><div class="feat-title">MADE IN GERMANY</div><div class="feat-desc">Handgefertigt in Germany — direkt vom Hersteller</div></div>
   </div>
 </div>
+
+<!-- ═══ BENTO-GRID · WARUM LEXORD (OMGN/Linear/Apple-Style) ═══ -->
+<section class="lxd-bento reveal lxd-reveal" aria-label="Warum LEXORD">
+  <div class="lxd-bento-pre">⟫ DER LEXORD UNTERSCHIED ⟪</div>
+  <h2 class="lxd-bento-title">DAS BEKOMMST DU<br><span class="acc">BEI KEINEM ANDEREN</span></h2>
+  <div class="lxd-bento-grid">
+    <!-- Big tile -->
+    <div class="lxd-bento-tile big">
+      <div class="lxd-bento-glow"></div>
+      <div class="lxd-bento-num">01</div>
+      <h3>TMR &amp; HALL-EFFECT STICKS</h3>
+      <p>Magnetisch · kontaktlos · lebenslang drift-frei. Die gleiche Technologie wie in der DualSense Edge — nur ohne Apple-Premium-Aufschlag.</p>
+      <div class="lxd-bento-vis">
+        <div class="lxd-bento-orbit"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+    <!-- Tall tile -->
+    <div class="lxd-bento-tile tall">
+      <div class="lxd-bento-icon-xl">🇩🇪</div>
+      <h3>MADE IN GERMANY</h3>
+      <p>Jeder Controller wird in <strong>Handarbeit</strong> montiert, qualitätsgeprüft und versendet. Kein Massenproduktions-Müll.</p>
+      <div class="lxd-bento-stamp">SINCE 2021</div>
+    </div>
+    <!-- Wide tile -->
+    <div class="lxd-bento-tile wide">
+      <div class="lxd-bento-stat-row">
+        <div class="lxd-bento-stat"><span class="n">24<small>h</small></span><span class="l">Versand</span></div>
+        <div class="lxd-bento-stat"><span class="n">24<small>Mon</small></span><span class="l">Garantie</span></div>
+        <div class="lxd-bento-stat"><span class="n">100<small>%</small></span><span class="l">Handarbeit</span></div>
+        <div class="lxd-bento-stat"><span class="n">4.9<small>★</small></span><span class="l">aus 91+ Reviews</span></div>
+      </div>
+    </div>
+    <!-- Square tile -->
+    <div class="lxd-bento-tile square">
+      <div class="lxd-bento-paddle">
+        <div class="paddle-card"><div class="paddle-l"></div><div class="paddle-r"></div></div>
+      </div>
+      <h3>PADDLE-SYSTEM V3</h3>
+      <p>2× oder 4× Back-Paddles · frei programmierbar.</p>
+    </div>
+    <!-- Square tile -->
+    <div class="lxd-bento-tile square">
+      <div class="lxd-bento-clicky"><div class="ck-tr"></div></div>
+      <h3>CLICKY TRIGGER</h3>
+      <p>Mouse-Click-Feel · 1mm Auslöseweg.</p>
+    </div>
+    <!-- Wide tile bottom -->
+    <div class="lxd-bento-tile wide accent">
+      <div>
+        <div class="lxd-bento-hl">DIREKTER KONTAKT.<br>ZUM HERSTELLER.</div>
+        <p>Du redest nicht mit Support-Schicht 3 im Ausland — du redest mit <strong>Leon Schulz</strong> persönlich. Innerhalb 24h. Per WhatsApp, E-Mail oder Anruf.</p>
+      </div>
+      <a href="#contact" class="lxd-bento-cta">KONTAKT →</a>
+    </div>
+  </div>
+</section>
+<style>
+.lxd-bento{padding:90px 5% 60px;background:#000;position:relative;border-top:1px solid #0a0a0a}
+.lxd-bento-pre{font-family:'Orbitron',sans-serif;font-size:9px;color:var(--neon);letter-spacing:4px;text-align:center;margin-bottom:14px}
+.lxd-bento-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(1.6rem,4.5vw,3rem);letter-spacing:2px;text-align:center;color:#fff;margin-bottom:48px;line-height:1.05}
+.lxd-bento-title .acc{background:linear-gradient(90deg,var(--neon),var(--neon2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.lxd-bento-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:200px;gap:14px;max-width:1280px;margin:0 auto}
+.lxd-bento-tile{background:linear-gradient(180deg,#0d0d10,#070708);border:1px solid #1a1a1a;border-radius:20px;padding:24px;position:relative;overflow:hidden;transition:.4s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;justify-content:flex-end;cursor:default}
+.lxd-bento-tile:hover{transform:translateY(-4px);border-color:rgba(0,242,255,.4);box-shadow:0 26px 60px rgba(0,242,255,.08)}
+.lxd-bento-tile::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--neon),var(--neon2));transform:scaleX(0);transform-origin:left;transition:.5s}
+.lxd-bento-tile:hover::after{transform:scaleX(1)}
+.lxd-bento-tile.big{grid-column:span 2;grid-row:span 2}
+.lxd-bento-tile.tall{grid-column:span 1;grid-row:span 2}
+.lxd-bento-tile.wide{grid-column:span 4;grid-row:span 1;flex-direction:row;align-items:center;justify-content:space-around}
+.lxd-bento-tile.wide.accent{background:linear-gradient(135deg,#0e0e14,#080812);border-color:rgba(0,242,255,.18);justify-content:space-between;gap:30px}
+.lxd-bento-tile.square{grid-column:span 1;grid-row:span 1}
+.lxd-bento-tile h3{font-family:'Orbitron',sans-serif;font-weight:900;font-size:13px;letter-spacing:2px;color:#fff;margin-bottom:10px;line-height:1.2}
+.lxd-bento-tile p{font-size:12.5px;color:#999;line-height:1.6}
+.lxd-bento-tile.big h3{font-size:18px;letter-spacing:2.5px}
+.lxd-bento-tile.big p{font-size:13.5px}
+.lxd-bento-num{position:absolute;top:18px;right:24px;font-family:'Orbitron',sans-serif;font-weight:900;font-size:3.5rem;color:transparent;-webkit-text-stroke:1px rgba(0,242,255,.18);line-height:1}
+.lxd-bento-glow{position:absolute;top:-50px;right:-50px;width:240px;height:240px;background:radial-gradient(circle,rgba(0,242,255,.16),transparent 65%);filter:blur(20px);pointer-events:none}
+.lxd-bento-vis{margin-top:18px;display:flex;align-items:center;justify-content:center;flex:1;min-height:80px}
+.lxd-bento-orbit{position:relative;width:120px;height:120px;border-radius:50%;border:1px dashed rgba(0,242,255,.3);animation:lxdBentoRot 12s linear infinite}
+.lxd-bento-orbit::before{content:'';position:absolute;inset:18px;border-radius:50%;border:1px dashed rgba(188,19,254,.3);animation:lxdBentoRot 8s linear reverse infinite}
+.lxd-bento-orbit::after{content:'';position:absolute;inset:50%;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle,var(--neon),var(--neon2));transform:translate(-50%,-50%);box-shadow:0 0 20px var(--neon)}
+.lxd-bento-orbit span{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--neon);box-shadow:0 0 12px var(--neon)}
+.lxd-bento-orbit span:nth-child(1){top:0;left:50%;transform:translate(-50%,-50%)}
+.lxd-bento-orbit span:nth-child(2){bottom:18%;right:8%;width:6px;height:6px;background:var(--neon2);box-shadow:0 0 8px var(--neon2)}
+.lxd-bento-orbit span:nth-child(3){bottom:8%;left:14%;width:4px;height:4px;background:#fff;box-shadow:0 0 6px #fff}
+@keyframes lxdBentoRot{to{transform:rotate(360deg)}}
+.lxd-bento-icon-xl{font-size:54px;margin-bottom:14px;filter:drop-shadow(0 6px 20px rgba(0,0,0,.4))}
+.lxd-bento-stamp{position:absolute;top:18px;right:24px;font-family:'Orbitron',sans-serif;font-size:8.5px;letter-spacing:2.5px;color:#d4af37;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.3);padding:4px 9px;border-radius:6px;font-weight:900}
+.lxd-bento-stat-row{display:flex;justify-content:space-around;align-items:center;width:100%;flex-wrap:wrap;gap:14px}
+.lxd-bento-stat{text-align:center;flex:1;min-width:80px}
+.lxd-bento-stat .n{display:block;font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(1.6rem,3vw,2.4rem);background:linear-gradient(135deg,var(--neon),var(--neon2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1;letter-spacing:0}
+.lxd-bento-stat .n small{font-size:.5em;color:#888;-webkit-text-fill-color:#888;background:none;margin-left:2px;font-weight:700}
+.lxd-bento-stat .l{display:block;font-family:'Orbitron',sans-serif;font-size:8.5px;letter-spacing:2px;color:#666;margin-top:8px;text-transform:uppercase}
+.lxd-bento-paddle{flex:1;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.paddle-card{width:80px;height:50px;background:linear-gradient(180deg,#1a1a1a,#0a0a0a);border-radius:8px;border:1px solid #222;position:relative;display:flex;justify-content:space-between;padding:4px;box-shadow:inset 0 0 16px rgba(0,0,0,.5)}
+.paddle-l,.paddle-r{width:24px;height:full;background:linear-gradient(180deg,var(--neon),transparent);border-radius:3px;animation:lxdPaddlePress 2s ease-in-out infinite}
+.paddle-l{height:42px;align-self:flex-start}
+.paddle-r{height:42px;align-self:flex-start;animation-delay:1s}
+@keyframes lxdPaddlePress{0%,90%,100%{transform:translateY(0);opacity:.6}45%,55%{transform:translateY(4px);opacity:1}}
+.lxd-bento-clicky{flex:1;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.ck-tr{width:70px;height:50px;background:linear-gradient(180deg,#1c1c1c,#0a0a0a);border-radius:14px 14px 8px 8px;position:relative;box-shadow:inset 0 0 14px rgba(0,0,0,.6)}
+.ck-tr::before{content:'';position:absolute;inset:6px 6px 8px;background:linear-gradient(180deg,var(--neon),transparent);border-radius:10px 10px 5px 5px;animation:lxdClicky 1.6s ease-in-out infinite}
+@keyframes lxdClicky{0%,90%,100%{transform:translateY(0);opacity:.8}40%,55%{transform:translateY(3px);opacity:1}}
+.lxd-bento-hl{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(1.1rem,2vw,1.6rem);letter-spacing:2px;color:#fff;line-height:1.15;margin-bottom:10px}
+.lxd-bento-tile.wide.accent p{font-size:13px;max-width:520px}
+.lxd-bento-cta{flex-shrink:0;display:inline-flex;align-items:center;padding:14px 22px;background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;text-decoration:none;border-radius:11px;font-family:'Orbitron',sans-serif;font-weight:900;font-size:10.5px;letter-spacing:2px;box-shadow:0 8px 20px rgba(0,242,255,.3);transition:.3s;white-space:nowrap}
+.lxd-bento-cta:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(0,242,255,.5)}
+@media(max-width:960px){
+  .lxd-bento-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:180px}
+  .lxd-bento-tile.big{grid-column:span 2;grid-row:span 2}
+  .lxd-bento-tile.tall{grid-column:span 1;grid-row:span 1}
+  .lxd-bento-tile.wide{grid-column:span 2;flex-direction:column;text-align:center;padding:24px;justify-content:center;gap:18px}
+  .lxd-bento-tile.square{grid-column:span 1}
+  .lxd-bento-num{font-size:2.6rem}
+}
+@media(max-width:560px){
+  .lxd-bento{padding:60px 4% 40px}
+  .lxd-bento-grid{grid-template-columns:1fr;grid-auto-rows:auto;gap:10px}
+  .lxd-bento-tile,.lxd-bento-tile.big,.lxd-bento-tile.tall,.lxd-bento-tile.wide,.lxd-bento-tile.square{grid-column:span 1;grid-row:auto;min-height:180px;padding:22px}
+  .lxd-bento-stat-row{justify-content:space-between}
+  .lxd-bento-stat{min-width:60px}
+}
+</style>
 
 <!-- ═══ SO FUNKTIONIERT'S · 3 STEPS ═══ -->
 <section class="lxd-howto reveal lxd-reveal" aria-label="So funktioniert es">
@@ -4365,6 +4524,73 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLogin();closeA
 
 <!-- Empfehlungs-Button — gleicher Stil wie KI-Button, direkt über KI-Button -->
 <button id="lxd-ref-btn" onclick="lxdOpenShare()" aria-label="Empfehlen & 10 % sparen" title="Empfehlen & 10 % sparen">🎁</button>
+
+<!-- ═══ MOBILE STICKY BOTTOM CTA BAR (OMGN-Style) ═══ -->
+<div id="lxd-sticky-cta" aria-hidden="false">
+  <a href="konfigurator.html" class="lxd-sticky-main">
+    <span class="lxd-sticky-icon">🎮</span>
+    <span class="lxd-sticky-label">
+      <span class="lxd-sticky-sub">DEIN CUSTOM CONTROLLER</span>
+      <span class="lxd-sticky-big">JETZT KONFIGURIEREN →</span>
+    </span>
+  </a>
+  <button class="lxd-sticky-cart" onclick="openCart()" aria-label="Warenkorb öffnen">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+    <span class="lxd-sticky-cart-badge" id="lxd-sticky-cart-badge" style="display:none">0</span>
+  </button>
+</div>
+<style>
+#lxd-sticky-cta{position:fixed;left:10px;right:10px;bottom:10px;z-index:8500;display:none;align-items:stretch;gap:8px;padding:0;animation:lxdStickyIn .6s cubic-bezier(.2,.8,.2,1) .8s both;pointer-events:none}
+#lxd-sticky-cta>*{pointer-events:auto}
+.lxd-sticky-main{flex:1;display:flex;align-items:center;gap:12px;padding:11px 14px;background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;text-decoration:none;border-radius:14px;box-shadow:0 14px 32px rgba(0,242,255,.4),0 0 0 1px rgba(0,242,255,.3);transition:.25s;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);position:relative;overflow:hidden}
+.lxd-sticky-main::before{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);animation:lxdStickyShine 3s ease-in-out infinite;animation-delay:2s}
+.lxd-sticky-main:active{transform:scale(.97)}
+.lxd-sticky-icon{font-size:24px;flex-shrink:0;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))}
+.lxd-sticky-label{display:flex;flex-direction:column;line-height:1.15;flex:1;min-width:0}
+.lxd-sticky-sub{font-family:'Orbitron',sans-serif;font-size:8.5px;letter-spacing:1.8px;opacity:.65;font-weight:700;text-transform:uppercase}
+.lxd-sticky-big{font-family:'Orbitron',sans-serif;font-size:12px;font-weight:900;letter-spacing:1.5px;margin-top:2px}
+.lxd-sticky-cart{flex-shrink:0;width:52px;background:rgba(8,8,8,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(0,242,255,.3);border-radius:14px;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;box-shadow:0 14px 32px rgba(0,0,0,.5);transition:.25s}
+.lxd-sticky-cart:active{transform:scale(.92)}
+.lxd-sticky-cart-badge{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;border-radius:9px;background:var(--neon2);color:#000;font-family:'Orbitron',sans-serif;font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center;padding:0 5px;box-shadow:0 0 12px rgba(188,19,254,.6)}
+@keyframes lxdStickyIn{from{opacity:0;transform:translateY(120%)}to{opacity:1;transform:translateY(0)}}
+@keyframes lxdStickyShine{0%{left:-100%}100%{left:200%}}
+/* nur Mobile, und nur wenn nicht ganz oben oder im Cart */
+@media(max-width:760px){#lxd-sticky-cta{display:flex}#lxd-sticky-cta.hide{transform:translateY(140%);opacity:0;transition:.4s}}
+@media(max-width:760px){#scroll-top{bottom:78px}body{padding-bottom:0}}
+</style>
+<script>
+(function(){
+  /* Badge sync mit Hauptcart */
+  function syncBadge(){
+    try{
+      const cart=JSON.parse(localStorage.getItem('lxrd_cart')||'[]');
+      const n=cart.reduce((a,i)=>a+(i.qty||1),0);
+      const b=document.getElementById('lxd-sticky-cart-badge');
+      if(!b)return;
+      if(n>0){b.textContent=n;b.style.display='flex';}else{b.style.display='none';}
+    }catch(e){}
+  }
+  /* Wenn Hero noch sichtbar oder Cart auf → CTA Bar ausblenden */
+  const bar=document.getElementById('lxd-sticky-cta');
+  const hero=document.getElementById('hero');
+  function update(){
+    if(!bar)return;
+    const cartOpen=document.getElementById('cart-drawer')?.classList.contains('open');
+    const heroVisible=hero ? hero.getBoundingClientRect().bottom>120 : false;
+    bar.classList.toggle('hide', cartOpen || heroVisible);
+  }
+  window.addEventListener('scroll',update,{passive:true});
+  window.addEventListener('storage',syncBadge);
+  document.addEventListener('DOMContentLoaded',()=>{syncBadge();update();});
+  // Reagiere wenn cart drawer toggles
+  const obs=new MutationObserver(()=>{syncBadge();update();});
+  document.addEventListener('DOMContentLoaded',()=>{
+    const cd=document.getElementById('cart-drawer');
+    if(cd) obs.observe(cd,{attributes:true,attributeFilter:['class']});
+  });
+  syncBadge();
+})();
+</script>
 
 <!-- ═══ EXIT-INTENT-POPUP ═══ -->
 <div id="lxd-exit" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(12px);z-index:99999;align-items:center;justify-content:center;padding:20px">

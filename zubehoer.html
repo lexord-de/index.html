@@ -3,18 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>LXRD Wallet · Premium 3D-Print Portemonnaie | LEXORD® Engineering</title>
-<meta name="description" content="LXRD Wallet — Präzisions-gefertigtes 3D-Druck-Portemonnaie aus Bio-PETG. Handgefertigt in Deutschland. Made in Germany. Lifetime-Garantie. Ab 39,90 €.">
-<meta name="keywords" content="lxrd wallet, 3d druck portemonnaie, premium wallet, slim wallet, minimalist wallet, made in germany, custom wallet, bio petg">
-<meta name="robots" content="index,follow">
+<title>LXRD ACCESSOIRES · Premium 3D-Print Wallet | LEXORD® Engineering</title>
+<meta name="description" content="LXRD Accessoires — Premium 3D-Druck-Wallet aus Bio-PETG. Handgefertigt in Deutschland. Lifetime-Garantie. Limited Edition Serie 001. Ab 39,90 €.">
+<meta name="keywords" content="lxrd accessoires, premium wallet, 3d druck portemonnaie, minimalist wallet, slim wallet, made in germany, bio petg, atelier collection">
+<meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#00f2ff">
-<meta property="og:title" content="LXRD Wallet · LEXORD® Engineering">
-<meta property="og:description" content="Premium 3D-Druck Portemonnaie · Bio-PETG · Made in Germany · ab 39,90 €">
+<meta property="og:title" content="LXRD ACCESSOIRES · Premium 3D-Print Wallet">
+<meta property="og:site_name" content="LXRD by LEXORD">
+<meta property="og:description" content="Premium 3D-Druck Wallet · Bio-PETG · Handgefertigt · Limited Edition · ab 39,90 €">
 <meta property="og:image" content="https://lexord.de/img/lxrd-wallet.jpg">
 <meta property="og:url" content="https://lexord.de/zubehoer.html">
 <meta property="og:type" content="product">
 <meta property="product:price:amount" content="39.90">
 <meta property="product:price:currency" content="EUR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LXRD ACCESSOIRES · Premium 3D-Print Wallet">
+<meta name="twitter:description" content="Bio-PETG · Lifetime-Garantie · Limited Edition Serie 001">
+<meta name="twitter:image" content="https://lexord.de/img/lxrd-wallet.jpg">
 <link rel="icon" type="image/png" href="IMG_7023.png">
 <link rel="canonical" href="https://lexord.de/zubehoer.html">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@200;300;400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -426,24 +431,42 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 <div class="particles" id="particles"></div>
 
 <!-- Floating Back-Button -->
-<a href="index.html" class="back-fab" aria-label="Zurück zur Startseite" title="Zurück zur Startseite">←</a>
+<a href="index.html" class="back-fab" aria-label="Zurück zum LEXORD Shop" title="Zurück zum LEXORD Shop">←</a>
 
-<!-- ═══ HEADER ═══ -->
-<header>
-  <a href="index.html" class="brand" aria-label="LEXORD">
-    <span class="brand-logo">LEX<i>O</i>RD<sup>®</sup></span>
-    <span class="tag">ZUBEHÖR</span>
+<!-- ═══ HEADER · Standalone-Brand-Style ═══ -->
+<header class="brand-header">
+  <a href="index.html" class="brand" aria-label="LXRD Accessoires by LEXORD">
+    <span class="brand-logo">LXRD<sup>®</sup></span>
+    <span class="tag">ACCESSOIRES</span>
   </a>
-  <div class="header-r">
-    <a href="index.html" class="nav-l">← STARTSEITE</a>
-    <a href="reparatur.html" class="nav-l">REPARATUR</a>
-    <a href="printing-service.html" class="nav-l">3D PRINT</a>
+  <nav class="header-nav">
+    <a href="#kaufen" class="nav-l">SHOP</a>
+    <a href="#material" class="nav-l">MATERIAL</a>
+    <a href="#engineering" class="nav-l">ENGINEERING</a>
+    <a href="#reviews" class="nav-l">REVIEWS</a>
+    <a href="index.html" class="nav-l nav-l-mute">← LEXORD</a>
     <button class="cart-icon" onclick="openCart()" aria-label="Warenkorb">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 22a1 1 0 1 0 2 0M19 22a1 1 0 1 0 2 0M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
       <span class="cart-badge" id="cart-badge" style="display:none">0</span>
     </button>
-  </div>
+  </nav>
 </header>
+<style>
+header.brand-header{padding:18px 6%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:rgba(0,0,0,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);z-index:1000;border-bottom:1px solid rgba(255,255,255,.05);min-height:64px}
+.brand-header .brand{display:flex;align-items:center;gap:14px;text-decoration:none}
+.brand-header .brand-logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:1.5rem;letter-spacing:8px;color:#fff;line-height:1;background:linear-gradient(135deg,#fff,#888);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.brand-header .brand-logo sup{font-size:.4em;color:var(--neon);margin-left:2px;-webkit-text-fill-color:var(--neon)}
+.brand-header .brand .tag{color:var(--neon);font-family:'Orbitron',sans-serif;font-weight:700;font-size:.58rem;letter-spacing:4px;border:1px solid rgba(0,242,255,.4);padding:5px 11px 4px;border-radius:5px;background:rgba(0,242,255,.06);line-height:1;text-transform:uppercase}
+.header-nav{display:flex;gap:26px;align-items:center}
+.header-nav .nav-l{font-family:'Orbitron',sans-serif;font-size:.62rem;color:#aaa;letter-spacing:2.8px;text-decoration:none;font-weight:600;position:relative;padding:8px 0;transition:.25s}
+.header-nav .nav-l::after{content:'';position:absolute;bottom:4px;left:0;right:0;height:1px;background:var(--neon);transform:scaleX(0);transform-origin:left;transition:.3s cubic-bezier(.2,.8,.2,1)}
+.header-nav .nav-l:hover{color:#fff}
+.header-nav .nav-l:hover::after{transform:scaleX(1)}
+.header-nav .nav-l-mute{color:#555;font-size:.55rem;padding-left:14px;margin-left:8px;border-left:1px solid #222}
+.header-nav .nav-l-mute:hover{color:#888}
+@media(max-width:880px){.header-nav{gap:14px}.header-nav .nav-l{font-size:.56rem;letter-spacing:2px}}
+@media(max-width:680px){header.brand-header{padding:14px 5% 14px 64px}.brand-header .brand-logo{font-size:1.2rem;letter-spacing:6px}.brand-header .brand .tag{font-size:.52rem;padding:4px 9px 3px;letter-spacing:3px}.header-nav .nav-l{display:none}.header-nav{gap:8px}}
+</style>
 
 <!-- ═══ HERO ═══ -->
 <section class="hero">
@@ -482,7 +505,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
 <div class="marq">
   <div class="marq-track">
     <div class="marq-item"><span class="dot"></span> <span class="em">🏆</span> <span class="acc">LIMITED EDITION</span></div>
-    <div class="marq-item"><span class="dot"></span> <span class="em">🇩🇪</span> HANDGEFERTIGT IN DOMSÜHL</div>
+    <div class="marq-item"><span class="dot"></span> <span class="em">🇩🇪</span> HANDGEFERTIGT IN DEUTSCHLAND</div>
     <div class="marq-item"><span class="dot"></span> <span class="em">🛡️</span> <span class="acc">LIFETIME GARANTIE</span></div>
     <div class="marq-item"><span class="dot"></span> <span class="em">🌱</span> BIO-PETG · KOMPOSTIERBAR</div>
     <div class="marq-item"><span class="dot"></span> <span class="em">⚡</span> RFID-SAFE TECHNOLOGIE</div>
@@ -490,7 +513,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
     <div class="marq-item"><span class="dot"></span> <span class="em">⭐</span> <span class="acc">4.9 / 5 · 127 BEWERTUNGEN</span></div>
     <!-- duplicate for seamless loop -->
     <div class="marq-item"><span class="dot"></span> <span class="em">🏆</span> <span class="acc">LIMITED EDITION</span></div>
-    <div class="marq-item"><span class="dot"></span> <span class="em">🇩🇪</span> HANDGEFERTIGT IN DOMSÜHL</div>
+    <div class="marq-item"><span class="dot"></span> <span class="em">🇩🇪</span> HANDGEFERTIGT IN DEUTSCHLAND</div>
     <div class="marq-item"><span class="dot"></span> <span class="em">🛡️</span> <span class="acc">LIFETIME GARANTIE</span></div>
     <div class="marq-item"><span class="dot"></span> <span class="em">🌱</span> BIO-PETG · KOMPOSTIERBAR</div>
     <div class="marq-item"><span class="dot"></span> <span class="em">⚡</span> RFID-SAFE TECHNOLOGIE</div>
@@ -543,7 +566,7 @@ header{padding:18px 6%;display:flex;justify-content:space-between;align-items:ce
     <div class="spot-info rv rv-d1">
       <div class="spot-cat">LXRD ATELIER · COLLECTION 001</div>
       <h3 class="spot-h">LXRD WALLET</h3>
-      <div class="spot-tag">// HANDGEFERTIGT · DOMSÜHL · 2026</div>
+      <div class="spot-tag">// HANDGEFERTIGT · DEUTSCHLAND · 2026</div>
       <div class="spot-rating">
         <span class="stars">★★★★★</span>
         <span class="meta"><strong>4.9</strong> · 127 Bewertungen</span>

@@ -1466,33 +1466,22 @@ document.addEventListener('DOMContentLoaded',()=>{
 <!-- FULL NAV -->
 <nav id="full-nav">
   <a href="#hero" class="nav-link" data-i18n="nav_home" onclick="toggleMenu()">HOME</a>
-
-  <div class="nav-group-h">SHOP</div>
   <a href="konfigurator.html" class="nav-link" data-i18n="nav_konfig">3D KONFIGURATOR</a>
-  <a href="collections.html" class="nav-link" data-i18n="nav_shop">CONTROLLER</a>
+  <a href="collections.html" class="nav-link" data-i18n="nav_shop">PRODUKTE</a>
   <a href="zubehoer.html" class="nav-link">ACCESSOIRES</a>
-
-  <div class="nav-group-h">SERVICE</div>
   <a href="reparatur.html" class="nav-link" data-i18n="nav_repair">REPARATUR</a>
   <a href="printing-service.html" class="nav-link">🖨️ 3D PRINTING</a>
-  <a href="b2b.html" class="nav-link b2b" data-i18n="nav_b2b">🏢 B2B SHOP</a>
-
-  <div class="nav-group-h">INFO &amp; KONTO</div>
   <a href="blog.html" class="nav-link">📝 MAGAZIN</a>
   <a href="#tester-sec" class="nav-link" data-i18n="nav_tester" onclick="toggleMenu()">TESTER</a>
   <a href="#contact" class="nav-link" data-i18n="nav_contact" onclick="toggleMenu()">KONTAKT</a>
   <button class="nav-link" data-i18n="nav_review" onclick="document.getElementById('review-modal').style.display='flex';toggleMenu()">BEWERTEN</button>
   <button class="nav-link special" data-i18n="nav_account" onclick="toggleMenu();openLogin()">👤 MEIN KONTO</button>
-
+  <a href="b2b.html" class="nav-link b2b" data-i18n="nav_b2b">🏢 B2B SHOP</a>
   <div class="footer-social" style="margin-top:20px">
     <a href="https://instagram.com/lexord.de" target="_blank" rel="noopener"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" class="soc-icon" alt="Instagram" loading="lazy"></a>
     <a href="https://tiktok.com/@lexord.de" target="_blank" rel="noopener"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" class="soc-icon" alt="TikTok" loading="lazy"></a>
   </div>
 </nav>
-<style>
-#full-nav .nav-group-h{font-family:'Orbitron',sans-serif;font-size:8.5px;letter-spacing:3.5px;color:var(--neon);padding:18px 0 6px;border-top:1px solid rgba(255,255,255,.05);margin-top:4px;font-weight:900;opacity:.8}
-#full-nav .nav-group-h:first-of-type{margin-top:12px}
-</style>
 
 <!-- CART DRAWER -->
 <aside id="cart-drawer" aria-label="Warenkorb">
@@ -1687,6 +1676,18 @@ document.addEventListener('DOMContentLoaded',()=>{
 @keyframes lxdMassiveDotPulse{0%,100%{opacity:.6;text-shadow:0 0 16px var(--neon)}50%{opacity:1;text-shadow:0 0 32px var(--neon),0 0 60px var(--neon2)}}
 @media(max-width:560px){.lxd-massive{padding:40px 0}.lxd-massive-track{gap:32px;animation-duration:30s}.lxd-massive-track .lxd-massive-outline{-webkit-text-stroke-width:1.5px}}
 </style>
+</div>
+
+<!-- FEATURES STRIP -->
+<div class="features-strip reveal">
+  <div class="features-grid">
+    <div class="feat-card"><div class="feat-icon">🧲</div><div class="feat-title">HALL EFFECT</div><div class="feat-desc">Magnetische Sticks — kein Drift, lebenslange Präzision</div></div>
+    <div class="feat-card"><div class="feat-icon">⚡</div><div class="feat-title">TMR STICKS</div><div class="feat-desc">Tunnel-Magneto-Resistenz für maximale Genauigkeit</div></div>
+    <div class="feat-card"><div class="feat-icon">🎯</div><div class="feat-title">CLICKY TRIGGER</div><div class="feat-desc">Mouse-Click-Feel — 1mm Auslöseweg, instant response</div></div>
+    <div class="feat-card"><div class="feat-icon">🎮</div><div class="feat-title">PADDLE SYSTEM</div><div class="feat-desc">2× oder 4× Back-Paddles, frei programmierbar</div></div>
+    <div class="feat-card"><div class="feat-icon">🎨</div><div class="feat-title">INDIVIDUELL</div><div class="feat-desc">Jedes Teil einzeln konfigurierbar im Konfigurator</div></div>
+    <div class="feat-card"><div class="feat-icon">🇩🇪</div><div class="feat-title">MADE IN GERMANY</div><div class="feat-desc">Handgefertigt in Germany — direkt vom Hersteller</div></div>
+  </div>
 </div>
 
 <!-- ═══ BENTO-GRID · WARUM LEXORD (OMGN/Linear/Apple-Style) ═══ -->
@@ -1998,7 +1999,22 @@ document.addEventListener('DOMContentLoaded',()=>{
   </div>
   <script type="text/javascript" src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script> -->
 
-  <div style="text-align:center;margin-top:10px;font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:2px;color:#666">⟫ ECHTE KUNDENBEWERTUNGEN UNTEN ⟪</div>
+  <div class="ticker-cont">
+    <div class="ticker-track">
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Beste Scuf Alternative. Qualität ist Wahnsinn!"</p></article>
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag g-tag">GOOGLE</span><p style="font-size:10px;color:#aaa">"Stickzange perfekt. 24h Versand top!"</p></article>
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag eb-tag">EBAY</span><p style="font-size:10px;color:#aaa">"Engineering auf höchstem Level. Super Kontakt."</p></article>
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Kein Stick-Drift mehr. TMR Umbau top!"</p></article>
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag g-tag">GOOGLE</span><p style="font-size:10px;color:#aaa">"Mega schnelle Lieferung, Verarbeitung 10/10."</p></article>
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Konfigurator super easy, genau was ich wollte!"</p></article>
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Beste Scuf Alternative. Qualität ist Wahnsinn!"</p></article>
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag g-tag">GOOGLE</span><p style="font-size:10px;color:#aaa">"Stickzange perfekt. 24h Versand top!"</p></article>
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag eb-tag">EBAY</span><p style="font-size:10px;color:#aaa">"Engineering auf höchstem Level. Super Kontakt."</p></article>
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Kein Stick-Drift mehr. TMR Umbau top!"</p></article>
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag g-tag">GOOGLE</span><p style="font-size:10px;color:#aaa">"Mega schnelle Lieferung, Verarbeitung 10/10."</p></article>
+      <article class="rev-card"><div class="stars">★★★★★</div><span class="src-tag tp-tag">TRUSTPILOT</span><p style="font-size:10px;color:#aaa">"Konfigurator super easy, genau was ich wollte!"</p></article>
+    </div>
+  </div>
 </section>
 
 <!-- ============ PREMIUM CONTROLLER SWIPER — 5 SLIDES ============ -->

@@ -325,6 +325,7 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
     <button class="dash-tab" onclick="switchTab('newsletter',this)">📧 NEWSLETTER</button>
     <button class="dash-tab" onclick="switchTab('blog',this)">📝 BLOG</button>
     <button class="dash-tab" onclick="switchTab('produkte',this)">📦 PRODUKTE</button>
+    <button class="dash-tab" onclick="switchTab('versand',this)">🚚 VERSAND</button>
   </div>
 
   <!-- PANEL: LIVE -->
@@ -886,6 +887,55 @@ body{background:var(--bg);color:#e8e8ec;font-family:'Inter',sans-serif;min-heigh
         <button class="dash-action" onclick="loadAdminProductsList()">↻ AKTUALISIEREN</button>
       </div>
       <div id="pu-list"><div style="text-align:center;color:#666;padding:30px;font-family:Orbitron;font-size:10px;letter-spacing:2px">LADE PRODUKTE…</div></div>
+    </div>
+  </div>
+
+  <!-- PANEL: VERSAND -->
+  <div class="dash-panel" id="panel-versand">
+    <div class="arch-banner" style="background:linear-gradient(135deg,rgba(255,174,0,.08),rgba(0,242,255,.05));border-color:rgba(255,174,0,.3)">
+      🚚 <strong>Versand-Manager</strong> · Halb-automatisch ohne DHL-Geschäftskunden-API · Adressen kopieren, DHL Online aufrufen, Tracking eintragen, automatische Versand-Mail, Munbyn-Bluetooth-Druck
+    </div>
+
+    <div id="vsd-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0"></div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
+      <button class="dash-action" onclick="vsdLoad()">↻ AKTUALISIEREN</button>
+      <select class="fin-sel" id="vsd-filter" onchange="vsdRender()" style="min-width:200px">
+        <option value="open">📦 OFFEN (zu versenden)</option>
+        <option value="shipped">✓ VERSANDT</option>
+        <option value="all">Alle Bestellungen</option>
+      </select>
+      <input type="text" class="search-input" id="vsd-search" placeholder="🔍 Suche…" oninput="vsdRender()" style="min-width:160px">
+      <button class="dash-action" onclick="vsdCopyAllAddresses()" style="background:rgba(0,242,255,.1);color:#00f2ff;border:1px solid rgba(0,242,255,.3)">📋 ALLE ADRESSEN KOPIEREN</button>
+      <button class="dash-action" onclick="vsdExportCSV()" style="background:rgba(188,19,254,.1);color:#bc13fe;border:1px solid rgba(188,19,254,.3)">⤓ CSV EXPORT</button>
+      <button class="dash-action" onclick="vsdBulkOpenDHL()" style="background:linear-gradient(135deg,#ffae00,#ff8c00);color:#000;font-weight:900;border:none">📦 ALLE → DHL ONLINE</button>
+    </div>
+
+    <!-- Munbyn Bluetooth Bar -->
+    <div id="vsd-bt-bar" style="background:rgba(0,242,255,.04);border:1px solid rgba(0,242,255,.2);border-radius:12px;padding:14px 18px;margin-bottom:14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px">
+        <div id="vsd-bt-status-dot" style="width:10px;height:10px;border-radius:50%;background:#ff4d6d;box-shadow:0 0 8px #ff4d6d"></div>
+        <div>
+          <div style="font-family:Orbitron;font-size:9px;letter-spacing:2px;color:#666">MUNBYN ITPP941 / RW402B</div>
+          <div style="font-size:12px;color:#fff;font-weight:700" id="vsd-bt-status">Nicht verbunden</div>
+        </div>
+      </div>
+      <button class="dash-action" onclick="vsdBtConnect()" style="background:rgba(0,242,255,.1);color:#00f2ff;border:1px solid rgba(0,242,255,.3)">🔵 BLUETOOTH VERBINDEN</button>
+      <button class="dash-action" onclick="vsdBtTestPrint()" style="background:rgba(255,255,255,.05);color:#aaa">🖨️ TEST-DRUCK</button>
+      <button class="dash-action" onclick="vsdBtDisconnect()" style="background:rgba(255,77,109,.1);color:#ff4d6d;border:1px solid rgba(255,77,109,.3)">⌀ TRENNEN</button>
+    </div>
+
+    <div id="vsd-list"><div style="text-align:center;color:#666;padding:30px;font-family:Orbitron;font-size:10px;letter-spacing:2px">LADE BESTELLUNGEN …</div></div>
+
+    <div style="margin-top:14px;font-size:10px;color:#555;line-height:1.7;padding:14px;background:rgba(0,0,0,.4);border-radius:10px">
+      <strong style="color:#888">Workflow:</strong>
+      1) Auf <code>📋 Adresse</code> klicken → Adressdaten im Zwischenspeicher ·
+      2) <code>📦 DHL ÖFFNEN</code> klickt dhl.de/onlinefrankierung auf ·
+      3) Adresse einfügen, DHL-Label kaufen, PDF runterladen ·
+      4) DHL-PDF über dein System öffnen → Munbyn-Drucker auswählen → drucken ·
+      5) <code>Tracking eintragen</code> → Kunde bekommt automatisch Versand-Mail
+      <br><br>
+      <strong style="color:#888">Munbyn Direkt-Druck:</strong> Mit dem 🖨️ neben jeder Bestellung druckst du ein eigenes Absender-Etikett (LEXORD-Branding + Empfänger + Tracking-Barcode) direkt per Bluetooth zum Munbyn — als Beilage oder Re-Print.
     </div>
   </div>
 
@@ -2643,6 +2693,7 @@ function switchTab(tab, btn){
   if(tab === 'newsletter') loadNewsletter();
   if(tab === 'blog') loadBlogList();
   if(tab === 'produkte') loadAdminProductsList();
+  if(tab === 'versand') vsdLoad();
   if(tab === 'live') { loadLive(); resizeGlobe(); }
 }
 
@@ -2776,6 +2827,320 @@ async function prodDelete(slug){
     if(d.success){ toast('✓ Gelöscht','success'); loadAdminProductsList(); }
     else toast('Fehler','error');
   }catch(e){ toast('Fehler','error'); }
+}
+
+/* ════════ VERSAND-MANAGER + MUNBYN BLUETOOTH ════════ */
+let VSD_ORDERS = [];
+let VSD_BT_DEVICE = null;
+let VSD_BT_CHAR = null;
+
+const LAND_NAMES = {DE:'Deutschland',AT:'Österreich',CH:'Schweiz',FR:'Frankreich',NL:'Niederlande',BE:'Belgien',LU:'Luxemburg',IT:'Italien',ES:'Spanien',PL:'Polen',CZ:'Tschechien',SE:'Schweden',DK:'Dänemark',GB:'Großbritannien',US:'USA'};
+
+async function vsdLoad(){
+  const d = await api('/admin/orders');
+  if(!d || !d.orders){ document.getElementById('vsd-list').innerHTML = empty('⚠','VERBINDUNGSFEHLER'); return; }
+  VSD_ORDERS = d.orders.filter(o => (o.status||'').toLowerCase() !== 'storniert');
+  vsdRender();
+}
+
+function vsdRender(){
+  const filter = document.getElementById('vsd-filter').value;
+  const q = (document.getElementById('vsd-search').value||'').toLowerCase().trim();
+  let list = VSD_ORDERS.slice();
+  if(filter === 'open') list = list.filter(o => !o.tracking);
+  if(filter === 'shipped') list = list.filter(o => o.tracking);
+  if(q) list = list.filter(o => (o.orderNr||'').toLowerCase().includes(q) || (o.name||'').toLowerCase().includes(q) || (o.email||'').toLowerCase().includes(q));
+  list.sort((a,b) => new Date(b.created||b.date||0) - new Date(a.created||a.date||0));
+
+  // Stats
+  const open = VSD_ORDERS.filter(o=>!o.tracking).length;
+  const shipped = VSD_ORDERS.filter(o=>o.tracking).length;
+  const today = new Date().toISOString().slice(0,10);
+  const todayShipped = VSD_ORDERS.filter(o=>o.tracking && (o.shipped||'').slice(0,10)===today).length;
+  document.getElementById('vsd-stats').innerHTML = `
+    <div style="background:rgba(255,174,0,.06);border:1px solid rgba(255,174,0,.25);border-radius:10px;padding:14px"><div style="font-size:10px;color:#888;letter-spacing:2px;margin-bottom:4px">OFFEN</div><div style="font-family:Orbitron;font-size:24px;font-weight:900;color:#ffae00">${open}</div></div>
+    <div style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.25);border-radius:10px;padding:14px"><div style="font-size:10px;color:#888;letter-spacing:2px;margin-bottom:4px">VERSANDT</div><div style="font-family:Orbitron;font-size:24px;font-weight:900;color:#00ff88">${shipped}</div></div>
+    <div style="background:rgba(0,242,255,.06);border:1px solid rgba(0,242,255,.25);border-radius:10px;padding:14px"><div style="font-size:10px;color:#888;letter-spacing:2px;margin-bottom:4px">HEUTE</div><div style="font-family:Orbitron;font-size:24px;font-weight:900;color:#00f2ff">${todayShipped}</div></div>
+  `;
+
+  if(!list.length){ document.getElementById('vsd-list').innerHTML = '<div style="text-align:center;color:#666;padding:40px;font-family:Orbitron;font-size:10px;letter-spacing:2px">KEINE BESTELLUNGEN IN DIESER ANSICHT</div>'; return; }
+
+  document.getElementById('vsd-list').innerHTML = list.map((o,i) => vsdRow(o,i)).join('');
+}
+
+function vsdRow(o, i){
+  const ad = o.shipping_address || {};
+  const fn = ad.fn || (o.name||'').split(' ')[0] || '';
+  const ln = ad.ln || (o.name||'').split(' ').slice(1).join(' ') || '';
+  const land = ad.country || o.land || 'DE';
+  const dt = o.created || o.date;
+  const dStr = dt ? new Date(dt).toLocaleDateString('de-DE') + ' ' + new Date(dt).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}) : '–';
+  const trackTr = o.tracking
+    ? '<span style="background:rgba(0,255,136,.15);color:#00ff88;font-size:9px;font-family:Orbitron;letter-spacing:1.5px;padding:3px 8px;border-radius:5px">✓ '+esc2(o.tracking)+'</span>'
+    : '<span style="background:rgba(255,174,0,.15);color:#ffae00;font-size:9px;font-family:Orbitron;letter-spacing:1.5px;padding:3px 8px;border-radius:5px">⏳ OFFEN</span>';
+  const items = (o.items||[]).map(it => esc2(it.name) + ' ('+ (it.qty||1) +'×)').join(' · ') || '–';
+  return `<div style="background:#0a0a0a;border:1px solid rgba(255,255,255,.05);border-radius:12px;padding:18px;margin-bottom:12px" id="vsd-card-${i}">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:14px;flex-wrap:wrap">
+      <div>
+        <div style="font-family:Courier New,monospace;font-size:14px;font-weight:900;color:#fff">${esc2(o.orderNr||'?')}</div>
+        <div style="font-size:11px;color:#888;font-family:Orbitron;letter-spacing:1px;margin-top:3px">${dStr} · ${parseFloat(o.total||0).toFixed(2)} €</div>
+      </div>
+      ${trackTr}
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+      <div style="background:#040404;border-radius:8px;padding:12px">
+        <div style="font-size:9px;font-family:Orbitron;letter-spacing:2px;color:#666;margin-bottom:6px">📍 LIEFERADRESSE</div>
+        <div style="font-size:13px;color:#fff;line-height:1.6;font-weight:600">${esc2(fn)} ${esc2(ln)}</div>
+        <div style="font-size:12px;color:#bbb;line-height:1.6">${esc2(ad.street||'')} ${esc2(ad.no||'')}</div>
+        <div style="font-size:12px;color:#bbb;line-height:1.6">${esc2(ad.zip||'')} ${esc2(ad.city||'')}</div>
+        <div style="font-size:11px;color:#888;line-height:1.6">${esc2(LAND_NAMES[land]||land)}</div>
+        ${ad.phone ? '<div style="font-size:11px;color:#888;line-height:1.6">Tel: '+esc2(ad.phone)+'</div>' : ''}
+        ${o.email ? '<div style="font-size:11px;color:#666;line-height:1.6;margin-top:4px">'+esc2(o.email)+'</div>' : ''}
+      </div>
+      <div style="background:#040404;border-radius:8px;padding:12px">
+        <div style="font-size:9px;font-family:Orbitron;letter-spacing:2px;color:#666;margin-bottom:6px">📦 INHALT</div>
+        <div style="font-size:12px;color:#bbb;line-height:1.6">${items}</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <button onclick="vsdCopyAddr(${i})" class="dash-action" style="background:rgba(0,242,255,.1);color:#00f2ff;border:1px solid rgba(0,242,255,.3)">📋 ADRESSE</button>
+      <a href="https://www.dhl.de/onlinefrankierung" target="_blank" class="dash-action" style="background:linear-gradient(135deg,#ffae00,#ff8c00);color:#000;font-weight:900;border:none;text-decoration:none" onclick="vsdCopyAddr(${i},true)">📦 DHL ÖFFNEN</a>
+      <button onclick="vsdBtPrintLabel(${i})" class="dash-action" style="background:rgba(188,19,254,.1);color:#bc13fe;border:1px solid rgba(188,19,254,.3)" title="Eigenes Absender-Label auf Munbyn drucken">🖨️ MUNBYN</button>
+      <input type="text" id="vsd-trk-${i}" placeholder="Tracking-Nr eintragen" value="${esc2(o.tracking||'')}" style="flex:1;min-width:160px;padding:9px 11px;background:#040404;border:1px solid #1a1a1a;color:#fff;border-radius:8px;font-family:Courier New,monospace;font-size:12px;letter-spacing:1px;box-sizing:border-box">
+      <button onclick="vsdSaveTracking('${o.orderNr}',${i})" class="dash-action" style="background:linear-gradient(135deg,#00ff88,#00b67a);color:#000;font-weight:900;border:none">✓ VERSANDT + MAIL</button>
+    </div>
+  </div>`;
+}
+
+function vsdFormatAddrForDHL(o){
+  const ad = o.shipping_address || {};
+  const fn = ad.fn || (o.name||'').split(' ')[0] || '';
+  const ln = ad.ln || (o.name||'').split(' ').slice(1).join(' ') || '';
+  const land = ad.country || o.land || 'DE';
+  return [
+    (fn + ' ' + ln).trim(),
+    (ad.street||'') + ' ' + (ad.no||''),
+    (ad.zip||'') + ' ' + (ad.city||''),
+    LAND_NAMES[land]||land
+  ].filter(Boolean).join('\n');
+}
+
+function vsdCopyAddr(i, silent){
+  const o = vsdCurrentList()[i];
+  if(!o) return;
+  const txt = vsdFormatAddrForDHL(o);
+  try{
+    navigator.clipboard.writeText(txt);
+    if(!silent) toast('✓ Adresse kopiert — jetzt auf DHL ÖFFNEN','success');
+  }catch(e){
+    if(!silent) toast('Clipboard nicht verfügbar — bitte manuell kopieren','error');
+  }
+}
+
+function vsdCurrentList(){
+  const filter = document.getElementById('vsd-filter').value;
+  const q = (document.getElementById('vsd-search').value||'').toLowerCase().trim();
+  let list = VSD_ORDERS.slice();
+  if(filter === 'open') list = list.filter(o => !o.tracking);
+  if(filter === 'shipped') list = list.filter(o => o.tracking);
+  if(q) list = list.filter(o => (o.orderNr||'').toLowerCase().includes(q) || (o.name||'').toLowerCase().includes(q) || (o.email||'').toLowerCase().includes(q));
+  list.sort((a,b) => new Date(b.created||b.date||0) - new Date(a.created||a.date||0));
+  return list;
+}
+
+function vsdCopyAllAddresses(){
+  const list = vsdCurrentList();
+  if(!list.length) return toast('Keine Bestellungen in aktueller Ansicht','warn');
+  const all = list.map((o,i) => '═══ Bestellung ' + (o.orderNr||'?') + ' ═══\n' + vsdFormatAddrForDHL(o)).join('\n\n');
+  try{ navigator.clipboard.writeText(all); toast('✓ '+list.length+' Adressen kopiert','success'); }
+  catch(e){ toast('Clipboard nicht verfügbar','error'); }
+}
+
+function vsdExportCSV(){
+  const list = vsdCurrentList();
+  if(!list.length) return toast('Keine Bestellungen','warn');
+  const head = ['Bestellnummer','Datum','Empfänger Vorname','Empfänger Nachname','Strasse','Hausnr','PLZ','Stadt','Land','Telefon','Email','Betrag €','Tracking','Status'];
+  const rows = list.map(o => {
+    const ad = o.shipping_address || {};
+    const fn = ad.fn || (o.name||'').split(' ')[0] || '';
+    const ln = ad.ln || (o.name||'').split(' ').slice(1).join(' ') || '';
+    return [o.orderNr||'', o.created||o.date||'', fn, ln, ad.street||'', ad.no||'', ad.zip||'', ad.city||'', ad.country||o.land||'DE', ad.phone||'', o.email||'', parseFloat(o.total||0).toFixed(2).replace('.',','), o.tracking||'', o.status||''];
+  });
+  const csv = [head, ...rows].map(r => r.map(c => {
+    const s = String(c==null?'':c);
+    return /[";,\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+  }).join(';')).join('\r\n');
+  const blob = new Blob(['﻿' + csv], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'LEXORD-Versand-' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  toast('✓ CSV exportiert ('+list.length+' Bestellungen)','success');
+}
+
+function vsdBulkOpenDHL(){
+  const list = vsdCurrentList().filter(o => !o.tracking);
+  if(!list.length) return toast('Keine offenen Bestellungen','warn');
+  if(!confirm(list.length + ' Bestellungen → DHL Online öffnen in ' + list.length + ' Tabs?\n\nTipp: Adressen werden NICHT auto-übertragen — bei jeder Bestellung Adresse einzeln kopieren.')) return;
+  list.forEach((o,idx) => {
+    setTimeout(() => window.open('https://www.dhl.de/onlinefrankierung','_blank'), idx*120);
+  });
+  toast('✓ '+list.length+' DHL-Tabs werden geöffnet','success');
+}
+
+async function vsdSaveTracking(orderNr, i){
+  const inp = document.getElementById('vsd-trk-'+i);
+  const trk = (inp?inp.value:'').trim();
+  if(!trk || trk.length < 8){ toast('Bitte Tracking-Nummer eingeben (min. 8 Zeichen)','error'); return; }
+  const tk = localStorage.getItem(TOKEN_KEY);
+  try{
+    const r = await fetch(WORKER_URL+'/admin/orders/'+encodeURIComponent(orderNr)+'/tracking',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tk},body:JSON.stringify({tracking:trk,notify:true})});
+    const d = await r.json();
+    if(d.success){ toast('✓ Versand-Mail an Kunde gesendet','success'); vsdLoad(); }
+    else toast('Fehler: '+(d.error||''),'error');
+  }catch(e){ toast('Verbindungsfehler','error'); }
+}
+
+/* ═══ MUNBYN ITPP941 / RW402B · WEB BLUETOOTH · CPCL ═══ */
+async function vsdBtConnect(){
+  if(!navigator.bluetooth){ toast('Web Bluetooth nicht verfügbar — bitte Chrome oder Edge auf Desktop/Android nutzen','error'); return; }
+  try{
+    const device = await navigator.bluetooth.requestDevice({
+      filters: [{namePrefix:'Munbyn'},{namePrefix:'RW'},{namePrefix:'ITPP'},{namePrefix:'BT'},{namePrefix:'Printer'},{namePrefix:'POS'}],
+      optionalServices: ['000018f0-0000-1000-8000-00805f9b34fb', '49535343-fe7d-4ae5-8fa9-9fafd205e455', '0000ff00-0000-1000-8000-00805f9b34fb']
+    });
+    VSD_BT_DEVICE = device;
+    document.getElementById('vsd-bt-status').textContent = 'Verbinde mit ' + (device.name||'Drucker') + '…';
+    const server = await device.gatt.connect();
+    // Try common printer service UUIDs
+    let svc = null, ch = null;
+    const tryUUIDs = [
+      ['000018f0-0000-1000-8000-00805f9b34fb','00002af1-0000-1000-8000-00805f9b34fb'],
+      ['49535343-fe7d-4ae5-8fa9-9fafd205e455','49535343-8841-43f4-a8d4-ecbe34729bb3'],
+      ['0000ff00-0000-1000-8000-00805f9b34fb','0000ff02-0000-1000-8000-00805f9b34fb']
+    ];
+    for(const [su, cu] of tryUUIDs){
+      try{ svc = await server.getPrimaryService(su); ch = await svc.getCharacteristic(cu); break; }
+      catch(e){}
+    }
+    if(!ch){
+      // Last resort: scan all services for writable char
+      const services = await server.getPrimaryServices();
+      for(const s of services){
+        const chars = await s.getCharacteristics();
+        for(const c of chars){
+          if(c.properties.write || c.properties.writeWithoutResponse){ ch = c; break; }
+        }
+        if(ch) break;
+      }
+    }
+    if(!ch) throw new Error('Keine schreibbare Bluetooth-Characteristic gefunden');
+    VSD_BT_CHAR = ch;
+    document.getElementById('vsd-bt-status').textContent = '✓ ' + (device.name||'Drucker') + ' verbunden';
+    document.getElementById('vsd-bt-status-dot').style.background = '#00ff88';
+    document.getElementById('vsd-bt-status-dot').style.boxShadow = '0 0 8px #00ff88';
+    toast('✓ Munbyn-Drucker verbunden','success');
+    device.addEventListener('gattserverdisconnected',()=>{
+      VSD_BT_CHAR = null; VSD_BT_DEVICE = null;
+      document.getElementById('vsd-bt-status').textContent = 'Nicht verbunden';
+      document.getElementById('vsd-bt-status-dot').style.background = '#ff4d6d';
+      document.getElementById('vsd-bt-status-dot').style.boxShadow = '0 0 8px #ff4d6d';
+    });
+  }catch(e){
+    document.getElementById('vsd-bt-status').textContent = 'Verbindung fehlgeschlagen';
+    toast('Bluetooth-Fehler: '+e.message,'error');
+  }
+}
+
+async function vsdBtDisconnect(){
+  if(VSD_BT_DEVICE && VSD_BT_DEVICE.gatt && VSD_BT_DEVICE.gatt.connected){
+    try{ VSD_BT_DEVICE.gatt.disconnect(); }catch(e){}
+  }
+  VSD_BT_CHAR = null; VSD_BT_DEVICE = null;
+  document.getElementById('vsd-bt-status').textContent = 'Nicht verbunden';
+  document.getElementById('vsd-bt-status-dot').style.background = '#ff4d6d';
+  document.getElementById('vsd-bt-status-dot').style.boxShadow = '0 0 8px #ff4d6d';
+  toast('Drucker getrennt','success');
+}
+
+async function vsdBtSendChunks(bytes){
+  if(!VSD_BT_CHAR) throw new Error('Nicht verbunden');
+  const MAX = 180;
+  for(let i=0; i<bytes.length; i+=MAX){
+    const slice = bytes.slice(i, i+MAX);
+    try{ await VSD_BT_CHAR.writeValueWithoutResponse(slice); }
+    catch(e){ await VSD_BT_CHAR.writeValue(slice); }
+    await new Promise(r => setTimeout(r, 20));
+  }
+}
+
+function vsdBuildCPCL(addrLines, orderNr, tracking){
+  // CPCL für Munbyn ITPP941 (102×152 mm bei 203 dpi: 800×1200 dots)
+  const enc = new TextEncoder();
+  const lines = [
+    '! 0 200 200 1200 1',
+    'PW 800',
+    'TONE 0',
+    'SPEED 4',
+    'PAGE-WIDTH 800',
+    'SETBOLD 1',
+    'T 7 0 30 30 LEXORD ENGINEERING',
+    'SETBOLD 0',
+    'T 4 0 30 90 Made in Germany',
+    'LINE 30 130 770 130 2',
+    'T 4 0 30 160 EMPFAENGER:',
+    'SETBOLD 1'
+  ];
+  let y = 200;
+  addrLines.forEach(l => {
+    lines.push('T 5 0 30 ' + y + ' ' + l);
+    y += 60;
+  });
+  lines.push('SETBOLD 0');
+  lines.push('LINE 30 ' + (y+20) + ' 770 ' + (y+20) + ' 2');
+  lines.push('T 4 0 30 ' + (y+60) + ' Bestell-Nr: ' + orderNr);
+  if(tracking){
+    lines.push('T 4 0 30 ' + (y+120) + ' Tracking:');
+    lines.push('B 128 1 2 60 30 ' + (y+170) + ' ' + tracking);
+    lines.push('T 4 0 30 ' + (y+360) + ' ' + tracking);
+  }
+  lines.push('FORM');
+  lines.push('PRINT');
+  return enc.encode(lines.join('\r\n') + '\r\n');
+}
+
+async function vsdBtTestPrint(){
+  if(!VSD_BT_CHAR){ toast('Erst Bluetooth verbinden','error'); return; }
+  try{
+    const data = vsdBuildCPCL(['TEST DRUCK','Munbyn ITPP941','LEXORD Engineering'], 'TEST-' + Date.now().toString().slice(-6), '');
+    await vsdBtSendChunks(data);
+    toast('✓ Test-Druck gesendet','success');
+  }catch(e){ toast('Druck-Fehler: '+e.message,'error'); }
+}
+
+async function vsdBtPrintLabel(i){
+  if(!VSD_BT_CHAR){ toast('Erst Bluetooth verbinden','error'); return; }
+  const o = vsdCurrentList()[i];
+  if(!o) return;
+  const ad = o.shipping_address || {};
+  const fn = ad.fn || (o.name||'').split(' ')[0] || '';
+  const ln = ad.ln || (o.name||'').split(' ').slice(1).join(' ') || '';
+  const land = ad.country || o.land || 'DE';
+  const addrLines = [
+    (fn + ' ' + ln).trim(),
+    (ad.street||'') + ' ' + (ad.no||''),
+    (ad.zip||'') + ' ' + (ad.city||''),
+    LAND_NAMES[land]||land
+  ];
+  const trkInput = document.getElementById('vsd-trk-'+i);
+  const trk = (trkInput?trkInput.value:'').trim() || o.tracking || '';
+  try{
+    const data = vsdBuildCPCL(addrLines, o.orderNr||'?', trk);
+    await vsdBtSendChunks(data);
+    toast('✓ Label gedruckt: ' + (o.orderNr||'?'),'success');
+  }catch(e){ toast('Druck-Fehler: '+e.message,'error'); }
 }
 
 /* ════════ BEWERTUNGS-MANAGER ════════ */

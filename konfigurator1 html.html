@@ -1,0 +1,2152 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0,user-scalable=yes,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="format-detection" content="telephone=no">
+<title>3D Konfigurator | LEXORD® Custom Controller Builder</title>
+<meta name="description" content="Baue deinen perfekten LEXORD Custom PS5 Controller — 30+ Farben pro Bauteil, Gravur, Hall Effect &amp; TMR Sticks, Paddles, Clicky Trigger, LED-Lightbar. Made in Germany.">
+<link rel="canonical" href="https://lexord.de/konfigurator.html">
+<link rel="icon" type="image/png" href="IMG_7023.png">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;700&family=Bebas+Neue&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+:root{--neon:#00f2ff;--neon2:#bc13fe;--bg:#000;--panel:#080808;--green:#00b67a;--err:#ff4d4f}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;min-width:0}
+html,body{max-width:100vw;width:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:rgba(0,242,255,.18)}
+html{scroll-behavior:smooth}
+body{background:#000;color:#fff;font-family:'Inter',sans-serif;min-height:100vh;min-height:100dvh;padding-left:env(safe-area-inset-left,0);padding-right:env(safe-area-inset-right,0)}
+img,canvas,video,svg,iframe{max-width:100%;height:auto}
+input,select,textarea,button{max-width:100%;font-family:inherit}
+@media(max-width:480px){input[type=text],input[type=email],input[type=tel],input[type=number],input[type=password],select,textarea{font-size:16px!important}}
+img{display:block}
+a{color:var(--neon);text-decoration:none}
+a:hover{color:#fff}
+
+#star-canvas{position:fixed;inset:0;z-index:-2;background:#000;pointer-events:none}
+#particle-canvas{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.5}
+.lightning-bg{position:fixed;inset:0;pointer-events:none;z-index:-1;overflow:hidden}
+.lightning-line{position:absolute;width:2px;background:linear-gradient(to bottom,transparent,var(--neon),transparent);opacity:.18;animation:lF var(--dur,3s) var(--delay,0s) infinite}
+@keyframes lF{0%,90%,100%{opacity:0}92%,96%{opacity:.5}94%{opacity:0}}
+
+header{position:fixed;top:0;width:100%;z-index:100;padding:13px 5%;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);border-bottom:1px solid #0d0d0d;display:flex;align-items:center;justify-content:space-between}
+.brand{font-family:'Orbitron';font-weight:900;font-size:1.05rem;letter-spacing:5px;color:#fff!important}
+.brand .tag{color:var(--neon);font-size:.6rem;letter-spacing:3px;margin-left:8px;border:1px solid var(--neon);padding:2px 8px;border-radius:4px;vertical-align:middle}
+.back-link{font-family:'Orbitron';font-size:9px;color:#888;letter-spacing:2px;transition:.3s}
+.back-link:hover{color:var(--neon)}
+.cart-mini{display:flex;align-items:center;gap:7px;padding:7px 14px;border:1px solid #1a1a1a;border-radius:6px;font-family:'Orbitron';font-size:9px;color:#888;background:transparent;cursor:pointer;transition:.3s}
+.cart-mini:hover{border-color:var(--neon);color:var(--neon)}
+.cart-mini .badge{background:var(--neon);color:#000;font-size:8px;font-weight:900;min-width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.hdr-r{display:flex;align-items:center;gap:14px}
+
+/* PROGRESS */
+.progress-strip{position:fixed;top:55px;left:0;right:0;height:3px;background:#0a0a0a;z-index:90}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--neon),var(--neon2));width:0;transition:width .5s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 10px var(--neon)}
+
+.kfg-hero{padding:90px 5% 24px;text-align:center;background:radial-gradient(ellipse at top,rgba(0,242,255,.08),transparent 60%)}
+.kfg-eyebrow{display:inline-block;padding:6px 14px;background:rgba(0,242,255,.08);border:1px solid rgba(0,242,255,.25);border-radius:20px;font-family:'Orbitron';font-size:8px;color:var(--neon);letter-spacing:3px;margin-bottom:12px;animation:pulse 3s infinite}
+@keyframes pulse{50%{box-shadow:0 0 18px rgba(0,242,255,.5)}}
+h1{font-family:'Orbitron';font-size:clamp(1.4rem,4.5vw,2.4rem);font-weight:900;letter-spacing:-1px;line-height:1.1;margin-bottom:10px}
+h1 .accent{background:linear-gradient(90deg,var(--neon),var(--neon2),var(--neon));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;background-size:200%;animation:nS 4s ease-in-out infinite}
+@keyframes nS{50%{background-position:100% 50%}}
+.kfg-lead{font-size:12px;color:#888;max-width:580px;margin:0 auto;line-height:1.6}
+
+.kfg-layout{display:grid;grid-template-columns:1fr 380px;gap:30px;max-width:1500px;margin:0 auto;padding:20px 5% 120px;align-items:start}
+@media(max-width:980px){.kfg-layout{grid-template-columns:1fr;gap:20px}}
+
+/* PREVIEW */
+.preview-wrap{position:sticky;top:80px;background:linear-gradient(180deg,#070707 0%,#000 100%);border:1px solid #131318;border-radius:18px;padding:24px;overflow:hidden}
+
+/* ════ NEW: BUILD TOOLBAR ════ */
+.build-toolbar{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;justify-content:center}
+.bt-btn{padding:9px 14px;background:#0a0a0a;border:1px solid #1a1a1a;color:#aaa;font-family:'Orbitron';font-size:8.5px;letter-spacing:1.5px;border-radius:7px;cursor:pointer;transition:.25s;display:flex;align-items:center;gap:6px}
+.bt-btn:hover{border-color:var(--neon);color:var(--neon);transform:translateY(-1px)}
+.bt-btn.surprise{background:linear-gradient(135deg,rgba(0,242,255,.08),rgba(188,19,254,.08));border-color:rgba(0,242,255,.3);color:var(--neon)}
+.bt-btn.surprise:hover{background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;border-color:var(--neon)}
+.bt-btn .ico{font-size:13px}
+
+/* Build name input */
+.build-name-row{display:flex;gap:8px;align-items:center;margin-bottom:14px}
+.build-name-input{flex:1;padding:9px 12px;background:#040404;border:1px solid #1a1a1a;color:#fff;font-family:'Orbitron';font-size:10px;letter-spacing:1.5px;border-radius:7px;outline:none;text-transform:uppercase}
+.build-name-input:focus{border-color:var(--neon)}
+.build-name-input::placeholder{color:#444;letter-spacing:1px}
+
+/* Progress ring */
+.progress-ring-wrap{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#0a0a0a;border:1px solid #131318;border-radius:8px;font-family:'Orbitron';font-size:8.5px;color:#888;letter-spacing:1.5px}
+.progress-ring-wrap .pct{color:var(--neon);font-weight:900;font-size:11px}
+
+/* PRICE DRAWER (right slide-out) */
+#price-drawer{position:fixed;top:0;right:-380px;width:340px;height:100vh;background:linear-gradient(180deg,#050505,#000);border-left:1px solid var(--neon);z-index:300;transition:right .4s cubic-bezier(.2,.8,.2,1);overflow-y:auto;padding:80px 24px 90px;box-shadow:-20px 0 50px rgba(0,0,0,.95)}
+#price-drawer.open{right:0}
+#price-drawer .pd-head{font-family:Orbitron;font-size:13px;color:var(--neon);letter-spacing:3px;margin-bottom:6px}
+#price-drawer .pd-sub{font-family:Orbitron;font-size:8.5px;color:#555;letter-spacing:2px;margin-bottom:24px}
+#price-drawer .pd-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #0f0f0f;font-size:12px;color:#aaa;align-items:flex-start;gap:10px}
+#price-drawer .pd-row:last-child{border-bottom:none}
+#price-drawer .pd-row .lbl{font-family:Orbitron;font-size:8px;color:#666;letter-spacing:1.2px;margin-bottom:3px;text-transform:uppercase}
+#price-drawer .pd-row .val{color:#ddd;font-size:11.5px}
+#price-drawer .pd-row .price{font-family:Orbitron;font-size:11px;color:var(--neon);white-space:nowrap;font-weight:700}
+#price-drawer .pd-row .price.zero{color:#444}
+#price-drawer .pd-total{display:flex;justify-content:space-between;padding:18px 0 14px;margin-top:10px;border-top:2px solid #1a1a1a;font-family:Orbitron;font-size:11px;color:#fff;letter-spacing:1.5px}
+#price-drawer .pd-total .big{font-size:22px;color:var(--neon);font-weight:900}
+#price-drawer .close{position:absolute;top:18px;right:18px;width:32px;height:32px;border:1px solid #1a1a1a;background:#0a0a0a;color:#888;border-radius:50%;cursor:pointer;font-size:18px}
+#price-drawer .close:hover{border-color:var(--err);color:var(--err)}
+.drawer-toggle{position:fixed;right:20px;bottom:90px;width:54px;height:54px;background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;border:none;border-radius:50%;cursor:pointer;z-index:200;display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-size:9px;font-weight:900;letter-spacing:.5px;box-shadow:0 8px 24px rgba(0,242,255,.35);flex-direction:column;line-height:1}
+.drawer-toggle:hover{transform:scale(1.08)}
+.drawer-toggle .ico{font-size:18px;margin-bottom:1px}
+@media(max-width:640px){.drawer-toggle{right:14px;bottom:86px;width:48px;height:48px}#price-drawer{width:88%}}
+
+/* MINI-MAP */
+.mini-map{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:14px;padding:10px;background:#040404;border:1px solid #131318;border-radius:9px}
+.mm-dot{aspect-ratio:1/1;border-radius:50%;border:1.5px solid #1a1a1a}
+.mm-lbl{font-family:Orbitron;font-size:7px;color:#444;letter-spacing:1px;text-align:center;margin-top:5px;text-transform:uppercase}
+
+/* Pattern overlay options */
+.pattern-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;margin-bottom:14px}
+.pattern-opt{aspect-ratio:1.4/1;border-radius:8px;cursor:pointer;border:2px solid #1a1a1a;position:relative;overflow:hidden;transition:.25s}
+.pattern-opt:hover{transform:scale(1.04);border-color:#555}
+.pattern-opt.sel{border-color:var(--neon);box-shadow:0 0 12px rgba(0,242,255,.4)}
+.pattern-opt.sel::after{content:'✓';position:absolute;top:4px;right:6px;color:var(--neon);font-weight:900;font-size:14px;text-shadow:0 0 4px #000}
+.pattern-opt .lbl{position:absolute;bottom:3px;left:5px;font-family:Orbitron;font-size:7px;color:#fff;letter-spacing:.5px;text-shadow:0 0 4px #000;text-transform:uppercase}
+
+/* Finish toggle (matte/glossy) */
+.finish-toggle{display:flex;gap:6px;margin-top:10px}
+.ft-btn{flex:1;padding:9px;background:#0a0a0a;border:1px solid #131318;color:#666;font-family:Orbitron;font-size:8.5px;letter-spacing:1.2px;border-radius:6px;cursor:pointer}
+.ft-btn.sel{border-color:var(--neon);color:var(--neon);background:rgba(0,242,255,.05)}
+
+/* BUNDLE SUGGESTIONS */
+.bundle-sec{max-width:1300px;margin:30px auto 0;padding:30px 5%}
+.bundle-head{font-family:Orbitron;font-size:13px;color:#fff;font-weight:900;letter-spacing:2.5px;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.bundle-head .ico{font-size:20px}
+.bundle-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.bundle-card{background:#080808;border:1px solid #131318;border-radius:13px;padding:18px;cursor:pointer;transition:.3s}
+.bundle-card:hover{border-color:var(--neon);transform:translateY(-3px)}
+.bundle-card .b-name{font-family:Orbitron;font-size:10px;color:var(--neon);letter-spacing:2px;margin-bottom:9px}
+.bundle-card .b-desc{font-size:11px;color:#888;line-height:1.6;margin-bottom:11px}
+.bundle-card .b-row{display:flex;justify-content:space-between;align-items:center}
+.bundle-card .b-old{font-family:Orbitron;font-size:9px;color:#444;text-decoration:line-through}
+.bundle-card .b-new{font-family:Orbitron;font-size:14px;color:var(--neon);font-weight:900}
+.bundle-card .b-save{font-family:Orbitron;font-size:7.5px;color:var(--green);letter-spacing:1px;margin-top:3px}
+
+/* Drag hint */
+.drag-hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-family:Orbitron;font-size:8px;color:var(--neon);letter-spacing:2px;background:rgba(0,0,0,.7);padding:6px 12px;border-radius:18px;border:1px solid rgba(0,242,255,.3);pointer-events:none;animation:dragHint 3s ease-in-out infinite;z-index:8;backdrop-filter:blur(6px)}
+@keyframes dragHint{0%,100%{opacity:.5;transform:translateX(-50%) translateY(0)}50%{opacity:1;transform:translateX(-50%) translateY(-3px)}}
+
+/* Save/load builds modal */
+#builds-modal{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:400;display:none;align-items:center;justify-content:center;backdrop-filter:blur(15px);padding:20px}
+#builds-modal.show{display:flex}
+.bm-box{background:#080808;border:1px solid var(--neon);border-radius:18px;max-width:520px;width:100%;padding:32px;max-height:80vh;overflow-y:auto}
+.bm-head{font-family:Orbitron;font-size:14px;color:var(--neon);letter-spacing:3px;margin-bottom:18px}
+.bm-list{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.bm-item{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#0a0a0a;border:1px solid #131318;border-radius:9px;cursor:pointer;transition:.25s}
+.bm-item:hover{border-color:var(--neon)}
+.bm-item .info{flex:1}
+.bm-item .n{font-family:Orbitron;font-size:10px;color:#fff;letter-spacing:1px;margin-bottom:3px}
+.bm-item .d{font-family:Orbitron;font-size:7.5px;color:#555;letter-spacing:1.2px}
+.bm-item .price{font-family:Orbitron;font-size:13px;color:var(--neon);font-weight:900;margin-right:14px}
+.bm-item .del{padding:6px 10px;background:transparent;border:1px solid #2a2a2a;color:#666;font-family:Orbitron;font-size:7px;letter-spacing:1px;border-radius:5px;cursor:pointer}
+.bm-item .del:hover{border-color:var(--err);color:var(--err)}
+.bm-empty{text-align:center;padding:30px;color:#444;font-family:Orbitron;font-size:10px;letter-spacing:2px}
+.bm-actions{display:flex;gap:10px}
+.bm-actions button{flex:1;padding:13px;font-family:Orbitron;font-size:9.5px;letter-spacing:1.5px;border-radius:8px;cursor:pointer;font-weight:900;border:none}
+.bm-cancel{background:transparent;border:1px solid #2a2a2a!important;color:#888}
+.bm-save{background:var(--neon);color:#000}
+@media(max-width:980px){.preview-wrap{position:relative;top:0}}
+
+.view-toggle{display:flex;gap:6px;margin-bottom:16px;justify-content:center}
+.vt-btn{padding:9px 22px;background:#0a0a0a;border:1px solid #131318;color:#888;font-family:'Orbitron';font-size:9px;letter-spacing:1.5px;border-radius:7px;cursor:pointer;transition:.25s}
+.vt-btn.sel{background:rgba(0,242,255,.08);border-color:var(--neon);color:var(--neon)}
+.vt-btn:hover{border-color:#2a2a2a}
+
+.preview-stage{aspect-ratio:1/0.95;position:relative;display:block;overflow:hidden;border-radius:14px;background:radial-gradient(ellipse at 50% 60%,#0c0c0c 0%,#000 75%)}
+.preview-stage::before{content:'';position:absolute;width:70%;height:55%;left:15%;top:25%;background:radial-gradient(circle,rgba(0,242,255,.14) 0%,transparent 70%);filter:blur(50px);pointer-events:none;z-index:0;animation:glowPulse 4s ease-in-out infinite}
+@keyframes glowPulse{50%{opacity:.55;transform:scale(1.08)}}
+
+/* Bitros-Style Dual-View Stack */
+.preview-stack{position:absolute;inset:0;z-index:1;animation:floatY 5.5s ease-in-out infinite}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+/* CONTROLLER-UNIT: Container fuer Bild + alle Masken */
+.ctrl-unit{position:absolute;background-size:contain;background-repeat:no-repeat;background-position:center;transition:transform .7s cubic-bezier(.4,0,.2,1),opacity .55s,filter .4s;filter:drop-shadow(0 20px 30px rgba(0,0,0,.6))}
+.ctrl-img{position:absolute;inset:0;background-size:contain;background-repeat:no-repeat;background-position:center}
+.base-front{background-image:url('Photoroom_20260501_094506.png')}
+.base-back{background-image:url('Photoroom_20260501_090821.png')}
+.ctrl-layer{position:absolute;inset:0;background-size:contain;background-repeat:no-repeat;background-position:center;-webkit-mask-size:contain;-webkit-mask-repeat:no-repeat;-webkit-mask-position:center;mask-size:contain;mask-repeat:no-repeat;mask-position:center;transition:background-color .5s cubic-bezier(.4,0,.2,1),filter .4s,opacity .4s}
+/* Layout: bitros-Style — Front kompakt unten links, Back kleiner oben rechts (Platz fuer Labels) */
+.unit-front{width:58%;height:58%;left:5%;bottom:5%;z-index:2}
+.unit-back{width:42%;height:42%;right:5%;top:5%;z-index:1;filter:drop-shadow(0 14px 22px rgba(0,0,0,.55))}
+/* View-Modi steuern Sichtbarkeit + Groesse */
+.preview-stack.view-front .unit-front{width:88%;height:88%;left:6%;bottom:4%;z-index:2}
+.preview-stack.view-front .unit-back{opacity:0;transform:translateX(20%) scale(.6)}
+.preview-stack.view-back  .unit-back{width:88%;height:88%;right:6%;top:4%;z-index:2}
+.preview-stack.view-back  .unit-front{opacity:0;transform:translateX(-20%) scale(.6)}
+.preview-stack.view-both  .unit-front{opacity:1}
+.preview-stack.view-both  .unit-back{opacity:1}
+/* Highlight beim Hover ueber Unit */
+.ctrl-unit:hover{filter:drop-shadow(0 22px 34px rgba(0,0,0,.7)) drop-shadow(0 0 22px rgba(0,242,255,.25))}
+
+/* === HOTSPOT-LAYER (Stage-relative Positionierung — Labels in Rand-Zonen, Linien zum Bauteil) === */
+.hotspot-layer{position:absolute;inset:0;pointer-events:none;z-index:8}
+.preview-stack.view-front .hotspot-layer .hs2[data-anchor="paddles"],
+.preview-stack.view-front .hotspot-layer .hs2[data-anchor="grip"]{display:none}
+.preview-stack.view-back .hotspot-layer .hs2:not([data-anchor="paddles"]):not([data-anchor="grip"]){display:none}
+.hs2{position:absolute;width:0;height:0;opacity:0;transition:opacity .35s ease;pointer-events:none}
+.hs2.show{opacity:1}
+.hs2-dot{position:absolute;top:0;left:0;width:9px;height:9px;border-radius:50%;background:#00f2ff;box-shadow:0 0 10px #00f2ff,0 0 0 3px rgba(0,242,255,.18);transform:translate(-50%,-50%);animation:hsDot 2.4s ease-in-out infinite}
+.hs2-dot::after{content:'';position:absolute;inset:-12px;border:1px solid rgba(0,242,255,.35);border-radius:50%;animation:dotRing 2.4s ease-in-out infinite}
+@keyframes hsDot{0%,100%{box-shadow:0 0 10px #00f2ff,0 0 0 3px rgba(0,242,255,.18)}50%{box-shadow:0 0 16px #00f2ff,0 0 0 6px rgba(0,242,255,.06)}}
+@keyframes dotRing{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.35);opacity:0}}
+
+/* Label: float in Rand-Zonen, sehr transparent, kompakt */
+/* Label: einzeilige Pill, sehr transparent, einheitlich kompakt — kein Listen-Layout */
+.hs2-label{position:absolute;top:0;left:0;font-family:'Inter','Segoe UI',sans-serif;font-size:8.5px;font-weight:600;color:#fff;background:rgba(0,0,0,.7);padding:3px 9px;border:1px solid rgba(0,242,255,.5);border-radius:99px;backdrop-filter:blur(8px);white-space:nowrap;letter-spacing:.25px;text-shadow:0 1px 2px rgba(0,0,0,.85);line-height:1.3;box-shadow:0 4px 12px rgba(0,0,0,.45)}
+/* Label-Richtungen relativ zum Dot (Dot sitzt bei top:0;left:0 vom hs2-Wrapper) */
+.hs2.lbl-top    .hs2-label{transform:translate(-50%,calc(-100% - 18px))}
+.hs2.lbl-bottom .hs2-label{transform:translate(-50%,18px)}
+.hs2.lbl-left   .hs2-label{transform:translate(calc(-100% - 18px),-50%)}
+.hs2.lbl-right  .hs2-label{transform:translate(18px,-50%)}
+/* Verbindungs-Strich vom Label zum Dot */
+.hs2-label::after{content:'';position:absolute;background:linear-gradient(rgba(0,242,255,.8),rgba(0,242,255,.15))}
+.hs2.lbl-top    .hs2-label::after{bottom:-14px;left:50%;width:1px;height:12px;transform:translateX(-50%)}
+.hs2.lbl-bottom .hs2-label::after{top:-14px;left:50%;width:1px;height:12px;transform:translateX(-50%)}
+.hs2.lbl-left   .hs2-label::after{right:-14px;top:50%;width:12px;height:1px;transform:translateY(-50%);background:linear-gradient(-90deg,rgba(0,242,255,.8),rgba(0,242,255,.15))}
+.hs2.lbl-right  .hs2-label::after{left:-14px;top:50%;width:12px;height:1px;transform:translateY(-50%);background:linear-gradient(90deg,rgba(0,242,255,.8),rgba(0,242,255,.15))}
+
+/* === EXAKTE Bauteil-Positionen (PS5 DualSense Layout)
+   unit-front belegt Stage 5-63% horizontal, 37-95% vertikal
+   unit-back  belegt Stage 53-95% horizontal, 5-47% vertikal
+   Jeder hs2 ist ein 0x0-Anker bei der Bauteil-Position.
+   Label-Richtung via lbl-top/bottom/left/right Klasse. */
+.hs2[data-anchor="trigger"]   {top:39%;left:22%}   /* L2 Trigger */
+.hs2[data-anchor="akku"]      {top:38%;left:34%}   /* USB-C oben (Akku innen) */
+.hs2[data-anchor="touchpad"]  {top:49%;left:34%}   /* Touchpad Mitte */
+.hs2[data-anchor="frontbtn"]  {top:42%;left:18%}   /* L1 / FrontButton oben links */
+.hs2[data-anchor="mittel"]    {top:63%;left:34%}   /* PS-Logo / Mittelstueck */
+.hs2[data-anchor="sticks"]    {top:71%;left:34%}   /* Mitte zwischen Sticks */
+.hs2[data-anchor="rumble"]    {top:88%;left:22%}   /* linker Griff (Rumble) */
+.hs2[data-anchor="paddles"]   {top:14%;left:65%}   /* oberer Paddle-Bereich Backshell */
+.hs2[data-anchor="grip"]      {top:28%;left:75%}   /* Backshell Mitte (Grip) */
+
+/* Front-Unit Bauteil-Positionen (relativ zum unit-front):
+   L1/R1 Bumper:  top:18%, links 25% / rechts 25%
+   L2/R2 Trigger: top:5%,  links 32% / rechts 32%
+   Touchpad:      top:25%, mitte 50%
+   LED:           top:38%, mitte 50%
+   PS-Logo:       top:50%, mitte 50%
+   Linker Stick:  top:60%, links 30%
+   Rechter Stick: top:60%, rechts 30%
+   Akku (Top):    top:3%,  mitte 50%
+*/
+@keyframes hsBlink{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.06);filter:brightness(1.4) drop-shadow(0 0 8px #00f2ff)}}
+
+/* LED LIGHTBAR — animiert */
+.led-bar{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);width:34%;height:4px;border-radius:4px;background:var(--led-color,#3aa3ff);box-shadow:0 0 14px var(--led-color,#3aa3ff),0 0 28px var(--led-color,#3aa3ff);opacity:.9;z-index:5;animation:ledBreathe 2.5s ease-in-out infinite}
+@keyframes ledBreathe{0%,100%{opacity:.6;filter:brightness(.9)}50%{opacity:1;filter:brightness(1.5)}}
+
+/* GRAVUR auf Touchpad */
+.engraving-overlay{position:absolute;top:32%;left:50%;transform:translate(-50%,-50%);font-family:Orbitron;font-size:14px;color:#fff;letter-spacing:3px;text-shadow:0 0 8px var(--neon),0 0 16px var(--neon);z-index:6;pointer-events:none;opacity:0;transition:opacity .4s;white-space:nowrap}
+.engraving-overlay.on{opacity:.92;animation:engrGlow 2s ease-in-out infinite}
+@keyframes engrGlow{50%{text-shadow:0 0 12px var(--neon),0 0 24px var(--neon),0 0 36px var(--neon)}}
+
+.preview-shadow{position:absolute;bottom:5%;left:18%;right:18%;height:28px;background:radial-gradient(ellipse,rgba(0,242,255,.22) 0%,rgba(0,0,0,.55) 35%,transparent 75%);filter:blur(22px);z-index:0;animation:shadowPulse 5s ease-in-out infinite}
+@keyframes shadowPulse{50%{opacity:.5;transform:scaleX(.92)}}
+
+/* === Mobile: Hotspot-Labels schrumpfen === */
+@media(max-width:780px){
+  .hs2-label{font-size:7.5px;padding:3px 6px;max-width:100px;border-radius:11px}
+  .hs2-label strong{font-size:8px}
+  .hs2-label::before,.hs2-label.line-right::before,.hs2-label.line-left::before{width:22px}
+  .hs2-label.line-right::before{right:-22px}.hs2-label.line-left::before{left:-22px}
+  .hs2-label.line-down::after,.hs2-label.line-up::after{height:20px}
+  .hs2-dot{width:7px;height:7px}
+}
+@media(max-width:480px){
+  .hs2-label{font-size:6.5px;padding:2px 5px;max-width:80px}
+  .hs2-label strong{font-size:7px;margin-bottom:0}
+  .hs2-label::before,.hs2-label.line-right::before,.hs2-label.line-left::before{width:14px}
+  .hs2-label.line-right::before{right:-14px}.hs2-label.line-left::before{left:-14px}
+  .hs2-dot{width:6px;height:6px}
+  .hs2-dot::after{inset:-8px}
+}
+
+.preview-info{margin-top:18px;padding-top:18px;border-top:1px solid #131318;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.pv-left{font-family:'Orbitron';font-size:9px;color:#555;letter-spacing:2px}
+.pv-name{color:var(--neon);font-size:13px;margin-bottom:4px;letter-spacing:1px;font-weight:700}
+.pv-price{font-family:'Orbitron';font-size:30px;color:var(--neon);font-weight:900;text-shadow:0 0 14px rgba(0,242,255,.4);text-align:right;line-height:1;transition:transform .3s}
+.pv-price.bump{animation:priceBump .5s}
+@keyframes priceBump{50%{transform:scale(1.15);color:#fff;text-shadow:0 0 20px var(--neon)}}
+.pv-price small{font-size:9px;color:#555;display:block;margin-top:5px;letter-spacing:1.5px}
+
+.preset-row{display:flex;gap:8px;margin-top:18px;overflow-x:auto;padding-bottom:6px}
+.preset-btn{padding:9px 16px;background:#0a0a0a;border:1px solid #1a1a1a;color:#888;font-family:'Orbitron';font-size:8px;letter-spacing:1.5px;border-radius:6px;cursor:pointer;white-space:nowrap;transition:.2s}
+.preset-btn:hover,.preset-btn.active{border-color:var(--neon);color:var(--neon);background:rgba(0,242,255,.05)}
+
+.stage-controls{display:flex;gap:6px;justify-content:center;margin-top:10px}
+.sc-btn{padding:8px 14px;background:#0a0a0a;border:1px solid #131318;color:#888;font-family:'Orbitron';font-size:8.5px;letter-spacing:1.5px;border-radius:6px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:5px}
+.sc-btn:hover{border-color:var(--neon);color:var(--neon)}
+.sc-btn.on{background:rgba(0,242,255,.08);border-color:var(--neon);color:var(--neon)}
+
+/* CONFIGURATOR */
+.cfg-panel{background:#070707;border:1px solid #131318;border-radius:18px;padding:0;display:flex;flex-direction:column;max-height:calc(100vh - 120px);min-height:600px}
+@media(max-width:980px){.cfg-panel{max-height:none}}
+
+.step-tabs{display:flex;gap:0;background:#040404;border-bottom:1px solid #131318;border-radius:18px 18px 0 0;overflow-x:auto;flex-shrink:0;padding:4px}
+.step-tabs::-webkit-scrollbar{height:0}
+.step-tab{flex:1;min-width:80px;padding:11px 5px;font-family:'Orbitron';font-size:7.5px;letter-spacing:1px;color:#555;cursor:pointer;background:transparent;border:none;text-align:center;transition:.2s;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:4px;white-space:nowrap;position:relative}
+.step-tab .ico{font-size:18px}
+.step-tab.active{color:var(--neon);background:rgba(0,242,255,.06)}
+.step-tab.active::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:2px;background:var(--neon);box-shadow:0 0 6px var(--neon)}
+.step-tab.done .ico{position:relative}
+.step-tab.done .ico:after{content:'✓';position:absolute;top:-4px;right:-9px;font-size:9px;color:var(--green);font-weight:900}
+
+.cfg-content{flex:1;overflow-y:auto;padding:24px;-webkit-overflow-scrolling:touch}
+.cfg-content::-webkit-scrollbar{width:5px}
+.cfg-content::-webkit-scrollbar-thumb{background:#1a1a1a;border-radius:3px}
+.step{display:none;animation:stepIn .5s cubic-bezier(.2,.8,.2,1)}
+.step.active{display:block}
+@keyframes stepIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.step-h{font-family:'Orbitron';font-size:14px;letter-spacing:3px;color:var(--neon);margin-bottom:6px}
+.step-sub{font-family:'Orbitron';font-size:9px;color:#555;letter-spacing:1.5px;margin-bottom:22px}
+
+.color-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:18px}
+@media(max-width:480px){.color-grid{grid-template-columns:repeat(5,1fr)}}
+.swatch{aspect-ratio:1/1;border-radius:8px;cursor:pointer;border:2px solid #1a1a1a;position:relative;transition:.25s cubic-bezier(.4,0,.2,1);overflow:hidden}
+.swatch:hover{transform:scale(1.12) rotate(-3deg);border-color:#555;z-index:5}
+.swatch.sel{border-color:var(--neon);box-shadow:0 0 14px rgba(0,242,255,.6),inset 0 0 0 2px #000;transform:scale(1.06)}
+.swatch.sel::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:14px;text-shadow:0 0 4px #000,0 0 8px #000;animation:tickIn .3s}
+@keyframes tickIn{from{transform:scale(0)}to{transform:scale(1)}}
+.swatch.premium::before{content:'';position:absolute;top:2px;right:2px;width:6px;height:6px;background:#ffd400;border-radius:50%;box-shadow:0 0 4px #ffd400;z-index:2}
+
+.color-name{font-family:'Orbitron';font-size:9px;color:#888;text-align:center;margin-bottom:12px;letter-spacing:1.5px}
+.color-name strong{color:var(--neon)}
+
+.hw-opt{background:#0a0a0a;border:1px solid #131318;border-radius:10px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:.25s;display:flex;align-items:center;justify-content:space-between;gap:14px;position:relative;overflow:hidden}
+.hw-opt::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--neon);transform:scaleY(0);transition:.25s;transform-origin:top}
+.hw-opt:hover{border-color:#2a2a2a;transform:translateX(2px)}
+.hw-opt.sel{border-color:var(--neon);background:rgba(0,242,255,.05);box-shadow:0 0 14px rgba(0,242,255,.1)}
+.hw-opt.sel::before{transform:scaleY(1)}
+.hw-opt .left{flex:1}
+.hw-opt .title{font-family:'Orbitron';font-size:10px;letter-spacing:1.5px;margin-bottom:4px;color:#ccc}
+.hw-opt.sel .title{color:var(--neon)}
+.hw-opt .desc{font-size:11px;color:#666;line-height:1.5}
+.hw-opt .price{font-family:'Orbitron';font-size:13px;color:var(--neon);font-weight:700;white-space:nowrap}
+.hw-opt .price.free{color:var(--green)}
+
+.engr-input{width:100%;padding:13px 15px;background:#040404;border:1px solid #1a1a1a;color:#fff;font-family:'Orbitron';font-size:13px;border-radius:8px;outline:none;letter-spacing:2px;transition:.2s;text-transform:uppercase}
+.engr-input:focus{border-color:var(--neon);background:rgba(0,242,255,.03);box-shadow:0 0 14px rgba(0,242,255,.15)}
+.engr-counter{font-family:'Orbitron';font-size:8.5px;color:#555;text-align:right;letter-spacing:1px;margin-top:5px}
+.engr-preview{margin-top:14px;padding:18px;background:#0a0a0a;border:1px dashed #1a1a1a;border-radius:8px;text-align:center;font-family:'Orbitron';font-size:14px;color:var(--neon);letter-spacing:3px;min-height:55px;display:flex;align-items:center;justify-content:center;text-shadow:0 0 10px rgba(0,242,255,.4)}
+.engr-fonts{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin-top:12px}
+.font-opt{padding:10px 6px;background:#0a0a0a;border:1px solid #131318;border-radius:7px;cursor:pointer;text-align:center;font-size:11px;letter-spacing:1px;transition:.2s;color:#888}
+.font-opt.sel{border-color:var(--neon);color:var(--neon);background:rgba(0,242,255,.05)}
+.font-opt.f1{font-family:'Orbitron'}
+.font-opt.f2{font-family:Georgia,serif;font-style:italic}
+.font-opt.f3{font-family:'Courier New',monospace}
+.font-opt.f4{font-family:'Pacifico',cursive}
+
+/* STICKER GRID */
+.sticker-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
+.sticker-opt{aspect-ratio:1/1;background:#0a0a0a;border:2px solid #131318;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:30px;transition:.25s}
+.sticker-opt:hover{transform:scale(1.08);border-color:#2a2a2a}
+.sticker-opt.sel{border-color:var(--neon);background:rgba(0,242,255,.06);box-shadow:0 0 12px rgba(0,242,255,.25)}
+
+.summary-block{background:#0a0a0a;border:1px solid #131318;border-radius:10px;padding:18px;margin-bottom:14px}
+.summary-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #0f0f0f;font-size:12px;color:#aaa;align-items:center}
+.summary-row:last-child{border-bottom:none}
+.summary-row span:first-child{font-family:'Orbitron';font-size:8.5px;color:#666;letter-spacing:1.5px}
+.summary-row span:last-child{color:#ccc;font-weight:500}
+.summary-row .col-dot{display:inline-block;width:14px;height:14px;border-radius:50%;border:1.5px solid #2a2a2a;margin-right:8px;vertical-align:middle}
+
+.cfg-foot{padding:18px 22px;background:#050505;border-top:1px solid #131318;border-radius:0 0 18px 18px;flex-shrink:0}
+.foot-row{display:flex;gap:10px;margin-top:12px}
+.foot-row button{flex:1;padding:14px;border:none;border-radius:9px;cursor:pointer;font-family:'Orbitron';font-size:10px;letter-spacing:2px;transition:.3s;font-weight:900}
+.btn-prev{background:transparent;border:1px solid #2a2a2a!important;color:#888}
+.btn-prev:hover{border-color:var(--neon)!important;color:var(--neon)}
+.btn-next{background:linear-gradient(135deg,var(--neon),#00bdd6);color:#000;box-shadow:0 8px 20px rgba(0,242,255,.3)}
+.btn-next:hover{background:#fff;transform:translateY(-1px)}
+.btn-cart{flex:2;background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;box-shadow:0 8px 24px rgba(0,242,255,.35),0 4px 12px rgba(188,19,254,.2);padding:16px!important;font-size:11px!important}
+.btn-cart:hover{transform:translateY(-2px) scale(1.01)}
+
+.toast{position:fixed;bottom:30px;right:28px;background:#0c0c0c;border:1px solid var(--neon);border-left:3px solid var(--neon);padding:13px 18px;border-radius:8px;font-family:'Orbitron';font-size:9.5px;letter-spacing:1.5px;z-index:99999;color:#fff;animation:tIn .3s}
+.toast.err{border-left-color:var(--err);border-color:var(--err)}
+@keyframes tIn{from{transform:translateX(60px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* Particle Burst on color change */
+.burst{position:fixed;width:6px;height:6px;border-radius:50%;pointer-events:none;z-index:99998;animation:burstAnim .8s ease-out forwards}
+@keyframes burstAnim{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--bx,0),var(--by,-60px)) scale(0)}}
+
+.mobile-price-bar{display:none;position:fixed;bottom:0;left:0;right:0;background:linear-gradient(180deg,rgba(0,0,0,.85),rgba(0,0,0,.98));backdrop-filter:blur(20px);border-top:1px solid var(--neon);padding:14px 5%;z-index:80;align-items:center;justify-content:space-between;gap:10px}
+@media(max-width:980px){.mobile-price-bar{display:flex}body{padding-bottom:80px}}
+.mpb-price{font-family:'Orbitron';font-size:18px;color:var(--neon);font-weight:900}
+.mpb-price small{font-size:9px;color:#888;display:block;margin-top:2px}
+.mpb-cart{padding:13px 22px;background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;border:none;font-family:'Orbitron';font-weight:900;font-size:10px;letter-spacing:2px;border-radius:8px;cursor:pointer}
+
+/* ═════ PREMIUM FOOTER (gespiegelt aus collections.html) ═════ */
+footer.lxrd-foot{margin-top:80px;background:#040404;border-top:1px solid #0e0e0e;font-family:'Orbitron';color:#888;letter-spacing:normal}
+.foot-top{max-width:1100px;margin:0 auto;padding:44px 5% 28px;display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:40px}
+.foot-col h4{font-size:9.5px;letter-spacing:2.5px;color:#fff;margin-bottom:14px;font-weight:600}
+.foot-brand-logo{font-family:'Orbitron';font-weight:900;font-size:18px;letter-spacing:4px;color:#fff;margin-bottom:10px;display:inline-block}
+.foot-brand-logo span{color:var(--neon)}
+.foot-tag{font-size:9.5px;letter-spacing:1.3px;color:#666;line-height:1.6;margin-bottom:14px}
+.foot-col ul{list-style:none;padding:0;margin:0}
+.foot-col ul li{margin:7px 0}
+.foot-col ul li a{font-size:9.5px;letter-spacing:1.4px;color:#888;text-decoration:none;transition:.2s;margin:0}
+.foot-col ul li a:hover{color:var(--neon)}
+.foot-social{display:flex;gap:8px;margin-top:10px}
+.foot-social a{width:30px;height:30px;border-radius:50%;background:#0a0a0a;border:1px solid #1a1a1a;display:flex;align-items:center;justify-content:center;color:#888;font-size:12px;text-decoration:none;transition:.2s;margin:0}
+.foot-social a:hover{background:var(--neon);color:#000;border-color:var(--neon)}
+.foot-bottom{max-width:1100px;margin:0 auto;padding:16px 5% 24px;border-top:1px solid #0e0e0e;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;font-size:9px;letter-spacing:1.5px;color:#555}
+.foot-bottom-meta a{color:var(--neon);text-decoration:none}
+@media(max-width:680px){.foot-top{grid-template-columns:1fr 1fr;gap:28px}.foot-col:first-child{grid-column:span 2}.foot-bottom{flex-direction:column;text-align:center}}
+
+/* ═════ PADDLE-VISUALISIERUNG (auf Backshell-Unit) ═════ */
+.paddle-overlay{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .5s cubic-bezier(.2,.8,.2,1);z-index:6}
+.paddle-overlay.active{opacity:1}
+.paddle{position:absolute;width:12%;height:30%;background:linear-gradient(180deg,#262626 0%,#0a0a0a 100%);border:1px solid #3a3a3a;border-radius:18px/40px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 6px 14px rgba(0,0,0,.8);transform:translateY(40px);opacity:0;transition:transform .55s cubic-bezier(.2,1.4,.3,1),opacity .4s;display:flex;align-items:center;justify-content:center}
+.paddle::after{content:'';position:absolute;top:8%;left:12%;right:12%;height:22%;background:linear-gradient(180deg,rgba(255,255,255,.08),transparent);border-radius:14px;pointer-events:none}
+.paddle-overlay.prog .paddle{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 6px 14px rgba(0,0,0,.8),0 0 0 1px rgba(0,242,255,.4),0 0 18px rgba(0,242,255,.25)}
+.paddle-ico{width:50%;height:40%;display:flex;align-items:center;justify-content:center;opacity:.88}
+.paddle-ico svg{width:100%;height:100%}
+.paddle-overlay.active .paddle{opacity:.92;transform:translateY(0)}
+.paddle-overlay.active .paddle.p1{transition-delay:0ms}
+.paddle-overlay.active .paddle.p2{transition-delay:80ms}
+.paddle-overlay.active .paddle.p3{transition-delay:160ms}
+.paddle-overlay.active .paddle.p4{transition-delay:240ms}
+/* Position der 4 Paddles auf der Backshell (an die echte Photoroom-Position angepasst) */
+.paddle.p1{top:30%;left:20%}
+.paddle.p2{top:30%;right:20%}
+.paddle.p3{top:54%;left:28%}
+.paddle.p4{top:54%;right:28%}
+.paddle-overlay.count-2 .paddle.p3,.paddle-overlay.count-2 .paddle.p4{display:none}
+.paddle-overlay.count-0{opacity:0!important}
+/* 4er/6er-Pakete: komplettes Backshell-Bild ueberlagert, einzelne Paddles aus */
+.paddle-overlay .paddle-back-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;pointer-events:none;opacity:0;transition:opacity .5s ease;filter:drop-shadow(0 8px 14px rgba(0,0,0,.65))}
+.paddle-overlay.use-back-img .paddle-back-img{opacity:1}
+.paddle-overlay.use-back-img .paddle{display:none}
+/* Scull-X/O-Foto ist enger zugeschnitten als das 4x-Standard-Foto -> verkleinern, damit es auf der 3D-Vorschau gleich gross wirkt wie beim 4x Standard */
+.paddle-overlay.count-2.use-back-img .paddle-back-img{transform:scale(var(--scull-scale,.55));transform-origin:center center}
+
+/* ═════ TOUCHPAD + MITTELSTUECK OVERLAY ═════ */
+.layer-touchpad{position:absolute;top:23%;left:35%;width:30%;height:13%;border-radius:8% / 30%;background:transparent;mix-blend-mode:multiply;opacity:0;transition:background-color .5s,opacity .5s,box-shadow .4s;z-index:4;pointer-events:none}
+.layer-touchpad.on{opacity:.85;box-shadow:inset 0 0 0 2px rgba(0,242,255,.15)}
+.layer-mittelstueck{position:absolute;top:38%;left:46%;width:8%;height:8%;border-radius:50%;background:transparent;mix-blend-mode:multiply;opacity:0;transition:background-color .5s,opacity .5s;z-index:4;pointer-events:none}
+.layer-mittelstueck.on{opacity:.85}
+
+/* ═════ FRONT-BUTTON OVERLAY (2× FrontButtons fuer 6er/4er+Front Pakete) ═════ */
+.frontbtn-overlay{position:absolute;inset:0;pointer-events:none;z-index:6;opacity:0;transition:opacity .4s}
+.frontbtn-overlay.active{opacity:1}
+.fb{position:absolute;width:4.5%;height:5%;background:linear-gradient(180deg,#1a1a1a,#0a0a0a);border:1px solid rgba(0,242,255,.5);border-radius:50%;box-shadow:0 0 10px rgba(0,242,255,.55),inset 0 1px 0 rgba(255,255,255,.1);transform:scale(0);transition:transform .55s cubic-bezier(.2,1.4,.3,1)}
+.frontbtn-overlay.active .fb{transform:scale(1)}
+.frontbtn-overlay.active .fb.fb1{transition-delay:320ms}
+.frontbtn-overlay.active .fb.fb2{transition-delay:400ms}
+/* FrontButtons sitzen oberhalb der Schulter-Bumper auf der Frontseite */
+.fb1{top:18%;left:23%}
+.fb2{top:18%;right:23%}
+
+/* ═════ PADDLE-CARD-GRID (10 Optionen wie bitros) ═════ */
+.paddle-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px}
+.pp-card{background:#0a0a0a;border:1.5px solid #1a1a1a;border-radius:10px;padding:10px 6px;text-align:center;cursor:pointer;transition:.25s;display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;overflow:hidden}
+.pp-card:hover{border-color:#3a3a3a;transform:translateY(-2px)}
+.pp-card.sel{border-color:var(--neon);background:rgba(0,242,255,.06);box-shadow:0 0 14px rgba(0,242,255,.18)}
+.pp-card.sel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--neon),transparent)}
+.pp-ico{width:54px;height:34px;display:flex;align-items:center;justify-content:center;margin-bottom:2px;background:#101010;border-radius:8px;padding:3px;overflow:hidden;border:1px dashed #2a2a2a;position:relative}
+.pp-img{width:100%;height:100%;object-fit:contain;display:block}
+.pp-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#444;font-size:6.5px;text-align:center;line-height:1.2;font-family:Inter,sans-serif;letter-spacing:.2px}
+.pp-ph-x{font-family:Arial;font-size:18px;color:#ff4d4f;font-weight:900;border:none}
+.pp-ph-x span{display:block}
+.pp-card.sel .pp-ico{border:1px solid var(--neon);background:rgba(0,242,255,.06);box-shadow:inset 0 0 0 1px rgba(0,242,255,.3)}
+.paddle-img{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}
+.paddle-ph{width:100%;height:100%;border:1px dashed rgba(0,242,255,.4);border-radius:50%;background:rgba(0,242,255,.05)}
+.pp-lbl{font-family:'Orbitron';font-size:7.5px;color:#bbb;letter-spacing:.5px;line-height:1.25;min-height:18px;display:flex;align-items:center}
+.pp-card.sel .pp-lbl{color:#fff}
+.pp-price{font-family:'Orbitron';font-size:8px;color:var(--neon);font-weight:700;letter-spacing:.5px}
+@media(max-width:1200px){.paddle-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:680px){.paddle-grid{grid-template-columns:repeat(3,1fr);gap:6px}.pp-card{padding:8px 4px}.pp-ico{width:42px;height:26px}.pp-lbl{font-size:7px}}
+@media(max-width:420px){.paddle-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ═════ PART-HIGHLIGHT (welcher Teil wird gerade konfiguriert) ═════ */
+.preview-layer.highlight{animation:partGlow 2.4s ease-in-out infinite;z-index:5}
+@keyframes partGlow{0%,100%{filter:drop-shadow(0 0 0px rgba(0,242,255,0)) brightness(1)}50%{filter:drop-shadow(0 0 14px rgba(0,242,255,.85)) brightness(1.18)}}
+.part-pulse-ring{position:absolute;inset:0;pointer-events:none;border-radius:50%;border:2px solid rgba(0,242,255,.5);opacity:0;z-index:4}
+.part-pulse-ring.fire{animation:partRing .7s ease-out}
+@keyframes partRing{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.4);opacity:0}}
+
+/* ═════ COLOR-SHIMMER beim Farbwechsel ═════ */
+.preview-layer.shimmer{position:relative}
+.shimmer-sweep{position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);background-size:300% 100%;background-position:200% 0;mix-blend-mode:overlay;pointer-events:none;animation:colorSwipe .9s ease-out;z-index:7}
+@keyframes colorSwipe{0%{background-position:200% 0;opacity:0}10%{opacity:1}100%{background-position:-200% 0;opacity:0}}
+
+/* ═════ TRIGGER-PRESS-ANIMATION (beim Hover über Trigger-Farbpicker) ═════ */
+.trigger-press #layer-triggers{animation:triggerPress 1s ease-in-out infinite}
+@keyframes triggerPress{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-1.5%) scale(.985)}}
+
+.help-tip{display:inline-flex;align-items:center;gap:6px;font-family:'Orbitron';font-size:8.5px;color:#555;background:#0a0a0a;border:1px solid #131318;padding:8px 12px;border-radius:6px;margin-bottom:16px;letter-spacing:1px}
+.help-tip strong{color:var(--neon)}
+
+.paddle-count{display:flex;gap:8px;margin-top:8px}
+.pc-btn{flex:1;padding:11px;background:#0a0a0a;border:1px solid #1a1a1a;color:#888;font-family:'Orbitron';font-size:10px;letter-spacing:1.5px;border-radius:7px;cursor:pointer;transition:.2s}
+.pc-btn.sel{border-color:var(--neon);color:var(--neon);background:rgba(0,242,255,.06)}
+
+.warranty-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+@media(max-width:380px){.warranty-grid{grid-template-columns:1fr}}
+
+/* LED color picker */
+.led-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-top:10px}
+.led-swatch{aspect-ratio:1/1;border-radius:50%;cursor:pointer;border:2px solid #1a1a1a;transition:.25s;position:relative}
+.led-swatch:hover{transform:scale(1.15);border-color:#555}
+.led-swatch.sel{border-color:#fff;box-shadow:0 0 12px var(--c)}
+
+/* Custom color picker for hex input */
+.custom-color-row{display:flex;gap:8px;margin-top:14px;align-items:center}
+.custom-color-row input[type=color]{width:50px;height:40px;border:1px solid #1a1a1a;border-radius:7px;background:transparent;cursor:pointer}
+.custom-color-row input[type=text]{flex:1;padding:10px 12px;background:#040404;border:1px solid #1a1a1a;color:#fff;font-family:'Courier New',monospace;font-size:12px;border-radius:7px;outline:none}
+.custom-color-row input[type=text]:focus{border-color:var(--neon)}
+.custom-color-row button{padding:10px 18px;background:var(--neon);color:#000;border:none;font-family:Orbitron;font-size:9px;letter-spacing:1.5px;border-radius:7px;cursor:pointer;font-weight:900}
+
+/* ════════════════════════════════════════════════
+   MOBILE & TABLET RESPONSIVENESS (NEU)
+═════════════════════════════════════════════════ */
+/* Tablet & kleinere Desktops */
+@media(max-width:1100px){
+  .kfg-layout{grid-template-columns:1fr 340px;gap:20px;padding:18px 4% 120px}
+  .preview-wrap{padding:20px}
+  .cfg-panel{min-height:520px}
+}
+
+/* Tablet portrait — Sidebar wandert nach unten */
+@media(max-width:980px){
+  .kfg-layout{grid-template-columns:1fr;gap:16px;padding:14px 4% 110px}
+  .preview-wrap{position:relative;top:0;padding:18px}
+  .preview-stage{aspect-ratio:1.4/1}
+  .preview-stack{max-width:420px;width:80%}
+  .cfg-panel{min-height:auto;max-height:none}
+  .cfg-content{padding:20px;max-height:none}
+}
+
+/* Mobile (Smartphone) */
+@media(max-width:640px){
+  header{padding:11px 4%;flex-wrap:wrap;gap:8px}
+  .brand{font-size:.85rem;letter-spacing:3px}
+  .brand .tag{font-size:.5rem;letter-spacing:2px;padding:1px 6px;margin-left:5px}
+  .back-link{font-size:8px;letter-spacing:1.5px}
+  .cart-mini{padding:6px 10px;font-size:8px;gap:5px}
+  .cart-mini .badge{min-width:14px;height:14px;font-size:7px}
+  .progress-strip{top:50px}
+
+  .kfg-hero{padding:75px 4% 18px}
+  .kfg-eyebrow{font-size:7px;letter-spacing:2px;padding:5px 11px;margin-bottom:8px}
+  h1{font-size:1.4rem;letter-spacing:-.5px;margin-bottom:8px}
+  .kfg-lead{font-size:11px;line-height:1.5}
+
+  .kfg-layout{padding:10px 3% 100px;gap:12px}
+
+  /* Preview */
+  .preview-wrap{padding:14px;border-radius:14px}
+  .preview-stage{aspect-ratio:1.3/1;border-radius:11px}
+  .preview-stack{max-width:340px;width:88%}
+  .led-bar{height:3px;width:32%}
+  .engraving-overlay{font-size:11px;letter-spacing:2px;top:30%}
+
+  .view-toggle{margin-bottom:12px}
+  .vt-btn{padding:7px 14px;font-size:8px;letter-spacing:1.2px}
+
+  .stage-controls{margin-top:8px;flex-wrap:wrap}
+  .sc-btn{padding:7px 11px;font-size:7.5px;letter-spacing:1.2px}
+
+  .preview-info{margin-top:14px;padding-top:14px}
+  .pv-name{font-size:11px;margin-bottom:3px}
+  .pv-left{font-size:8px;letter-spacing:1.5px}
+  .pv-price{font-size:24px}
+  .pv-price small{font-size:8px;letter-spacing:1px;margin-top:3px}
+
+  .preset-row{margin-top:14px;gap:6px}
+  .preset-btn{padding:7px 12px;font-size:7px;letter-spacing:1.2px;border-radius:5px}
+
+  /* Configurator */
+  .cfg-panel{border-radius:14px}
+  .step-tabs{border-radius:14px 14px 0 0;padding:3px}
+  .step-tab{min-width:64px;padding:9px 4px;font-size:7px;letter-spacing:.8px;gap:3px}
+  .step-tab .ico{font-size:15px}
+  .step-tab.done .ico:after{top:-3px;right:-7px;font-size:8px}
+
+  .cfg-content{padding:18px 16px}
+  .step-h{font-size:12px;letter-spacing:2.5px}
+  .step-sub{font-size:8.5px;letter-spacing:1.2px;margin-bottom:16px}
+  .help-tip{font-size:7.5px;padding:7px 10px;letter-spacing:.8px}
+
+  .color-name{font-size:8.5px;letter-spacing:1.2px;margin-bottom:10px}
+  .color-grid{grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px}
+
+  .hw-opt{padding:11px 12px;gap:10px;margin-bottom:8px}
+  .hw-opt .title{font-size:9.5px;letter-spacing:1.2px}
+  .hw-opt .desc{font-size:10.5px;line-height:1.45}
+  .hw-opt .price{font-size:12px}
+  .hw-opt .price.free{font-size:11px}
+
+  .engr-input{padding:11px 13px;font-size:12px;letter-spacing:1.5px}
+  .engr-preview{padding:14px;font-size:12px;letter-spacing:2px;min-height:48px}
+  .engr-fonts{gap:5px}
+  .font-opt{padding:8px 4px;font-size:10px}
+
+  .paddle-count{gap:6px}
+  .pc-btn{padding:9px;font-size:9px;letter-spacing:1.2px}
+
+  .sticker-grid{grid-template-columns:repeat(4,1fr);gap:8px}
+  .sticker-opt{font-size:24px;border-radius:8px}
+
+  .summary-block{padding:14px;margin-bottom:11px}
+  .summary-row{padding:7px 0;font-size:11px}
+  .summary-row span:first-child{font-size:8px;letter-spacing:1.2px}
+
+  .led-grid{grid-template-columns:repeat(6,1fr);gap:5px}
+
+  .custom-color-row{flex-wrap:wrap;gap:6px}
+  .custom-color-row input[type=color]{width:44px;height:38px}
+  .custom-color-row input[type=text]{font-size:11px;padding:9px 10px;min-width:0}
+  .custom-color-row button{padding:9px 14px;font-size:8.5px}
+
+  .cfg-foot{padding:14px 16px}
+  .foot-row{gap:8px;margin-top:10px}
+  .foot-row button{padding:13px 10px;font-size:9px;letter-spacing:1.5px}
+  .btn-cart{padding:14px!important;font-size:10px!important}
+
+  .toast{bottom:96px;right:14px;left:14px;padding:11px 14px;font-size:8.5px;letter-spacing:1.2px}
+  .mobile-price-bar{padding:11px 4%}
+  .mpb-price{font-size:16px}
+  .mpb-price small{font-size:8px}
+  .mpb-cart{padding:11px 16px;font-size:9px;letter-spacing:1.5px}
+}
+
+/* Sehr kleine Bildschirme (iPhone SE, kleine Androids) */
+@media(max-width:380px){
+  .step-tab{min-width:56px;padding:8px 3px;font-size:6.5px}
+  .step-tab .ico{font-size:14px}
+  .color-grid{grid-template-columns:repeat(5,1fr);gap:5px}
+  .led-grid{grid-template-columns:repeat(5,1fr)}
+  .sticker-grid{grid-template-columns:repeat(3,1fr)}
+  .engr-fonts{grid-template-columns:1fr 1fr;gap:5px}
+  .stage-controls{justify-content:flex-start;overflow-x:auto;padding-bottom:4px}
+  .preset-row{padding-bottom:4px}
+  .preview-stack{width:92%;max-width:300px}
+  .preview-stage{aspect-ratio:1.2/1}
+  .pv-price{font-size:22px}
+  .pv-name{font-size:10px;letter-spacing:.8px}
+  .preview-info{flex-direction:column;gap:8px}
+  .preview-info > *:last-child{text-align:left}
+  .pv-price{text-align:left}
+  .foot-row{flex-direction:column}
+  .btn-cart{font-size:10px!important}
+}
+
+/* Landscape Mobile — niedrigere Höhe */
+@media(max-height:600px) and (orientation:landscape) and (max-width:980px){
+  .kfg-hero{padding:65px 4% 10px}
+  h1{font-size:1.2rem;margin-bottom:6px}
+  .kfg-lead{display:none}
+  .kfg-eyebrow{margin-bottom:6px}
+  .preview-stage{aspect-ratio:2/1;min-height:200px}
+  .preview-stack{max-width:280px;width:60%}
+}
+
+/* High-DPI Screens — schärfere Schatten */
+@media(min-resolution:2dppx){
+  .preview-base{filter:drop-shadow(0 0 30px rgba(0,242,255,.18))}
+}
+
+/* Touch-Geräte — größere Tap-Targets */
+@media(hover:none) and (pointer:coarse){
+  .swatch{min-height:36px;min-width:36px}
+  .led-swatch{min-height:32px;min-width:32px}
+  .sticker-opt{min-height:56px}
+  .hw-opt{min-height:54px}
+  .pc-btn{min-height:42px}
+  .step-tab{min-height:50px}
+  .preset-btn{min-height:34px}
+  .bt-btn{min-height:42px}
+  .pattern-opt{min-height:50px}
+  .ft-btn{min-height:42px}
+}
+
+/* ════════ RESPONSIVE FÜR NEUE FEATURES ════════ */
+
+/* Tablet (≤1100px): Drawer schmaler */
+@media(max-width:1100px){
+  #price-drawer{width:320px}
+  .drawer-toggle{right:18px}
+}
+
+/* Tablet portrait (≤980px) */
+@media(max-width:980px){
+  .build-toolbar{justify-content:flex-start;overflow-x:auto;padding-bottom:4px;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
+  .build-toolbar::-webkit-scrollbar{height:0}
+  .bt-btn{flex-shrink:0}
+  .bundle-sec{padding:24px 4%}
+  .bundle-head{font-size:12px;letter-spacing:2px}
+  .bundle-grid{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+  .bundle-card{padding:16px}
+  .bm-box{padding:26px;max-height:85vh}
+  #price-drawer{width:300px;padding:75px 20px 80px}
+}
+
+/* Mobile (≤640px) */
+@media(max-width:640px){
+  /* Build name + progress row */
+  .build-name-row{flex-direction:column;gap:6px;align-items:stretch;margin-bottom:10px}
+  .build-name-input{font-size:9.5px;padding:9px 11px;letter-spacing:1.2px}
+  .progress-ring-wrap{padding:8px 11px;justify-content:center;font-size:8px;letter-spacing:1.2px}
+  .progress-ring-wrap .pct{font-size:10px}
+
+  /* Build toolbar — kleiner */
+  .build-toolbar{gap:5px;margin-bottom:10px}
+  .bt-btn{padding:8px 11px;font-size:7.5px;letter-spacing:1.2px;gap:4px;border-radius:6px}
+  .bt-btn .ico{font-size:12px}
+
+  /* Mini-map kompakter */
+  .mini-map{grid-template-columns:repeat(6,1fr);gap:3px;padding:7px;margin-top:11px}
+  .mm-lbl{font-size:6.5px;margin-top:4px}
+
+  /* Price drawer Mobile */
+  #price-drawer{width:92%;padding:70px 18px 80px}
+  #price-drawer .pd-head{font-size:11.5px;letter-spacing:2.5px}
+  #price-drawer .pd-sub{font-size:7.5px;letter-spacing:1.5px;margin-bottom:18px}
+  #price-drawer .pd-row{padding:9px 0;font-size:11px;gap:8px}
+  #price-drawer .pd-row .lbl{font-size:7px;letter-spacing:1px}
+  #price-drawer .pd-row .val{font-size:10.5px}
+  #price-drawer .pd-row .price{font-size:10px}
+  #price-drawer .pd-total{font-size:10px}
+  #price-drawer .pd-total .big{font-size:18px}
+
+  /* Drawer toggle */
+  .drawer-toggle{right:14px;bottom:84px;width:46px;height:46px}
+  .drawer-toggle .ico{font-size:15px}
+  .drawer-toggle #dt-price{font-size:8px}
+
+  /* Bundles Mobile */
+  .bundle-sec{padding:20px 4%;margin-top:24px}
+  .bundle-head{font-size:11px;letter-spacing:1.8px;margin-bottom:14px;gap:7px}
+  .bundle-head .ico{font-size:17px}
+  .bundle-grid{grid-template-columns:1fr;gap:10px}
+  .bundle-card{padding:15px}
+  .bundle-card .b-name{font-size:9.5px;letter-spacing:1.5px;margin-bottom:7px}
+  .bundle-card .b-desc{font-size:10.5px;line-height:1.55;margin-bottom:9px}
+  .bundle-card .b-new{font-size:13px}
+  .bundle-card .b-old{font-size:8.5px}
+  .bundle-card .b-save{font-size:7px}
+
+  /* Patterns + Finish-Toggle */
+  .pattern-grid{grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+  .pattern-opt .lbl{font-size:6.5px}
+  .finish-toggle{gap:5px}
+  .ft-btn{padding:8px;font-size:8px}
+
+  /* Builds-Modal */
+  .bm-box{padding:22px 18px;max-height:88vh}
+  .bm-head{font-size:12px;letter-spacing:2.5px;margin-bottom:14px}
+  .bm-item{padding:11px 13px}
+  .bm-item .n{font-size:9.5px}
+  .bm-item .d{font-size:7px}
+  .bm-item .price{font-size:11px;margin-right:10px}
+  .bm-item .del{padding:5px 8px;font-size:6.5px}
+  .bm-empty{padding:24px;font-size:9px;letter-spacing:1.5px}
+  .bm-actions{gap:8px;flex-direction:column}
+  .bm-actions button{padding:12px;font-size:9px;letter-spacing:1.2px}
+  .bm-cancel{order:2}
+  .bm-save{order:1}
+
+  /* Drag-Hint */
+  .drag-hint{font-size:7px;padding:5px 10px;letter-spacing:1.5px}
+}
+
+/* Sehr klein (≤380px) — iPhone SE etc. */
+@media(max-width:380px){
+  .build-toolbar{gap:4px}
+  .bt-btn{padding:7px 9px;font-size:7px;letter-spacing:.8px}
+  .bt-btn .ico{font-size:11px}
+  .bundle-card .b-name{font-size:9px}
+  .bundle-card .b-desc{font-size:10px}
+  #price-drawer{width:96%;padding:65px 14px 75px}
+  #price-drawer .pd-head{font-size:11px;letter-spacing:2px}
+  #price-drawer .pd-total .big{font-size:16px}
+  .drawer-toggle{width:42px;height:42px;bottom:76px;right:10px}
+  .drawer-toggle .ico{font-size:13px}
+  .drawer-toggle #dt-price{font-size:7px}
+  .mini-map{grid-template-columns:repeat(3,1fr);gap:5px}
+  .pattern-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+/* Landscape Mobile — Drawer Vollbild verhindern */
+@media(max-height:600px) and (orientation:landscape){
+  #price-drawer{padding-top:60px;padding-bottom:30px}
+  .bm-box{max-height:90vh}
+  .build-name-row{flex-direction:row}
+}
+
+/* Extra Wide (≥1500px) — bisschen mehr Atem */
+@media(min-width:1500px){
+  .kfg-layout{max-width:1600px}
+  .preview-stack{max-width:580px}
+  #price-drawer{width:400px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="star-canvas" aria-hidden="true"></canvas>
+<canvas id="particle-canvas" aria-hidden="true"></canvas>
+<div class="lightning-bg" id="lightning-bg" aria-hidden="true"></div>
+
+<header>
+  <a class="brand" href="/">LEXORD® <span class="tag">KONFIG</span></a>
+  <div class="hdr-r">
+    <a href="/" class="back-link">← STARTSEITE</a>
+    <button class="cart-mini" onclick="goToCart()">🛒 <span class="badge" id="cart-count">0</span></button>
+  </div>
+</header>
+
+<div class="progress-strip"><div class="progress-fill" id="progress-fill"></div></div>
+
+<section class="kfg-hero">
+  <div class="kfg-eyebrow">🎮 PROFESSIONAL CONTROLLER BUILDER · LIVE PREVIEW</div>
+  <h1>Baue deinen <span class="accent">perfekten Controller</span></h1>
+  <p class="kfg-lead">30+ Farben pro Bauteil · Hall Effect/TMR Sticks · Clicky Trigger · Paddles · Power-Akku. Alles Made in Germany.</p>
+</section>
+
+<div class="kfg-layout">
+
+  <!-- LIVE PREVIEW (Bitros-Style: Front + Back gleichzeitig sichtbar) -->
+  <div class="preview-wrap">
+
+    <div class="view-toggle">
+      <button class="vt-btn sel" id="vt-both" onclick="setView('both')">⚌ BEIDE</button>
+      <button class="vt-btn" id="vt-front" onclick="setView('front')">🎮 VORDERSEITE</button>
+      <button class="vt-btn" id="vt-back" onclick="setView('back')">🛡️ RÜCKSEITE</button>
+    </div>
+
+    <div class="preview-stage" id="preview-stage">
+      <div class="preview-stack view-both" id="preview-stack">
+
+        <!-- HOTSPOT-LAYER: liegt UEBER beiden Units, Labels sitzen in den Rand-Zonen -->
+        <div class="hotspot-layer" id="hotspot-layer">
+          <!-- Front-Bauteile (Anker = Punkt auf dem Bauteil, Label in Rand-Zone) -->
+          <div class="hs2" data-anchor="trigger"><div class="hs2-dot"></div><div class="hs2-label" id="lbl-trigger"></div></div>
+          <div class="hs2" data-anchor="akku"><div class="hs2-dot"></div><div class="hs2-label" id="lbl-akku"></div></div>
+          <div class="hs2" data-anchor="touchpad"><div class="hs2-dot"></div><div class="hs2-label" id="lbl-touchpad"></div></div>
+          <div class="hs2" data-anchor="mittel"><div class="hs2-dot"></div><div class="hs2-label" id="lbl-mittel"></div></div>
+          <div class="hs2" data-anchor="sticks"><div class="hs2-dot"></div><div class="hs2-label" id="lbl-sticks"></div></div>
+          <div class="hs2" data-anchor="rumble"><div class="hs2-dot"></div><div class="hs2-label" id="lbl-rumble"></div></div>
+          <div class="hs2" data-anchor="frontbtn"><div class="hs2-dot"></div><div class="hs2-label" id="lbl-frontbtn"></div></div>
+          <!-- Back-Bauteile -->
+          <div class="hs2" data-anchor="paddles"><div class="hs2-dot"></div><div class="hs2-label" id="lbl-paddles"></div></div>
+          <div class="hs2" data-anchor="grip"><div class="hs2-dot"></div><div class="hs2-label" id="lbl-grip"></div></div>
+        </div>
+
+        <!-- FRONT-UNIT (Hauptcontroller links unten) -->
+        <div class="ctrl-unit unit-front" id="unit-front">
+          <div class="ctrl-img base-front"></div>
+          <div class="ctrl-layer" id="layer-frontshell" style="-webkit-mask-image:url('mask-frontshell.PNG');mask-image:url('mask-frontshell.PNG');background-color:#0a0a0a;mix-blend-mode:multiply"></div>
+          <div class="ctrl-layer" id="layer-buttons" style="-webkit-mask-image:url('mask-buttons.PNG');mask-image:url('mask-buttons.PNG');background-color:#ffffff;mix-blend-mode:screen"></div>
+          <div class="ctrl-layer" id="layer-dpad" style="-webkit-mask-image:url('mask-dpad.PNG');mask-image:url('mask-dpad.PNG');background-color:#cccccc;mix-blend-mode:screen"></div>
+          <div class="ctrl-layer" id="layer-sticks" style="-webkit-mask-image:url('mask-stickcap.PNG');mask-image:url('mask-stickcap.PNG');background-color:#222222;mix-blend-mode:multiply"></div>
+          <div class="ctrl-layer" id="layer-triggers" style="-webkit-mask-image:url('mask-triggercolor.PNG');mask-image:url('mask-triggercolor.PNG');background-color:#0a0a0a;mix-blend-mode:multiply"></div>
+          <!-- Touchpad via Maske (mask-touchpad.JPG vom User) -->
+          <div class="ctrl-layer" id="layer-touchpad" style="-webkit-mask-image:url('mask-touchpad.JPG');mask-image:url('mask-touchpad.JPG');background-color:#0a0a0a;mix-blend-mode:multiply;opacity:0;transition:opacity .5s,background-color .5s"></div>
+          <!-- Mittelstueck: positioniertes Overlay (keine Maske vorhanden) -->
+          <div class="layer-mittelstueck" id="layer-mittelstueck"></div>
+          <!-- Front-Front-Buttons-Visualisierung -->
+          <div class="frontbtn-overlay" id="frontbtn-overlay" aria-hidden="true">
+            <span class="fb fb1"></span><span class="fb fb2"></span>
+          </div>
+        </div>
+
+        <!-- BACK-UNIT (kleinerer Controller rechts oben) -->
+        <div class="ctrl-unit unit-back" id="unit-back">
+          <div class="ctrl-img base-back"></div>
+          <div class="ctrl-layer" id="layer-backshell" style="-webkit-mask-image:url('mask-backshell.PNG');mask-image:url('mask-backshell.PNG');background-color:#0a0a0a;mix-blend-mode:multiply"></div>
+          <!-- Paddle-Overlay sitzt auf der Backshell -->
+          <div class="paddle-overlay" id="paddle-overlay" aria-hidden="true">
+            <!-- Komplettes Backshell-Bild (4er/6er-Pakete) -->
+            <img class="paddle-back-img" id="paddle-back-img" alt="" style="display:none">
+            <!-- Einzelne Paddle-Slots (2er-Pakete oder Fallback) -->
+            <div class="paddle p1"><span class="paddle-ico"></span></div>
+            <div class="paddle p2"><span class="paddle-ico"></span></div>
+            <div class="paddle p3"><span class="paddle-ico"></span></div>
+            <div class="paddle p4"><span class="paddle-ico"></span></div>
+          </div>
+        </div>
+
+      </div>
+      <div class="preview-shadow"></div>
+    </div>
+
+    <div class="preview-info">
+      <div class="pv-left">
+        <div class="pv-name" id="pv-name">LXRD CUSTOM EDITION</div>
+        <div>BASIS: PS5 DUALSENSE · MADE IN GERMANY</div>
+      </div>
+      <div class="pv-price" id="pv-price-wrap">
+        <span id="pv-price">129,00 €</span>
+        <small>INKL. PROFIMONTAGE · § 19 USTG</small>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- CONFIGURATOR -->
+  <div class="cfg-panel">
+    <div class="step-tabs">
+      <button class="step-tab active" data-step="0" onclick="goToStep(0)"><span class="ico">🎨</span>FRONT</button>
+      <button class="step-tab" data-step="1" onclick="goToStep(1)"><span class="ico">🛡️</span>BACK</button>
+      <button class="step-tab" data-step="2" onclick="goToStep(2)"><span class="ico">🔘</span>BTN</button>
+      <button class="step-tab" data-step="3" onclick="goToStep(3)"><span class="ico">🎯</span>D-PAD</button>
+      <button class="step-tab" data-step="4" onclick="goToStep(4)"><span class="ico">🕹️</span>STICKS</button>
+      <button class="step-tab" data-step="5" onclick="goToStep(5)"><span class="ico">⚡</span>TRIG</button>
+      <button class="step-tab" data-step="6" onclick="goToStep(6)"><span class="ico">⚙️</span>HW</button>
+      <button class="step-tab" data-step="7" onclick="goToStep(7)"><span class="ico">✓</span>FERTIG</button>
+    </div>
+
+    <div class="cfg-content">
+
+      <!-- STEP 0 FRONT -->
+      <div class="step active" data-step="0">
+        <div class="step-h">FRONT-SCHALE</div>
+        <div class="step-sub">DIE VORDERE GEHÄUSE-FARBE</div>
+        <div class="help-tip">💡 Tipp: <strong>Special-Colors</strong> (gelber Punkt) = +12 € Aufpreis</div>
+        <div class="color-name">FARBE: <strong id="name-front">SCHWARZ MATT</strong></div>
+        <div class="color-grid" id="grid-front"></div>
+      </div>
+
+      <!-- STEP 1 BACK -->
+      <div class="step" data-step="1">
+        <div class="step-h">BACK-SCHALE</div>
+        <div class="step-sub">DIE RÜCKSEITE INKL. GRIPS</div>
+        <div class="color-name">FARBE: <strong id="name-back">SCHWARZ MATT</strong></div>
+        <div class="color-grid" id="grid-back"></div>
+      </div>
+
+      <!-- STEP 2 BUTTONS -->
+      <div class="step" data-step="2">
+        <div class="step-h">ACTION-BUTTONS</div>
+        <div class="step-sub">✕ ○ □ △ · OPTIONS · CREATE · PS</div>
+        <div class="color-name">FARBE: <strong id="name-buttons">WEISS</strong></div>
+        <div class="color-grid" id="grid-buttons"></div>
+      </div>
+
+      <!-- STEP 3 D-PAD -->
+      <div class="step" data-step="3">
+        <div class="step-h">D-PAD</div>
+        <div class="step-sub">STEUERKREUZ-FARBE</div>
+        <div class="color-name">FARBE: <strong id="name-dpad">GRAU</strong></div>
+        <div class="color-grid" id="grid-dpad"></div>
+      </div>
+
+      <!-- STEP 4 STICKS -->
+      <div class="step" data-step="4">
+        <div class="step-h">STICK-CAPS</div>
+        <div class="step-sub">DIE BEIDEN ANALOG-STICKS</div>
+        <div class="color-name">FARBE: <strong id="name-sticks">SCHWARZ</strong></div>
+        <div class="color-grid" id="grid-sticks"></div>
+      </div>
+
+      <!-- STEP 5 TRIGGERS -->
+      <div class="step" data-step="5" onmouseenter="document.getElementById('preview-stack')?.classList.add('trigger-press');document.getElementById('hs-trigger')?.classList.add('show')" onmouseleave="document.getElementById('preview-stack')?.classList.remove('trigger-press');updateAllHotspots()">
+        <div class="step-h">TRIGGER &amp; BUMPER</div>
+        <div class="step-sub">L1 / R1 / L2 / R2</div>
+        <div class="color-name">FARBE: <strong id="name-triggers">SCHWARZ MATT</strong></div>
+        <div class="color-grid" id="grid-triggers"></div>
+      </div>
+
+      <!-- STEP 6 HW (LED entfernt) -->
+      <div class="step" data-step="6">
+        <div class="step-h">PERFORMANCE-UPGRADES</div>
+        <div class="step-sub">DRIFT-FREIE STICKS · CLICKY · PADDLES · GRIP</div>
+
+        <div style="font-family:Orbitron;font-size:9px;color:var(--neon);letter-spacing:2px;margin:14px 0 10px">🕹️ STICK-TECHNOLOGIE</div>
+        <div class="hw-opt sel" onclick="setHw('stick','standard',0)" id="hw-stick-standard"><div class="left"><div class="title">STANDARD POTENTIOMETER</div><div class="desc">Original PS5 DualSense — kann mit der Zeit driften</div></div><div class="price free">INKL.</div></div>
+        <div class="hw-opt" onclick="setHw('stick','hall',42)" id="hw-stick-hall"><div class="left"><div class="title">⚡ HALL EFFECT STICKS</div><div class="desc">Magnetisch · drift-resistent · lebenslange Haltbarkeit</div></div><div class="price">+42 €</div></div>
+        <div class="hw-opt" onclick="setHw('stick','tmr',68)" id="hw-stick-tmr"><div class="left"><div class="title">🎯 TMR PRO STICKS</div><div class="desc">Premium — höchste Präzision · null Drift</div></div><div class="price">+68 €</div></div>
+
+        <div style="font-family:Orbitron;font-size:9px;color:var(--neon);letter-spacing:2px;margin:24px 0 10px">🎯 TRIGGER</div>
+        <div class="hw-opt sel" onclick="setHw('trigger','standard',0)" id="hw-trigger-standard"><div class="left"><div class="title">STANDARD TRIGGER</div><div class="desc">Original DualSense mit Adaptive Trigger</div></div><div class="price free">INKL.</div></div>
+        <div class="hw-opt" onclick="setHw('trigger','clicky',39)" id="hw-trigger-clicky"><div class="left"><div class="title">⚡ CLICKY TRIGGER</div><div class="desc">Mouse-Click-Feel · 1 mm Auslöseweg · perfekt für FPS</div></div><div class="price">+39 €</div></div>
+
+        <div style="font-family:Orbitron;font-size:9px;color:var(--neon);letter-spacing:2px;margin:24px 0 10px">🎮 BACK-PADDLES &amp; FRONTBUTTONS</div>
+        <div class="paddle-grid" id="paddle-grid"></div>
+        <p style="font-size:10.5px;color:#666;margin-top:10px;line-height:1.6">Frei programmierbar — schnellere Reaktionen ohne Umgreifen. <strong style="color:#888">Ares</strong> = Pfeil · <strong style="color:#888">Scull</strong> = Totenkopf · <strong style="color:#888">Chip</strong> = programmierbar.</p>
+
+        <div style="font-family:Orbitron;font-size:9px;color:var(--neon);letter-spacing:2px;margin:24px 0 10px">🛡️ GRIP-GEHÄUSE</div>
+        <div class="hw-opt sel" onclick="setHw('grip','standard',0)" id="hw-grip-standard"><div class="left"><div class="title">STANDARD GEHÄUSE</div><div class="desc">Original DualSense Oberfläche</div></div><div class="price free">INKL.</div></div>
+        <div class="hw-opt" onclick="setHw('grip','grip',49)" id="hw-grip-grip"><div class="left"><div class="title">🛡️ GRIP COATING</div><div class="desc">Anti-Rutsch Soft-Touch · alle Kontaktflächen</div></div><div class="price">+49 €</div></div>
+
+        <div style="font-family:Orbitron;font-size:9px;color:var(--neon);letter-spacing:2px;margin:24px 0 10px">🔊 RUMBLE-MODUL</div>
+        <div class="hw-opt sel" onclick="setHw('rumble','standard',0)" id="hw-rumble-standard"><div class="left"><div class="title">STANDARD RUMBLE</div><div class="desc">Original Vibration + Haptic Feedback</div></div><div class="price free">INKL.</div></div>
+        <div class="hw-opt" onclick="setHw('rumble','strong',32)" id="hw-rumble-strong"><div class="left"><div class="title">💥 STRONG RUMBLE+</div><div class="desc">Verstärkte Motoren · 30% stärker</div></div><div class="price">+32 €</div></div>
+
+        <div style="font-family:Orbitron;font-size:9px;color:var(--neon);letter-spacing:2px;margin:24px 0 10px">🔋 AKKU-SYSTEM</div>
+        <div class="hw-opt sel" onclick="setHw('akku','standard',0)" id="hw-akku-standard"><div class="left"><div class="title">STANDARD AKKU</div><div class="desc">Original PS5 · 1560 mAh · 6-8 h Laufzeit</div></div><div class="price free">INKL.</div></div>
+        <div class="hw-opt" onclick="setHw('akku','power',79)" id="hw-akku-power"><div class="left"><div class="title">⚡ POWER-AKKU 2200 mAh</div><div class="desc">+40% Laufzeit · bis zu 12 h Spielzeit</div></div><div class="price">+79 €</div></div>
+        <div class="hw-opt" onclick="setHw('akku','light',44)" id="hw-akku-light"><div class="left"><div class="title">🪶 LIGHTWEIGHT-AKKU</div><div class="desc">-30 g · spürbar weniger Gewicht · 4-6 h Laufzeit</div></div><div class="price">+44 €</div></div>
+
+        <div style="font-family:Orbitron;font-size:9px;color:var(--neon);letter-spacing:2px;margin:24px 0 10px">🎨 TOUCHPAD-FARBE</div>
+        <div class="color-name">FARBE: <strong id="name-touchpad">SCHWARZ MATT</strong></div>
+        <div class="color-grid" id="grid-touchpad"></div>
+
+        <div style="font-family:Orbitron;font-size:9px;color:var(--neon);letter-spacing:2px;margin:24px 0 10px">⬛ MITTELSTÜCK (PS-LOGO-BEREICH)</div>
+        <div class="color-name">FARBE: <strong id="name-mittelstueck">SCHWARZ MATT</strong></div>
+        <div class="color-grid" id="grid-mittelstueck"></div>
+      </div>
+
+      <!-- STEP 7 SUMMARY (Gravur + Sticker entfernt) -->
+      <div class="step" data-step="7">
+        <div class="step-h">DEINE KONFIGURATION</div>
+        <div class="step-sub">PRÜFE ALLES BEVOR DU IN DEN WARENKORB LEGST</div>
+
+        <div class="summary-block">
+          <div class="summary-row"><span>FRONT-SCHALE</span><span><span class="col-dot" id="sum-front-dot"></span><span id="sum-front">Schwarz Matt</span></span></div>
+          <div class="summary-row"><span>BACK-SCHALE</span><span><span class="col-dot" id="sum-back-dot"></span><span id="sum-back">Schwarz Matt</span></span></div>
+          <div class="summary-row"><span>BUTTONS</span><span><span class="col-dot" id="sum-buttons-dot"></span><span id="sum-buttons">Weiss</span></span></div>
+          <div class="summary-row"><span>D-PAD</span><span><span class="col-dot" id="sum-dpad-dot"></span><span id="sum-dpad">Grau</span></span></div>
+          <div class="summary-row"><span>STICK-CAPS</span><span><span class="col-dot" id="sum-sticks-dot"></span><span id="sum-sticks">Schwarz</span></span></div>
+          <div class="summary-row"><span>TRIGGER</span><span><span class="col-dot" id="sum-triggers-dot"></span><span id="sum-triggers">Schwarz</span></span></div>
+        </div>
+
+        <div class="summary-block">
+          <div class="summary-row"><span>STICK-TECHNIK</span><span id="sum-stick-tech">Standard</span></div>
+          <div class="summary-row"><span>TRIGGER-MOD</span><span id="sum-trigger-mod">Standard</span></div>
+          <div class="summary-row"><span>BACK-PADDLES</span><span id="sum-paddles">Keine</span></div>
+          <div class="summary-row"><span>GEHÄUSE</span><span id="sum-grip">Standard</span></div>
+          <div class="summary-row"><span>RUMBLE</span><span id="sum-rumble">Standard</span></div>
+          <div class="summary-row"><span>RGB-MODUL</span><span id="sum-rgb">Aus</span></div>
+        </div>
+
+        <div style="font-family:Orbitron;font-size:8.5px;color:#555;letter-spacing:1.5px;margin:16px 0 8px">GARANTIE-VERLÄNGERUNG</div>
+        <div class="warranty-grid">
+          <div class="hw-opt sel" onclick="setHw('warranty',24,0)" id="hw-warranty-24"><div class="left"><div class="title">24 MONATE</div><div class="desc">Gesetzlich</div></div><div class="price free">INKL.</div></div>
+          <div class="hw-opt" onclick="setHw('warranty',36,49)" id="hw-warranty-36"><div class="left"><div class="title">+12 MONATE</div><div class="desc">Erweitert</div></div><div class="price">+49 €</div></div>
+        </div>
+
+        <div style="margin-top:20px;padding:16px;background:rgba(0,242,255,.04);border:1px solid rgba(0,242,255,.2);border-radius:8px;font-size:11px;color:#aaa;line-height:1.7">
+          📦 <strong style="color:var(--neon)">FERTIGUNGSZEIT:</strong> 3–5 Werktage · Handarbeit in Domsühl<br>
+          🚚 <strong style="color:var(--neon)">VERSAND:</strong> DHL · Deutschland kostenlos ab 50 €<br>
+          🛡️ <strong style="color:var(--neon)">RÜCKGABE:</strong> Custom = kein Widerruf (§ 312g BGB) · Gewährleistung 24 M.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="cfg-foot">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-family:Orbitron;font-size:10px">
+        <span style="color:#555;letter-spacing:1.5px">GESAMTPREIS</span>
+        <span style="color:var(--neon);font-size:18px;font-weight:900" id="foot-price">129,00 €</span>
+      </div>
+      <div class="foot-row">
+        <button class="btn-prev" onclick="prevStep()" id="btn-prev" style="display:none">← ZURÜCK</button>
+        <button class="btn-next" onclick="nextStep()" id="btn-next">WEITER →</button>
+        <button class="btn-next btn-cart" onclick="addToCart()" id="btn-cart" style="display:none">🛒 IN DEN WARENKORB</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BUNDLE SUGGESTIONS -->
+<section class="bundle-sec">
+  <div class="bundle-head"><span class="ico">🎁</span>SPAR-PAKETE · UPGRADE-BUNDLES</div>
+  <div class="bundle-grid" id="bundle-grid"></div>
+</section>
+
+<!-- PRICE DRAWER -->
+<button class="drawer-toggle" onclick="togglePriceDrawer()" id="drawer-toggle"><span class="ico">💰</span><span id="dt-price">129€</span></button>
+<div id="price-drawer">
+  <button class="close" onclick="togglePriceDrawer()">×</button>
+  <div class="pd-head">💎 PREIS-AUFSCHLÜSSELUNG</div>
+  <div class="pd-sub">JEDES UPGRADE TRANSPARENT</div>
+  <div id="pd-list"></div>
+  <div class="pd-total"><span>GESAMT</span><span class="big" id="pd-total">129,00 €</span></div>
+  <p style="font-size:10.5px;color:#555;line-height:1.7;margin-top:14px">Kleinunternehmer §19 UStG · keine MwSt. · zzgl. Versand (DE 6,99€ · kostenlos ab 50€)</p>
+</div>
+
+<!-- BUILDS MODAL -->
+<div id="builds-modal">
+  <div class="bm-box">
+    <div class="bm-head" id="bm-head">💾 BUILDS</div>
+    <div class="bm-list" id="bm-list"></div>
+    <div class="bm-actions">
+      <button class="bm-cancel" onclick="closeBuildsModal()">SCHLIESSEN</button>
+      <button class="bm-save" id="bm-save-btn" onclick="doSaveBuild()">💾 AKTUELLEN BUILD SPEICHERN</button>
+    </div>
+  </div>
+</div>
+
+<div class="mobile-price-bar">
+  <div>
+    <div class="mpb-price" id="mpb-price">129,00 €</div>
+    <small>INKL. ALLEM · KEINE MWST.</small>
+  </div>
+  <button class="mpb-cart" onclick="addToCart()">🛒 IN DEN WARENKORB</button>
+</div>
+
+<!-- ═══ PREMIUM FOOTER (lxrd-foot · 1:1 wie collections.html) ═══ -->
+<footer class="lxrd-foot">
+  <div class="foot-top">
+    <div class="foot-col">
+      <div class="foot-brand-logo">LEX<span>O</span>RD<span style="font-size:11px;vertical-align:super">®</span></div>
+      <div class="foot-tag">Handgefertigte Premium-Controller — Made in Germany. Jeder Custom-Build entsteht in Mecklenburg-Vorpommern.</div>
+      <div class="foot-social" aria-label="Social Media">
+        <a href="https://instagram.com/lexord.de" target="_blank" rel="noopener" title="Instagram">◉</a>
+        <a href="https://wa.me/4915204718720" target="_blank" rel="noopener" title="WhatsApp">✆</a>
+        <a href="mailto:Kontakt@Lexord.de" title="E-Mail">✉</a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h4>SHOP</h4>
+      <ul>
+        <li><a href="/">Startseite</a></li>
+        <li><a href="collections.html">Alle Controller</a></li>
+        <li><a href="konfigurator.html">Konfigurator</a></li>
+        <li><a href="b2b.html">B2B</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h4>RECHTLICHES</h4>
+      <ul>
+        <li><a href="/#impressum">Impressum</a></li>
+        <li><a href="/#datenschutz">Datenschutz</a></li>
+        <li><a href="/#agb">AGB</a></li>
+        <li><a href="/#widerruf">Widerruf</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <div>© 2026 LEXORD® Engineering · Domsühl, Deutschland · USt-Befreit § 19 UStG</div>
+    <div class="foot-bottom-meta"><a href="mailto:Kontakt@Lexord.de">Kontakt@Lexord.de</a></div>
+  </div>
+</footer>
+
+<script>
+'use strict';
+
+/* FARB-PALETTE */
+const COLORS = [
+  {name:'Schwarz Matt',    hex:'#0a0a0a'},
+  {name:'Weiss',           hex:'#ffffff'},
+  {name:'Grau',            hex:'#888888'},
+  {name:'Anthrazit',       hex:'#1a1a1a'},
+  {name:'Silber',          hex:'#c0c0c0'},
+  {name:'Türkis Neon',     hex:'#00f2ff'},
+  {name:'Magenta Neon',    hex:'#bc13fe'},
+  {name:'Pink Hot',        hex:'#ff2db4'},
+  {name:'Rot Ferrari',     hex:'#e60012'},
+  {name:'Rot Tiefdunkel',  hex:'#7a0000'},
+  {name:'Orange Lava',     hex:'#ff6a00'},
+  {name:'Gelb Sonne',      hex:'#ffd400'},
+  {name:'Gold',            hex:'#d4af37'},
+  {name:'Grün Limette',    hex:'#9fff00'},
+  {name:'Grün Wald',       hex:'#0e6b3a'},
+  {name:'Grün Petrol',     hex:'#005f5f'},
+  {name:'Blau Sky',        hex:'#3aa3ff'},
+  {name:'Blau Nacht',      hex:'#0a1f5e'},
+  {name:'Blau Royal',      hex:'#1e3a8a'},
+  {name:'Lila Tief',       hex:'#3b0a4f'},
+  {name:'Lila Violet',     hex:'#7b3bff'},
+  {name:'Bronze',          hex:'#8c6b3a'},
+  {name:'Kupfer',          hex:'#b87333'},
+  {name:'Rosegold',        hex:'#e0b9a5'},
+  {name:'Mintgrün',        hex:'#9ff0d4'},
+  {name:'Babyblau',        hex:'#a3d8ff'},
+  {name:'Beige',           hex:'#e8d6b3'},
+  {name:'Camo Grün',       hex:'#3d4a2a',special:'camo'}
+];
+
+const LED_COLORS = [
+  {name:'Blau PS5',hex:'#3aa3ff'},{name:'Türkis',hex:'#00f2ff'},{name:'Magenta',hex:'#bc13fe'},
+  {name:'Pink',hex:'#ff2db4'},{name:'Rot',hex:'#e60012'},{name:'Orange',hex:'#ff6a00'},
+  {name:'Gelb',hex:'#ffd400'},{name:'Grün',hex:'#9fff00'},{name:'Weiss',hex:'#ffffff'},
+  {name:'Lila',hex:'#7b3bff'},{name:'Gold',hex:'#d4af37'},{name:'Aus',hex:'#000000'}
+];
+
+const STICKERS = [
+  {name:'Keiner',ico:'∅'},{name:'Stern',ico:'⭐'},{name:'Flamme',ico:'🔥'},{name:'Blitz',ico:'⚡'},
+  {name:'Krone',ico:'👑'},{name:'Schädel',ico:'💀'},{name:'Herz',ico:'❤️'},{name:'Game',ico:'🎮'},
+  {name:'Drache',ico:'🐉'},{name:'Schild',ico:'🛡️'},{name:'Auge',ico:'👁️'},{name:'Stern⭐',ico:'✨'}
+];
+
+const PRESETS = {
+  stealth: {front:0, back:0, buttons:1, dpad:2, sticks:0, triggers:0, led:0, name:'STEALTH BLACK'},
+  arctic:  {front:1, back:1, buttons:5, dpad:4, sticks:5, triggers:1, led:8, name:'ARCTIC WHITE'},
+  neon:    {front:5, back:0, buttons:6, dpad:6, sticks:5, triggers:0, led:1, name:'NEON CYBER'},
+  royal:   {front:18,back:18,buttons:12,dpad:18,sticks:12,triggers:18,led:10,name:'ROYAL GOLD'},
+  fire:    {front:8, back:0, buttons:11,dpad:10,sticks:0, triggers:8, led:4, name:'FIRE BLAZE'},
+  camo:    {front:27,back:27,buttons:14,dpad:14,sticks:14,triggers:14,led:7, name:'TACTICAL CAMO'}
+};
+
+const PARTS = ['front','back','buttons','dpad','sticks','triggers','touchpad','mittelstueck'];
+const PART_LABELS = {front:'FRONT-SCHALE',back:'BACK-SCHALE',buttons:'BUTTONS',dpad:'D-PAD',sticks:'STICK-CAPS',triggers:'TRIGGER',touchpad:'TOUCHPAD',mittelstueck:'MITTELSTÜCK'};
+const LAYER_IDS  = {front:'layer-frontshell',back:'layer-backshell',buttons:'layer-buttons',dpad:'layer-dpad',sticks:'layer-sticks',triggers:'layer-triggers',touchpad:'layer-touchpad',mittelstueck:'layer-mittelstueck'};
+const BASE_PRICE = 129;
+
+let state = {
+  front:0, back:0, buttons:1, dpad:2, sticks:0, triggers:0,
+  touchpad:0, mittelstueck:0,
+  led:0,
+  hw_stick:'standard', hw_stick_price:0,
+  hw_trigger:'standard', hw_trigger_price:0,
+  hw_paddles:0, hw_paddles_price:0,
+  hw_grip:'standard', hw_grip_price:0,
+  hw_rumble:'standard', hw_rumble_price:0,
+  hw_akku:'standard', hw_akku_price:0,
+  hw_led_rgb:false, hw_led_rgb_price:0,
+  hw_warranty:24, hw_warranty_price:0,
+  engr_enabled:false, engr_text:'', engr_font:'orbitron',
+  sticker:0,
+  customColors:{}
+};
+
+let currentStep = 0;
+const TOTAL_STEPS = 8;
+let autoSpin = false;
+let currentView = 'both';
+
+/* COLOR GRID */
+function buildColorGrid(part){
+  const grid = document.getElementById('grid-'+part);
+  if(!grid) return;
+  grid.innerHTML = COLORS.map((c,i)=>{
+    const isSel = state[part] === i;
+    let bg = `background-color:${c.hex}`;
+    if(c.special==='camo')     bg = `background:radial-gradient(circle at 30% 40%,#5a6b3a 8px,transparent 9px),radial-gradient(circle at 70% 70%,#2a3a1a 6px,transparent 7px),#3d4a2a`;
+    const premium = c.special?' premium':'';
+    return `<div class="swatch${isSel?' sel':''}${premium}" style="${bg}" title="${c.name}${c.special?' (+15€)':''}" onclick="pickColor('${part}',${i},event)"></div>`;
+  }).join('');
+}
+
+function buildLEDGrid(){
+  const grid = document.getElementById('grid-led');
+  if(!grid) return;
+  grid.innerHTML = LED_COLORS.map((c,i)=>{
+    const isSel = state.led === i;
+    return `<div class="led-swatch${isSel?' sel':''}" style="background:${c.hex};--c:${c.hex}" title="${c.name}" onclick="pickLED(${i})"></div>`;
+  }).join('');
+}
+
+function buildStickerGrid(){
+  const grid = document.getElementById('grid-sticker');
+  if(!grid) return;
+  grid.innerHTML = STICKERS.map((s,i)=>{
+    const isSel = state.sticker === i;
+    return `<div class="sticker-opt${isSel?' sel':''}" title="${s.name}" onclick="pickSticker(${i})">${s.ico}</div>`;
+  }).join('');
+}
+
+function pickColor(part, idx, ev){
+  state[part] = idx;
+  const c = COLORS[idx];
+  delete state.customColors[part];
+  applyToLayer(part, c);
+  const lbl=document.getElementById('name-'+part);if(lbl)lbl.textContent = c.name.toUpperCase();
+  buildColorGrid(part);
+  updateAll();
+  updateAllHotspots();
+  particleBurst(ev, c.hex);
+  highlightPart(part);
+  /* Auto-Flip auf passende Seite */
+  if(part==='back'&&currentView!=='back'){setView('back');}
+  if((part==='front'||part==='touchpad'||part==='mittelstueck')&&currentView==='back'){setView('front');}
+  /* Hotspot zur ausgewaehlten Part anzeigen + Dot blinken */
+  const partAnchor={sticks:'sticks',triggers:'trigger',touchpad:'touchpad',mittelstueck:'mittel'};
+  if(partAnchor[part]){
+    const dot=document.querySelector('.hs2[data-anchor="'+partAnchor[part]+'"] .hs2-dot');
+    if(dot){dot.style.animation='hsBlink 1.4s ease-in-out 2,hsDot 2.4s ease-in-out infinite';setTimeout(()=>dot.style.animation='hsDot 2.4s ease-in-out infinite',3200);}
+  }
+  toast('✓ '+PART_LABELS[part]+': '+c.name);
+}
+
+function applyCustomColor(part, hex){
+  if(!/^#?[0-9a-fA-F]{6}$/.test(hex.replace('#',''))) return;
+  if(!hex.startsWith('#')) hex = '#'+hex;
+  state.customColors[part] = hex;
+  const c = {name:'Custom '+hex.toUpperCase(),hex:hex};
+  applyToLayer(part, c);
+  document.getElementById('name-'+part).textContent = 'CUSTOM '+hex.toUpperCase();
+  // Sync hex input
+  const t = document.getElementById('cc-'+part+'-hex');if(t)t.value=hex;
+  const cc = document.getElementById('cc-'+part);if(cc)cc.value=hex;
+  updateAll();
+}
+
+function pickLED(idx){
+  state.led = idx;
+  const c = LED_COLORS[idx];
+  const bar = document.getElementById('led-bar');
+  if(bar){bar.style.setProperty('--led-color',c.hex);bar.style.opacity=c.hex==='#000000'?'0':'.9';}
+  const lbl=document.getElementById('name-led');if(lbl)lbl.textContent = c.name.toUpperCase();
+}
+
+function pickSticker(idx){
+  state.sticker = idx;
+  const lbl=document.getElementById('name-sticker');if(lbl)lbl.textContent = STICKERS[idx].name.toUpperCase();
+}
+
+function applyToLayer(part, color){
+  const el = document.getElementById(LAYER_IDS[part]);
+  if(!el) return;
+  el.style.background = '';
+  el.style.backgroundImage = '';
+  el.style.animation = '';
+  el.style.backgroundColor = color.hex;
+  /* Touchpad (Maske) und Mittelstueck (positioniertes Overlay): nur sichtbar wenn nicht Default */
+  if(part==='touchpad'){
+    el.style.opacity = state[part]!==0 ? '.85' : '0';
+  }
+  if(part==='mittelstueck'){
+    el.classList.toggle('on', state[part]!==0);
+  }
+  if(color.special==='camo'){
+    el.style.background = `radial-gradient(circle at 30% 40%,#5a6b3a 12%,transparent 13%),radial-gradient(circle at 70% 70%,#2a3a1a 10%,transparent 11%),${color.hex}`;
+  }
+  el.style.maskRepeat = 'no-repeat';
+  el.style.maskSize = 'contain';
+  el.style.maskPosition = 'center';
+  el.style.webkitMaskRepeat = 'no-repeat';
+  el.style.webkitMaskSize = 'contain';
+  el.style.webkitMaskPosition = 'center';
+  triggerShimmer(el);
+}
+
+/* === Color-Shimmer: holographischer Sweep beim Farbwechsel === */
+function triggerShimmer(el){
+  if(!el) return;
+  const existing=el.querySelector('.shimmer-sweep');if(existing)existing.remove();
+  const sw=document.createElement('div');sw.className='shimmer-sweep';el.appendChild(sw);
+  setTimeout(()=>sw.remove(),900);
+}
+
+/* === Part-Highlight: pulst den aktuell konfigurierten Layer === */
+let _highlightTimer=null;
+function highlightPart(part){
+  document.querySelectorAll('.preview-layer.highlight').forEach(el=>el.classList.remove('highlight'));
+  if(_highlightTimer){clearTimeout(_highlightTimer);_highlightTimer=null;}
+  if(!part)return;
+  const el=document.getElementById(LAYER_IDS[part]);if(!el)return;
+  el.classList.add('highlight');
+  _highlightTimer=setTimeout(()=>el.classList.remove('highlight'),3200);
+}
+
+/* === Hotspot-Highlight beim Step-Wechsel === */
+function flashHotspot(step){
+  /* Step -> hs2-Anker die aufblinken (Step-Numbering nach LED-/Gravur-/Sticker-Entfernung) */
+  const map = {
+    0:[],                                            // Front-Schale
+    1:['grip'],                                       // Back-Schale -> Grip-Hinweis
+    2:[],                                             // Buttons
+    3:[],                                             // D-Pad
+    4:['sticks'],                                     // Sticks
+    5:['trigger'],                                    // Trigger
+    6:['sticks','trigger','paddles','akku','grip','rumble','frontbtn'] // HW
+  };
+  (map[step]||[]).forEach(anchor=>{
+    const dot=document.querySelector('.hs2[data-anchor="'+anchor+'"] .hs2-dot');
+    if(dot){dot.style.animation='hsBlink 1.6s ease-in-out 2,hsDot 2.4s ease-in-out infinite';setTimeout(()=>dot.style.animation='hsDot 2.4s ease-in-out infinite',3400);}
+  });
+}
+
+/* === ALL HOTSPOTS — automatisch sichtbar basierend auf State === */
+/* === NEUES HOTSPOT-SYSTEM (hs2 mit Stage-relativen Positions) ===
+   - Labels sitzen in den RAND-ZONEN der Stage (nicht ueber dem Controller)
+   - Dots sitzen auf den Bauteilen
+   - Erscheinen nur wenn Option nicht Default
+*/
+/* Label-Richtung pro Bauteil — Label muss in eine Richtung wo der Controller nicht ist */
+const HS2_DIR = {
+  trigger:'top',     /* L2 oben links -> Label DRUEBER (in leere Top-Zone) */
+  akku:'top',        /* USB-C oben Mitte -> Label DRUEBER */
+  touchpad:'top',    /* Touchpad oben -> Label DRUEBER */
+  frontbtn:'left',   /* L1 links -> Label LINKS davon (in linke Rand-Zone) */
+  mittel:'right',    /* PS-Logo Mitte -> Label RECHTS (in rechte Zone unter unit-back) */
+  sticks:'right',    /* Sticks Mitte unten -> Label RECHTS */
+  rumble:'right',    /* linker Griff -> Label RECHTS davon */
+  paddles:'left',    /* Paddle-Bereich auf Backshell -> Label LINKS (in Lücke zw Units) */
+  grip:'right'       /* Backshell Mitte -> Label RECHTS davon */
+};
+function setHs2(anchor, label, show){
+  const node = document.querySelector('.hs2[data-anchor="'+anchor+'"]');
+  if(!node) return;
+  node.classList.toggle('show', !!show);
+  node.classList.remove('lbl-top','lbl-bottom','lbl-left','lbl-right');
+  node.classList.add('lbl-'+(HS2_DIR[anchor]||'top'));
+  const lbl = node.querySelector('.hs2-label');
+  if(lbl) lbl.textContent = label;
+}
+function updateAllHotspots(){
+  /* Kompakte einzeilige Pills — kein <strong>/<br> mehr */
+  setHs2('trigger', 'Clicky Trigger', state.hw_trigger==='clicky');
+  setHs2('akku',
+    state.hw_akku==='power'?'Power-Akku 2200':state.hw_akku==='light'?'Lightweight Akku':'',
+    state.hw_akku!=='standard');
+  const tpName = COLORS[state.touchpad]?COLORS[state.touchpad].name:'';
+  setHs2('touchpad', 'Touchpad: '+tpName, state.touchpad!==0);
+  const msName = COLORS[state.mittelstueck]?COLORS[state.mittelstueck].name:'';
+  setHs2('mittel', 'Mittelstück: '+msName, state.mittelstueck!==0);
+  setHs2('sticks',
+    state.hw_stick==='hall'?'Hall Effect Sticks':state.hw_stick==='tmr'?'TMR Pro Sticks':'',
+    state.hw_stick!=='standard');
+  setHs2('rumble', 'Strong Rumble+', state.hw_rumble==='strong');
+  const meta = state.hw_paddles_meta || {fb:0,count:0};
+  setHs2('frontbtn', '2× FrontButtons', meta.fb>0);
+  setHs2('paddles', meta.label||'', meta.count>0);
+  setHs2('grip', 'Grip Coating', state.hw_grip==='grip');
+}
+function setHotspot(){/* Legacy no-op — Hotspots laufen jetzt ueber updateAllHotspots */}
+
+/* === PADDLE-KATALOG (bitros-Style) === */
+const PADDLE_TYPES = [
+  {id:0,  label:'ohne',                       price:0,  count:0, fb:0, ico:'X',           prog:false},
+  {id:2,  label:'2× Scull X/O',               price:49, count:2, fb:0, ico:'scull',       prog:false},
+  {id:7,  label:'4× standart',                price:65, count:4, fb:0, ico:'plain',       prog:false}
+];
+/* === PADDLE-BILDER (Platzhalter-System) ===
+   Lege Dateien in den Projektordner mit diesen Namen, dann werden sie automatisch geladen:
+   - paddle-card-ares.png         (Card-Vorschau: Mini-Controller mit Ares-Paddle)
+   - paddle-card-scull.png
+   - paddle-card-ares-prog.png
+   - paddle-card-scull-prog.png
+   - paddle-card-plain.png
+   - paddle-card-plain-prog.png
+   - paddle-on-ares.png           (Einzelnes Paddle, sitzt auf dem Backshell)
+   - paddle-on-scull.png
+   - paddle-on-ares-prog.png
+   - paddle-on-scull-prog.png
+   - paddle-on-plain.png
+   - paddle-on-plain-prog.png
+   Fehlt eine Datei -> SVG-Fallback wird automatisch angezeigt.
+*/
+/* === PADDLE-BILDER (reine Platzhalter — KEINE SVG-Grafiken mehr) ===
+   Wenn du echte Paddle-Bilder bereitstellen willst, lege diese Dateien
+   in den Projektordner. Bis dahin zeigt das System leere Slots.
+
+   CARD-VORSCHAU (im Konfig-Grid):
+   - paddle-card-ares.png         (Mini-Controller mit Ares X/O Paddle)
+   - paddle-card-scull.png        (Mini-Controller mit Scull X/O Paddle)
+   - paddle-card-ares-prog.png    (Mini-Controller mit Ares programmierbar)
+   - paddle-card-scull-prog.png
+   - paddle-card-plain.png
+   - paddle-card-plain-prog.png
+
+   AUF-CONTROLLER-OVERLAY (einzelne Paddles auf der Backshell — 2er-Pakete):
+   - paddle-on-ares.png
+   - paddle-on-scull.png
+   - paddle-on-ares-prog.png
+   - paddle-on-scull-prog.png
+   - paddle-on-plain.png
+   - paddle-on-plain-prog.png
+
+   4er-PAKETE — kompletter Backshell-Render mit allen 4 Paddles:
+   - paddle-back-4.png      (Standard 4er — Photoroom_20260520_222658.png als Beispiel)
+   - paddle-back-4-prog.png (4er programmierbar)
+   - paddle-back-6.png      (6er 2x Front+4x programmierbar)
+
+   Fehlt eine Datei -> Slot bleibt leer (gestrichelter Platzhalter).
+*/
+function paddleCardImg(kind){
+  if(kind==='X') return '<div class="pp-ph pp-ph-x" title="ohne"><span>X</span></div>';
+  if(kind==='scull'){
+    return `<img class="pp-img" src="Photoroom_20260723_143939.png" alt="Scull X/O" loading="lazy"
+              onerror="this.onerror=null;this.src='paddle-card-scull.png';this.onerror=function(){this.outerHTML='<div class=&quot;pp-ph&quot;><span>Bild fehlt:<br>paddle-card-scull.png</span></div>'}">`;
+  }
+  const file = 'paddle-card-'+kind+'.png';
+  return `<img class="pp-img" src="${file}" alt="${kind}" loading="lazy"
+            onerror="this.outerHTML='<div class=&quot;pp-ph&quot;><span>Bild fehlt:<br>${file}</span></div>'">`;
+}
+function paddleOnImg(kind){
+  if(!kind || kind==='X') return '';
+  const file = 'paddle-on-'+kind+'.png';
+  return `<img class="paddle-img" src="${file}" alt=""
+            onerror="this.outerHTML='<div class=&quot;paddle-ph&quot;></div>'">`;
+}
+/* 4er / 6er Paddles UND 2x Scull X/O werden als KOMPLETTE Backshell-Overlay angezeigt
+   (statt einzelner Paddle-Divs — bitros-Look).
+   Standard 4er: Photoroom_20260520_222658.png (oder paddle-back-4.png als Alt).
+   4er programmierbar: paddle-back-4-prog.png
+   2x Scull X/O: Photoroom_20260723_143939.png (oder paddle-back-2-scull.png als Alt).
+*/
+function paddleBackFile(meta){
+  if(!meta) return null;
+  if(meta.count===4) return meta.prog ? 'paddle-back-4-prog.png' : 'Photoroom_20260520_222658.png';
+  if(meta.count===2 && meta.ico==='scull' && !meta.prog) return 'Photoroom_20260723_143939.png';
+  return null;
+}
+function paddleBackAlt(meta){
+  if(!meta) return null;
+  if(meta.count===4) return 'paddle-back-4.png'; /* Fallback wenn Hauptdatei fehlt */
+  if(meta.count===2 && meta.ico==='scull' && !meta.prog) return 'paddle-back-2-scull.png';
+  return null;
+}
+function buildPaddleGrid(){
+  const g=document.getElementById('paddle-grid');if(!g)return;
+  g.innerHTML = PADDLE_TYPES.map(t=>{
+    const sel=state.hw_paddles===t.id?'sel':'';
+    const priceTxt = t.price===0?'inkl.':'+'+t.price.toFixed(2).replace('.',',')+' €';
+    return `<div class="pp-card ${sel}" id="pp-${t.id}" onclick="pickPaddle(${t.id})">
+      <div class="pp-ico">${paddleCardImg(t.ico)}</div>
+      <div class="pp-lbl">${t.label}</div>
+      <div class="pp-price">${priceTxt}</div>
+    </div>`;
+  }).join('');
+}
+function pickPaddle(id){
+  const t = PADDLE_TYPES.find(x=>x.id===id); if(!t) return;
+  state.hw_paddles = t.id;
+  state.hw_paddles_price = t.price;
+  state.hw_paddles_meta = {count:t.count, fb:t.fb, ico:t.ico, prog:t.prog, label:t.label};
+  buildPaddleGrid();
+  updatePaddleOverlay();
+  updateAll();
+  if(t.count>0) setView('back');
+  toast('🎮 '+t.label+' '+(t.price?('+'+t.price+' €'):''));
+}
+
+/* === Paddle-Overlay auf der Backshell aktualisieren === */
+function updatePaddleOverlay(){
+  const ov=document.getElementById('paddle-overlay');if(!ov)return;
+  const meta = state.hw_paddles_meta || {count:0, fb:0, ico:'X', prog:false};
+  const n = meta.count||0;
+  ov.classList.remove('count-0','count-2','count-4','active','prog','use-back-img');
+  if(n>0){ov.classList.add('active','count-'+n);if(meta.prog)ov.classList.add('prog');}else{ov.classList.add('count-0');}
+
+  /* 4er-Pakete: komplettes Backshell-Bild als Overlay (statt einzelner Paddles).
+     2er-Pakete oder fehlende 4er-Datei: einzelne Paddle-Divs mit paddleOnImg(). */
+  const backFile = paddleBackFile(meta);
+  const backImg = document.getElementById('paddle-back-img');
+  if(backFile){
+    ov.classList.add('use-back-img');
+    if(backImg){
+      backImg.src = backFile;
+      const alt = paddleBackAlt(meta);
+      backImg.onerror = function(){
+        if(alt && this.src.indexOf(alt)===-1){this.src = alt;}
+        else{this.style.display='none';ov.classList.remove('use-back-img');}
+      };
+      backImg.onload = function(){this.style.display='block';};
+      backImg.style.display = 'block';
+    }
+  } else {
+    if(backImg){backImg.style.display='none';backImg.src='';}
+    /* Einzelne Paddles (2er-Pakete) */
+    ov.querySelectorAll('.paddle-ico').forEach(ic=>{ic.innerHTML = n>0 ? paddleOnImg(meta.ico) : '';});
+  }
+
+  /* FrontButtons-Visualisierung */
+  const fb=document.getElementById('frontbtn-overlay');if(fb)fb.classList.toggle('active', meta.fb>0);
+}
+
+/* PRESETS */
+function applyPreset(key, ev){
+  const p = PRESETS[key];
+  if(!p) return;
+  PARTS.forEach(part=>{state[part]=p[part];delete state.customColors[part];applyToLayer(part,COLORS[p[part]]);buildColorGrid(part);const n=document.getElementById('name-'+part);if(n)n.textContent=COLORS[p[part]].name.toUpperCase();});
+  if(p.led!==undefined){state.led=p.led;pickLED(p.led);}
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+  if(ev&&ev.target)ev.target.classList.add('active');
+  document.getElementById('pv-name').textContent = 'LXRD '+p.name;
+  updateAll();
+  particleBurst(ev, COLORS[p.front].hex);
+  toast('✨ Preset: '+p.name);
+}
+
+/* HARDWARE */
+function setHw(group, value, price){
+  if(group==='stick'){state.hw_stick=value;state.hw_stick_price=price;document.querySelectorAll('[id^="hw-stick-"]').forEach(el=>el.classList.remove('sel'));document.getElementById('hw-stick-'+value).classList.add('sel');}
+  if(group==='trigger'){state.hw_trigger=value;state.hw_trigger_price=price;document.querySelectorAll('[id^="hw-trigger-"]').forEach(el=>el.classList.remove('sel'));document.getElementById('hw-trigger-'+value).classList.add('sel');}
+  if(group==='paddles'){pickPaddle(value);return;}
+  if(group==='grip'){state.hw_grip=value;state.hw_grip_price=price;document.querySelectorAll('[id^="hw-grip-"]').forEach(el=>el.classList.remove('sel'));document.getElementById('hw-grip-'+value).classList.add('sel');}
+  if(group==='rumble'){state.hw_rumble=value;state.hw_rumble_price=price;document.querySelectorAll('[id^="hw-rumble-"]').forEach(el=>el.classList.remove('sel'));document.getElementById('hw-rumble-'+value).classList.add('sel');}
+  if(group==='akku'){state.hw_akku=value;state.hw_akku_price=price;document.querySelectorAll('[id^="hw-akku-"]').forEach(el=>el.classList.remove('sel'));document.getElementById('hw-akku-'+value).classList.add('sel');}
+  if(group==='led_rgb'){state.hw_led_rgb=value;state.hw_led_rgb_price=price;const el=document.getElementById('hw-led-rgb');if(el)el.classList.toggle('sel',!!value);}
+  if(group==='warranty'){state.hw_warranty=value;state.hw_warranty_price=price;document.querySelectorAll('[id^="hw-warranty-"]').forEach(el=>el.classList.remove('sel'));document.getElementById('hw-warranty-'+value).classList.add('sel');}
+  /* Hotspot-Highlight fuer die gerade gewaehlte Hardware-Option */
+  const flashMap={stick:'sticks',trigger:'trigger',grip:'grip',rumble:'rumble',akku:'akku'};
+  if(flashMap[group]){const dot=document.querySelector('.hs2[data-anchor="'+flashMap[group]+'"] .hs2-dot');if(dot){dot.style.animation='hsBlink 1.4s ease-in-out 2,hsDot 2.4s ease-in-out infinite';setTimeout(()=>dot.style.animation='hsDot 2.4s ease-in-out infinite',3200);}}
+  updateAllHotspots();
+  updateAll();
+}
+
+/* GRAVUR */
+function toggleEngraving(){
+  state.engr_enabled = !state.engr_enabled;
+  const t = document.getElementById('hw-engr-toggle');
+  const prev = document.getElementById('engr-preview');
+  const disp = document.getElementById('engr-display');
+  if(state.engr_enabled){t.classList.add('sel');prev.style.display='flex';updateEngraving();disp.classList.add('on');}
+  else{t.classList.remove('sel');prev.style.display='none';disp.classList.remove('on');}
+  updateAll();
+}
+function updateEngraving(){
+  const txt = document.getElementById('engr-text').value;
+  state.engr_text = txt;
+  document.getElementById('engr-len').textContent = txt.length;
+  const prev = document.getElementById('engr-preview');
+  const disp = document.getElementById('engr-display');
+  prev.textContent = txt || 'LEXORD';
+  disp.textContent = txt || 'LEXORD';
+  if(state.engr_enabled){disp.classList.add('on');}
+  updateAll();
+}
+function setFont(font, el){
+  state.engr_font = font;
+  document.querySelectorAll('.font-opt').forEach(f=>f.classList.remove('sel'));
+  el.classList.add('sel');
+  const prev = document.getElementById('engr-preview');
+  const disp = document.getElementById('engr-display');
+  const ff = font==='orbitron'?'Orbitron':(font==='serif'?'Georgia,serif':(font==='mono'?'Courier New,monospace':'Pacifico,cursive'));
+  prev.style.fontFamily = ff;
+  disp.style.fontFamily = ff;
+  prev.style.fontStyle = font==='serif'?'italic':'normal';
+  disp.style.fontStyle = font==='serif'?'italic':'normal';
+}
+
+/* PRICE */
+function calcPrice(){
+  let p = BASE_PRICE;
+  p += state.hw_stick_price + state.hw_trigger_price + state.hw_paddles_price + state.hw_grip_price + state.hw_rumble_price + state.hw_akku_price + state.hw_led_rgb_price + state.hw_warranty_price;
+  if(state.engr_enabled) p += 29;
+  if(state.sticker > 0) p += 22;
+  // Custom-Color +15 each
+  PARTS.forEach(part=>{if(state.customColors[part]||COLORS[state[part]].special) p += 15;});
+  return p;
+}
+function fmt(p){return p.toFixed(2).replace('.',',')+' €';}
+
+function updateAll(){
+  const p = calcPrice();
+  const elPrice = document.getElementById('pv-price');
+  if(elPrice){elPrice.textContent = fmt(p);const wrap=document.getElementById('pv-price-wrap');wrap.classList.add('bump');setTimeout(()=>wrap.classList.remove('bump'),500);}
+  document.getElementById('foot-price').textContent = fmt(p);
+  document.getElementById('mpb-price').textContent = fmt(p);
+  // RGB price label
+  const rgbP=document.getElementById('led-rgb-price');if(rgbP)rgbP.textContent=state.hw_led_rgb?'✓ AKTIV':'+44 €';
+  updateSummary();
+  updateProgress();
+}
+
+function updateSummary(){
+  PARTS.forEach(part=>{
+    const c = state.customColors[part]?{name:'Custom '+state.customColors[part],hex:state.customColors[part]}:COLORS[state[part]];
+    const el = document.getElementById('sum-'+part);
+    if(el) el.textContent = c.name;
+    const dot = document.getElementById('sum-'+part+'-dot');
+    if(dot){dot.style.background = c.special?`linear-gradient(135deg,${c.hex},#fff)`:c.hex;}
+  });
+  const set=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=val;};
+  const setBg=(id,val)=>{const e=document.getElementById(id);if(e)e.style.background=val;};
+  set('sum-stick-tech', state.hw_stick==='hall'?'Hall Effect':(state.hw_stick==='tmr'?'TMR Pro':'Standard'));
+  set('sum-trigger-mod', state.hw_trigger==='clicky'?'Clicky Trigger':'Standard');
+  const meta=state.hw_paddles_meta;
+  set('sum-paddles', meta && meta.count>0?meta.label:'Keine');
+  set('sum-grip', state.hw_grip==='grip'?'GRIP Coating':'Standard');
+  set('sum-rumble', state.hw_rumble==='strong'?'Strong Rumble+':'Standard');
+  set('sum-akku', state.hw_akku==='power'?'Power 2200':(state.hw_akku==='light'?'Lightweight':'Standard'));
+}
+
+function updateProgress(){
+  const pct = (currentStep / (TOTAL_STEPS-1)) * 100;
+  document.getElementById('progress-fill').style.width = pct+'%';
+}
+
+/* STEPS */
+function goToStep(s){
+  currentStep = Math.max(0, Math.min(TOTAL_STEPS-1, s));
+  document.querySelectorAll('.step').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.step-tab').forEach(el=>el.classList.remove('active'));
+  document.querySelector('.step[data-step="'+currentStep+'"]').classList.add('active');
+  document.querySelector('.step-tab[data-step="'+currentStep+'"]').classList.add('active');
+  document.querySelectorAll('.step-tab').forEach((el,i)=>{if(i<currentStep)el.classList.add('done');else el.classList.remove('done');});
+  document.getElementById('btn-prev').style.display = currentStep===0?'none':'block';
+  document.getElementById('btn-next').style.display = currentStep===TOTAL_STEPS-1?'none':'block';
+  document.getElementById('btn-cart').style.display = currentStep===TOTAL_STEPS-1?'block':'none';
+  document.querySelector('.cfg-content').scrollTop = 0;
+  // Auto-View beim Step-Wechsel (nach LED/Gravur/Sticker-Entfernung)
+  if(currentStep===1){setView('back');}                  // Backshell
+  else if(currentStep===6){setView('both');}              // Hardware/Paddles
+  else if(currentStep===7){setView('both');}              // Fertig/Summary
+  else if(currentStep>=0 && currentStep<=5){setView('front');} // Front/Buttons/D-Pad/Sticks/Trigger
+  // Hotspot-Highlight passend zum Step
+  flashHotspot(currentStep);
+  updateProgress();
+}
+function nextStep(){goToStep(currentStep+1);}
+function prevStep(){goToStep(currentStep-1);}
+
+/* VIEW */
+function setView(v){
+  currentView = v;
+  const stack = document.getElementById('preview-stack');if(!stack)return;
+  stack.classList.remove('view-front','view-back','view-both');
+  stack.classList.add('view-'+v);
+  document.querySelectorAll('.vt-btn').forEach(b=>b.classList.remove('sel'));
+  const vb=document.getElementById('vt-'+v);if(vb)vb.classList.add('sel');
+  updatePaddleOverlay();
+}
+function updateViewState(){setView(currentView);}
+
+/* CART */
+function addToCart(){
+  const p = calcPrice();
+  const desc = [
+    PARTS.map(part=>{const c = state.customColors[part]?'Custom '+state.customColors[part]:COLORS[state[part]].name;return PART_LABELS[part]+': '+c;}).join(' · '),
+    state.hw_stick!=='standard'?'Sticks: '+state.hw_stick.toUpperCase():'',
+    state.hw_trigger==='clicky'?'Clicky Trigger':'',
+    state.hw_paddles_meta&&state.hw_paddles_meta.count>0?state.hw_paddles_meta.label:'',
+    state.hw_grip==='grip'?'GRIP Coating':'',
+    state.hw_rumble==='strong'?'Strong Rumble+':'',
+    state.hw_akku!=='standard'?'Akku: '+state.hw_akku:'',
+    state.engr_enabled&&state.engr_text?'Gravur: "'+state.engr_text+'"':''
+  ].filter(Boolean).join(' · ');
+
+  /* Konfig mit lesbaren Namen + HEX-Codes (fuer Admin-Panel Farb-Tags) */
+  const colorConfig = {};
+  PARTS.forEach(part=>{
+    const c = state.customColors[part] ? {name:'Custom '+state.customColors[part], hex:state.customColors[part]} : COLORS[state[part]];
+    colorConfig[PART_LABELS[part]] = { name: c.name, hex: c.hex };
+  });
+  const configReadable = {
+    ...colorConfig,
+    stick_tech: state.hw_stick!=='standard' ? state.hw_stick.toUpperCase() : null,
+    trigger_tech: state.hw_trigger==='clicky' ? 'Clicky' : null,
+    paddles: state.hw_paddles_meta && state.hw_paddles_meta.count>0 ? state.hw_paddles_meta.label : null,
+    grip: state.hw_grip==='grip' ? 'Grip Coating' : null,
+    rumble: state.hw_rumble==='strong' ? 'Strong Rumble+' : null,
+    akku: state.hw_akku!=='standard' ? state.hw_akku : null,
+    buildName: state.buildName || null
+  };
+  /* Nulls entfernen */
+  Object.keys(configReadable).forEach(k=>{ if(!configReadable[k]) delete configReadable[k]; });
+
+  const item = {
+    name: state.buildName ? 'LXRD '+state.buildName : 'LXRD Custom Controller',
+    price: p,
+    img: 'Photoroom_20260501_094506.png',
+    qty: 1,
+    config: configReadable,
+    colors: PARTS.map(part=>{
+      const c = state.customColors[part] ? {hex:state.customColors[part]} : COLORS[state[part]];
+      return c.hex;
+    }),
+    desc: desc
+  };
+
+  try{
+    const stored = localStorage.getItem('lxrd_cart');
+    const cart = stored ? JSON.parse(stored) : [];
+    cart.push(item);
+    localStorage.setItem('lxrd_cart', JSON.stringify(cart));
+    toast('🛒 Konfiguration im Warenkorb!');
+    setTimeout(()=>{location.href='/?cart=open';}, 800);
+  }catch(e){
+    toast('⚠ Fehler — bitte erneut versuchen','err');
+  }
+}
+function goToCart(){location.href='/?cart=open';}
+
+/* UTILS */
+function toast(msg, type){
+  const t = document.createElement('div');
+  t.className = 'toast'+(type==='err'?' err':'');
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>{t.style.transition='.4s';t.style.opacity='0';t.style.transform='translateX(60px)';},2400);
+  setTimeout(()=>t.remove(),2900);
+}
+
+function particleBurst(ev, color){
+  if(!ev || !ev.clientX) return;
+  for(let i=0;i<10;i++){
+    const b = document.createElement('div');
+    b.className = 'burst';
+    b.style.left = ev.clientX+'px';
+    b.style.top = ev.clientY+'px';
+    b.style.background = color || '#00f2ff';
+    b.style.boxShadow = '0 0 8px '+(color||'#00f2ff');
+    const angle = (i/10) * Math.PI * 2;
+    const dist = 40 + Math.random() * 40;
+    b.style.setProperty('--bx', Math.cos(angle)*dist+'px');
+    b.style.setProperty('--by', Math.sin(angle)*dist+'px');
+    document.body.appendChild(b);
+    setTimeout(()=>b.remove(), 800);
+  }
+}
+
+function updateCartBadge(){
+  try{
+    const stored = localStorage.getItem('lxrd_cart');
+    const cart = stored ? JSON.parse(stored) : [];
+    const total = cart.reduce((s,i)=>s+(i.qty||1),0);
+    document.getElementById('cart-count').textContent = total;
+  }catch(e){}
+}
+
+/* CANVAS BACKGROUNDS */
+(function(){const sc=document.getElementById('star-canvas');if(!sc)return;const sx=sc.getContext('2d');const rsz=()=>{sc.width=window.innerWidth;sc.height=window.innerHeight;};window.addEventListener('resize',rsz);rsz();const stars=[];for(let i=0;i<100;i++)stars.push({x:Math.random()*sc.width,y:Math.random()*sc.height,v:.05+Math.random()*.25,o:Math.random()*.7});function draw(){sx.clearRect(0,0,sc.width,sc.height);stars.forEach(s=>{s.y-=s.v;if(s.y<0)s.y=sc.height;sx.fillStyle='rgba(255,255,255,'+s.o+')';sx.fillRect(s.x,s.y,1,1);});requestAnimationFrame(draw);}draw();})();
+(function(){const pc=document.getElementById('particle-canvas');if(!pc)return;const px=pc.getContext('2d');const rsz=()=>{pc.width=window.innerWidth;pc.height=window.innerHeight;};window.addEventListener('resize',rsz);rsz();const pts=[];for(let i=0;i<70;i++)pts.push({x:Math.random()*pc.width,y:Math.random()*pc.height,vx:(Math.random()-.5)*.3,vy:-Math.random()*.4-.1,sz:Math.random()*1.8+.4,alpha:Math.random()*.4+.1,color:Math.random()>.55?'#bc13fe':'#00f2ff'});function draw(){px.clearRect(0,0,pc.width,pc.height);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.y<-10){p.y=pc.height+10;p.x=Math.random()*pc.width;}if(p.x<-10)p.x=pc.width+10;if(p.x>pc.width+10)p.x=-10;px.save();px.globalAlpha=p.alpha;px.fillStyle=p.color;px.shadowColor=p.color;px.shadowBlur=8;px.beginPath();px.arc(p.x,p.y,p.sz,0,Math.PI*2);px.fill();px.restore();});requestAnimationFrame(draw);}draw();})();
+(function(){const bg=document.getElementById('lightning-bg');if(!bg)return;for(let i=0;i<8;i++){const el=document.createElement('div');el.className='lightning-line';el.style.cssText='left:'+(5+Math.random()*90)+'%;top:'+Math.random()*60+'%;height:'+(120+Math.random()*250)+'px;--dur:'+(2.5+Math.random()*3.5)+'s;--delay:'+Math.random()*5+'s';bg.appendChild(el);}})();
+
+/* RGB Animation für Hologramm */
+const styleEl = document.createElement('style');
+styleEl.textContent = '@keyframes rg{to{background-position:200%}}';
+document.head.appendChild(styleEl);
+
+/* ═══════════════════════════════════════
+   NEW: BUILD NAME · PROGRESS · MINI-MAP
+═══════════════════════════════════════ */
+function updateBuildName(){const inp=document.getElementById('build-name');if(!inp)return;const n=inp.value.trim();state.buildName=n;const pv=document.getElementById('pv-name');if(pv)pv.textContent=n?'LXRD '+n.toUpperCase():'LXRD CUSTOM EDITION';}
+
+function updateProgress(){
+  // Count customizations beyond defaults
+  const defaults = {front:0, back:0, buttons:1, dpad:2, sticks:0, triggers:0, led:0};
+  let touched = 0;
+  let total = 12; // 6 colors + LED + 5 hardware groups
+  PARTS.forEach(p=>{if(state[p]!==defaults[p]||state.customColors[p])touched++;});
+  if(state.led!==0) touched++;
+  if(state.hw_stick!=='standard') touched++;
+  if(state.hw_trigger!=='standard') touched++;
+  if(state.hw_paddles>0) touched++;
+  if(state.hw_grip!=='standard') touched++;
+  if(state.engr_enabled||state.sticker>0) touched++;
+  const pct = Math.round((touched/total)*100);
+  const el = document.getElementById('build-pct');
+  if(el) el.textContent = pct+'%';
+}
+
+function updateMiniMap(){
+  const mm = document.getElementById('mini-map');
+  if(!mm) return;
+  mm.innerHTML = PARTS.map(part=>{
+    const c = state.customColors[part]?{hex:state.customColors[part]}:COLORS[state[part]];
+    let bg = c.hex;
+    if(c.special==='camo') bg = 'radial-gradient(circle at 30% 40%,#5a6b3a 30%,#2a3a1a 60%)';
+    return `<div class="mm-dot" style="background:${bg}" title="${PART_LABELS[part]}: ${c.name||c.hex}"></div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════
+   NEW: SURPRISE ME (Random Build)
+═══════════════════════════════════════ */
+function surpriseMe(){
+  PARTS.forEach(part=>{
+    const idx = Math.floor(Math.random()*COLORS.length);
+    state[part] = idx;
+    delete state.customColors[part];
+    applyToLayer(part, COLORS[idx]);
+    buildColorGrid(part);
+    document.getElementById('name-'+part).textContent = COLORS[idx].name.toUpperCase();
+  });
+  // Random LED
+  state.led = Math.floor(Math.random()*LED_COLORS.length);
+  pickLED(state.led);
+  // Random some hardware (50% chance each)
+  if(Math.random()>.5){const o=['hall','tmr'][Math.floor(Math.random()*2)];setHw('stick',o,o==='hall'?42:68);}
+  else setHw('stick','standard',0);
+  if(Math.random()>.6) setHw('trigger','clicky',27);else setHw('trigger','standard',0);
+  if(Math.random()>.5){const p=[2,7][Math.floor(Math.random()*2)];setHw('paddles',p,p===2?49:65);}
+  else setHw('paddles',0,0);
+  if(Math.random()>.6) setHw('grip','grip',34);else setHw('grip','standard',0);
+  document.getElementById('pv-name').textContent = 'LXRD '+['ALPHA','OMEGA','PHANTOM','NOVA','PULSE','REBEL','SHADOW','NEON','APEX','VORTEX'][Math.floor(Math.random()*10)];
+  updateAll();
+  toast('🎲 Zufalls-Build erstellt!');
+}
+
+/* ═══════════════════════════════════════
+   NEW: SAVE / LOAD / DELETE BUILDS
+═══════════════════════════════════════ */
+function getSavedBuilds(){try{return JSON.parse(localStorage.getItem('lxrd_builds')||'[]');}catch(e){return [];}}
+function setSavedBuilds(b){try{localStorage.setItem('lxrd_builds',JSON.stringify(b));}catch(e){}}
+
+function openBuildsModal(mode){
+  const m = document.getElementById('builds-modal');
+  const head = document.getElementById('bm-head');
+  const saveBtn = document.getElementById('bm-save-btn');
+  if(mode==='save'){head.textContent='💾 BUILD SPEICHERN';saveBtn.style.display='block';}
+  else{head.textContent='📁 GESPEICHERTE BUILDS';saveBtn.style.display='none';}
+  renderBuilds();
+  m.classList.add('show');
+}
+function closeBuildsModal(){document.getElementById('builds-modal').classList.remove('show');}
+
+function renderBuilds(){
+  const list = getSavedBuilds();
+  const el = document.getElementById('bm-list');
+  if(!list.length){el.innerHTML='<div class="bm-empty">NOCH KEINE BUILDS GESPEICHERT</div>';return;}
+  el.innerHTML = list.map((b,i)=>`<div class="bm-item" onclick="loadBuild(${i})"><div class="info"><div class="n">${esc(b.name||'Unbenannter Build')}</div><div class="d">${new Date(b.created).toLocaleDateString('de-DE')} · ${b.price.toFixed(2).replace('.',',')}€</div></div><div class="price">${b.price.toFixed(2).replace('.',',')}€</div><button class="del" onclick="event.stopPropagation();deleteBuild(${i})">×</button></div>`).join('');
+}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function doSaveBuild(){
+  const list = getSavedBuilds();
+  const name = state.buildName || ('Build #'+(list.length+1));
+  list.unshift({name,state:JSON.parse(JSON.stringify(state)),price:calcPrice(),created:new Date().toISOString()});
+  if(list.length>10) list.pop();
+  setSavedBuilds(list);
+  renderBuilds();
+  toast('✓ Build "'+name+'" gespeichert');
+}
+function loadBuild(i){
+  const list = getSavedBuilds();
+  if(!list[i]) return;
+  state = JSON.parse(JSON.stringify(list[i].state));
+  PARTS.forEach(part=>{
+    if(state.customColors[part]) applyToLayer(part,{hex:state.customColors[part]});
+    else applyToLayer(part, COLORS[state[part]]);
+    buildColorGrid(part);
+    const n=document.getElementById('name-'+part);if(n)n.textContent=COLORS[state[part]].name.toUpperCase();
+  });
+  pickLED(state.led);
+  setHw('stick',state.hw_stick,state.hw_stick_price);
+  setHw('trigger',state.hw_trigger,state.hw_trigger_price);
+  setHw('paddles',state.hw_paddles,state.hw_paddles_price);
+  setHw('grip',state.hw_grip,state.hw_grip_price);
+  const bn=document.getElementById('build-name');if(bn)bn.value=state.buildName||'';
+  if(state.engr_text){document.getElementById('engr-text').value=state.engr_text;updateEngraving();}
+  closeBuildsModal();
+  updateAll();
+  toast('✓ Build "'+list[i].name+'" geladen');
+}
+function deleteBuild(i){
+  if(!confirm('Build wirklich löschen?'))return;
+  const list = getSavedBuilds();
+  list.splice(i,1);
+  setSavedBuilds(list);
+  renderBuilds();
+}
+
+/* ═══════════════════════════════════════
+   NEW: SHARE via URL HASH
+═══════════════════════════════════════ */
+function shareBuild(){
+  try{
+    const compact = {
+      f:state.front,b:state.back,bt:state.buttons,d:state.dpad,s:state.sticks,t:state.triggers,
+      l:state.led,
+      hs:state.hw_stick,ht:state.hw_trigger,hp:state.hw_paddles,hg:state.hw_grip,
+      e:state.engr_enabled?1:0,et:state.engr_text,ef:state.engr_font,
+      sk:state.sticker,n:state.buildName||''
+    };
+    const hash = btoa(JSON.stringify(compact));
+    const url = location.origin+location.pathname+'#cfg='+hash;
+    if(navigator.share){navigator.share({title:'Mein LEXORD Custom Build',text:'Schau dir mein Custom Controller-Build an',url}).catch(()=>{copyToClip(url);});}
+    else copyToClip(url);
+  }catch(e){toast('⚠ Teilen fehlgeschlagen','err');}
+}
+function copyToClip(url){
+  if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>toast('🔗 Link kopiert!','ok')).catch(()=>fallback(url));}
+  else fallback(url);
+  function fallback(u){prompt('Link kopieren:',u);}
+}
+function loadFromHash(){
+  try{
+    const h = location.hash;
+    if(!h.startsWith('#cfg=')) return false;
+    const data = JSON.parse(atob(h.slice(5)));
+    state.front=data.f;state.back=data.b;state.buttons=data.bt;state.dpad=data.d;state.sticks=data.s;state.triggers=data.t;
+    state.led=data.l;
+    if(data.hs)setHw('stick',data.hs,data.hs==='hall'?42:(data.hs==='tmr'?68:0));
+    if(data.ht)setHw('trigger',data.ht,data.ht==='clicky'?27:0);
+    if(data.hp!==undefined)setHw('paddles',data.hp,data.hp===2?49:(data.hp===4?65:0));
+    if(data.hg)setHw('grip',data.hg,data.hg==='grip'?34:0);
+    if(data.n){state.buildName=data.n;const bn=document.getElementById('build-name');if(bn)bn.value=data.n;updateBuildName();}
+    if(data.et){state.engr_text=data.et;state.engr_font=data.ef||'orbitron';document.getElementById('engr-text').value=data.et;}
+    if(data.e){state.engr_enabled=false;toggleEngraving();}
+    state.sticker=data.sk||0;
+    PARTS.forEach(part=>{applyToLayer(part,COLORS[state[part]]);buildColorGrid(part);const n=document.getElementById('name-'+part);if(n)n.textContent=COLORS[state[part]].name.toUpperCase();});
+    pickLED(state.led);
+    toast('🔗 Build aus Link geladen!');
+    history.replaceState(null,'',location.pathname);
+    return true;
+  }catch(e){return false;}
+}
+
+/* ═══════════════════════════════════════
+   NEW: DOWNLOAD BUILD IMAGE
+═══════════════════════════════════════ */
+function downloadBuildImage(){
+  // Capture preview-stage as canvas using html-to-image alternative: simple SVG approach
+  try{
+    const stage = document.querySelector('.preview-stage');
+    const w = stage.offsetWidth, h = stage.offsetHeight;
+    const canvas = document.createElement('canvas');
+    canvas.width = w*2; canvas.height = h*2;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(2,2);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0,0,w,h);
+    // Draw colors as a strip representation
+    const cols = PARTS.map(p=>state.customColors[p]||COLORS[state[p]].hex);
+    cols.forEach((c,i)=>{
+      ctx.fillStyle = c;
+      ctx.fillRect(w*.1+i*(w*.13),h*.4,w*.11,h*.2);
+    });
+    ctx.fillStyle = '#00f2ff';
+    ctx.font = 'bold 14px Orbitron,sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('LEXORD® '+(state.buildName||'CUSTOM').toUpperCase(),w/2,h*.15);
+    ctx.font = '11px sans-serif';
+    ctx.fillStyle = '#fff';
+    ctx.fillText(calcPrice().toFixed(2).replace('.',',')+' €',w/2,h*.85);
+    ctx.fillStyle = '#888';
+    ctx.font = '9px sans-serif';
+    ctx.fillText('Built on lexord.de/konfigurator',w/2,h*.92);
+    canvas.toBlob(blob=>{
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'LEXORD_'+(state.buildName||'CustomBuild').replace(/\W+/g,'_')+'.png';
+      a.click();
+      setTimeout(()=>URL.revokeObjectURL(a.href),500);
+      toast('📸 Bild heruntergeladen!');
+    });
+  }catch(e){toast('Screenshot fehlgeschlagen','err');}
+}
+
+/* ═══════════════════════════════════════
+   NEW: PRICE DRAWER
+═══════════════════════════════════════ */
+function togglePriceDrawer(){document.getElementById('price-drawer').classList.toggle('open');}
+function updatePriceDrawer(){
+  const rows = [];
+  rows.push({lbl:'BASIS CONTROLLER',val:'PS5 DualSense Custom',price:129});
+  PARTS.forEach(part=>{
+    const c = state.customColors[part]?{name:'Custom '+state.customColors[part],special:false}:COLORS[state[part]];
+    const isSpecial = COLORS[state[part]]?.special;
+    rows.push({lbl:PART_LABELS[part],val:c.name,price:isSpecial?15:0});
+  });
+  rows.push({lbl:'LED LIGHTBAR',val:LED_COLORS[state.led].name,price:0});
+  if(state.hw_stick!=='standard') rows.push({lbl:'STICK-UPGRADE',val:state.hw_stick==='hall'?'Hall Effect':'TMR Pro',price:state.hw_stick_price});
+  if(state.hw_trigger==='clicky') rows.push({lbl:'CLICKY TRIGGER',val:'Mouse-Click 1mm',price:39});
+  if(state.hw_paddles>0) rows.push({lbl:'BACK-PADDLES',val:state.hw_paddles+'× Paddle',price:state.hw_paddles_price});
+  if(state.hw_grip==='grip') rows.push({lbl:'GRIP COATING',val:'Anti-Rutsch Soft-Touch',price:49});
+  if(state.hw_rumble==='strong') rows.push({lbl:'STRONG RUMBLE+',val:'30% stärker',price:32});
+  if(state.hw_led_rgb) rows.push({lbl:'RGB-MODUL',val:'16 Mio. Farben',price:44});
+  if(state.hw_warranty>24) rows.push({lbl:'GARANTIE',val:'+12 Monate erweitert',price:49});
+  if(state.engr_enabled) rows.push({lbl:'GRAVUR',val:state.engr_text||'LEXORD',price:29});
+  if(state.sticker>0) rows.push({lbl:'STICKER',val:STICKERS[state.sticker].name,price:22});
+
+  document.getElementById('pd-list').innerHTML = rows.map(r=>`<div class="pd-row"><div><div class="lbl">${r.lbl}</div><div class="val">${r.val}</div></div><div class="price ${r.price===0?'zero':''}">${r.price>0?'+'+r.price.toFixed(2).replace('.',',')+' €':'inkl.'}</div></div>`).join('');
+  document.getElementById('pd-total').textContent = calcPrice().toFixed(2).replace('.',',')+' €';
+  document.getElementById('dt-price').textContent = Math.round(calcPrice())+'€';
+}
+
+/* ═══════════════════════════════════════
+   NEW: BUNDLE SUGGESTIONS
+═══════════════════════════════════════ */
+function renderBundles(){
+  const bundles = [
+    {name:'PRO GAMER BUNDLE',desc:'Hall-Effect Sticks + Clicky Trigger + 2× Paddles · perfekt für FPS',adds:{stick:'hall',trigger:'clicky',paddles:2},save:22},
+    {name:'ELITE PERFORMANCE',desc:'TMR Pro + Clicky Trigger Pro + 4× Paddles + GRIP · maximale Präzision',adds:{stick:'tmr',trigger:'clicky',paddles:4,grip:'grip'},save:38},
+    {name:'STREAMER EDITION',desc:'RGB-Modul + Custom Gravur + GRIP-Coating · zeig dein Style',adds:{led_rgb:true,engr:true,grip:'grip'},save:29},
+    {name:'COLLECTOR EDITION',desc:'Premium-Sticker + +12 Monate Garantie + Strong Rumble+',adds:{rumble:'strong',warranty:36,sticker:true},save:17}
+  ];
+  document.getElementById('bundle-grid').innerHTML = bundles.map((b,i)=>{
+    const orig = Object.values(b.adds).reduce((s,v)=>{
+      if(v==='hall')return s+42;if(v==='tmr')return s+68;if(v==='clicky')return s+39;
+      if(v===2)return s+49;if(v===4)return s+65;if(v==='grip')return s+49;
+      if(v===true)return s+(b.adds.led_rgb===true?44:(b.adds.engr===true?29:22));
+      if(v==='strong')return s+32;if(v===36)return s+49;return s;
+    },0);
+    const newP = orig-b.save;
+    return `<div class="bundle-card" onclick="applyBundle(${i})">
+      <div class="b-name">⚡ ${b.name}</div>
+      <div class="b-desc">${b.desc}</div>
+      <div class="b-row">
+        <div><div class="b-old">${orig.toFixed(0)} €</div><div class="b-save">−${b.save} € SPAREN</div></div>
+        <div class="b-new">+${newP.toFixed(0)} €</div>
+      </div>
+    </div>`;
+  }).join('');
+  window._BUNDLES = bundles;
+}
+function applyBundle(i){
+  const b = window._BUNDLES[i];if(!b)return;
+  if(b.adds.stick==='hall')setHw('stick','hall',42);
+  if(b.adds.stick==='tmr')setHw('stick','tmr',68);
+  if(b.adds.trigger==='clicky')setHw('trigger','clicky',39);
+  if(b.adds.paddles===2)setHw('paddles',2,49);
+  if(b.adds.paddles===4)setHw('paddles',7,65);
+  if(b.adds.grip==='grip')setHw('grip','grip',49);
+  if(b.adds.rumble==='strong')setHw('rumble','strong',32);
+  if(b.adds.led_rgb)setHw('led_rgb',true,44);
+  if(b.adds.warranty===36)setHw('warranty',36,49);
+  if(b.adds.engr&&!state.engr_enabled)toggleEngraving();
+  if(b.adds.sticker&&state.sticker===0){state.sticker=1;document.getElementById('name-sticker').textContent=STICKERS[1].name.toUpperCase();buildStickerGrid();}
+  updateAll();
+  toast('✨ Bundle "'+b.name+'" angewendet!');
+}
+
+/* ═══════════════════════════════════════
+   NEW: DRAG-TO-ROTATE
+═══════════════════════════════════════ */
+(function(){
+  const stack = document.getElementById('preview-stack');
+  if(!stack) return;
+  let dragging = false, startX = 0, baseRot = 0, currentRot = 0;
+  stack.style.cursor = 'grab';
+  function down(e){
+    if(autoSpin) return;
+    dragging = true; stack.style.cursor='grabbing';
+    startX = (e.touches?e.touches[0].clientX:e.clientX);
+    stack.style.animation = 'none';
+    stack.style.transition = 'none';
+  }
+  function move(e){
+    if(!dragging) return;
+    const x = (e.touches?e.touches[0].clientX:e.clientX);
+    currentRot = baseRot + (x-startX)*0.5;
+    stack.style.transform = `rotateY(${currentRot}deg)`;
+  }
+  function up(){
+    if(!dragging) return;
+    dragging = false; stack.style.cursor='grab';
+    baseRot = currentRot;
+    stack.style.transition = 'transform 1s cubic-bezier(.4,0,.2,1)';
+    // Auto-snap to 0 / 180
+    const norm = ((baseRot%360)+360)%360;
+    const target = norm<90||norm>270 ? 0 : 180;
+    setTimeout(()=>{stack.style.transform=`rotateY(${target}deg)`;baseRot=target;currentView=target===180?'back':'front';document.querySelectorAll('.vt-btn').forEach(b=>b.classList.remove('sel'));document.getElementById('vt-'+currentView).classList.add('sel');},50);
+    setTimeout(()=>{stack.style.animation='floatY 5s ease-in-out infinite';},1100);
+  }
+  stack.addEventListener('mousedown',down);
+  document.addEventListener('mousemove',move);
+  document.addEventListener('mouseup',up);
+  stack.addEventListener('touchstart',down,{passive:true});
+  document.addEventListener('touchmove',move,{passive:true});
+  document.addEventListener('touchend',up);
+})();
+
+/* Wrap updateAll to also refresh new widgets */
+const _origUpdateAll = updateAll;
+updateAll = function(){
+  _origUpdateAll();
+  try{updateMiniMap();updateProgress();updatePriceDrawer();}catch(e){}
+};
+
+/* INIT */
+PARTS.forEach(part=>{buildColorGrid(part);applyToLayer(part, COLORS[state[part]]);});
+state.buildName = state.buildName||'';
+renderBundles();
+buildPaddleGrid();
+updatePaddleOverlay();
+updateAllHotspots();
+setView('both');
+loadFromHash();
+buildLEDGrid();
+buildStickerGrid();
+pickLED(0);
+updateCartBadge();
+updateAll();
+
+// Keyboard navigation
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
+  if(e.key==='ArrowRight')nextStep();
+  if(e.key==='ArrowLeft')prevStep();
+  if(e.key===' '){e.preventDefault();setView(currentView==='front'?'back':'front');}
+});
+</script>
+
+<script src="lxrd-tracker.js" defer></script>
+<script>window.addEventListener("load",function(){setTimeout(function(){window.LXRD&&LXRD.event("config_start");},800);});</script>
+</body>
+</html>
